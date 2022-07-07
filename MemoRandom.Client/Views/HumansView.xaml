@@ -8,6 +8,7 @@
         xmlns:region="clr-namespace:MemoRandom.Models.Common;assembly=MemoRandom.Models"
         xmlns:local="clr-namespace:MemoRandom.Client.Views"
         mc:Ignorable="d"
+        ContentRendered="MetroWindow_ContentRendered"
         Title="HumansView" Height="450" Width="800">
     <Grid>
         <Grid.RowDefinitions>

@@ -41,6 +41,11 @@ namespace MemoRandom.Client.ViewModels
         }
         #endregion
 
+        //private readonly IEventAggregator _eventAggregator;
+        //private readonly SubscriptionToken _messageHeader; // Подумать - нужен ли?
+        //private readonly SubscriptionToken _reasonsDictionaryChanging;
+        //private readonly SubscriptionToken _humansDataFileChanging;
+
         #region Commands
         public DelegateCommand SettingsMenuCommand { get; private set; }
         public DelegateCommand HumansListMenuCommand { get; private set; }
@@ -206,6 +211,13 @@ namespace MemoRandom.Client.ViewModels
             _container = container ?? throw new ArgumentNullException(nameof(container));
             _regionManager = regionManager ?? throw new ArgumentNullException(nameof(regionManager));
             _eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
+
+            //Title = HeaderDefault;
+            ////_humansFile = ConfigurationManager.AppSettings["HumansPath"];
+
+            //_messageHeader = _eventAggregator.GetEvent<ChangeViewHeaderEvent>().Subscribe(OnChangeHeader, ThreadOption.PublisherThread);
+            //_reasonsDictionaryChanging = eventAggregator.GetEvent<ChangeReasonsDictionaryEvent>().Subscribe(OnReasonsDictionaryChanged, ThreadOption.PublisherThread);
+            //_humansDataFileChanging = eventAggregator.GetEvent<ChangeHumansDataFile>().Subscribe(OnChangeHumansDataFile, ThreadOption.PublisherThread);
 
             InitializeRegions();
             InitializeCommands();

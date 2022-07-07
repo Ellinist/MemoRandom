@@ -18,6 +18,11 @@ namespace MemoRandom.Client.Views
             RegionManager.SetRegionManager(regionTarget, regionManager);
         }
 
+        private void MetroWindow_ContentRendered(object sender, System.EventArgs e)
+        {
+            Activate();
+        }
+
         #region CTOR
         public HumansView(IContainer container, HumansViewModel vm)
         {
