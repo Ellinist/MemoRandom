@@ -99,27 +99,27 @@ namespace MemoRandom.Client.ViewModels
         //    }
         //}
 
-        ///// <summary>
-        ///// Вызов окна добавления человека
-        ///// </summary>
-        //private void OnAddNewHumanCommand()
-        //{
-        //    if (_menuRegion.Views.Any())
-        //    {
-        //        _menuRegion.RemoveAll();
-        //        _menu = _container.Resolve<HumansListUserControl>(); // На замену на меню списка людей
-        //        _menuRegion.Add(_menu);
-        //    }
+        /// <summary>
+        /// Вызов окна добавления человека
+        /// </summary>
+        private void OnStartHumansMainView()
+        {
+            if (_menuRegion.Views.Any())
+            {
+                _menuRegion.RemoveAll();
+                _menu = _container.Resolve<HumansMainMenuUserControl>(); // На замену на меню списка людей
+                _menuRegion.Add(_menu);
+            }
 
-        //    if (_workRegion.Views.Any())
-        //    {
-        //        _workRegion.RemoveAll();
+            //if (_workRegion.Views.Any())
+            //{
+            //    _workRegion.RemoveAll();
 
-        //        _work = _container.Resolve<HumanInformationView>();
-        //        _workRegion.Add(_work);
-        //        //_workRegion.Context = new HumanInformationViewModel(_eventAggregator);
-        //    }
-        //}
+            //    _work = _container.Resolve<HumanInformationView>();
+            //    _workRegion.Add(_work);
+            //    //_workRegion.Context = new HumanInformationViewModel(_eventAggregator);
+            //}
+        }
 
         ///// <summary>
         ///// Выбор меню настроек
@@ -229,6 +229,8 @@ namespace MemoRandom.Client.ViewModels
 
             InitializeRegions();
             InitializeCommands();
+
+            OnStartHumansMainView();
         }
         #endregion
     }
