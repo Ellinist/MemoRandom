@@ -24,7 +24,7 @@ namespace MemoRandom.Client.Views
         }
 
         #region CTOR
-        public HumansView(IContainer container, HumansViewModel vm)
+        public HumansView(IContainer container/*, HumansViewModel vm*/)
         {
             InitializeComponent();
 
@@ -36,7 +36,7 @@ namespace MemoRandom.Client.Views
                 SetRegionManager(regionManager, MenuRegion, RegionNames.MenuRegion);
             }
 
-            DataContext = vm;
+            //DataContext = vm;
         }
         #endregion
     }

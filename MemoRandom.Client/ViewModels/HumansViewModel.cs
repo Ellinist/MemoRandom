@@ -1,16 +1,24 @@
-﻿using System;
-using DryIoc;
-using MemoRandom.Client.UserControls;
+﻿using DryIoc;
 using MemoRandom.Models.Common;
-using MemoRandom.Models.Events;
-using Prism.Mvvm;
+using Microsoft.Win32;
 using NLog;
 using Prism.Commands;
 using Prism.Events;
+using Prism.Mvvm;
 using Prism.Regions;
+using System;
+using System.Configuration;
+using System.IO;
+using System.Linq;
+using System.Windows;
+using MemoRandom.Client.UserControls;
+using MemoRandom.Models.Events;
 
 namespace MemoRandom.Client.ViewModels
 {
+    /// <summary>
+    /// Модель представления основного окна со списком людей
+    /// </summary>
     public class HumansViewModel : BindableBase
     {
         #region PRIVATE FIELDS
