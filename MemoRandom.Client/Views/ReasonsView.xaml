@@ -1,0 +1,194 @@
+﻿<mah:MetroWindow x:Class="MemoRandom.Client.Views.ReasonsView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:models="clr-namespace:MemoRandom.Models.Models;assembly=MemoRandom.Models"
+        mc:Ignorable="d"
+        Title="{Binding ReasonsViewTitle}"
+        x:Name="ReasonsDictionary"
+        Height="450" Width="800">
+
+    <b:Interaction.Triggers>
+        <b:EventTrigger EventName="Loaded">
+            <b:InvokeCommandAction Command="{Binding OnLoadedReasonsViewCommand}"/>
+                                   <!--CommandParameter="{Binding ElementName=ReasonsView}"/>-->
+        </b:EventTrigger>
+    </b:Interaction.Triggers>
+
+    <mah:MetroWindow.Resources>
+        <!--Стиль контрола TextBox-->
+        <Style x:Key="TextBoxStyle" TargetType="TextBox" BasedOn="{StaticResource MahApps.Styles.TextBox}">
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0, 0, 2, 0"/>
+        </Style>
+
+        <!--Стиль контрола Label-->
+        <Style x:Key="LabelStyle" TargetType="Label" BasedOn="{StaticResource MahApps.Styles.Label}">
+            <!--<Setter Property="FontFamily" Value="{StaticResource MahApps.Fonts.Family.Control}"/>-->
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Margin" Value="0, 1, 2, 1"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+
+        <!--Стиль контрола Button-->
+        <Style x:Key="ButtonStyle" TargetType="Button" BasedOn="{StaticResource MahApps.Styles.Button}">
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Margin" Value="2, 4, 2, 4"/>
+            <Setter Property="Padding" Value="10, 0, 10, 0"/>
+        </Style>
+    </mah:MetroWindow.Resources>
+
+    <Grid>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*" MinWidth="260"/>
+                <ColumnDefinition Width="4"/>
+                <ColumnDefinition Width="5*" MinWidth="480"/>
+            </Grid.ColumnDefinitions>
+
+            <!--Дерево причин смерти-->
+            <Border Grid.Row="0" Grid.Column="0"
+                                    Margin="5, 5, 0, 5"
+                                    BorderBrush="Black" BorderThickness="2">
+                <ScrollViewer CanContentScroll="True"
+                                              HorizontalScrollBarVisibility="Auto"
+                                              VerticalScrollBarVisibility="Auto">
+                    <TreeView x:Name="ReasonsTree"
+                                              Style="{StaticResource MahApps.Styles.TreeView}"
+                                              ItemsSource="{Binding ReasonsList, Mode=TwoWay, NotifyOnSourceUpdated=True}">
+                        <TreeView.Resources>
+                            <HierarchicalDataTemplate DataType="{x:Type models:Reason}" ItemsSource="{Binding ReasonChildren}">
+                                <TextBlock Text="{Binding Path=ReasonName}"/>
+                            </HierarchicalDataTemplate>
+                        </TreeView.Resources>
+                        <TreeView.ItemContainerStyle>
+                            <Style TargetType="TreeViewItem">
+                                <Setter Property="IsSelected" Value="{Binding IsSelected}"/>
+                                <Setter Property="FontSize" Value="18"/>
+                                <Setter Property="FontWeight" Value="Bold"/>
+                                <Setter Property="IsExpanded" Value="True"/>
+                            </Style>
+                        </TreeView.ItemContainerStyle>
+                        <b:Interaction.Triggers>
+
+                            <!--Команда выбора узла-->
+                            <b:EventTrigger EventName="SelectedItemChanged">
+                                <b:InvokeCommandAction Command="{Binding SelectNodeCommand}"
+                                                                       CommandParameter="{Binding ElementName=ReasonsTree, Path=SelectedItem}"/>
+                            </b:EventTrigger>
+
+                            <!--Команда отмены выбора - клик на свободном поле-->
+                            <b:EventTrigger EventName="MouseDown">
+                                <b:InvokeCommandAction Command="{Binding EmptyClickCommand}"/>
+                            </b:EventTrigger>
+                        </b:Interaction.Triggers>
+                    </TreeView>
+                </ScrollViewer>
+            </Border>
+
+            <!--Разделитель-->
+            <GridSplitter Grid.Column="1"
+                                          Width="4"
+                                          Style="{StaticResource MahApps.Styles.GridSplitter}"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Stretch"/>
+
+            <!--Подробная информация о причинах смерти-->
+            <Border Grid.Row="0" Grid.Column="2"
+                                    Margin="0, 5, 5, 5"
+                                    BorderBrush="Black" BorderThickness="2">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*" MinWidth="138"/>
+                        <ColumnDefinition Width="7*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="7*"/>
+                        <RowDefinition Height="38"/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0" Grid.Column="0"
+                                           Content="Причина:"
+                                           Style="{StaticResource LabelStyle}"/>
+                    <TextBox Grid.Row="0" Grid.Column="1"
+                                             IsEnabled="{Binding FieldsEnabled}"
+                                             Style="{StaticResource TextBoxStyle}"
+                                             Text="{Binding ReasonName}"/>
+                    <Label Grid.Row="1" Grid.Column="0"
+                                           Content="Комментарий:"
+                                           Style="{StaticResource LabelStyle}"/>
+                    <ScrollViewer  Grid.Row="1" Grid.Column="1" CanContentScroll="True"
+                                                   HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                        <TextBox Background="White"
+                                                 IsEnabled="{Binding FieldsEnabled}"
+                                                 Text="{Binding ReasonComment}"
+                                                 Style="{StaticResource TextBoxStyle}"
+                                                 TextWrapping="WrapWithOverflow" AcceptsReturn="True"
+                                                 VerticalAlignment="Stretch"/>
+                    </ScrollViewer>
+                    <Label Grid.Row="2" Grid.Column="0"
+                                           Content="Описание:"
+                                           Style="{StaticResource LabelStyle}"/>
+                    <ScrollViewer Grid.Row="2" Grid.Column="1" CanContentScroll="True"
+                                                  HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                        <TextBox  Background="White"
+                                                  IsEnabled="{Binding FieldsEnabled}"
+                                                  Text="{Binding ReasonDescription}"
+                                                  Style="{StaticResource TextBoxStyle}"
+                                                  TextWrapping="WrapWithOverflow" AcceptsReturn="True"
+                                                  VerticalAlignment="Stretch"/>
+                    </ScrollViewer>
+
+                    <Grid Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <!--Кнопка добавления записи в справочник причин смерти-->
+                        <Button Grid.Column="0"
+                                                Style="{StaticResource ButtonStyle}"
+                                                IsEnabled="{Binding AddSaveButtonEnabled}"
+                                                Content="{Binding AddButtonText}"
+                                                Command="{Binding InsertCommand}"
+                                                CommandParameter="{Binding ElementName=ReasonsTree, Path=SelectedItem}"/>
+
+                        <!--Кнопка внесения изменений в справочник причин смерти-->
+                        <Button Grid.Column="1"
+                                                Style="{StaticResource ButtonStyle}"
+                                                Content="{Binding SaveButtonText}"
+                                                IsEnabled="{Binding ChangeSaveButtonEnabled}"
+                                                Command="{Binding ChangeCommand}"/>
+
+                        <!--Кнопка удаления записи из справочника причин смерти-->
+                        <Button Grid.Column="2"
+                                                Style="{StaticResource ButtonStyle}"
+                                                Content="Удалить"
+                                                IsEnabled="{Binding DeleteButtonEnabled}"
+                                                Command="{Binding DeleteNodeCommand}"
+                                                CommandParameter="{Binding ElementName=ReasonsTree, Path=SelectedItem}"/>
+
+                        <!--Кнопка отмены внесенных изменений в справочнике причин смерти-->
+                        <Button Grid.Column="3"
+                                                Style="{StaticResource ButtonStyle}"
+                                                Content="Отмена"
+                                                IsEnabled="{Binding CancelButtonEnabled}"
+                                                Command="{Binding CancelCommand}"
+                                                CommandParameter="{Binding ElementName=ReasonsTree, Path=SelectedItem}"/>
+                    </Grid>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</mah:MetroWindow>
