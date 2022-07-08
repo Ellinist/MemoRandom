@@ -1,0 +1,32 @@
+﻿<UserControl x:Class="MemoRandom.Client.UserControls.HumansMenuUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MemoRandom.Client.UserControls"
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+             mc:Ignorable="d">
+
+    <!--Данный UC предназначен для меню стартового режима-->
+    <Grid>
+        <StackPanel Orientation="Horizontal">
+            <Menu Background="Transparent" Style="{StaticResource MahApps.Styles.Menu}">
+                <MenuItem Header="Справочник" Command="{Binding SettingsMenuCommand}"/>
+                <MenuItem Header="Создать" Command="{Binding HumansListMenuCommand}"/>
+                <MenuItem Header="Изображение"/>
+                <MenuItem Header="Вид" Visibility="{Binding}">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                        <TextBlock Text="Light"
+                                   Margin="0, 0, 5, 0"
+                                   VerticalAlignment="Center"
+                                   Style="{StaticResource MahApps.Styles.TextBlock}"/>
+                        <mah:ToggleSwitch IsOn="False" OnContent="Dark" OffContent="Dark" Margin="0"/>
+                    </StackPanel>
+                    <MenuItem Header="Цвет темы"
+                    />
+                </MenuItem>
+                <MenuItem Header="О программе" Command="{Binding StartAboutCommand}"/>
+            </Menu>
+        </StackPanel>
+    </Grid>
+</UserControl>

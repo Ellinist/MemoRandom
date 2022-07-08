@@ -6,7 +6,7 @@ namespace MemoRandom.Client.Views
     /// <summary>
     /// Логика взаимодействия для HumansView.xaml
     /// </summary>
-    public partial class HumansView : MetroWindow
+    public partial class HumansListView : MetroWindow
     {
         private void MetroWindow_ContentRendered(object sender, System.EventArgs e)
         {
@@ -14,7 +14,7 @@ namespace MemoRandom.Client.Views
         }
 
         #region CTOR
-        public HumansView(HumansViewModel vm)
+        public HumansListView(HumansListViewModel vm)
         {
             InitializeComponent();
 

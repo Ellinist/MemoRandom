@@ -10,7 +10,7 @@ namespace MemoRandom.Client.ViewModels
     /// <summary>
     /// Модель представления основного окна со списком людей
     /// </summary>
-    public class HumansViewModel : BindableBase
+    public class HumansListViewModel : BindableBase
     {
         #region PRIVATE FIELDS
         private string _humansViewTitle = "Начало";
@@ -60,7 +60,7 @@ namespace MemoRandom.Client.ViewModels
         }
 
         #region CTOR
-        public HumansViewModel(ILogger logger, IContainer container, IEventAggregator eventAggregator)
+        public HumansListViewModel(ILogger logger, IContainer container, IEventAggregator eventAggregator)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _container = container ?? throw new ArgumentNullException(nameof(container));

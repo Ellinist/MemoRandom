@@ -1,0 +1,58 @@
+﻿<mah:MetroWindow x:Class="MemoRandom.Client.Views.HumansListView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns:uc="clr-namespace:MemoRandom.Client.UserControls"
+        xmlns:prism="http://prismlibrary.com/"
+        xmlns:local="clr-namespace:MemoRandom.Client.Views"
+        mc:Ignorable="d"
+        ContentRendered="MetroWindow_ContentRendered"
+        Title="HumansView" Height="680" Width="1200">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="48" MinHeight="48" MaxHeight="48"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="48" MinHeight="48" MaxHeight="48"/>
+        </Grid.RowDefinitions>
+
+        <!--Меню основного окна со списком людей-->
+        <uc:HumansMenuUserControl Grid.Row="0">
+
+        </uc:HumansMenuUserControl>
+
+        <!--Основная рабочая зона окна-->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
+
+            <!--Список людей в табличном виде-->
+            <Border Grid.Column="0" ScrollViewer.CanContentScroll="True"
+                    BorderBrush="Black"
+                    BorderThickness="1"
+                    Margin="2, 1, 1, 1">
+                <ListView ></ListView>
+            </Border>
+
+            <Grid Grid.Row="1" Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <!--Изображение выбранного человека-->
+                <Border Grid.Row="0" Grid.Column="0"
+                        BorderBrush="Black"
+                        BorderThickness="1"
+                        Margin="1, 1, 2, 1">
+                    <Image Grid.Row="0" Grid.Column="0"></Image>
+                </Border>
+
+                <uc:HumanDetailesUserControl Grid.Row="1"/>
+            </Grid>
+        </Grid>
+    </Grid>
+</mah:MetroWindow>

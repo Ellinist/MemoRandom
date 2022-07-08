@@ -106,7 +106,7 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private void OpenHumansView()
         {
-            _container.Resolve<HumansView>().Show();
+            _container.Resolve<HumansListView>().Show();
         }
         
         /// <summary>
