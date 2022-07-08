@@ -98,7 +98,7 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private void OpenReasonsView()
         {
-            _container.Resolve<ReasonsView>().Show();
+            _container.Resolve<ReasonsView>().ShowDialog();
         }
 
         /// <summary>
@@ -106,7 +106,7 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private void OpenHumansView()
         {
-            _container.Resolve<HumansListView>().Show();
+            _container.Resolve<HumansListView>().ShowDialog();
         }
         
         /// <summary>

@@ -7,6 +7,179 @@
         mc:Ignorable="d"
         Title="HumanDetailesView" Height="680" Width="1200">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="80"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <!--Блок описательный-->
+            <ColumnDefinition/>
+            <!--Блок изображений-->
+        </Grid.ColumnDefinitions>
+
+        <GroupBox Grid.Column="0" Grid.Row="0"
+                  Style="{StaticResource MahApps.Styles.GroupBox}"
+                  Header="Основные данные">
+            <ScrollViewer>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1.9*"/>
+                        <ColumnDefinition Width="3.3*"/>
+                        <ColumnDefinition Width="100"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+
+                    <!--Фамилия человека-->
+                    <Label Grid.Row="0" Grid.Column="0"
+                           Style="{StaticResource MahApps.Styles.Label}"
+                           Background="AliceBlue"
+                           Content="Фамилия:"
+                           HorizontalContentAlignment="Right"/>
+                    <TextBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2"
+                             Style="{StaticResource MahApps.Styles.TextBox}"
+                             Text="{Binding LastName}"
+                             HorizontalAlignment="Stretch"
+                             HorizontalContentAlignment="Left"/>
+
+                    <!--Имя человека-->
+                    <Label Grid.Row="1" Grid.Column="0"
+                           Style="{StaticResource MahApps.Styles.Label}"
+                           Background="AliceBlue"
+                           Content="Имя:"
+                           HorizontalContentAlignment="Right"/>
+                    <TextBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
+                             Style="{StaticResource MahApps.Styles.TextBox}"
+                             Text="{Binding FirstName}"
+                             HorizontalAlignment="Stretch"
+                             HorizontalContentAlignment="Left"/>
+
+                    <!--Отчество-->
+                    <Label Grid.Row="2" Grid.Column="0"
+                           Style="{StaticResource MahApps.Styles.Label}"
+                           Background="AliceBlue"
+                           Content="Отчество:"
+                           HorizontalContentAlignment="Right"/>
+                    <TextBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2"
+                             Style="{StaticResource MahApps.Styles.TextBox}"
+                             Text="{Binding Patronymic}"
+                             HorizontalAlignment="Stretch"
+                             HorizontalContentAlignment="Left"/>
+
+                    <!--Дата рождения-->
+                    <Label Grid.Row="3" Grid.Column="0"
+                           Style="{StaticResource MahApps.Styles.Label}"
+                           Background="AliceBlue"
+                           Content="Дата рождения:"
+                           HorizontalContentAlignment="Right"/>
+                    <DatePicker Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2"
+                                Style="{StaticResource MahApps.Styles.DatePicker}"
+                                />
+
+                    <!--Страна рождения-->
+                    <Label Grid.Row="4" Grid.Column="0"
+                           Style="{StaticResource MahApps.Styles.Label}"
+                           Background="AliceBlue"
+                           Content="Страна рождения:"
+                           HorizontalContentAlignment="Right"/>
+                    <TextBox Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2"
+                             Style="{StaticResource MahApps.Styles.TextBox}"
+                             Text="{Binding BirthCountry}"
+                             HorizontalAlignment="Stretch"
+                             HorizontalContentAlignment="Left"/>
+
+                    <!--Место рождения-->
+                    <Label Grid.Row="5" Grid.Column="0"
+                           Style="{StaticResource MahApps.Styles.Label}"
+                           Background="AliceBlue"
+                           Content="Место рождения:"
+                           HorizontalContentAlignment="Right"/>
+                    <TextBox Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2"
+                             Style="{StaticResource MahApps.Styles.TextBox}"
+                             Text="{Binding BirthPlace}"
+                             HorizontalAlignment="Stretch"
+                             HorizontalContentAlignment="Left"/>
+
+                    <!--Дата смерти-->
+                    <Label Grid.Row="6" Grid.Column="0"
+                           Style="{StaticResource MahApps.Styles.Label}"
+                           Background="AliceBlue"
+                           Content="Дата смерти:"
+                           HorizontalContentAlignment="Right"/>
+                    <DatePicker Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2"
+                                Style="{StaticResource MahApps.Styles.DatePicker}"
+                                />
+
+                    <!--Страна смерти-->
+                    <Label Grid.Row="7" Grid.Column="0"
+                           Style="{StaticResource MahApps.Styles.Label}"
+                           Background="AliceBlue"
+                           Content="Страна смерти:"
+                           HorizontalContentAlignment="Right"/>
+                    <TextBox Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="2"
+                             Style="{StaticResource MahApps.Styles.TextBox}"
+                             Text="{Binding DeathCountry}"
+                             HorizontalAlignment="Stretch"
+                             HorizontalContentAlignment="Left"/>
+
+                    <!--Место смерти-->
+                    <Label Grid.Row="8" Grid.Column="0"
+                           Style="{StaticResource MahApps.Styles.Label}"
+                           Background="AliceBlue"
+                           Content="Место смерти:"
+                           HorizontalContentAlignment="Right"/>
+                    <TextBox Grid.Row="8" Grid.Column="1" Grid.ColumnSpan="2"
+                             Style="{StaticResource MahApps.Styles.TextBox}"
+                             Text="{Binding DeathPlace}"
+                             HorizontalAlignment="Stretch"
+                             HorizontalContentAlignment="Left"/>
+
+                    <!--Причина смерти-->
+                    <Label Grid.Row="9" Grid.Column="0"
+                           Style="{StaticResource MahApps.Styles.Label}"
+                           Background="AliceBlue"
+                           Content="Причина смерти:"
+                           HorizontalContentAlignment="Right"/>
+                    <TextBlock Grid.Row="9" Grid.Column="1"
+                               Text="{Binding DeathReason}"
+                               Style="{StaticResource MahApps.Styles.TextBlock}"/>
+                    <Button Grid.Row="9" Grid.Column="2"
+                            Content="Изменить"
+                            Command="{Binding ChangeDeathReason}"/>
+
+                    <!--Скрытый идентификатор HumanId-->
+                    <!--
+                    <TextBox Grid.Row="0" Grid.Column="0"
+                               Name="HumanIdentificator"
+                               Text="{Binding HumanId}"
+                               Visibility="Hidden"/>-->
+                </Grid>
+            </ScrollViewer>
+        </GroupBox>
+
+        <Grid Grid.Row="1" Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="0"
+                    Content="Сохранить"
+                    Command="{Binding SaveHumanCommand}"
+                    CommandParameter="{Binding ElementName=HumanIdentificator}"/>
+            <Button Grid.Column="1"
+                    Content="Отменить"/>
+        </Grid>
     </Grid>
 </Window>

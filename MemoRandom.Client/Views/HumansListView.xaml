@@ -34,7 +34,21 @@
                     BorderBrush="Black"
                     BorderThickness="1"
                     Margin="2, 1, 1, 1">
-                <ListView ></ListView>
+                <ListView Grid.Column="0"
+                          Style="{StaticResource MahApps.Styles.ListView}">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Guid"/>
+                            <GridViewColumn Header="Фамилия"/>
+                            <GridViewColumn Header="Имя"/>
+                            <GridViewColumn Header="Отчество"/>
+                            <GridViewColumn Header="Дата рождения"/>
+                            <GridViewColumn Header="Страна рождения"/>
+                            <GridViewColumn Header="Место рождения"/>
+                            <GridViewColumn Header="Полных лет"/>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
             </Border>
 
             <Grid Grid.Row="1" Grid.Column="1">
