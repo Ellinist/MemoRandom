@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MemoRandom.Models.Models;
+using Prism.Commands;
 using Prism.Mvvm;
 
 namespace MemoRandom.Client.ViewModels
@@ -10,15 +12,15 @@ namespace MemoRandom.Client.ViewModels
     public class HumanDetailesViewModel : BindableBase
     {
         #region Private Fields
-        private string _lastName = "test1";
-        private string _firstName = "test1";
-        private string _patronymic = "test1";
+        private string _lastName = "Введите фамилию";
+        private string _firstName = "Введите имя";
+        private string _patronymic = "Введите отчество";
         private DateTime _birthDate = DateTime.Now;
-        private string _birthCountry = "test1";
-        private string _birthPlace = "test1";
+        private string _birthCountry = "Введите страну рождения";
+        private string _birthPlace = "Введите место рождения";
         private DateTime _deathDate = DateTime.Now;
-        private string _deathCountry = "test1";
-        private string _deathPlace = "test1";
+        private string _deathCountry = "Введите страну смерти";
+        private string _deathPlace = "Введите место смерти";
         private Guid _deathReasonId;
         #endregion
 
@@ -116,11 +118,41 @@ namespace MemoRandom.Client.ViewModels
         }
         #endregion
 
+        #region COMMANDS
+        public DelegateCommand SaveHumanCommand { get; private set; }
+        #endregion
+
+        #region COMMANDS IMPLEMENTATION
+        private void SaveHuman()
+        {
+            // Пока для нового хьюмана
+            Human human = new()
+            {
+                LastName = LastName,
+                FirstName = FirstName,
+                Patronymic = Patronymic,
+                BirthDate = BirthDate,
+                BirthCountry = BirthCountry,
+                BirthPlace = BirthPlace,
+                DeathDate = DeathDate,
+                DeathCountry = DeathCountry,
+                DeathPlace = DeathPlace,
+                DeathReasonId = DeathReasonId
+            };
+        }
+        #endregion
+
+        private void InitializeCommands()
+        {
+            SaveHumanCommand = new DelegateCommand(SaveHuman);
+        }
 
         #region CTOR
         public HumanDetailesViewModel()
         {
 
+
+            InitializeCommands();
         }
         #endregion
     }
