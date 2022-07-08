@@ -133,14 +133,14 @@ namespace MemoRandom.Client.ViewModels
                 HumanId = Guid.NewGuid(),
                 LastName = LastName,
                 FirstName = FirstName,
-                //Patronymic = Patronymic,
-                //BirthDate = BirthDate,
-                //BirthCountry = BirthCountry,
-                //BirthPlace = BirthPlace,
-                //DeathDate = DeathDate,
-                //DeathCountry = DeathCountry,
-                //DeathPlace = DeathPlace,
-                //DeathReasonId = DeathReasonId
+                Patronymic = Patronymic,
+                BirthDate = BirthDate,
+                BirthCountry = BirthCountry,
+                BirthPlace = BirthPlace,
+                DeathDate = DeathDate,
+                DeathCountry = DeathCountry,
+                DeathPlace = DeathPlace,
+                DeathReasonId = DeathReasonId
             };
 
             _dbController.AddHumanToList(human);

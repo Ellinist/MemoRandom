@@ -293,18 +293,18 @@ namespace MemoRandom.Data.Implementations
                 {
                     DbHuman record = new DbHuman()
                     {
-                        HumanId = human.HumanId,
-                        LastName = human.LastName,
-                        FirstName = human.FirstName,
-                        //Patronymic = human.Patronymic,
-                        //BirthDate = human.BirthDate,
-                        //BirthCountry = human.BirthCountry,
-                        //BirthPlace = human.BirthPlace,
-                        //DeathDate = human.DeathDate,
-                        //DeathCountry = human.DeathCountry,
-                        //DeathPlace = human.DeathPlace,
-                        //ImageFile = string.Empty,
-                        //DeathReasonId = human.DeathReasonId
+                        DbHumanId = human.HumanId,
+                        DbLastName = human.LastName,
+                        DbFirstName = human.FirstName,
+                        DbPatronymic = human.Patronymic,
+                        DbBirthDate = human.BirthDate,
+                        DbBirthCountry = human.BirthCountry,
+                        DbBirthPlace = human.BirthPlace,
+                        DbDeathDate = human.DeathDate,
+                        DbDeathCountry = human.DeathCountry,
+                        DbDeathPlace = human.DeathPlace,
+                        DbImageFile = string.Empty,
+                        DbDeathReasonId = human.DeathReasonId
                     };
                     MemoContext.DbHumans.Add(record);
 

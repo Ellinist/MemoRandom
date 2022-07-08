@@ -169,17 +169,17 @@ namespace MemoRandom.Models.Models
             }
         }
 
-        ///// <summary>
-        ///// Идентификатор причины смерти (берется из справочника)
-        ///// </summary>
-        //public Guid DeathReasonId
-        //{
-        //    get => _deathReasonId;
-        //    set
-        //    {
-        //        _deathReasonId = value;
-        //        RaisePropertyChanged(nameof(DeathReasonId));
-        //    }
-        //}
+        /// <summary>
+        /// Идентификатор причины смерти (берется из справочника)
+        /// </summary>
+        public Guid DeathReasonId
+        {
+            get => _deathReasonId;
+            set
+            {
+                _deathReasonId = value;
+                RaisePropertyChanged(nameof(DeathReasonId));
+            }
+        }
     }
 }

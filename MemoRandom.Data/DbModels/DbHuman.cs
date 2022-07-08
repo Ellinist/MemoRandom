@@ -8,20 +8,19 @@ namespace MemoRandom.Data.DbModels
     {
         [Key]
         [Required]
-        public Guid HumanId { get; set; }
+        public Guid DbHumanId { get; set; }
         [MinLength(100)]
-        public string LastName { get; set; }
+        public string DbLastName { get; set; }
         [MinLength(100)]
-        public string FirstName { get; set; }
-        //public string Patronymic { get; set; }
-        //public DateTime BirthDate { get; set; }
-        //public string BirthCountry { get; set; }
-        //public string BirthPlace { get; set; }
-        //public DateTime DeathDate { get; set; }
-        //public string DeathCountry { get; set; }
-        //public string DeathPlace { get; set; }
-        //public string ImageFile { get; set; }
-        //[Key]
-        //public Guid DeathReasonId { get; set; }
+        public string DbFirstName { get; set; }
+        public string DbPatronymic { get; set; }
+        public DateTime DbBirthDate { get; set; }
+        public string DbBirthCountry { get; set; }
+        public string DbBirthPlace { get; set; }
+        public DateTime DbDeathDate { get; set; }
+        public string DbDeathCountry { get; set; }
+        public string DbDeathPlace { get; set; }
+        public string DbImageFile { get; set; }
+        public Guid DbDeathReasonId { get; set; }
     }
 }

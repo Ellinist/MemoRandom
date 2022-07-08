@@ -1,4 +1,5 @@
-﻿using MemoRandom.Data.DbModels;
+﻿using System.Collections.Immutable;
+using MemoRandom.Data.DbModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace MemoRandom.Data.Controllers
@@ -16,6 +17,10 @@ namespace MemoRandom.Data.Controllers
         /// </summary>
         public DbSet<DbHuman> DbHumans { get; set; }
 
+        //protected override void OnModelCreating(ModelBuilder builder)
+        //{
+        //    builder.Entity<DbHuman>().ToTable("DbHumans");
+        //}
 
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {

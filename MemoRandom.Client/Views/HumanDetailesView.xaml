@@ -152,7 +152,7 @@
                            Content="Причина смерти:"
                            HorizontalContentAlignment="Right"/>
                     <TextBlock Grid.Row="9" Grid.Column="1"
-                               Text="{Binding DeathReason}"
+                               Text="{Binding DeathReasonId}"
                                Style="{StaticResource MahApps.Styles.TextBlock}"/>
                     <Button Grid.Row="9" Grid.Column="2"
                             Content="Изменить"
