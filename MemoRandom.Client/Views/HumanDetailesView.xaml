@@ -85,7 +85,7 @@
                            HorizontalContentAlignment="Right"/>
                     <DatePicker Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2"
                                 Style="{StaticResource MahApps.Styles.DatePicker}"
-                                DisplayDate="{Binding BirthDate}"/>
+                                SelectedDate="{Binding BirthDate}"/>
 
                     <!--Страна рождения-->
                     <Label Grid.Row="4" Grid.Column="0"
@@ -119,7 +119,7 @@
                            HorizontalContentAlignment="Right"/>
                     <DatePicker Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2"
                                 Style="{StaticResource MahApps.Styles.DatePicker}"
-                                DisplayDate="{Binding DeathDate}"/>
+                                SelectedDate="{Binding DeathDate}"/>
 
                     <!--Страна смерти-->
                     <Label Grid.Row="7" Grid.Column="0"
