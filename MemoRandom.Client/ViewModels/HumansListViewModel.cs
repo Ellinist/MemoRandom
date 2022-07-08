@@ -4,6 +4,7 @@ using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
 using System;
+using MemoRandom.Client.Views;
 
 namespace MemoRandom.Client.ViewModels
 {
@@ -40,6 +41,7 @@ namespace MemoRandom.Client.ViewModels
         //private readonly SubscriptionToken _humansDataFileChanging;
 
         #region Commands
+        public DelegateCommand AddHumanMenuCommand { get; private set; }
         public DelegateCommand SettingsMenuCommand { get; private set; }
         public DelegateCommand HumansListMenuCommand { get; private set; }
         public DelegateCommand StartMenuCommand { get; private set; }
@@ -52,11 +54,17 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private void InitializeCommands()
         {
+            AddHumanMenuCommand = new DelegateCommand(AddHumanMenu);
             //SettingsMenuCommand = new DelegateCommand(OpenSettingsView);
             //StartMenuCommand = new DelegateCommand(OpenStartView);
             //StartAboutCommand = new DelegateCommand(OpenAboutView);
             //HumansListMenuCommand = new DelegateCommand(OnHumansListMenuCommand);
             //AddNewHumanCommand = new DelegateCommand(OnAddNewHumanCommand);
+        }
+
+        private void AddHumanMenu()
+        {
+            _container.Resolve<HumanDetailesView>().ShowDialog();
         }
 
         #region CTOR

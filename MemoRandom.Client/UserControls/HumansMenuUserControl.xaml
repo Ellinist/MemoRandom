@@ -12,7 +12,7 @@
         <StackPanel Orientation="Horizontal">
             <Menu Background="Transparent" Style="{StaticResource MahApps.Styles.Menu}">
                 <MenuItem Header="Справочник" Command="{Binding SettingsMenuCommand}"/>
-                <MenuItem Header="Создать" Command="{Binding HumansListMenuCommand}"/>
+                <MenuItem Header="Создать" Command="{Binding AddHumanMenuCommand}"/>
                 <MenuItem Header="Изображение"/>
                 <MenuItem Header="Вид" Visibility="{Binding}">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
