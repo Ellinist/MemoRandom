@@ -72,56 +72,17 @@ namespace MemoRandom.Data.Implementations
         }
         #endregion
 
-        //#region Блок работы со списком людей
-        ///// <summary>
-        ///// Получение пути к файлу списка людей
-        ///// </summary>
-        ///// <param name="file"></param>
-        ///// <returns></returns>
-        //public async Task<string> GetXmlHumansDataFile(string file)
-        //{
-        //    using var stream = File.OpenRead(file);
-        //    XmlSerializer deserializer = new(typeof(string));
-        //    var resultHumansPath = (string)deserializer.Deserialize(stream);
-        //    stream.Dispose();
-
-        //    return await Task<string>.FromResult(resultHumansPath); // Временно
-        //}
-
-        ///// <summary>
-        ///// Установка пути к файлу со списком людей
-        ///// </summary>
-        ///// <param name="file"></param>
-        ///// <param name="humansFile"></param>
-        //public async Task<bool> SetXmlHumansDataFile(string file, string humansFile)
-        //{
-        //    bool successResult = true;
-        //    try
-        //    {
-        //        using var stream = File.Create(file);
-        //        XmlSerializer serializer = new(typeof(string));
-        //        serializer.Serialize(stream, humansFile);
-        //        stream.Dispose();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        successResult = false;
-        //        _logger.Error($"Ошибка формирования пути к файлу информации по людям: {ex.HResult}");
-        //    }
-
-        //    return await Task<bool>.FromResult(successResult);
-        //}
-
-        //public async Task<List<Human>> GetXmlHumansList(string file)
-        //{
-        //    return null;
-        //}
-
-        //public async Task<bool> SaveXmlHumansList(List<Human> humansList, string humansFile)
-        //{
-        //    return true;
-        //}
-        //#endregion
+        #region Блок работы со списком людей
+        /// <summary>
+        /// Добавление сущности человека в общий список
+        /// </summary>
+        /// <param name="human"></param>
+        /// <returns></returns>
+        public bool AddHumanToList(Human human)
+        {
+            return AddingHuman(human).Result;
+        }
+        #endregion
 
         #region Auxiliary methods
         /// <summary>
@@ -315,6 +276,49 @@ namespace MemoRandom.Data.Implementations
                     DeletingDaughters(child, context);
                 }
             }
+        }
+
+        /// <summary>
+        /// Асинхронный метод добавления человека в список БД
+        /// </summary>
+        /// <param name="human"></param>
+        /// <returns></returns>
+        private async Task<bool> AddingHuman(Human human)
+        {
+            bool successResult = true;
+
+            await using (MemoContext = new MemoRandomDbContext(GetConnectionString()))
+            {
+                try
+                {
+                    DbHuman record = new DbHuman()
+                    {
+                        HumanId = human.HumanId,
+                        LastName = human.LastName,
+                        FirstName = human.FirstName,
+                        //Patronymic = human.Patronymic,
+                        //BirthDate = human.BirthDate,
+                        //BirthCountry = human.BirthCountry,
+                        //BirthPlace = human.BirthPlace,
+                        //DeathDate = human.DeathDate,
+                        //DeathCountry = human.DeathCountry,
+                        //DeathPlace = human.DeathPlace,
+                        //ImageFile = string.Empty,
+                        //DeathReasonId = human.DeathReasonId
+                    };
+                    MemoContext.DbHumans.Add(record);
+
+                    MemoContext.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    successResult = false;
+                    _logger.Error($"Ошибка записи информации по человеку: {ex.HResult}");
+                    MessageBox.Show($"Error: {ex.HResult}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+
+            return successResult;
         }
         #endregion
 

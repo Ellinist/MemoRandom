@@ -34,5 +34,7 @@ namespace MemoRandom.Data.Interfaces
         /// <param name="reason"></param>
         /// <returns></returns>
         bool DeleteReasonInList(Reason reason);
+
+        bool AddHumanToList(Human human);
     }
 }

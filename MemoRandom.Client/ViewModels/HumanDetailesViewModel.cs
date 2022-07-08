@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MemoRandom.Data.Interfaces;
 using MemoRandom.Models.Models;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -12,6 +13,7 @@ namespace MemoRandom.Client.ViewModels
     public class HumanDetailesViewModel : BindableBase
     {
         #region Private Fields
+        private readonly IMemoRandomDbController _dbController;
         private string _lastName = "Введите фамилию";
         private string _firstName = "Введите имя";
         private string _patronymic = "Введите отчество";
@@ -128,17 +130,20 @@ namespace MemoRandom.Client.ViewModels
             // Пока для нового хьюмана
             Human human = new()
             {
+                HumanId = Guid.NewGuid(),
                 LastName = LastName,
                 FirstName = FirstName,
-                Patronymic = Patronymic,
-                BirthDate = BirthDate,
-                BirthCountry = BirthCountry,
-                BirthPlace = BirthPlace,
-                DeathDate = DeathDate,
-                DeathCountry = DeathCountry,
-                DeathPlace = DeathPlace,
-                DeathReasonId = DeathReasonId
+                //Patronymic = Patronymic,
+                //BirthDate = BirthDate,
+                //BirthCountry = BirthCountry,
+                //BirthPlace = BirthPlace,
+                //DeathDate = DeathDate,
+                //DeathCountry = DeathCountry,
+                //DeathPlace = DeathPlace,
+                //DeathReasonId = DeathReasonId
             };
+
+            _dbController.AddHumanToList(human);
         }
         #endregion
 
@@ -148,9 +153,9 @@ namespace MemoRandom.Client.ViewModels
         }
 
         #region CTOR
-        public HumanDetailesViewModel()
+        public HumanDetailesViewModel(IMemoRandomDbController dbController)
         {
-
+            _dbController = dbController;
 
             InitializeCommands();
         }

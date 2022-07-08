@@ -11,7 +11,10 @@ namespace MemoRandom.Data.Controllers
         /// Набор справочника причин смерти
         /// </summary>
         public DbSet<DbReason> DbReasons { get; set; }
-
+        /// <summary>
+        /// Набор характеристик людей
+        /// </summary>
+        public DbSet<DbHuman> DbHumans { get; set; }
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
