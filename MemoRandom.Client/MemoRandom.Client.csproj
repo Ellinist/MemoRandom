@@ -9,12 +9,11 @@
 
   <ItemGroup>
     <None Remove="Icons\bxs-party.svg" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="Views\bxs-party.svg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
+    <None Remove="Resources\Icon1.ico" />
+    <None Remove="Views\death1.ico" />
+    <None Remove="Views\Icon1.ico" />
+    <None Remove="Views\peoples.ico" />
+    <None Remove="Views\peoples2.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -41,6 +40,29 @@
 
   <ItemGroup>
     <Folder Include="Icons\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\Icon1.ico" />
+    <Resource Include="Views\death1.ico" />
+    <Resource Include="Views\Icon1.ico" />
+    <Resource Include="Views\peoples.ico" />
+    <Resource Include="Views\peoples2.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Resource.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resource.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resource.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>
