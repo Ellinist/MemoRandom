@@ -144,7 +144,12 @@
                Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center"
                Foreground="Chartreuse"
                FontSize="28" FontWeight="Normal" FontStyle="Normal" FontFamily="{StaticResource MainFont}"
-               Content="{Binding CurrentDateTime}"/>
+               >
+            <Label.Content>
+                <TextBlock Text="{Binding CurrentDateTime, StringFormat=\{0:dd MMMM yyyy HH:mm:ss\}, ConverterCulture=Ru}"/>
+                <!--<TextBlock Text="{Binding CurrentDateTime, StringFormat=\{0:g\}, ConverterCulture=Ru}"/>-->
+            </Label.Content>
+        </Label>
         <!--<Button Grid.Row="2" Grid.Column="0" Content="{Binding SettingsName}" FontFamily="{StaticResource MainFont}"
                 Template="{StaticResource ButtonTemplate}"
                 Command="{Binding Path=ShowSettingsWindow}"/>

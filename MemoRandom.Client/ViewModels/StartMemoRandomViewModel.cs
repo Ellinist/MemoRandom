@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 using DryIoc;
 using MemoRandom.Client.Views;
 using NLog;
@@ -17,6 +20,7 @@ namespace MemoRandom.Client.ViewModels
         private DateTime _currentDateTime = DateTime.Now;
         private readonly ILogger _logger; // Экземпляр журнала
         private readonly IContainer _container; // Контейнер
+        private bool _active = true; // Флаг активности текущего окна
         #endregion
 
         #region PROPS
@@ -74,10 +78,10 @@ namespace MemoRandom.Client.ViewModels
         #endregion
 
         #region COMMANDS
-        /// <summary>
-        /// Команда подключения к базе данных
-        /// </summary>
-        public DelegateCommand ConnectDbCommand { get; private set; }
+        ///// <summary>
+        ///// Команда подключения к базе данных
+        ///// </summary>
+        //public DelegateCommand ConnectDbCommand { get; private set; }
         /// <summary>
         /// Команда открытия окна справочника причин смерти
         /// </summary>
@@ -92,13 +96,16 @@ namespace MemoRandom.Client.ViewModels
         public DelegateCommand<object> OnLoadedStartMemoRandomViewCommand { get; private set; }
         #endregion
 
-        #region COMMAND BLOCK
+        #region COMMAND IMPLEMENTATION
         /// <summary>
         /// Открытие окна справочника причин смерти
         /// </summary>
         private void OpenReasonsView()
         {
+            _active = false;
             _container.Resolve<ReasonsView>().ShowDialog();
+            _active = true;
+            SetCurrentDateTime(); // Какой ужас - надо как-то по-другому делать!
         }
 
         /// <summary>
@@ -106,7 +113,10 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private void OpenHumansView()
         {
+            _active = false;
             _container.Resolve<HumansListView>().ShowDialog();
+            _active = true;
+            SetCurrentDateTime(); // Какой ужас - надо как-то по-другому делать!
         }
         
         /// <summary>
@@ -117,6 +127,7 @@ namespace MemoRandom.Client.ViewModels
             if (param is Window)
             {
                 (param as Window).Closing += StartMemoRandomViewModel_Closing; // Подписываемся на событие закрытия окна
+                SetCurrentDateTime();
             }
         }
         /// <summary>
@@ -138,7 +149,23 @@ namespace MemoRandom.Client.ViewModels
         }
         #endregion
 
-
+        /// <summary>
+        /// Установка текущей даты времени с шагом в одну секунду
+        /// </summary>
+        private void SetCurrentDateTime()
+        {
+            Task.Factory.StartNew(() =>
+            {
+                while (_active)
+                {
+                    Thread.Sleep(1000);
+                    Dispatcher.CurrentDispatcher.Invoke(() =>
+                    {
+                        CurrentDateTime = DateTime.Now;
+                    });
+                }
+            });
+        }
 
 
 
