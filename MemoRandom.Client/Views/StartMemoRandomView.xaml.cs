@@ -1,5 +1,6 @@
 ﻿using MahApps.Metro.Controls;
 using MemoRandom.Client.ViewModels;
+using System.Windows;
 
 namespace MemoRandom.Client.Views
 {
@@ -16,6 +17,9 @@ namespace MemoRandom.Client.Views
         public StartMemoRandomView(StartMemoRandomViewModel vm)
         {
             InitializeComponent();
+
+            var _ = new Microsoft.Xaml.Behaviors.DefaultTriggerAttribute(typeof(Trigger), typeof(Microsoft.Xaml.Behaviors.TriggerBase), null);
+
             DataContext = vm;
         }
     }

@@ -90,7 +90,7 @@ namespace MemoRandom.Data.Implementations
         /// </summary>
         /// <param name="reasons">Плоский список</param>
         /// <param name="headReason">Головной элемент (экземпляр класса)</param>
-        private void FormObservableCollection(List<DbReason> reasons, Reason? headReason)
+        private void FormObservableCollection(List<DbReason> reasons, Reason headReason)
         {
             for (int i = 0; i < reasons.Count; i++)
             {

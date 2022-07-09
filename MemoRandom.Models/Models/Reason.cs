@@ -114,13 +114,13 @@ namespace MemoRandom.Models.Models
 
 
         #region CTOR
-        /// <summary>
-        /// Конструктор
-        /// </summary>
-        public Reason()
-        {
-            ReasonChildren = new ObservableCollection<Reason>();
-        }
+        ///// <summary>
+        ///// Конструктор
+        ///// </summary>
+        //public Reason()
+        //{
+        //    ReasonChildren = new ObservableCollection<Reason>();
+        //}
         #endregion
     }
 }

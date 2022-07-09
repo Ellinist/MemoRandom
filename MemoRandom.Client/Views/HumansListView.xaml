@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
-        xmlns:uc="clr-namespace:MemoRandom.Client.UserControls"
+        xmlns:uc="clr-namespace:MemoRandom.Client.Views.UserControls"
         xmlns:prism="http://prismlibrary.com/"
         xmlns:local="clr-namespace:MemoRandom.Client.Views"
         mc:Ignorable="d"
