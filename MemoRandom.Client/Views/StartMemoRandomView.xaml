@@ -5,6 +5,8 @@
                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                  xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+                 xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+                 xmlns:fa="http://schemas.fontawesome.io/icons/"
                  xmlns:prism="http://prismlibrary.com/"
                  mc:Ignorable="d"
                  Title="{Binding StartViewHeader}" Height="200" Width="680"
@@ -16,6 +18,8 @@
                  IsMinButtonEnabled="False"
                  ShowMaxRestoreButton="False"
                  IsMaxRestoreButtonEnabled="False"
+                 ShowIconOnTitleBar="True"
+                 
                  x:Name="StartView"
                  Background="Black" WindowStartupLocation="CenterScreen">
 
@@ -147,15 +151,8 @@
                >
             <Label.Content>
                 <TextBlock Text="{Binding CurrentDateTime, StringFormat=\{0:dd MMMM yyyy HH:mm:ss\}, ConverterCulture=Ru}"/>
-                <!--<TextBlock Text="{Binding CurrentDateTime, StringFormat=\{0:g\}, ConverterCulture=Ru}"/>-->
             </Label.Content>
         </Label>
-        <!--<Button Grid.Row="2" Grid.Column="0" Content="{Binding SettingsName}" FontFamily="{StaticResource MainFont}"
-                Template="{StaticResource ButtonTemplate}"
-                Command="{Binding Path=ShowSettingsWindow}"/>
-        <Button Grid.Row="2" Grid.Column="2" Content="{Binding MemoRandomName}" FontFamily="{StaticResource MainFont}"
-                Template="{StaticResource ButtonTemplate}"
-                Command="{Binding Path=ShowMemoRandomWindow}"/>-->
         <Button Grid.Row="2" Grid.Column="0"
                 Content="{Binding ReasonsButtonName}"
                 FontFamily="{StaticResource MainFont}"

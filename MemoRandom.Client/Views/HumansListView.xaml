@@ -1,35 +1,201 @@
 ﻿<mah:MetroWindow x:Class="MemoRandom.Client.Views.HumansListView"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
-        xmlns:uc="clr-namespace:MemoRandom.Client.Views.UserControls"
-        xmlns:prism="http://prismlibrary.com/"
-        xmlns:local="clr-namespace:MemoRandom.Client.Views"
-        mc:Ignorable="d"
-        ContentRendered="MetroWindow_ContentRendered"
-        Title="HumansView" Height="680" Width="1200">
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                 xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+                 xmlns:uc="clr-namespace:MemoRandom.Client.Views.UserControls"
+                 xmlns:fa="http://schemas.fontawesome.io/icons/"
+                 xmlns:prism="http://prismlibrary.com/"
+                 xmlns:local="clr-namespace:MemoRandom.Client.Views"
+                 mc:Ignorable="d"
+                 ContentRendered="MetroWindow_ContentRendered"
+                 Title="HumansView" Height="680" Width="1200">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="48" MinHeight="48" MaxHeight="48"/>
+            <RowDefinition Height="40" MinHeight="40" MaxHeight="40"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="48" MinHeight="48" MaxHeight="48"/>
         </Grid.RowDefinitions>
 
         <!--Меню основного окна со списком людей-->
-        <uc:HumansMenuUserControl Grid.Row="0">
-
-        </uc:HumansMenuUserControl>
+        <uc:HumansMenuUserControl Grid.Row="0"/>
 
         <!--Основная рабочая зона окна-->
         <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
+            <TabControl>
+                <TabItem>
+                    <TabItem.Header>
+                        <StackPanel HorizontalAlignment="Center"
+                                    Orientation="Horizontal">
+                            <fa:ImageAwesome Icon="UserPlus" 
+                                             Height="17"
+                                             Margin="10, 0, 10, 0"
+                                             Foreground="Red"/>
+                            <TextBlock Text="Список людей"
+                                       FontSize="18"
+                                       FontWeight="Bold"
+                                       FontFamily="Arial"
+                                       FontStyle="Italic"
+                                       Margin="0, 0, 10, 0"/>
+                        </StackPanel>
+                    </TabItem.Header>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="9*" MinHeight="200"></RowDefinition>
+                            <RowDefinition Height="3*" MinHeight="150"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="7*"></ColumnDefinition>
+                                <ColumnDefinition Width="3*" MinWidth="460" MaxWidth="460"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <DataGrid x:Name="DgHumans" Grid.Column="0" SelectionMode="Single" UseLayoutRounding="True" CanUserAddRows="False" IsReadOnly="True" AlternatingRowBackground="Aqua"
+                                  ItemsSource="{Binding Path=DisplayedHumansList}" AutoGenerateColumns="False" Margin="5, 5, 0, 5" SelectedIndex="{Binding Path=HumansIndex, Mode=TwoWay}">
+                                <DataGrid.ColumnHeaderStyle>
+                                    <!--Задание характеристик отображения заголовка таблицы-->
+                                    <Style TargetType="{x:Type DataGridColumnHeader}">
+                                        <Setter Property="Background" Value="#CAD9FF"/>
+                                        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                    </Style>
+                                </DataGrid.ColumnHeaderStyle>
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="ID" IsReadOnly="True" Binding="{Binding Path=HumanGUID}" Visibility="Visible"/>
+                                    <DataGridTextColumn Header="ID_Reason" IsReadOnly="True" Binding="{Binding Path=DeathReasonGUID}" Visibility="Visible"/>
+                                    <DataGridTextColumn Header="Фамилия" IsReadOnly="True" Binding="{Binding Path=LastName}" Width="*" MinWidth="110"/>
+                                    <DataGridTextColumn Header="Имя" IsReadOnly="True" Binding="{Binding Path=FirstName}" Width="*" MinWidth="100"/>
+                                    <DataGridTextColumn Header="Отчество" IsReadOnly="True" Binding="{Binding Path=Patronymic}" Width="*" MinWidth="100"/>
+                                    <DataGridTextColumn Header="Дата рождения" IsReadOnly="True" Width="120"
+                                                    Binding="{Binding Path=BirthDate, StringFormat='dd MMMM yyyy',ConverterCulture='ru-RU', Mode=OneWay}">
+                                        <DataGridTextColumn.CellStyle>
+                                            <Style>
+                                                <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+                                            </Style>
+                                        </DataGridTextColumn.CellStyle>
+                                    </DataGridTextColumn>
+                                    <DataGridTextColumn Header="Родная страна" IsReadOnly="True" Binding="{Binding Path=BirthCountry}" Width="*"/>
+                                    <DataGridTextColumn Header="Место рождения" IsReadOnly="True" Binding="{Binding Path=BirthPlace}" Width="2*"/>
+                                    <DataGridTextColumn Header="Дата смерти" IsReadOnly="True" Width="120"
+                                                    Binding="{Binding Path=DeathDate, StringFormat='dd MMMM yyyy',ConverterCulture='ru-RU', Mode=OneWay}">
+                                        <DataGridTextColumn.CellStyle>
+                                            <Style>
+                                                <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+                                            </Style>
+                                        </DataGridTextColumn.CellStyle>
+                                    </DataGridTextColumn>
+                                    <DataGridTextColumn Header="Страна смерти" IsReadOnly="True" Binding="{Binding Path=DeathCountry}" Width="*"/>
+                                    <DataGridTextColumn Header="Место смерти" IsReadOnly="True" Binding="{Binding Path=DeathPlace}" Width="2*"/>
+                                    <DataGridTextColumn Header="Дней" IsReadOnly="True" Binding="{Binding Path=FullDays}" Width="*" Visibility="Collapsed"/>
+                                    <!--<DataGridTextColumn Header="FullYears" IsReadOnly="True" Binding="{Binding Path=FullYears}" Width="*" Visibility="Visible"/>-->
+                                </DataGrid.Columns>
+                            </DataGrid>
+                            <StackPanel Grid.Column="1" DataContext="{Binding ElementName=DgHumans, Path=SelectedValue}"
+                                    Margin="5, 5, 5, 5">
+                                <Image Source="{Binding Photo}" Stretch="Uniform" HorizontalAlignment="Center"/>
+                                <Label Content="{Binding Path=LastName}" HorizontalAlignment="Center"
+                                   FontSize="36" FontFamily="/Resources/#Beresta" Padding="0" Foreground="DarkBlue"/>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Label Content="{Binding Path=FirstName}"  Foreground="DarkBlue"
+                                       FontSize="28" FontFamily="/Resources/#Beresta" Padding="0,0,5,0"/>
+                                    <Label Content="{Binding Path=Patronymic}" Foreground="DarkBlue"
+                                       FontSize="28" FontFamily="/Resources/#Beresta" Padding="5,0,0,0"/>
+                                </StackPanel>
+                                <Label Content="{Binding Path=FullYears}" HorizontalAlignment="Center" FontSize="22" Foreground="Crimson"
+                                   FontFamily="/Resources/#Roland" FontWeight="Bold" Padding="0"/>
+                            </StackPanel>
+                        </Grid>
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="10*"></ColumnDefinition>
+                                <ColumnDefinition Width="6*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <DockPanel Grid.Column="0">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" DockPanel.Dock="Bottom" Margin="5, 5, 5, 5">
+                                    <Button Content="Подробности" Command="{Binding ShowAdditionInfoCommand}"
+                                        Margin="0, 5, 10, 5" FontSize="18" FontWeight="Bold" Padding="10, 5, 10, 5"/>
+                                    <Button Content="Новая запись" Command="{Binding AddNewHumanCommand}"
+                                        Margin="10, 5, 10, 5" FontSize="18" FontWeight="Bold" Padding="10, 5, 10, 5"/>
+                                    <Button Content="Редактировать запись" Command="{Binding EditHumanDataCommand}"
+                                        Margin="10, 5, 10, 5" FontSize="18" FontWeight="Bold" Padding="10, 5, 10, 5"/>
+                                    <Button Content="Удалить запись" Command="{Binding DeleteHumanCommand}"
+                                        Margin="10, 5, 0, 5" FontSize="18" FontWeight="Bold" Padding="10, 5, 10, 5"/>
+                                </StackPanel>
+                                <ScrollViewer Margin="7, 0, 0, 0" DataContext="{Binding ElementName=DgHumans, Path=SelectedValue}">
+                                    <TextBlock Text="{Binding Path=Comments}"
+                                           FontSize="14" FontWeight="Bold" FontStyle="Italic" Foreground="DarkBlue" TextWrapping="Wrap"/>
+                                </ScrollViewer>
+                            </DockPanel>
+                            <Grid Grid.Column="1" Margin="5" DataContext="{Binding ElementName=DgHumans, Path=SelectedValue}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="3*"></ColumnDefinition>
+                                    <ColumnDefinition Width="7*"></ColumnDefinition >
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="3*"/>
+                                    <RowDefinition Height="2*"/>
+                                    <RowDefinition Height="2*"/>
+                                    <RowDefinition Height="2*"/>
+                                    <RowDefinition Height="2*"/>
+                                    <RowDefinition Height="2*"/>
+                                    <RowDefinition Height="2*"/>
+                                </Grid.RowDefinitions>
+                                <Label Grid.Column="0" Grid.Row="0" Content="Причина смерти:"
+                                   HorizontalContentAlignment="Right" FontSize="18" Padding="0, 2, 5, 0"/>
+                                <Label Grid.Column="1" Grid.Row="0"  Content="{Binding Path=ReasonName}" Padding="5, 0, 0, 5"
+                                   HorizontalContentAlignment="Left" FontSize="20" FontFamily="/Resources/#Roland" FontWeight="Bold"/>
+                                <Label Grid.Column="0" Grid.Row="1" Content="Дата рождения:"
+                                   HorizontalContentAlignment="Right" FontSize="14" Padding="0, 0, 5, 0"/>
+                                <Label Grid.Column="1" Grid.Row="1" Padding="5, 0, 0, 0" HorizontalContentAlignment="Left" FontSize="14">
+                                    <Label.Content>
+                                        <TextBlock Text="{Binding Path=BirthDate, StringFormat='dd MMMM yyyy', ConverterCulture='ru-RU'}" FontWeight="Bold"/>
+                                    </Label.Content>
+                                </Label>
+                                <Label Grid.Column="0" Grid.Row="2" Content="Родная страна:"
+                                   HorizontalContentAlignment="Right" FontSize="14" Padding="0, 0, 5, 0"/>
+                                <Label Grid.Column="1" Grid.Row="2" Content="{Binding Path=BirthCountry}" Padding="5, 0, 0, 0"
+                                   HorizontalContentAlignment="Left" FontSize="14" FontWeight="Bold"/>
+                                <Label Grid.Column="0" Grid.Row="3" Content="Место рождения:"
+                                   HorizontalContentAlignment="Right" FontSize="14" Padding="0, 0, 5, 0"/>
+                                <Label Grid.Column="1" Grid.Row="3" Content="{Binding Path=BirthPlace}" Padding="5, 0, 0, 0"
+                                   HorizontalContentAlignment="Left" FontSize="14" FontWeight="Bold"/>
+                                <Label Grid.Column="0" Grid.Row="4" Content="Дата смерти:"
+                                   HorizontalContentAlignment="Right" FontSize="14" Padding="0, 0, 5, 0"/>
+                                <Label Grid.Column="1" Grid.Row="4" Padding="5, 0, 0, 0" HorizontalContentAlignment="Left" FontSize="14">
+                                    <Label.Content>
+                                        <TextBlock Text="{Binding Path=DeathDate, StringFormat='dd MMMM yyyy' , ConverterCulture='ru-RU'}" FontWeight="Bold"/>
+                                    </Label.Content>
+                                </Label>
+                                <Label Grid.Column="0" Grid.Row="5" Content="Страна смерти:"
+                                   HorizontalContentAlignment="Right" FontSize="14" Padding="0, 0, 5, 0"/>
+                                <Label Grid.Column="1" Grid.Row="5" Content="{Binding Path=DeathCountry}" Padding="5, 0, 0, 0"
+                                   HorizontalContentAlignment="Left" FontSize="14" FontWeight="Bold"/>
+                                <Label Grid.Column="0" Grid.Row="6" Content="Место смерти:"
+                                   HorizontalContentAlignment="Right" FontSize="14" Padding="0, 0, 5, 0"/>
+                                <Label Grid.Column="1" Grid.Row="6" Content="{Binding Path=DeathPlace}" Padding="5, 0, 0, 0"
+                                   HorizontalContentAlignment="Left" FontSize="14" FontWeight="Bold"/>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </TabItem>
+                
+                <TabItem>
+                    <TabItem.Header>
+                        <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                            <fa:ImageAwesome Height="17" Icon="AreaChart" Margin="10, 0, 10, 0" Foreground="DeepSkyBlue"/>
+                            <TextBlock Text="Аналитика" FontSize="18" FontWeight="Bold" FontFamily="Arial" FontStyle="Italic" Margin="0, 0, 10, 0"/>
+                        </StackPanel>
+                    </TabItem.Header>
+                    <Grid>
+
+                    </Grid>
+                </TabItem>
+            </TabControl>
+            <!--<Grid.ColumnDefinitions>
                 <ColumnDefinition Width="3*"/>
                 <ColumnDefinition Width="2*"/>
             </Grid.ColumnDefinitions>
 
-            <!--Список людей в табличном виде-->
+            --><!--Список людей в табличном виде--><!--
             <Border Grid.Column="0" ScrollViewer.CanContentScroll="True"
                     BorderBrush="Black"
                     BorderThickness="1"
@@ -57,7 +223,7 @@
                     <RowDefinition/>
                 </Grid.RowDefinitions>
 
-                <!--Изображение выбранного человека-->
+                --><!--Изображение выбранного человека--><!--
                 <Border Grid.Row="0" Grid.Column="0"
                         BorderBrush="Black"
                         BorderThickness="1"
@@ -66,7 +232,7 @@
                 </Border>
 
                 <uc:HumanDetailesUserControl Grid.Row="1"/>
-            </Grid>
+            </Grid>-->
         </Grid>
     </Grid>
 </mah:MetroWindow>
