@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using MahApps.Metro.Controls;
 using MemoRandom.Client.ViewModels;
 
 namespace MemoRandom.Client.Views

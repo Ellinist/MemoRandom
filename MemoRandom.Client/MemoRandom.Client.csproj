@@ -9,6 +9,8 @@
 
   <ItemGroup>
     <None Remove="Icons\bxs-party.svg" />
+    <None Remove="Resources\humanInfoIcon.ico" />
+    <None Remove="Resources\mainWindowIcon.ico" />
     <None Remove="Views\death1.ico" />
     <None Remove="Views\peoples2.ico" />
   </ItemGroup>
@@ -40,6 +42,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\humanInfoIcon.ico" />
+    <Resource Include="Resources\mainWindowIcon.ico" />
     <Resource Include="Resources\reasonsIcon.ico" />
     <Resource Include="Resources\startIcon.ico" />
   </ItemGroup>
