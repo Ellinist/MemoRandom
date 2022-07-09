@@ -19,7 +19,7 @@
                  ShowMaxRestoreButton="False"
                  IsMaxRestoreButtonEnabled="False"
                  ShowIconOnTitleBar="True"
-                 Icon="peoples2.ico"
+                 Icon="pack://application:,,,/Resources/startIcon.ico"
                  x:Name="StartView"
                  Background="Black" WindowStartupLocation="CenterScreen">
 
