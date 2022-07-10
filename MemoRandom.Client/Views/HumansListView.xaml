@@ -10,9 +10,10 @@
                  xmlns:local="clr-namespace:MemoRandom.Client.Views"
                  mc:Ignorable="d"
                  ShowIconOnTitleBar="True"
-                 Icon="pack://application:,,,/Resources/mainWindowIcon.ico"
+                 Icon="pack://application:,,,/Resources/Icons/mainWindowIcon.ico"
                  ContentRendered="MetroWindow_ContentRendered"
-                 Title="HumansView" Height="680" Width="1200">
+                 Title="HumansView" Height="680" Width="1200"
+                 WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="40" MinHeight="40" MaxHeight="40"/>

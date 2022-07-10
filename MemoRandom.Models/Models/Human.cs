@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Windows.Media.Imaging;
 using Prism.Mvvm;
 
 namespace MemoRandom.Models.Models
@@ -20,7 +21,7 @@ namespace MemoRandom.Models.Models
         private DateTime _deathDate;
         private string _deathCountry;
         private string _deathPlace;
-        private string _imageFile;
+        private BitmapImage _imageFile;
         private Guid _deathReasonId;
         #endregion
 
@@ -159,7 +160,7 @@ namespace MemoRandom.Models.Models
         /// <summary>
         /// Свойство - путь к изображению человека
         /// </summary>
-        public string ImageFile
+        public BitmapImage ImageFile
         {
             get => _imageFile;
             set

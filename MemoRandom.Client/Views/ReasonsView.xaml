@@ -9,7 +9,7 @@
                  mc:Ignorable="d"
                  Title="{Binding ReasonsViewTitle}"
                  ShowIconOnTitleBar="True"
-                 Icon="pack://application:,,,/Resources/reasonsIcon.ico"
+                 Icon="pack://application:,,,/Resources/Icons/reasonsIcon.ico"
                  x:Name="ReasonsDictionary"
                  Height="450" Width="800">
 
@@ -98,15 +98,16 @@
 
             <!--Разделитель-->
             <GridSplitter Grid.Column="1"
-                                          Width="4"
-                                          Style="{StaticResource MahApps.Styles.GridSplitter}"
-                                          HorizontalAlignment="Center"
-                                          VerticalAlignment="Stretch"/>
+                          Margin="0, 5, 0, 5"
+                          Width="4"
+                          Style="{StaticResource MahApps.Styles.GridSplitter}"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Stretch"/>
 
             <!--Подробная информация о причинах смерти-->
             <Border Grid.Row="0" Grid.Column="2"
-                                    Margin="0, 5, 5, 5"
-                                    BorderBrush="Black" BorderThickness="2">
+                    Margin="0, 5, 5, 5"
+                    BorderBrush="Black" BorderThickness="2">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="2*" MinWidth="138"/>

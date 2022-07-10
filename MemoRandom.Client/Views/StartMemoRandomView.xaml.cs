@@ -16,9 +16,9 @@ namespace MemoRandom.Client.Views
 
         public StartMemoRandomView(StartMemoRandomViewModel vm)
         {
-            InitializeComponent();
+            //var _ = new Microsoft.Xaml.Behaviors.DefaultTriggerAttribute(typeof(Trigger), typeof(Microsoft.Xaml.Behaviors.TriggerBase), null);
 
-            var _ = new Microsoft.Xaml.Behaviors.DefaultTriggerAttribute(typeof(Trigger), typeof(Microsoft.Xaml.Behaviors.TriggerBase), null);
+            InitializeComponent();
 
             DataContext = vm;
         }

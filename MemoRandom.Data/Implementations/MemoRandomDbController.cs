@@ -303,7 +303,7 @@ namespace MemoRandom.Data.Implementations
                         DbDeathDate = human.DeathDate,
                         DbDeathCountry = human.DeathCountry,
                         DbDeathPlace = human.DeathPlace,
-                        DbImageFile = string.Empty,
+                        DbImageFile = null,
                         DbDeathReasonId = human.DeathReasonId
                     };
                     MemoContext.DbHumans.Add(record);

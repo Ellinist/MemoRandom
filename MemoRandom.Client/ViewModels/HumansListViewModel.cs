@@ -57,7 +57,7 @@ namespace MemoRandom.Client.ViewModels
             AddHumanMenuCommand = new DelegateCommand(AddHumanMenu);
             //SettingsMenuCommand = new DelegateCommand(OpenSettingsView);
             //StartMenuCommand = new DelegateCommand(OpenStartView);
-            //StartAboutCommand = new DelegateCommand(OpenAboutView);
+            StartAboutCommand = new DelegateCommand(OpenAboutView);
             //HumansListMenuCommand = new DelegateCommand(OnHumansListMenuCommand);
             //AddNewHumanCommand = new DelegateCommand(OnAddNewHumanCommand);
         }
@@ -65,6 +65,11 @@ namespace MemoRandom.Client.ViewModels
         private void AddHumanMenu()
         {
             _container.Resolve<HumanDetailesView>().ShowDialog();
+        }
+
+        private void OpenAboutView()
+        {
+            _container.Resolve<AboutView>().ShowDialog();
         }
 
         #region CTOR

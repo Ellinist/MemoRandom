@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Windows.Media.Imaging;
 
 namespace MemoRandom.Data.DbModels
 {
@@ -20,7 +21,8 @@ namespace MemoRandom.Data.DbModels
         public DateTime DbDeathDate { get; set; }
         public string DbDeathCountry { get; set; }
         public string DbDeathPlace { get; set; }
-        public string DbImageFile { get; set; }
+        [NotMapped]
+        public BitmapImage DbImageFile { get; set; }
         public Guid DbDeathReasonId { get; set; }
     }
 }

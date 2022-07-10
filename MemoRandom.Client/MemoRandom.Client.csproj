@@ -8,11 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Icons\bxs-party.svg" />
+    <None Remove="Resources\Fonts\ArianaVioleta-dz2K.ttf" />
+    <None Remove="Resources\Fonts\Casanova.ttf" />
+    <None Remove="Resources\Icons\bxs-party.svg" />
     <None Remove="Resources\humanInfoIcon.ico" />
     <None Remove="Resources\mainWindowIcon.ico" />
-    <None Remove="Views\death1.ico" />
-    <None Remove="Views\peoples2.ico" />
+    <None Remove="Resources\Pictures\EllinistAbout.jpg" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,14 +39,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Icons\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="Resources\humanInfoIcon.ico" />
-    <Resource Include="Resources\mainWindowIcon.ico" />
-    <Resource Include="Resources\reasonsIcon.ico" />
-    <Resource Include="Resources\startIcon.ico" />
+    <Resource Include="Resources\Icons\humanInfoIcon.ico" />
+    <Resource Include="Resources\Icons\mainWindowIcon.ico" />
+    <Resource Include="Resources\Icons\reasonsIcon.ico" />
+    <Resource Include="Resources\Icons\startIcon.ico" />
+    <Content Include="Resources\Fonts\ArianaVioleta-dz2K.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Fonts\Casanova.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Pictures\EllinistAbout.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

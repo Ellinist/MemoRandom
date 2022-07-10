@@ -6,8 +6,6 @@
                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                  xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
                  xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
-                 xmlns:fa="http://schemas.fontawesome.io/icons/"
-                 xmlns:prism="http://prismlibrary.com/"
                  mc:Ignorable="d"
                  Title="{Binding StartViewHeader}" Height="200" Width="680"
                  MinHeight="240" MinWidth="680"
@@ -19,14 +17,15 @@
                  ShowMaxRestoreButton="False"
                  IsMaxRestoreButtonEnabled="False"
                  ShowIconOnTitleBar="True"
-                 Icon="pack://application:,,,/Resources/startIcon.ico"
+                 Icon="pack://application:,,,/Resources/Icons/startIcon.ico"
                  x:Name="StartView"
                  Background="Black" WindowStartupLocation="CenterScreen">
 
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding OnLoadedStartMemoRandomViewCommand}"
-                                   CommandParameter="{Binding ElementName=StartView}"/>
+                                   CommandParameter="{Binding ElementName=StartView}"
+                                   />
         </i:EventTrigger>
     </i:Interaction.Triggers>
 
