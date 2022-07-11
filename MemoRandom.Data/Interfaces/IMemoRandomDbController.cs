@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using MemoRandom.Models.Models;
 
 namespace MemoRandom.Data.Interfaces
@@ -35,6 +36,17 @@ namespace MemoRandom.Data.Interfaces
         /// <returns></returns>
         bool DeleteReasonInList(Reason reason);
 
+        /// <summary>
+        /// Получение списка людей из БД
+        /// </summary>
+        /// <returns></returns>
+        List<Human> GetHumasList();
+
+        /// <summary>
+        /// Добавление человека в список людей в БД
+        /// </summary>
+        /// <param name="human"></param>
+        /// <returns></returns>
         bool AddHumanToList(Human human);
     }
 }

@@ -74,6 +74,15 @@ namespace MemoRandom.Data.Implementations
 
         #region Блок работы со списком людей
         /// <summary>
+        /// Получение списка людей из БД
+        /// </summary>
+        /// <returns></returns>
+        public List<Human> GetHumasList()
+        {
+            return GettingHumans().Result;
+        }
+
+        /// <summary>
         /// Добавление сущности человека в общий список
         /// </summary>
         /// <param name="human"></param>
@@ -279,6 +288,57 @@ namespace MemoRandom.Data.Implementations
         }
 
         /// <summary>
+        /// Получение списка людей
+        /// </summary>
+        /// <returns></returns>
+        private async Task<List<Human>> GettingHumans()
+        {
+            await using (MemoContext = new MemoRandomDbContext(GetConnectionString()))
+            {
+                try
+                {
+                    var humansList = MemoContext.DbHumans.ToList();
+
+                    return GetInnerHumans(humansList);
+                }
+                catch (Exception ex)
+                {
+                    ReasonsCollection = null; // В случае неуспеха чтения обнуляем иерархическую коллекцию
+                    _logger.Error($"Ошибка чтения файла настроек: {ex.HResult}");
+                    return null;
+                }
+            }
+        }
+
+        private List<Human> GetInnerHumans(List<DbHuman> humans)
+        {
+            List<Human> resultList = new();
+            foreach (var person in humans)
+            {
+                Human human = new()
+                {
+                    HumanId = person.DbHumanId,
+                    LastName = person.DbLastName,
+                    FirstName = person.DbFirstName,
+                    Patronymic = person.DbPatronymic,
+                    BirthDate = person.DbBirthDate,
+                    BirthCountry = person.DbBirthCountry,
+                    BirthPlace = person.DbBirthPlace,
+                    DeathDate = person.DbDeathDate,
+                    DeathCountry = person.DbDeathCountry,
+                    DeathPlace = person.DbDeathPlace,
+                    // Эти две строки - думать, как переместить в асинхронность иного рода
+                    //HumanImage = person.DbHumanImage,
+                    //ImageFilePath = person.DbImageFilePath,
+                    DeathReasonId = person.DbDeathReasonId
+                };
+                resultList.Add(human);
+            }
+
+            return resultList;
+        }
+
+        /// <summary>
         /// Асинхронный метод добавления человека в список БД
         /// </summary>
         /// <param name="human"></param>
@@ -304,6 +364,7 @@ namespace MemoRandom.Data.Implementations
                         DbDeathCountry = human.DeathCountry,
                         DbDeathPlace = human.DeathPlace,
                         DbHumanImage = human.HumanImage,
+                        DbImageFilePath = human.ImageFilePath,
                         DbDeathReasonId = human.DeathReasonId
                     };
                     MemoContext.DbHumans.Add(record);
@@ -314,7 +375,7 @@ namespace MemoRandom.Data.Implementations
                 {
                     successResult = false;
                     _logger.Error($"Ошибка записи информации по человеку: {ex.HResult}");
-                    MessageBox.Show($"Error: {ex.HResult}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    //MessageBox.Show($"Error: {ex.HResult}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
 

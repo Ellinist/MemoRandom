@@ -17,11 +17,6 @@ namespace MemoRandom.Data.Controllers
         /// </summary>
         public DbSet<DbHuman> DbHumans { get; set; }
 
-        //protected override void OnModelCreating(ModelBuilder builder)
-        //{
-        //    builder.Entity<DbHuman>().ToTable("DbHumans");
-        //}
-
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
             if (!builder.IsConfigured)

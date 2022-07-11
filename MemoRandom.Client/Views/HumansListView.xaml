@@ -12,7 +12,10 @@
                  ShowIconOnTitleBar="True"
                  Icon="pack://application:,,,/Resources/Icons/mainWindowIcon.ico"
                  ContentRendered="MetroWindow_ContentRendered"
-                 Title="HumansView" Height="680" Width="1200"
+                 Title="{Binding HumansViewTitle}"
+                 Height="700" Width="1400"
+                 MinWidth="1360"
+                 MinHeight="640"
                  WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.RowDefinitions>
@@ -53,58 +56,99 @@
                                 <ColumnDefinition Width="7*"></ColumnDefinition>
                                 <ColumnDefinition Width="3*" MinWidth="460" MaxWidth="460"></ColumnDefinition>
                             </Grid.ColumnDefinitions>
-                            <DataGrid x:Name="DgHumans" Grid.Column="0" SelectionMode="Single" UseLayoutRounding="True" CanUserAddRows="False" IsReadOnly="True" AlternatingRowBackground="Aqua"
-                                  ItemsSource="{Binding Path=DisplayedHumansList}" AutoGenerateColumns="False" Margin="5, 5, 0, 5" SelectedIndex="{Binding Path=HumansIndex, Mode=TwoWay}">
-                                <DataGrid.ColumnHeaderStyle>
-                                    <!--Задание характеристик отображения заголовка таблицы-->
-                                    <Style TargetType="{x:Type DataGridColumnHeader}">
-                                        <Setter Property="Background" Value="#CAD9FF"/>
-                                        <Setter Property="HorizontalContentAlignment" Value="Center"/>
-                                    </Style>
-                                </DataGrid.ColumnHeaderStyle>
-                                <DataGrid.Columns>
-                                    <DataGridTextColumn Header="ID" IsReadOnly="True" Binding="{Binding Path=HumanGUID}" Visibility="Visible"/>
-                                    <DataGridTextColumn Header="ID_Reason" IsReadOnly="True" Binding="{Binding Path=DeathReasonGUID}" Visibility="Visible"/>
-                                    <DataGridTextColumn Header="Фамилия" IsReadOnly="True" Binding="{Binding Path=LastName}" Width="*" MinWidth="110"/>
-                                    <DataGridTextColumn Header="Имя" IsReadOnly="True" Binding="{Binding Path=FirstName}" Width="*" MinWidth="100"/>
-                                    <DataGridTextColumn Header="Отчество" IsReadOnly="True" Binding="{Binding Path=Patronymic}" Width="*" MinWidth="100"/>
-                                    <DataGridTextColumn Header="Дата рождения" IsReadOnly="True" Width="120"
+
+                            <Border Grid.Column="0"
+                                    BorderBrush="Black"
+                                    BorderThickness="1">
+
+                                <DataGrid x:Name="DgHumans" SelectionMode="Single" UseLayoutRounding="True" CanUserAddRows="False" IsReadOnly="True" AlternatingRowBackground="Aqua"
+                                          ItemsSource="{Binding Path=DisplayedHumansList}" AutoGenerateColumns="False" Margin="5, 5, 0, 5" SelectedIndex="{Binding Path=HumansIndex, Mode=TwoWay}">
+                                    <DataGrid.ColumnHeaderStyle>
+                                        <!--Задание характеристик отображения заголовка таблицы-->
+                                        <Style TargetType="{x:Type DataGridColumnHeader}">
+                                            <Setter Property="Background" Value="#CAD9FF"/>
+                                            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                        </Style>
+                                    </DataGrid.ColumnHeaderStyle>
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="ID" IsReadOnly="True" Binding="{Binding Path=HumanGUID}" Visibility="Visible"/>
+                                        <DataGridTextColumn Header="ID_Reason" IsReadOnly="True" Binding="{Binding Path=DeathReasonGUID}" Visibility="Visible"/>
+                                        <DataGridTextColumn Header="Фамилия" IsReadOnly="True" Binding="{Binding Path=LastName}" Width="*" MinWidth="110"/>
+                                        <DataGridTextColumn Header="Имя" IsReadOnly="True" Binding="{Binding Path=FirstName}" Width="*" MinWidth="100"/>
+                                        <DataGridTextColumn Header="Отчество" IsReadOnly="True" Binding="{Binding Path=Patronymic}" Width="*" MinWidth="100"/>
+                                        <DataGridTextColumn Header="Дата рождения" IsReadOnly="True" Width="120"
                                                     Binding="{Binding Path=BirthDate, StringFormat='dd MMMM yyyy',ConverterCulture='ru-RU', Mode=OneWay}">
-                                        <DataGridTextColumn.CellStyle>
-                                            <Style>
-                                                <Setter Property="TextBlock.TextAlignment" Value="Center"/>
-                                            </Style>
-                                        </DataGridTextColumn.CellStyle>
-                                    </DataGridTextColumn>
-                                    <DataGridTextColumn Header="Родная страна" IsReadOnly="True" Binding="{Binding Path=BirthCountry}" Width="*"/>
-                                    <DataGridTextColumn Header="Место рождения" IsReadOnly="True" Binding="{Binding Path=BirthPlace}" Width="2*"/>
-                                    <DataGridTextColumn Header="Дата смерти" IsReadOnly="True" Width="120"
+                                            <DataGridTextColumn.CellStyle>
+                                                <Style>
+                                                    <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+                                                </Style>
+                                            </DataGridTextColumn.CellStyle>
+                                        </DataGridTextColumn>
+                                        <DataGridTextColumn Header="Родная страна" IsReadOnly="True" Binding="{Binding Path=BirthCountry}" Width="*"/>
+                                        <DataGridTextColumn Header="Место рождения" IsReadOnly="True" Binding="{Binding Path=BirthPlace}" Width="2*"/>
+                                        <DataGridTextColumn Header="Дата смерти" IsReadOnly="True" Width="120"
                                                     Binding="{Binding Path=DeathDate, StringFormat='dd MMMM yyyy',ConverterCulture='ru-RU', Mode=OneWay}">
-                                        <DataGridTextColumn.CellStyle>
-                                            <Style>
-                                                <Setter Property="TextBlock.TextAlignment" Value="Center"/>
-                                            </Style>
-                                        </DataGridTextColumn.CellStyle>
-                                    </DataGridTextColumn>
-                                    <DataGridTextColumn Header="Страна смерти" IsReadOnly="True" Binding="{Binding Path=DeathCountry}" Width="*"/>
-                                    <DataGridTextColumn Header="Место смерти" IsReadOnly="True" Binding="{Binding Path=DeathPlace}" Width="2*"/>
-                                    <DataGridTextColumn Header="Дней" IsReadOnly="True" Binding="{Binding Path=FullDays}" Width="*" Visibility="Collapsed"/>
-                                    <!--<DataGridTextColumn Header="FullYears" IsReadOnly="True" Binding="{Binding Path=FullYears}" Width="*" Visibility="Visible"/>-->
-                                </DataGrid.Columns>
-                            </DataGrid>
-                            <StackPanel Grid.Column="1" DataContext="{Binding ElementName=DgHumans, Path=SelectedValue}"
-                                    Margin="5, 5, 5, 5">
-                                <Image Source="{Binding Photo}" Stretch="Uniform" HorizontalAlignment="Center"/>
-                                <Label Content="{Binding Path=LastName}" HorizontalAlignment="Center"
-                                   FontSize="36" FontFamily="/Resources/#Beresta" Padding="0" Foreground="DarkBlue"/>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                    <Label Content="{Binding Path=FirstName}"  Foreground="DarkBlue"
-                                       FontSize="28" FontFamily="/Resources/#Beresta" Padding="0,0,5,0"/>
-                                    <Label Content="{Binding Path=Patronymic}" Foreground="DarkBlue"
-                                       FontSize="28" FontFamily="/Resources/#Beresta" Padding="5,0,0,0"/>
-                                </StackPanel>
-                                <Label Content="{Binding Path=FullYears}" HorizontalAlignment="Center" FontSize="22" Foreground="Crimson"
-                                   FontFamily="/Resources/#Roland" FontWeight="Bold" Padding="0"/>
+                                            <DataGridTextColumn.CellStyle>
+                                                <Style>
+                                                    <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+                                                </Style>
+                                            </DataGridTextColumn.CellStyle>
+                                        </DataGridTextColumn>
+                                        <DataGridTextColumn Header="Страна смерти" IsReadOnly="True" Binding="{Binding Path=DeathCountry}" Width="*"/>
+                                        <DataGridTextColumn Header="Место смерти" IsReadOnly="True" Binding="{Binding Path=DeathPlace}" Width="2*"/>
+                                        <DataGridTextColumn Header="Дней" IsReadOnly="True" Binding="{Binding Path=FullDays}" Width="*" Visibility="Collapsed"/>
+                                        <!--<DataGridTextColumn Header="FullYears" IsReadOnly="True" Binding="{Binding Path=FullYears}" Width="*" Visibility="Visible"/>-->
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </Border>
+                            
+                            <StackPanel Grid.Column="1"
+                                        DataContext="{Binding ElementName=DgHumans, Path=SelectedValue}"
+                                        Margin="5, 5, 5, 5">
+
+                                <Border BorderBrush="Black"
+                                        BorderThickness="1">
+                                    <Image Height="250"
+                                           Width="450"
+                                           Source="{Binding Photo}"
+                                           Stretch="Uniform"
+                                           HorizontalAlignment="Center"/>
+                                </Border>
+
+                                <!--Content="{Binding Path=LastName}"-->
+                                <Label Content="Surname" 
+                                       Height="24"
+                                       HorizontalAlignment="Center"
+                                       FontSize="22"
+                                       FontFamily="/Resources/#Beresta"
+                                       Padding="0"
+                                       Foreground="DarkBlue"/>
+
+                                    <StackPanel Orientation="Horizontal"
+                                                HorizontalAlignment="Center">
+                                        <!--Content="{Binding Path=FirstName}"-->
+                                        <Label Content="Name"
+                                               Foreground="DarkBlue"
+                                               FontSize="22"
+                                               FontFamily="/Resources/#Beresta"
+                                               Padding="0,0,5,0"/>
+                                        <!--Content="{Binding Path=Patronymic}"-->
+                                        <Label Content="Patronymic"
+                                               Foreground="DarkBlue"
+                                               FontSize="22"
+                                               FontFamily="/Resources/#Beresta"
+                                               Padding="5,0,0,0"/>
+                                    </StackPanel>
+
+                                <!--Content="{Binding Path=FullYears}"-->
+                                <Label Content="Years"
+                                       HorizontalAlignment="Center"
+                                       FontSize="22"
+                                       Foreground="Crimson"
+                                       FontFamily="/Resources/#Roland"
+                                       FontWeight="Bold"
+                                       Padding="0"/>
+
                             </StackPanel>
                         </Grid>
                         <Grid Grid.Row="1">
@@ -113,6 +157,7 @@
                                 <ColumnDefinition Width="6*"></ColumnDefinition>
                             </Grid.ColumnDefinitions>
                             <DockPanel Grid.Column="0">
+                                
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" DockPanel.Dock="Bottom" Margin="5, 5, 5, 5">
                                     <Button Content="Подробности" Command="{Binding ShowAdditionInfoCommand}"
                                         Margin="0, 5, 10, 5" FontSize="18" FontWeight="Bold" Padding="10, 5, 10, 5"/>
@@ -123,11 +168,24 @@
                                     <Button Content="Удалить запись" Command="{Binding DeleteHumanCommand}"
                                         Margin="10, 5, 0, 5" FontSize="18" FontWeight="Bold" Padding="10, 5, 10, 5"/>
                                 </StackPanel>
-                                <ScrollViewer Margin="7, 0, 0, 0" DataContext="{Binding ElementName=DgHumans, Path=SelectedValue}">
-                                    <TextBlock Text="{Binding Path=Comments}"
-                                           FontSize="14" FontWeight="Bold" FontStyle="Italic" Foreground="DarkBlue" TextWrapping="Wrap"/>
-                                </ScrollViewer>
+
+                                <Border BorderThickness="1"
+                                        DockPanel.Dock="Top"
+                                        BorderBrush="Black">
+                                    <ScrollViewer Margin="7, 0, 0, 0"
+                                                  DataContext="{Binding ElementName=DgHumans, Path=SelectedValue}">
+                                        <!--Text="{Binding Path=Comments}"-->
+                                        <TextBlock Text="Comments"
+                                                   FontSize="14"
+                                                   FontWeight="Bold"
+                                                   FontStyle="Italic"
+                                                   Foreground="DarkBlue"
+                                                   TextWrapping="Wrap"/>
+                                    </ScrollViewer>
+                                </Border>
+                                
                             </DockPanel>
+
                             <Grid Grid.Column="1" Margin="5" DataContext="{Binding ElementName=DgHumans, Path=SelectedValue}">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="3*"></ColumnDefinition>
