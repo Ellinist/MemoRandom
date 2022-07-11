@@ -167,13 +167,17 @@ namespace MemoRandom.Client.ViewModels
             var img = param as Image;
             if (img != null)
             {
-                MemoryStream ms = Clipboard.GetData("DeviceIndependentBitmap") as MemoryStream;
-                BitmapImage bmp = new BitmapImage();
-                bmp.BeginInit();
-                bmp.StreamSource = ms;
-                bmp.UriSource = new Uri("file");
-                bmp.EndInit();
-                img.Source = bmp;
+                if (Clipboard.ContainsImage())
+                {
+                    img.Source = Clipboard.GetImage();
+                }
+                //MemoryStream ms = Clipboard.GetData("DeviceIndependentBitmap") as MemoryStream;
+                //BitmapImage bmp = new BitmapImage();
+                //bmp.BeginInit();
+                //bmp.StreamSource = ms;
+                //bmp.UriSource = new Uri("file");
+                //bmp.EndInit();
+                //img.Source = bmp;
             }
         }
         #endregion
