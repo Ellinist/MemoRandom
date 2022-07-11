@@ -41,10 +41,14 @@
                     <TabItem.Header>
                         <StackPanel HorizontalAlignment="Center"
                                     Orientation="Horizontal">
+
+                            <!--Иконка вкладки со списком людей и общими характеристиками-->
                             <fa:ImageAwesome Icon="UserPlus" 
                                              Height="17"
                                              Margin="10, 0, 10, 0"
                                              Foreground="Red"/>
+
+                            <!--Заголовок вкладки со списком людей-->
                             <TextBlock Text="Список людей"
                                        FontSize="18"
                                        FontWeight="Bold"
@@ -53,14 +57,24 @@
                                        Margin="0, 0, 10, 0"/>
                         </StackPanel>
                     </TabItem.Header>
+
                     <Grid>
                         <Grid.RowDefinitions>
+
+                            <!--Зона списка людей и изображения с основными данными выбранного человека-->
                             <RowDefinition Height="9*" MinHeight="200"></RowDefinition>
+
+                            <!--Зона комментария, кнопок управления и подробными данными по выбранному человеку-->
                             <RowDefinition Height="3*" MinHeight="150"></RowDefinition>
                         </Grid.RowDefinitions>
+
                         <Grid Grid.Row="0">
                             <Grid.ColumnDefinitions>
+
+                                <!--Зона списка людей-->
                                 <ColumnDefinition Width="7*"></ColumnDefinition>
+
+                                <!--Зона изображения и основных данных выбранного человека-->
                                 <ColumnDefinition Width="3*" MinWidth="460" MaxWidth="460"></ColumnDefinition>
                             </Grid.ColumnDefinitions>
 
@@ -78,20 +92,48 @@
                                           AutoGenerateColumns="False"
                                           Margin="5, 5, 0, 5"
                                           SelectedIndex="{Binding Path=HumansIndex, Mode=TwoWay}">
+
                                     <DataGrid.ColumnHeaderStyle>
+
                                         <!--Задание характеристик отображения заголовка таблицы-->
                                         <Style TargetType="{x:Type DataGridColumnHeader}">
                                             <Setter Property="Background" Value="#CAD9FF"/>
                                             <Setter Property="HorizontalContentAlignment" Value="Center"/>
                                         </Style>
                                     </DataGrid.ColumnHeaderStyle>
+
                                     <DataGrid.Columns>
-                                        <DataGridTextColumn Header="ID" IsReadOnly="True" Binding="{Binding Path=HumanId}" Visibility="Visible"/>
-                                        <DataGridTextColumn Header="ID_Reason" IsReadOnly="True" Binding="{Binding Path=DeathReasonId}" Visibility="Visible"/>
-                                        <DataGridTextColumn Header="Фамилия" IsReadOnly="True" Binding="{Binding Path=LastName}" Width="*" MinWidth="110"/>
-                                        <DataGridTextColumn Header="Имя" IsReadOnly="True" Binding="{Binding Path=FirstName}" Width="*" MinWidth="100"/>
-                                        <DataGridTextColumn Header="Отчество" IsReadOnly="True" Binding="{Binding Path=Patronymic}" Width="*" MinWidth="100"/>
-                                        <DataGridTextColumn Header="Дата рождения" IsReadOnly="True" Width="120"
+                                        <DataGridTextColumn Header="ID"
+                                                            IsReadOnly="True"
+                                                            Binding="{Binding Path=HumanId}"
+                                                            Visibility="Visible"/>
+
+                                        <DataGridTextColumn Header="ID_Reason"
+                                                            IsReadOnly="True"
+                                                            Binding="{Binding Path=DeathReasonId}"
+                                                            Visibility="Visible"/>
+
+                                        <DataGridTextColumn Header="Фамилия"
+                                                            IsReadOnly="True"
+                                                            Binding="{Binding Path=LastName}"
+                                                            Width="*"
+                                                            MinWidth="110"/>
+
+                                        <DataGridTextColumn Header="Имя"
+                                                            IsReadOnly="True"
+                                                            Binding="{Binding Path=FirstName}"
+                                                            Width="*"
+                                                            MinWidth="100"/>
+
+                                        <DataGridTextColumn Header="Отчество"
+                                                            IsReadOnly="True"
+                                                            Binding="{Binding Path=Patronymic}"
+                                                            Width="*"
+                                                            MinWidth="100"/>
+
+                                        <DataGridTextColumn Header="Дата рождения"
+                                                            IsReadOnly="True"
+                                                            Width="120"
                                                             Binding="{Binding Path=BirthDate, StringFormat='dd MMMM yyyy',ConverterCulture='ru-RU', Mode=OneWay}">
                                             <DataGridTextColumn.CellStyle>
                                                 <Style>
@@ -99,9 +141,20 @@
                                                 </Style>
                                             </DataGridTextColumn.CellStyle>
                                         </DataGridTextColumn>
-                                        <DataGridTextColumn Header="Родная страна" IsReadOnly="True" Binding="{Binding Path=BirthCountry}" Width="*"/>
-                                        <DataGridTextColumn Header="Место рождения" IsReadOnly="True" Binding="{Binding Path=BirthPlace}" Width="2*"/>
-                                        <DataGridTextColumn Header="Дата смерти" IsReadOnly="True" Width="120"
+
+                                        <DataGridTextColumn Header="Родная страна"
+                                                            IsReadOnly="True"
+                                                            Binding="{Binding Path=BirthCountry}"
+                                                            Width="*"/>
+
+                                        <DataGridTextColumn Header="Место рождения"
+                                                            IsReadOnly="True"
+                                                            Binding="{Binding Path=BirthPlace}"
+                                                            Width="2*"/>
+
+                                        <DataGridTextColumn Header="Дата смерти"
+                                                            IsReadOnly="True"
+                                                            Width="120"
                                                             Binding="{Binding Path=DeathDate, StringFormat='dd MMMM yyyy',ConverterCulture='ru-RU', Mode=OneWay}">
                                             <DataGridTextColumn.CellStyle>
                                                 <Style>
@@ -109,28 +162,46 @@
                                                 </Style>
                                             </DataGridTextColumn.CellStyle>
                                         </DataGridTextColumn>
-                                        <DataGridTextColumn Header="Страна смерти" IsReadOnly="True" Binding="{Binding Path=DeathCountry}" Width="*"/>
-                                        <DataGridTextColumn Header="Место смерти" IsReadOnly="True" Binding="{Binding Path=DeathPlace}" Width="2*"/>
-                                        <DataGridTextColumn Header="Дней" IsReadOnly="True" Binding="{Binding Path=FullDays}" Width="*" Visibility="Collapsed"/>
+
+                                        <DataGridTextColumn Header="Страна смерти"
+                                                            IsReadOnly="True"
+                                                            Binding="{Binding Path=DeathCountry}"
+                                                            Width="*"/>
+
+                                        <DataGridTextColumn Header="Место смерти"
+                                                            IsReadOnly="True"
+                                                            Binding="{Binding Path=DeathPlace}"
+                                                            Width="2*"/>
+
+                                        <DataGridTextColumn Header="Дней"
+                                                            IsReadOnly="True"
+                                                            Binding="{Binding Path=FullDays}"
+                                                            Width="*"
+                                                            Visibility="Collapsed"/>
+
                                         <!--<DataGridTextColumn Header="FullYears" IsReadOnly="True" Binding="{Binding Path=FullYears}" Width="*" Visibility="Visible"/>-->
+
                                     </DataGrid.Columns>
                                 </DataGrid>
                             </Border>
                             
+                            <!--Зона изображения выбранного человека и основных его характеристик-->
                             <StackPanel Grid.Column="1"
                                         DataContext="{Binding ElementName=DgHumans, Path=SelectedValue}"
                                         Margin="5, 5, 5, 5">
 
                                 <Border BorderBrush="Black"
                                         BorderThickness="1">
+
+                                    <!--Изображение выбранного человека-->
                                     <Image Height="250"
                                            Width="450"
-                                           Source="{Binding Photo}"
+                                           Source="{Binding HumanImage}"
                                            Stretch="Uniform"
                                            HorizontalAlignment="Center"/>
                                 </Border>
 
-                                <!--Content="{Binding Path=LastName}"-->
+                                <!--Фамилия выбранного человека-->
                                 <Label Content="{Binding Path=LastName}" 
                                        Height="24"
                                        HorizontalAlignment="Center"
@@ -141,13 +212,15 @@
 
                                     <StackPanel Orientation="Horizontal"
                                                 HorizontalAlignment="Center">
-                                        <!--Content="{Binding Path=FirstName}"-->
+                                        
+                                        <!--Имя выбранного человека-->
                                         <Label Content="{Binding Path=FirstName}"
                                                Foreground="DarkBlue"
                                                FontSize="22"
                                                FontFamily="/Resources/#Beresta"
                                                Padding="0,0,5,0"/>
-                                        <!--Content="{Binding Path=Patronymic}"-->
+                                        
+                                        <!--Отчество выбранного человека-->
                                         <Label Content="{Binding Path=Patronymic}"
                                                Foreground="DarkBlue"
                                                FontSize="22"
@@ -155,6 +228,7 @@
                                                Padding="5,0,0,0"/>
                                     </StackPanel>
 
+                                <!--Число полных прожитых лет-->
                                 <!--Content="{Binding Path=FullYears}"-->
                                 <Label Content="Years"
                                        HorizontalAlignment="Center"
@@ -166,10 +240,12 @@
 
                             </StackPanel>
                         </Grid>
+
+                        <!--Нижняя зона с комментарием, кнопками и подробными характеристиками-->
                         <Grid Grid.Row="1">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="10*"></ColumnDefinition>
-                                <ColumnDefinition Width="6*"></ColumnDefinition>
+                                <ColumnDefinition Width="15*"></ColumnDefinition>
+                                <ColumnDefinition Width="7*"></ColumnDefinition>
                             </Grid.ColumnDefinitions>
                             <DockPanel Grid.Column="0">
                                 
@@ -189,7 +265,8 @@
                                         BorderBrush="Black">
                                     <ScrollViewer Margin="7, 0, 0, 0"
                                                   DataContext="{Binding ElementName=DgHumans, Path=SelectedValue}">
-                                        <!--Text="{Binding Path=Comments}"-->
+
+                                        <!--Поле комментария выбранного человека-->
                                         <TextBlock Text="{Binding Path=HumanComments}"
                                                    FontSize="14"
                                                    FontWeight="Bold"
@@ -203,7 +280,11 @@
 
                             <Grid Grid.Column="1" Margin="5" DataContext="{Binding ElementName=DgHumans, Path=SelectedValue}">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="3*"></ColumnDefinition>
+
+                                    <!--Блок заголовков-->
+                                    <ColumnDefinition Width="4*"></ColumnDefinition>
+
+                                    <!--Блок результатов-->
                                     <ColumnDefinition Width="7*"></ColumnDefinition >
                                 </Grid.ColumnDefinitions>
                                 <Grid.RowDefinitions>
@@ -215,40 +296,117 @@
                                     <RowDefinition Height="2*"/>
                                     <RowDefinition Height="2*"/>
                                 </Grid.RowDefinitions>
-                                <Label Grid.Column="0" Grid.Row="0" Content="Причина смерти:"
-                                   HorizontalContentAlignment="Right" FontSize="18" Padding="0, 2, 5, 0"/>
-                                <Label Grid.Column="1" Grid.Row="0"  Content="{Binding Path=ReasonName}" Padding="5, 0, 0, 5"
-                                   HorizontalContentAlignment="Left" FontSize="20" FontFamily="/Resources/#Roland" FontWeight="Bold"/>
-                                <Label Grid.Column="0" Grid.Row="1" Content="Дата рождения:"
-                                   HorizontalContentAlignment="Right" FontSize="14" Padding="0, 0, 5, 0"/>
-                                <Label Grid.Column="1" Grid.Row="1" Padding="5, 0, 0, 0" HorizontalContentAlignment="Left" FontSize="14">
+
+                                <Label Grid.Column="0"
+                                       Grid.Row="0"
+                                       Content="Причина смерти:"
+                                       HorizontalContentAlignment="Right"
+                                       FontSize="18"
+                                       Padding="0, 2, 5, 0"/>
+
+                                <Label Grid.Column="1"
+                                       Grid.Row="0"
+                                       Content="{Binding Path=ReasonName}"
+                                       Padding="5, 0, 0, 5"
+                                       HorizontalContentAlignment="Left"
+                                       FontSize="20"
+                                       FontFamily="/Resources/#Roland"
+                                       FontWeight="Bold"/>
+
+                                <Label Grid.Column="0"
+                                       Grid.Row="1"
+                                       Content="Дата рождения:"
+                                       HorizontalContentAlignment="Right"
+                                       FontSize="14"
+                                       Padding="0, 0, 5, 0"/>
+
+                                <Label Grid.Column="1"
+                                       Grid.Row="1"
+                                       Padding="5, 0, 0, 0"
+                                       HorizontalContentAlignment="Left" FontSize="14">
                                     <Label.Content>
-                                        <TextBlock Text="{Binding Path=BirthDate, StringFormat='dd MMMM yyyy', ConverterCulture='ru-RU'}" FontWeight="Bold"/>
+                                        <TextBlock Text="{Binding Path=BirthDate, StringFormat='dd MMMM yyyy', ConverterCulture='ru-RU'}"
+                                                   FontWeight="Bold"/>
                                     </Label.Content>
                                 </Label>
-                                <Label Grid.Column="0" Grid.Row="2" Content="Родная страна:"
-                                   HorizontalContentAlignment="Right" FontSize="14" Padding="0, 0, 5, 0"/>
-                                <Label Grid.Column="1" Grid.Row="2" Content="{Binding Path=BirthCountry}" Padding="5, 0, 0, 0"
-                                   HorizontalContentAlignment="Left" FontSize="14" FontWeight="Bold"/>
-                                <Label Grid.Column="0" Grid.Row="3" Content="Место рождения:"
-                                   HorizontalContentAlignment="Right" FontSize="14" Padding="0, 0, 5, 0"/>
-                                <Label Grid.Column="1" Grid.Row="3" Content="{Binding Path=BirthPlace}" Padding="5, 0, 0, 0"
-                                   HorizontalContentAlignment="Left" FontSize="14" FontWeight="Bold"/>
-                                <Label Grid.Column="0" Grid.Row="4" Content="Дата смерти:"
-                                   HorizontalContentAlignment="Right" FontSize="14" Padding="0, 0, 5, 0"/>
-                                <Label Grid.Column="1" Grid.Row="4" Padding="5, 0, 0, 0" HorizontalContentAlignment="Left" FontSize="14">
+
+                                <Label Grid.Column="0"
+                                       Grid.Row="2"
+                                       Content="Родная страна:"
+                                       HorizontalContentAlignment="Right"
+                                       FontSize="14"
+                                       Padding="0, 0, 5, 0"/>
+
+                                <Label Grid.Column="1"
+                                       Grid.Row="2"
+                                       Content="{Binding Path=BirthCountry}"
+                                       Padding="5, 0, 0, 0"
+                                       HorizontalContentAlignment="Left"
+                                       FontSize="14"
+                                       FontWeight="Bold"/>
+
+                                <Label Grid.Column="0"
+                                       Grid.Row="3"
+                                       Content="Место рождения:"
+                                       HorizontalContentAlignment="Right"
+                                       FontSize="14"
+                                       Padding="0, 0, 5, 0"/>
+
+                                <Label Grid.Column="1"
+                                       Grid.Row="3"
+                                       Content="{Binding Path=BirthPlace}"
+                                       Padding="5, 0, 0, 0"
+                                       HorizontalContentAlignment="Left"
+                                       FontSize="14"
+                                       FontWeight="Bold"/>
+
+                                <Label Grid.Column="0"
+                                       Grid.Row="4"
+                                       Content="Дата смерти:"
+                                       HorizontalContentAlignment="Right"
+                                       FontSize="14"
+                                       Padding="0, 0, 5, 0"/>
+
+                                <Label Grid.Column="1"
+                                       Grid.Row="4"
+                                       Padding="5, 0, 0, 0"
+                                       HorizontalContentAlignment="Left"
+                                       FontSize="14">
                                     <Label.Content>
-                                        <TextBlock Text="{Binding Path=DeathDate, StringFormat='dd MMMM yyyy' , ConverterCulture='ru-RU'}" FontWeight="Bold"/>
+                                        <TextBlock Text="{Binding Path=DeathDate, StringFormat='dd MMMM yyyy' , ConverterCulture='ru-RU'}"
+                                                   FontWeight="Bold"/>
                                     </Label.Content>
                                 </Label>
-                                <Label Grid.Column="0" Grid.Row="5" Content="Страна смерти:"
-                                   HorizontalContentAlignment="Right" FontSize="14" Padding="0, 0, 5, 0"/>
-                                <Label Grid.Column="1" Grid.Row="5" Content="{Binding Path=DeathCountry}" Padding="5, 0, 0, 0"
-                                   HorizontalContentAlignment="Left" FontSize="14" FontWeight="Bold"/>
-                                <Label Grid.Column="0" Grid.Row="6" Content="Место смерти:"
-                                   HorizontalContentAlignment="Right" FontSize="14" Padding="0, 0, 5, 0"/>
-                                <Label Grid.Column="1" Grid.Row="6" Content="{Binding Path=DeathPlace}" Padding="5, 0, 0, 0"
-                                   HorizontalContentAlignment="Left" FontSize="14" FontWeight="Bold"/>
+
+                                <Label Grid.Column="0"
+                                       Grid.Row="5"
+                                       Content="Страна смерти:"
+                                       HorizontalContentAlignment="Right"
+                                       FontSize="14"
+                                       Padding="0, 0, 5, 0"/>
+
+                                <Label Grid.Column="1"
+                                       Grid.Row="5"
+                                       Content="{Binding Path=DeathCountry}"
+                                       Padding="5, 0, 0, 0"
+                                       HorizontalContentAlignment="Left"
+                                       FontSize="14"
+                                       FontWeight="Bold"/>
+
+                                <Label Grid.Column="0"
+                                       Grid.Row="6"
+                                       Content="Место смерти:"
+                                       HorizontalContentAlignment="Right"
+                                       FontSize="14"
+                                       Padding="0, 0, 5, 0"/>
+
+                                <Label Grid.Column="1"
+                                       Grid.Row="6"
+                                       Content="{Binding Path=DeathPlace}"
+                                       Padding="5, 0, 0, 0"
+                                       HorizontalContentAlignment="Left"
+                                       FontSize="14"
+                                       FontWeight="Bold"/>
                             </Grid>
                         </Grid>
                     </Grid>
@@ -256,9 +414,18 @@
                 
                 <TabItem>
                     <TabItem.Header>
-                        <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                            <fa:ImageAwesome Height="17" Icon="AreaChart" Margin="10, 0, 10, 0" Foreground="DeepSkyBlue"/>
-                            <TextBlock Text="Аналитика" FontSize="18" FontWeight="Bold" FontFamily="Arial" FontStyle="Italic" Margin="0, 0, 10, 0"/>
+                        <StackPanel HorizontalAlignment="Center"
+                                    Orientation="Horizontal">
+                            <fa:ImageAwesome Height="17"
+                                             Icon="AreaChart"
+                                             Margin="10, 0, 10, 0"
+                                             Foreground="DeepSkyBlue"/>
+                            <TextBlock Text="Аналитика"
+                                       FontSize="18"
+                                       FontWeight="Bold"
+                                       FontFamily="Arial"
+                                       FontStyle="Italic"
+                                       Margin="0, 0, 10, 0"/>
                         </StackPanel>
                     </TabItem.Header>
                     <Grid>

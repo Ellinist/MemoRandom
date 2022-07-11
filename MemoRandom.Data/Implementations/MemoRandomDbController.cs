@@ -330,7 +330,8 @@ namespace MemoRandom.Data.Implementations
                     // Эти две строки - думать, как переместить в асинхронность иного рода
                     //HumanImage = person.DbHumanImage,
                     //ImageFilePath = person.DbImageFilePath,
-                    DeathReasonId = person.DbDeathReasonId
+                    DeathReasonId = person.DbDeathReasonId,
+                    HumanComments = person.DbHumanComments
                 };
                 resultList.Add(human);
             }

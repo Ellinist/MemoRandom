@@ -19,6 +19,7 @@ namespace MemoRandom.Client.ViewModels
         #region PRIVATE FIELDS
         private string _humansViewTitle = "Начало";
         private List<Human> _humansList = new();
+        private int _humansIndex = 0;
         private readonly ILogger _logger; // Экземпляр журнала
         private readonly IContainer _container; // Контейнер
         private readonly IEventAggregator _eventAggregator;
@@ -46,6 +47,16 @@ namespace MemoRandom.Client.ViewModels
             {
                 _humansList = value;
                 RaisePropertyChanged(nameof(HumansList));
+            }
+        }
+
+        public int HumansIndex
+        {
+            get => _humansIndex;
+            set
+            {
+                _humansIndex = value;
+                RaisePropertyChanged(nameof(HumansIndex));
             }
         }
         #endregion
