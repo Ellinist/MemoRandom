@@ -24,7 +24,7 @@ namespace MemoRandom.Models.Models
         private BitmapImage _humanImage;
         private string _imageFilePath;
         private Guid _deathReasonId;
-        private string _humanComments = "Empty comments"; // Потом добавить заполнение в окно создания или редактирования
+        private string _humanComments;
         #endregion
 
         /// <summary>
