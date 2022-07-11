@@ -22,7 +22,7 @@ namespace MemoRandom.Data.DbModels
         public string DbDeathCountry { get; set; }
         public string DbDeathPlace { get; set; }
         [NotMapped]
-        public BitmapImage DbImageFile { get; set; }
+        public BitmapImage DbHumanImage { get; set; }
         public Guid DbDeathReasonId { get; set; }
     }
 }

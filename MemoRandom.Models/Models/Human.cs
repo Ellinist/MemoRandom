@@ -21,7 +21,7 @@ namespace MemoRandom.Models.Models
         private DateTime _deathDate;
         private string _deathCountry;
         private string _deathPlace;
-        private BitmapImage _imageFile;
+        private BitmapImage _humanImage;
         private Guid _deathReasonId;
         #endregion
 
@@ -160,13 +160,13 @@ namespace MemoRandom.Models.Models
         /// <summary>
         /// Свойство - путь к изображению человека
         /// </summary>
-        public BitmapImage ImageFile
+        public BitmapImage HumanImage
         {
-            get => _imageFile;
+            get => _humanImage;
             set
             {
-                _imageFile = value;
-                RaisePropertyChanged(nameof(ImageFile));
+                _humanImage = value;
+                RaisePropertyChanged(nameof(HumanImage));
             }
         }
 
