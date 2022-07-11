@@ -6,7 +6,7 @@
                  xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
                  xmlns:uc="clr-namespace:MemoRandom.Client.Views.UserControls"
                  xmlns:fa="http://schemas.fontawesome.io/icons/"
-                 xmlns:prism="http://prismlibrary.com/"
+                 xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
                  xmlns:local="clr-namespace:MemoRandom.Client.Views"
                  mc:Ignorable="d"
                  ShowIconOnTitleBar="True"
@@ -17,6 +17,13 @@
                  MinWidth="1360"
                  MinHeight="640"
                  WindowStartupLocation="CenterScreen">
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding OnStartHumansViewCommand}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="40" MinHeight="40" MaxHeight="40"/>
@@ -61,8 +68,16 @@
                                     BorderBrush="Black"
                                     BorderThickness="1">
 
-                                <DataGrid x:Name="DgHumans" SelectionMode="Single" UseLayoutRounding="True" CanUserAddRows="False" IsReadOnly="True" AlternatingRowBackground="Aqua"
-                                          ItemsSource="{Binding Path=DisplayedHumansList}" AutoGenerateColumns="False" Margin="5, 5, 0, 5" SelectedIndex="{Binding Path=HumansIndex, Mode=TwoWay}">
+                                <DataGrid x:Name="DgHumans"
+                                          SelectionMode="Single"
+                                          UseLayoutRounding="True"
+                                          CanUserAddRows="False"
+                                          IsReadOnly="True"
+                                          AlternatingRowBackground="Aqua"
+                                          ItemsSource="{Binding Path=HumansList}"
+                                          AutoGenerateColumns="False"
+                                          Margin="5, 5, 0, 5"
+                                          SelectedIndex="{Binding Path=HumansIndex, Mode=TwoWay}">
                                     <DataGrid.ColumnHeaderStyle>
                                         <!--Задание характеристик отображения заголовка таблицы-->
                                         <Style TargetType="{x:Type DataGridColumnHeader}">
@@ -71,13 +86,13 @@
                                         </Style>
                                     </DataGrid.ColumnHeaderStyle>
                                     <DataGrid.Columns>
-                                        <DataGridTextColumn Header="ID" IsReadOnly="True" Binding="{Binding Path=HumanGUID}" Visibility="Visible"/>
-                                        <DataGridTextColumn Header="ID_Reason" IsReadOnly="True" Binding="{Binding Path=DeathReasonGUID}" Visibility="Visible"/>
+                                        <DataGridTextColumn Header="ID" IsReadOnly="True" Binding="{Binding Path=HumanId}" Visibility="Visible"/>
+                                        <DataGridTextColumn Header="ID_Reason" IsReadOnly="True" Binding="{Binding Path=DeathReasonId}" Visibility="Visible"/>
                                         <DataGridTextColumn Header="Фамилия" IsReadOnly="True" Binding="{Binding Path=LastName}" Width="*" MinWidth="110"/>
                                         <DataGridTextColumn Header="Имя" IsReadOnly="True" Binding="{Binding Path=FirstName}" Width="*" MinWidth="100"/>
                                         <DataGridTextColumn Header="Отчество" IsReadOnly="True" Binding="{Binding Path=Patronymic}" Width="*" MinWidth="100"/>
                                         <DataGridTextColumn Header="Дата рождения" IsReadOnly="True" Width="120"
-                                                    Binding="{Binding Path=BirthDate, StringFormat='dd MMMM yyyy',ConverterCulture='ru-RU', Mode=OneWay}">
+                                                            Binding="{Binding Path=BirthDate, StringFormat='dd MMMM yyyy',ConverterCulture='ru-RU', Mode=OneWay}">
                                             <DataGridTextColumn.CellStyle>
                                                 <Style>
                                                     <Setter Property="TextBlock.TextAlignment" Value="Center"/>
@@ -87,7 +102,7 @@
                                         <DataGridTextColumn Header="Родная страна" IsReadOnly="True" Binding="{Binding Path=BirthCountry}" Width="*"/>
                                         <DataGridTextColumn Header="Место рождения" IsReadOnly="True" Binding="{Binding Path=BirthPlace}" Width="2*"/>
                                         <DataGridTextColumn Header="Дата смерти" IsReadOnly="True" Width="120"
-                                                    Binding="{Binding Path=DeathDate, StringFormat='dd MMMM yyyy',ConverterCulture='ru-RU', Mode=OneWay}">
+                                                            Binding="{Binding Path=DeathDate, StringFormat='dd MMMM yyyy',ConverterCulture='ru-RU', Mode=OneWay}">
                                             <DataGridTextColumn.CellStyle>
                                                 <Style>
                                                     <Setter Property="TextBlock.TextAlignment" Value="Center"/>
@@ -116,7 +131,7 @@
                                 </Border>
 
                                 <!--Content="{Binding Path=LastName}"-->
-                                <Label Content="Surname" 
+                                <Label Content="{Binding Path=LastName}" 
                                        Height="24"
                                        HorizontalAlignment="Center"
                                        FontSize="22"
@@ -127,13 +142,13 @@
                                     <StackPanel Orientation="Horizontal"
                                                 HorizontalAlignment="Center">
                                         <!--Content="{Binding Path=FirstName}"-->
-                                        <Label Content="Name"
+                                        <Label Content="{Binding Path=FirstName}"
                                                Foreground="DarkBlue"
                                                FontSize="22"
                                                FontFamily="/Resources/#Beresta"
                                                Padding="0,0,5,0"/>
                                         <!--Content="{Binding Path=Patronymic}"-->
-                                        <Label Content="Patronymic"
+                                        <Label Content="{Binding Path=Patronymic}"
                                                Foreground="DarkBlue"
                                                FontSize="22"
                                                FontFamily="/Resources/#Beresta"
@@ -175,7 +190,7 @@
                                     <ScrollViewer Margin="7, 0, 0, 0"
                                                   DataContext="{Binding ElementName=DgHumans, Path=SelectedValue}">
                                         <!--Text="{Binding Path=Comments}"-->
-                                        <TextBlock Text="Comments"
+                                        <TextBlock Text="{Binding Path=HumanComments}"
                                                    FontSize="14"
                                                    FontWeight="Bold"
                                                    FontStyle="Italic"

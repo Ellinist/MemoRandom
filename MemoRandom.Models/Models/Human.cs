@@ -24,6 +24,7 @@ namespace MemoRandom.Models.Models
         private BitmapImage _humanImage;
         private string _imageFilePath;
         private Guid _deathReasonId;
+        private string _humanComments = "Empty comments"; // Потом добавить заполнение в окно создания или редактирования
         #endregion
 
         /// <summary>
@@ -194,6 +195,16 @@ namespace MemoRandom.Models.Models
             {
                 _deathReasonId = value;
                 RaisePropertyChanged(nameof(DeathReasonId));
+            }
+        }
+
+        public string HumanComments
+        {
+            get => _humanComments;
+            set
+            {
+                _humanComments = value;
+                RaisePropertyChanged(nameof(HumanComments));
             }
         }
     }

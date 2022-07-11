@@ -25,5 +25,6 @@ namespace MemoRandom.Data.DbModels
         public BitmapImage DbHumanImage { get; set; }
         public string DbImageFilePath { get; set; }
         public Guid DbDeathReasonId { get; set; }
+        public string DbHumanComments { get; set; }
     }
 }

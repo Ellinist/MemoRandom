@@ -365,7 +365,8 @@ namespace MemoRandom.Data.Implementations
                         DbDeathPlace = human.DeathPlace,
                         DbHumanImage = human.HumanImage,
                         DbImageFilePath = human.ImageFilePath,
-                        DbDeathReasonId = human.DeathReasonId
+                        DbDeathReasonId = human.DeathReasonId,
+                        DbHumanComments = human.HumanComments
                     };
                     MemoContext.DbHumans.Add(record);
 

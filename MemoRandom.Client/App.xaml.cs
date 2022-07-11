@@ -36,7 +36,14 @@ namespace MemoRandom.Client
             containerRegistry.RegisterInstance<ILogger>(_logger);
             containerRegistry.RegisterInstance<IEventAggregator>(new EventAggregator());
 
+
+            #region Контроллеры работы с внешними хранилищами информации
+
             containerRegistry.Register<IMemoRandomDbController, MemoRandomDbController>();
+
+            #endregion
+            
+            
             // Регистрация диалогового модуля
             //containerRegistry.Register<IDialogServices, DialogServices>();
 
