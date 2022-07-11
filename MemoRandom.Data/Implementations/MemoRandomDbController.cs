@@ -4,14 +4,19 @@ using System.Collections.ObjectModel;
 using System.Configuration;
 using System.IO;
 using System.Linq;
+using System.Net.Mime;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
 using MemoRandom.Models.Models;
 using MemoRandom.Data.Controllers;
 using MemoRandom.Data.DbModels;
 using MemoRandom.Data.Interfaces;
 using Microsoft.Data.SqlClient;
 using NLog;
+using System.Windows.Media.Imaging;
+using Microsoft.VisualBasic;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace MemoRandom.Data.Implementations
 {
@@ -352,6 +357,16 @@ namespace MemoRandom.Data.Implementations
             {
                 try
                 {
+                    using Stream bms = File.Open(@"d:\Couple\Котлета2.jpg", FileMode.Open);
+
+                    BitmapImage bm = new BitmapImage();
+                    bm.BeginInit();
+                    bm.StreamSource = bms;
+                    bm.CacheOption = BitmapCacheOption.OnLoad;
+                    bm.EndInit();
+
+
+
                     DbHuman record = new DbHuman()
                     {
                         DbHumanId = human.HumanId,
@@ -364,7 +379,8 @@ namespace MemoRandom.Data.Implementations
                         DbDeathDate = human.DeathDate,
                         DbDeathCountry = human.DeathCountry,
                         DbDeathPlace = human.DeathPlace,
-                        DbHumanImage = human.HumanImage,
+                        //DbHumanImage = human.HumanImage,
+                        DbHumanImage = bm,
                         DbImageFilePath = human.ImageFilePath,
                         DbDeathReasonId = human.DeathReasonId,
                         DbHumanComments = human.HumanComments
