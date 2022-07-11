@@ -5,9 +5,12 @@ using Prism.Events;
 using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Net.Mime;
 using MemoRandom.Client.Views;
 using MemoRandom.Models.Models;
 using MemoRandom.Data.Interfaces;
+using System.Windows.Media.Imaging;
 
 namespace MemoRandom.Client.ViewModels
 {
@@ -20,6 +23,7 @@ namespace MemoRandom.Client.ViewModels
         private string _humansViewTitle = "Начало";
         private List<Human> _humansList = new();
         private int _humansIndex = 0;
+        private BitmapImage _humanImage;
         private readonly ILogger _logger; // Экземпляр журнала
         private readonly IContainer _container; // Контейнер
         private readonly IEventAggregator _eventAggregator;
@@ -59,6 +63,16 @@ namespace MemoRandom.Client.ViewModels
                 RaisePropertyChanged(nameof(HumansIndex));
             }
         }
+
+        public BitmapImage HumanImage
+        {
+            get => _humanImage;
+            set
+            {
+                _humanImage = value;
+                RaisePropertyChanged(nameof(HumanImage));
+            }
+        } 
         #endregion
 
         //private readonly IEventAggregator _eventAggregator;
@@ -109,6 +123,18 @@ namespace MemoRandom.Client.ViewModels
         private void OnStartHumansView()
         {
             HumansList = _dbController.GetHumasList();
+            HumanImage = new BitmapImage();
+            using (var mem = new MemoryStream(HumansList[^1].HumanImage))
+            {
+                mem.Position = 0;
+                HumanImage.BeginInit();
+                HumanImage.CreateOptions = BitmapCreateOptions.PreservePixelFormat;
+                HumanImage.CacheOption = BitmapCacheOption.OnLoad;
+                HumanImage.UriSource = null;
+                HumanImage.StreamSource = mem;
+                HumanImage.EndInit();
+            }
+            HumanImage.Freeze();
         }
 
         #region CTOR

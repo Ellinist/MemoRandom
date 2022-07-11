@@ -21,7 +21,7 @@ namespace MemoRandom.Models.Models
         private DateTime _deathDate;
         private string _deathCountry;
         private string _deathPlace;
-        private BitmapImage _humanImage;
+        private byte[] _humanImage;
         private string _imageFilePath;
         private Guid _deathReasonId;
         private string _humanComments;
@@ -162,7 +162,7 @@ namespace MemoRandom.Models.Models
         /// <summary>
         /// Свойство - изображение человека
         /// </summary>
-        public BitmapImage HumanImage
+        public byte[] HumanImage
         {
             get => _humanImage;
             set

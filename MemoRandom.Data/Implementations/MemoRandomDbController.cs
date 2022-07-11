@@ -14,6 +14,7 @@ using MemoRandom.Data.DbModels;
 using MemoRandom.Data.Interfaces;
 using Microsoft.Data.SqlClient;
 using NLog;
+using System.Drawing.Imaging;
 using System.Windows.Media.Imaging;
 using Microsoft.VisualBasic;
 using static System.Net.Mime.MediaTypeNames;
@@ -333,7 +334,7 @@ namespace MemoRandom.Data.Implementations
                     DeathCountry = person.DbDeathCountry,
                     DeathPlace = person.DbDeathPlace,
                     // Эти две строки - думать, как переместить в асинхронность иного рода
-                    //HumanImage = person.DbHumanImage,
+                    HumanImage = person.DbHumanImage,
                     //ImageFilePath = person.DbImageFilePath,
                     DeathReasonId = person.DbDeathReasonId,
                     HumanComments = person.DbHumanComments
@@ -365,6 +366,19 @@ namespace MemoRandom.Data.Implementations
                     bm.CacheOption = BitmapCacheOption.OnLoad;
                     bm.EndInit();
 
+                    byte[] res;
+                    JpegBitmapEncoder encoder = new JpegBitmapEncoder();
+                    encoder.Frames.Add(BitmapFrame.Create(bm));
+                    using MemoryStream ms = new MemoryStream();
+                    encoder.Save(ms);
+                    res = ms.ToArray();
+
+                    //BitmapImage img = new BitmapImage();
+
+                    //using (var ms = new MemoryStream())
+                    //{
+                    //    byte[] res = /*ms.ToArray();*/
+                    //}
 
 
                     DbHuman record = new DbHuman()
@@ -380,7 +394,7 @@ namespace MemoRandom.Data.Implementations
                         DbDeathCountry = human.DeathCountry,
                         DbDeathPlace = human.DeathPlace,
                         //DbHumanImage = human.HumanImage,
-                        DbHumanImage = bm,
+                        DbHumanImage = res,
                         DbImageFilePath = human.ImageFilePath,
                         DbDeathReasonId = human.DeathReasonId,
                         DbHumanComments = human.HumanComments
