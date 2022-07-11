@@ -7,7 +7,7 @@ namespace MemoRandom.Client.Views
     /// <summary>
     /// Логика взаимодействия для StartMemoRandom.xaml
     /// </summary>
-    public partial class StartMemoRandomView : MetroWindow
+    public partial class StartMemoRandomView/* : MetroWindow*/
     {
         private void MetroWindow_ContentRendered(object sender, System.EventArgs e)
         {

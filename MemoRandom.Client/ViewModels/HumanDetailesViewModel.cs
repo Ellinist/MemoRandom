@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media.Imaging;
 using MemoRandom.Data.Interfaces;
 using MemoRandom.Models.Models;
 using Prism.Commands;
@@ -24,6 +28,7 @@ namespace MemoRandom.Client.ViewModels
         private string _deathCountry = "Введите страну смерти";
         private string _deathPlace = "Введите место смерти";
         private Guid _deathReasonId;
+        private Image _image;
         #endregion
 
         #region PROPS
@@ -118,10 +123,21 @@ namespace MemoRandom.Client.ViewModels
                 RaisePropertyChanged();
             }
         }
+
+        public Image Image
+        {
+            get => _image;
+            set
+            {
+                _image = value;
+                RaisePropertyChanged(nameof(Image));
+            }
+        }
         #endregion
 
         #region COMMANDS
         public DelegateCommand SaveHumanCommand { get; private set; }
+        public DelegateCommand<object> OnPasteCommand { get; private set; }
         #endregion
 
         #region COMMANDS IMPLEMENTATION
@@ -145,11 +161,27 @@ namespace MemoRandom.Client.ViewModels
 
             _dbController.AddHumanToList(human);
         }
+
+        private void OnPaste(object param)
+        {
+            var img = param as Image;
+            if (img != null)
+            {
+                MemoryStream ms = Clipboard.GetData("DeviceIndependentBitmap") as MemoryStream;
+                BitmapImage bmp = new BitmapImage();
+                bmp.BeginInit();
+                bmp.StreamSource = ms;
+                bmp.UriSource = new Uri("file");
+                bmp.EndInit();
+                img.Source = bmp;
+            }
+        }
         #endregion
 
         private void InitializeCommands()
         {
             SaveHumanCommand = new DelegateCommand(SaveHuman);
+            OnPasteCommand = new DelegateCommand<object>(OnPaste);
         }
 
         #region CTOR

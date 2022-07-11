@@ -1,10 +1,12 @@
-﻿<Window x:Class="MemoRandom.Client.Views.HumanDetailesView"
+﻿<controls:MetroWindow x:Class="MemoRandom.Client.Views.HumanDetailesView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:local="clr-namespace:MemoRandom.Client.Views"
+        xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
         Icon="pack://application:,,,/Resources/Icons/humanInfoIcon.ico"
         mc:Ignorable="d"
         Title="HumanDetailesView" Height="680" Width="1200">
@@ -171,6 +173,17 @@
             </ScrollViewer>
         </GroupBox>
 
+        <Border Grid.Column="1" Grid.Row="0" BorderThickness="10" BorderBrush="Black">
+            <Image x:Name="MyImage">
+                <!--<i:Interaction.Triggers>
+                    <i:EventTrigger EventName="KeyDown">
+                        <i:InvokeCommandAction Command="{Binding OnPasteCommand}"
+                                               CommandParameter="{Binding ElementName=MyImage}"></i:InvokeCommandAction>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>-->
+            </Image>
+        </Border>
+
         <Grid Grid.Row="1" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
@@ -182,7 +195,9 @@
                     Command="{Binding SaveHumanCommand}"
                     CommandParameter="{Binding ElementName=HumanIdentificator}"/>
             <Button Grid.Column="1"
-                    Content="Отменить"/>
+                    Content="Отменить"
+                    Command="{Binding OnPasteCommand}"
+                    CommandParameter="{Binding ElementName=MyImage}"/>
         </Grid>
     </Grid>
-</Window>
+</controls:MetroWindow>
