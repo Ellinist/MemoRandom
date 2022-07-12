@@ -19,6 +19,16 @@ namespace MemoRandom.Data.Implementations
             return HumansRepository.HumansList;
         }
 
+        public void SetCurrentHuman(Human human)
+        {
+            HumansRepository.CurrentHuman = human;
+        }
+
+        public Human GetCurrentHuman()
+        {
+            return HumansRepository.CurrentHuman;
+        }
+
         #region CTOR
         public HumansController(IMemoRandomDbController memoRandomDbController)
         {

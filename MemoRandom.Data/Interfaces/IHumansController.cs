@@ -14,5 +14,9 @@ namespace MemoRandom.Data.Interfaces
         /// </summary>
         /// <returns></returns>
         List<Human> GetHumansList();
+
+        void SetCurrentHuman(Human human);
+
+        Human GetCurrentHuman();
     }
 }
