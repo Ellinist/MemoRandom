@@ -38,6 +38,8 @@ namespace MemoRandom.Client
 
 
             #region Контроллеры работы с внешними хранилищами информации
+            //Регистрация интерфейса работы с людьми
+            containerRegistry.RegisterSingleton<IHumansController, HumansController>();
 
             containerRegistry.Register<IMemoRandomDbController, MemoRandomDbController>();
 

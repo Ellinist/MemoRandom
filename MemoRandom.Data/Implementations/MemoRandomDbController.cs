@@ -16,6 +16,7 @@ using Microsoft.Data.SqlClient;
 using NLog;
 using System.Drawing.Imaging;
 using System.Windows.Media.Imaging;
+using MemoRandom.Data.Repositories;
 using Microsoft.VisualBasic;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -85,7 +86,8 @@ namespace MemoRandom.Data.Implementations
         /// <returns></returns>
         public List<Human> GetHumasList()
         {
-            return GettingHumans().Result;
+            HumansRepository.HumansList = GettingHumans().Result;
+            return HumansRepository.HumansList; // Может уйти от дублирования?
         }
 
         /// <summary>

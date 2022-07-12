@@ -28,7 +28,7 @@ namespace MemoRandom.Client.ViewModels
         private readonly ILogger _logger; // Экземпляр журнала
         private readonly IContainer _container; // Контейнер
         private readonly IEventAggregator _eventAggregator;
-        private readonly IMemoRandomDbController _dbController;
+        private readonly IHumansController _humansController;
         #endregion
 
         #region PROPS
@@ -137,19 +137,19 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private void OnStartHumansView()
         {
-            HumansList = _dbController.GetHumasList();
+            HumansList = _humansController.GetHumansList();
             CurrentConfiguration.CurrentHumansList = HumansList; // В топку
 
             HumansIndex = 0;
         }
 
         #region CTOR
-        public HumansListViewModel(ILogger logger, IContainer container, IEventAggregator eventAggregator, IMemoRandomDbController dbController)
+        public HumansListViewModel(ILogger logger, IContainer container, IEventAggregator eventAggregator, IHumansController humansController)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _container = container ?? throw new ArgumentNullException(nameof(container));
             _eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
-            _dbController = dbController ?? throw new ArgumentNullException(nameof(dbController));
+            _humansController = humansController ?? throw new ArgumentNullException(nameof(humansController));
 
             //Title = HeaderDefault;
             ////_humansFile = ConfigurationManager.AppSettings["HumansPath"];
