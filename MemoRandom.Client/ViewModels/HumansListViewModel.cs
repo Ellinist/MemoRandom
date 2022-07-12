@@ -138,8 +138,9 @@ namespace MemoRandom.Client.ViewModels
         private void OnStartHumansView()
         {
             HumansList = _humansController.GetHumansList();
-            CurrentConfiguration.CurrentHumansList = HumansList; // В топку
+            //CurrentConfiguration.CurrentHumansList = HumansList; // В топку
 
+            //_humansController.SetCurrentHuman(HumansList[0]);
             HumansIndex = 0;
         }
 
