@@ -194,7 +194,7 @@
                                         BorderThickness="1">
 
                                     <!--Изображение выбранного человека-->
-                                    <Image Height="250"
+                                    <Image Height="350"
                                            Width="450"
                                            Source="{Binding Path=HumanImage}"
                                            Stretch="Uniform"

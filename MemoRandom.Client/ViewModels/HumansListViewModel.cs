@@ -66,6 +66,7 @@ namespace MemoRandom.Client.ViewModels
             get => _humansIndex;
             set
             {
+                if (HumansList == null || HumansList.Count == 0) return;
                 _humansIndex = value;
                 if (value == -1)
                 {
