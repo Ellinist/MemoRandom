@@ -11,6 +11,7 @@ using MemoRandom.Client.Views;
 using MemoRandom.Models.Models;
 using MemoRandom.Data.Interfaces;
 using System.Windows.Media.Imaging;
+using MemoRandom.Client.Configuration;
 
 namespace MemoRandom.Client.ViewModels
 {
@@ -44,6 +45,9 @@ namespace MemoRandom.Client.ViewModels
             }
         }
 
+        /// <summary>
+        /// Отображаемый список людей
+        /// </summary>
         public List<Human> HumansList
         {
             get => _humansList;
@@ -54,26 +58,26 @@ namespace MemoRandom.Client.ViewModels
             }
         }
 
+        /// <summary>
+        /// Индекс выбранного человека
+        /// </summary>
         public int HumansIndex
         {
             get => _humansIndex;
             set
             {
                 _humansIndex = value;
-                //HumanImage = HumansList[value].HumanImage;
+                if (value == -1)
+                {
+                    CurrentConfiguration.SetCurrentHuman(null);
+                }
+                else
+                {
+                    CurrentConfiguration.SetCurrentHuman(HumansList[value]);
+                }
                 RaisePropertyChanged(nameof(HumansIndex));
             }
         }
-
-        public BitmapImage HumanImage
-        {
-            get => _humanImage;
-            set
-            {
-                _humanImage = value;
-                RaisePropertyChanged(nameof(HumanImage));
-            }
-        } 
         #endregion
 
         //private readonly IEventAggregator _eventAggregator;
@@ -84,6 +88,7 @@ namespace MemoRandom.Client.ViewModels
         #region Commands
         public DelegateCommand OnStartHumansViewCommand { get; private set; }
         public DelegateCommand AddHumanMenuCommand { get; private set; }
+        public DelegateCommand EditHumanDataCommand { get; set; }
         public DelegateCommand SettingsMenuCommand { get; private set; }
         public DelegateCommand HumansListMenuCommand { get; private set; }
         public DelegateCommand StartMenuCommand { get; private set; }
@@ -98,7 +103,7 @@ namespace MemoRandom.Client.ViewModels
         {
             OnStartHumansViewCommand = new DelegateCommand(OnStartHumansView);
             AddHumanMenuCommand = new DelegateCommand(AddHumanMenu);
-            //SettingsMenuCommand = new DelegateCommand(OpenSettingsView);
+            EditHumanDataCommand = new DelegateCommand(EditHumanData);
             //StartMenuCommand = new DelegateCommand(OpenStartView);
             StartAboutCommand = new DelegateCommand(OpenAboutView);
             //HumansListMenuCommand = new DelegateCommand(OnHumansListMenuCommand);
@@ -109,6 +114,12 @@ namespace MemoRandom.Client.ViewModels
         /// Запуск окна создания нового человека
         /// </summary>
         private void AddHumanMenu()
+        {
+            CurrentConfiguration.SetCurrentHuman(null);
+            _container.Resolve<HumanDetailedView>().ShowDialog();
+        }
+
+        private void EditHumanData()
         {
             _container.Resolve<HumanDetailedView>().ShowDialog();
         }
@@ -127,20 +138,9 @@ namespace MemoRandom.Client.ViewModels
         private void OnStartHumansView()
         {
             HumansList = _dbController.GetHumasList();
+            CurrentConfiguration.CurrentHumansList = HumansList; // В топку
 
-            ////TODO Этот метод переписать для того, чтобы не плодить в безумном количестве сущности - подумать
-            //HumanImage = new BitmapImage();
-            //using (var mem = new MemoryStream(HumansList[HumansIndex].HumanImage))
-            //{
-            //    mem.Position = 0;
-            //    HumanImage.BeginInit();
-            //    HumanImage.CreateOptions = BitmapCreateOptions.PreservePixelFormat;
-            //    HumanImage.CacheOption = BitmapCacheOption.OnLoad;
-            //    HumanImage.UriSource = null;
-            //    HumanImage.StreamSource = mem;
-            //    HumanImage.EndInit();
-            //}
-            //HumanImage.Freeze();
+            HumansIndex = 0;
         }
 
         #region CTOR

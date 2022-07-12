@@ -3,6 +3,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
+using MemoRandom.Client.Configuration;
 using MemoRandom.Data.Interfaces;
 using MemoRandom.Models.Models;
 using Prism.Commands;
@@ -10,24 +11,31 @@ using Prism.Mvvm;
 
 namespace MemoRandom.Client.ViewModels
 {
+    /// <summary>
+    /// Класс модели представления формирования нового человека
+    /// </summary>
     public class HumanDetailedViewModel : BindableBase
     {
-        #region Private Fields
+        #region PRIVATE FIELDS
         private readonly IMemoRandomDbController _dbController;
-        private string _lastName = "Введите фамилию";
-        private string _firstName = "Введите имя";
-        private string _patronymic = "Введите отчество";
-        private DateTime _birthDate = DateTime.Now;
-        private string _birthCountry = "Введите страну рождения";
-        private string _birthPlace = "Введите место рождения";
-        private DateTime _deathDate = DateTime.Now;
-        private string _deathCountry = "Введите страну смерти";
-        private string _deathPlace = "Введите место смерти";
-        private Guid _deathReasonId;
-        private Image _image;
+
+        private string   _lastName;
+        private string   _firstName;
+        private string   _patronymic;
+        private DateTime _birthDate;
+        private string   _birthCountry;
+        private string   _birthPlace;
+        private DateTime _deathDate;
+        private string   _deathCountry;
+        private string   _deathPlace;
+        private Guid     _deathReasonId;
+        private Image    _image;
         #endregion
 
         #region PROPS
+        /// <summary>
+        /// Фамилия человека
+        /// </summary>
         public string LastName
         {
             get => _lastName;
@@ -37,6 +45,10 @@ namespace MemoRandom.Client.ViewModels
                 RaisePropertyChanged();
             }
         }
+
+        /// <summary>
+        /// Имя человека
+        /// </summary>
         public string FirstName
         {
             get => _firstName;
@@ -46,6 +58,10 @@ namespace MemoRandom.Client.ViewModels
                 RaisePropertyChanged();
             }
         }
+        
+        /// <summary>
+        /// Отчество человека
+        /// </summary>
         public string Patronymic
         {
             get => _patronymic;
@@ -55,6 +71,10 @@ namespace MemoRandom.Client.ViewModels
                 RaisePropertyChanged();
             }
         }
+        
+        /// <summary>
+        /// Дата рождения
+        /// </summary>
         public DateTime BirthDate
         {
             get => _birthDate;
@@ -64,6 +84,10 @@ namespace MemoRandom.Client.ViewModels
                 RaisePropertyChanged();
             }
         }
+        
+        /// <summary>
+        /// Страна рождения
+        /// </summary>
         public string BirthCountry
         {
             get => _birthCountry;
@@ -73,6 +97,10 @@ namespace MemoRandom.Client.ViewModels
                 RaisePropertyChanged();
             }
         }
+        
+        /// <summary>
+        /// Место рождения
+        /// </summary>
         public string BirthPlace
         {
             get => _birthPlace;
@@ -82,6 +110,10 @@ namespace MemoRandom.Client.ViewModels
                 RaisePropertyChanged();
             }
         }
+        
+        /// <summary>
+        /// Дата смерти
+        /// </summary>
         public DateTime DeathDate
         {
             get => _deathDate;
@@ -91,6 +123,10 @@ namespace MemoRandom.Client.ViewModels
                 RaisePropertyChanged();
             }
         }
+        
+        /// <summary>
+        /// Страна смерти
+        /// </summary>
         public string DeathCountry
         {
             get => _deathCountry;
@@ -100,6 +136,10 @@ namespace MemoRandom.Client.ViewModels
                 RaisePropertyChanged();
             }
         }
+        
+        /// <summary>
+        /// Место смерти
+        /// </summary>
         public string DeathPlace
         {
             get => _deathPlace;
@@ -109,7 +149,10 @@ namespace MemoRandom.Client.ViewModels
                 RaisePropertyChanged();
             }
         }
-
+        
+        /// <summary>
+        /// Идентификатор причины смерти
+        /// </summary>
         public Guid DeathReasonId
         {
             get => _deathReasonId;
@@ -135,18 +178,61 @@ namespace MemoRandom.Client.ViewModels
         #endregion
 
         #region COMMANDS
+        /// <summary>
+        /// Команда загрузки окна детальных данных по человеку
+        /// </summary>
         public DelegateCommand<object> OnDetailedViewLoadedCommand { get; private set; }
+        
+        /// <summary>
+        /// Команда сохранения данных по человеку
+        /// </summary>
         public DelegateCommand SaveHumanCommand { get; private set; }
+        
+        /// <summary>
+        /// Команда загрузки изображения
+        /// </summary>
         public DelegateCommand ImageLoadCommand { get; private set; }
         #endregion
 
         #region COMMANDS IMPLEMENTATION
 
+        /// <summary>
+        /// Метод, выполняемый после загрузки окна
+        /// </summary>
+        /// <param name="parameter"></param>
         private void OnDetailedViewLoaded(object parameter)
         {
             if (parameter as Image != null)
             {
                 Image = parameter as Image;
+
+                Human human = CurrentConfiguration.GetCurrentHuman();
+
+                if (human != null)
+                {
+                    LastName = human.LastName;
+                    FirstName = human.FirstName;
+                    Patronymic = human.Patronymic;
+                    BirthDate = human.BirthDate;
+                    BirthCountry = human.BirthCountry;
+                    BirthPlace = human.BirthPlace;
+                    DeathDate = human.DeathDate;
+                    DeathCountry = human.DeathCountry;
+                    DeathPlace = human.DeathPlace;
+                    //Image.Source = ConvertFromBitmapSource(human.HumanImage);
+                }
+                else
+                {
+                    LastName = "Введите фамилию";
+                    FirstName = "Введите имя";
+                    Patronymic = "Введите отчество";
+                    BirthDate = DateTime.Now;
+                    BirthCountry = "Введите страну рождения";
+                    BirthPlace = "Введите место рождения";
+                    DeathDate = DateTime.Now;
+                    DeathCountry = "Введите страну смерти";
+                    DeathPlace = "Введите место смерти";
+                }
             }
         }
 
@@ -175,8 +261,11 @@ namespace MemoRandom.Client.ViewModels
             _dbController.AddHumanToList(human);
         }
 
-        public static BitmapSource Tempo;
-
+        /// <summary>
+        /// Преобразование BitmapSource в массив байтов
+        /// </summary>
+        /// <param name="src"></param>
+        /// <returns></returns>
         private byte[] ConvertFromBitmapSource(BitmapSource src)
         {
             byte[] bit;
@@ -192,44 +281,27 @@ namespace MemoRandom.Client.ViewModels
             }
 
             return bit;
-            //JpegBitmapEncoder encoder = new JpegBitmapEncoder();
-            //MemoryStream memoryStream = new MemoryStream();
-            //BitmapImage bImg = new BitmapImage();
-
-            //encoder.Frames.Add(BitmapFrame.Create(src));
-            //encoder.Save(memoryStream);
-
-            //memoryStream.Position = 0;
-            //bImg.BeginInit();
-            //bImg.StreamSource = memoryStream;
-            //bImg.EndInit();
-
-            //memoryStream.Close();
-
-            //return bImg;
         }
 
+        /// <summary>
+        /// Метод загрузки изображения из буфера обмена
+        /// </summary>
         private void ImageLoad()
         {
             if (Clipboard.ContainsImage())
             {
                 Image.Source = Clipboard.GetImage();
-                //Tempo = ConvertBitmapSource(Clipboard.GetImage());
             }
             else
             {
                 MessageBox.Show("Not an image!", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-                //MemoryStream ms = Clipboard.GetData("DeviceIndependentBitmap") as MemoryStream;
-                //BitmapImage bmp = new BitmapImage();
-                //bmp.BeginInit();
-                //bmp.StreamSource = ms;
-                //bmp.UriSource = new Uri("file");
-                //bmp.EndInit();
-                //img.Source = bmp;
         }
         #endregion
 
+        /// <summary>
+        /// Инициализация команд
+        /// </summary>
         private void InitializeCommands()
         {
             OnDetailedViewLoadedCommand = new DelegateCommand<object>(OnDetailedViewLoaded);
@@ -240,7 +312,7 @@ namespace MemoRandom.Client.ViewModels
         #region CTOR
         public HumanDetailedViewModel(IMemoRandomDbController dbController)
         {
-            _dbController = dbController;
+            _dbController = dbController ?? throw new ArgumentNullException(nameof(dbController));
 
             InitializeCommands();
         }
