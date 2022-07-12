@@ -7,9 +7,9 @@ namespace MemoRandom.Client.Views
     /// <summary>
     /// Логика взаимодействия для HumanDetailesView.xaml
     /// </summary>
-    public partial class HumanDetailesView /*: MetroWindow*/
+    public partial class HumanDetailedView /*: MetroWindow*/
     {
-        public HumanDetailesView(HumanDetailesViewModel vm)
+        public HumanDetailedView(HumanDetailedViewModel vm)
         {
             InitializeComponent();
             DataContext = vm;

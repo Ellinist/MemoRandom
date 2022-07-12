@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Prism.Mvvm;
 
@@ -10,7 +11,7 @@ namespace MemoRandom.Models.Models
     /// </summary>
     public class Human : BindableBase
     {
-        #region Private fields
+        #region PRIVATE FIELDS
         private Guid _humanId;
         private string _firstName;
         private string _lastName;

@@ -196,13 +196,13 @@
                                     <!--Изображение выбранного человека-->
                                     <Image Height="250"
                                            Width="450"
-                                           Source="{Binding HumanImage}"
+                                           Source="{Binding Path=HumanImage}"
                                            Stretch="Uniform"
                                            HorizontalAlignment="Center"/>
                                 </Border>
 
                                 <!--Фамилия выбранного человека-->
-                                <Label Content="{Binding Path=LastName}" 
+                                <Label Content="{Binding Path=LastName}"
                                        Height="24"
                                        HorizontalAlignment="Center"
                                        FontSize="22"

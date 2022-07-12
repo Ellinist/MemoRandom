@@ -334,8 +334,10 @@ namespace MemoRandom.Data.Implementations
                     DeathCountry = person.DbDeathCountry,
                     DeathPlace = person.DbDeathPlace,
                     // Эти две строки - думать, как переместить в асинхронность иного рода
-                    HumanImage = person.DbHumanImage,
+                    //HumanImage = ConvertImageToArray(person.DbHumanImage),
                     //ImageFilePath = person.DbImageFilePath,
+                    //HumanImage = ConvertToBitmapImage(person.DbHumanImage),
+                    HumanImage = person.DbHumanImage,
                     DeathReasonId = person.DbDeathReasonId,
                     HumanComments = person.DbHumanComments
                 };
@@ -353,33 +355,38 @@ namespace MemoRandom.Data.Implementations
         private async Task<bool> AddingHuman(Human human)
         {
             bool successResult = true;
-
+            
             await using (MemoContext = new MemoRandomDbContext(GetConnectionString()))
             {
+                //using Stream bms = File.Open(@"d:\Couple\Котлета.jpg", FileMode.Open);
+
+                //BitmapImage bm = new BitmapImage();
+                //bm.BeginInit();
+                //bm.StreamSource = bms;
+                //bm.CacheOption = BitmapCacheOption.OnLoad;
+                //bm.EndInit();
+
+                //var tempo = ConvertImageToArray(bm);
+
                 try
                 {
-                    using Stream bms = File.Open(@"d:\Couple\Котлета2.jpg", FileMode.Open);
+                    #region MyRegion
+                    
 
-                    BitmapImage bm = new BitmapImage();
-                    bm.BeginInit();
-                    bm.StreamSource = bms;
-                    bm.CacheOption = BitmapCacheOption.OnLoad;
-                    bm.EndInit();
-
-                    byte[] res;
-                    JpegBitmapEncoder encoder = new JpegBitmapEncoder();
-                    encoder.Frames.Add(BitmapFrame.Create(bm));
-                    using MemoryStream ms = new MemoryStream();
-                    encoder.Save(ms);
-                    res = ms.ToArray();
+                    //byte[] res;
+                    //JpegBitmapEncoder encoder = new JpegBitmapEncoder();
+                    //encoder.Frames.Add(BitmapFrame.Create(bm));
+                    //using MemoryStream ms = new MemoryStream();
+                    //encoder.Save(ms);
+                    //res = ms.ToArray();
 
                     //BitmapImage img = new BitmapImage();
 
                     //using (var ms = new MemoryStream())
                     //{
                     //    byte[] res = /*ms.ToArray();*/
-                    //}
-
+                    //} 
+                    #endregion
 
                     DbHuman record = new DbHuman()
                     {
@@ -394,7 +401,8 @@ namespace MemoRandom.Data.Implementations
                         DbDeathCountry = human.DeathCountry,
                         DbDeathPlace = human.DeathPlace,
                         //DbHumanImage = human.HumanImage,
-                        DbHumanImage = res,
+                        //DbHumanImage = ConvertImageToArray(human.HumanImage),
+                        DbHumanImage = human.HumanImage,
                         DbImageFilePath = human.ImageFilePath,
                         DbDeathReasonId = human.DeathReasonId,
                         DbHumanComments = human.HumanComments
@@ -407,11 +415,89 @@ namespace MemoRandom.Data.Implementations
                 {
                     successResult = false;
                     _logger.Error($"Ошибка записи информации по человеку: {ex.HResult}");
-                    //MessageBox.Show($"Error: {ex.HResult}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show($"Error: {ex.HResult}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
 
             return successResult;
+        }
+
+        private BitmapImage ConvertToBitmapImage(byte[] src)
+        {
+            using (MemoryStream ms = new MemoryStream(src))
+            {
+                BitmapImage image = new BitmapImage();
+                image.BeginInit();
+                image.StreamSource = ms;
+                image.EndInit();
+                return image;
+            }
+        }
+
+        /// <summary>
+        /// Метод конвертирования BitmapImage в массив byte[]
+        /// </summary>
+        /// <param name="img"></param>
+        /// <returns></returns>
+        private byte[] ConvertImageToArray(BitmapSource img)
+        {
+            //StreamImageSource streamImageSource = (StreamImageSource)img;
+            //System.Threading.CancellationToken cancellationToken =
+            //    System.Threading.CancellationToken.None;
+            //Task<Stream> task = streamImageSource.Stream(cancellationToken);
+            //Stream stream = task.Result;
+            //byte[] bytesAvailable = new byte[stream.Length];
+            //stream.Read(bytesAvailable, 0, bytesAvailable.Length);
+            //return bytesAvailable;
+
+            byte[] bit = Array.Empty<byte>();
+
+            using (MemoryStream stream = new MemoryStream())
+            {
+                JpegBitmapEncoder encoder = new JpegBitmapEncoder();
+                encoder.QualityLevel = 100;
+                encoder.Frames.Add(BitmapFrame.Create(img));
+
+                encoder.Save(stream);
+                bit = stream.ToArray();
+            }
+
+            return bit;
+
+
+            //byte[] bit;
+
+            //JpegBitmapEncoder encoder = new JpegBitmapEncoder();
+            ////encoder.Frames.Add(BitmapFrame.Create(bitmapSource));
+            //encoder.QualityLevel = 100;
+            //// byte[] bit = new byte[0];
+            //using (MemoryStream stream = new MemoryStream())
+            //{
+            //    encoder.Frames.Add(BitmapFrame.Create(img));
+            //    encoder.Save(stream);
+            //    bit = stream.ToArray();
+            //    stream.Close();
+            //}
+
+            //return bit;
+
+            #region MyRegion
+
+            //byte[] res;
+            //JpegBitmapEncoder encoder = new JpegBitmapEncoder();
+            //encoder.Frames.Add(BitmapFrame.Create(img));
+            //using (MemoryStream ms = new MemoryStream())
+            //{
+            //    encoder.Save(ms);
+            //    res = ms.ToArray();
+            //}
+
+            //return res; 
+
+            #endregion
+
+            //ImageSourceConverter converter = new ImageSourceConverter();
+            //return (byte[])converter.ConvertTo(img, typeof(byte[]));
         }
         #endregion
 

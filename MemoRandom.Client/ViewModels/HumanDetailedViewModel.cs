@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
@@ -14,7 +10,7 @@ using Prism.Mvvm;
 
 namespace MemoRandom.Client.ViewModels
 {
-    public class HumanDetailesViewModel : BindableBase
+    public class HumanDetailedViewModel : BindableBase
     {
         #region Private Fields
         private readonly IMemoRandomDbController _dbController;
@@ -124,6 +120,9 @@ namespace MemoRandom.Client.ViewModels
             }
         }
 
+        /// <summary>
+        /// Элемент управления - для изображения
+        /// </summary>
         public Image Image
         {
             get => _image;
@@ -136,11 +135,24 @@ namespace MemoRandom.Client.ViewModels
         #endregion
 
         #region COMMANDS
+        public DelegateCommand<object> OnDetailedViewLoadedCommand { get; private set; }
         public DelegateCommand SaveHumanCommand { get; private set; }
-        public DelegateCommand<object> OnPasteCommand { get; private set; }
+        public DelegateCommand ImageLoadCommand { get; private set; }
         #endregion
 
         #region COMMANDS IMPLEMENTATION
+
+        private void OnDetailedViewLoaded(object parameter)
+        {
+            if (parameter as Image != null)
+            {
+                Image = parameter as Image;
+            }
+        }
+
+        /// <summary>
+        /// Сохранение данных по человеку
+        /// </summary>
         private void SaveHuman()
         {
             // Пока для нового хьюмана
@@ -156,21 +168,58 @@ namespace MemoRandom.Client.ViewModels
                 DeathDate = DeathDate,
                 DeathCountry = DeathCountry,
                 DeathPlace = DeathPlace,
+                HumanImage = ConvertFromBitmapSource((BitmapSource)Image.Source),
                 DeathReasonId = DeathReasonId
             };
 
             _dbController.AddHumanToList(human);
         }
 
-        private void OnPaste(object param)
+        public static BitmapSource Tempo;
+
+        private byte[] ConvertFromBitmapSource(BitmapSource src)
         {
-            var img = param as Image;
-            if (img != null)
+            byte[] bit;
+            //BitmapSource temp = (BitmapSource)Image.Source;
+            JpegBitmapEncoder encoder = new JpegBitmapEncoder();
+            encoder.QualityLevel = 100;
+            using (MemoryStream stream = new MemoryStream())
             {
-                if (Clipboard.ContainsImage())
-                {
-                    img.Source = Clipboard.GetImage();
-                }
+                encoder.Frames.Add(BitmapFrame.Create(src));
+                encoder.Save(stream);
+                bit = stream.ToArray();
+                stream.Close();
+            }
+
+            return bit;
+            //JpegBitmapEncoder encoder = new JpegBitmapEncoder();
+            //MemoryStream memoryStream = new MemoryStream();
+            //BitmapImage bImg = new BitmapImage();
+
+            //encoder.Frames.Add(BitmapFrame.Create(src));
+            //encoder.Save(memoryStream);
+
+            //memoryStream.Position = 0;
+            //bImg.BeginInit();
+            //bImg.StreamSource = memoryStream;
+            //bImg.EndInit();
+
+            //memoryStream.Close();
+
+            //return bImg;
+        }
+
+        private void ImageLoad()
+        {
+            if (Clipboard.ContainsImage())
+            {
+                Image.Source = Clipboard.GetImage();
+                //Tempo = ConvertBitmapSource(Clipboard.GetImage());
+            }
+            else
+            {
+                MessageBox.Show("Not an image!", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
                 //MemoryStream ms = Clipboard.GetData("DeviceIndependentBitmap") as MemoryStream;
                 //BitmapImage bmp = new BitmapImage();
                 //bmp.BeginInit();
@@ -178,18 +227,18 @@ namespace MemoRandom.Client.ViewModels
                 //bmp.UriSource = new Uri("file");
                 //bmp.EndInit();
                 //img.Source = bmp;
-            }
         }
         #endregion
 
         private void InitializeCommands()
         {
+            OnDetailedViewLoadedCommand = new DelegateCommand<object>(OnDetailedViewLoaded);
             SaveHumanCommand = new DelegateCommand(SaveHuman);
-            OnPasteCommand = new DelegateCommand<object>(OnPaste);
+            ImageLoadCommand = new DelegateCommand(ImageLoad);
         }
 
         #region CTOR
-        public HumanDetailesViewModel(IMemoRandomDbController dbController)
+        public HumanDetailedViewModel(IMemoRandomDbController dbController)
         {
             _dbController = dbController;
 

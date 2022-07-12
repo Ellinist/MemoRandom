@@ -60,6 +60,7 @@ namespace MemoRandom.Client.ViewModels
             set
             {
                 _humansIndex = value;
+                //HumanImage = HumansList[value].HumanImage;
                 RaisePropertyChanged(nameof(HumansIndex));
             }
         }
@@ -109,7 +110,7 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private void AddHumanMenu()
         {
-            _container.Resolve<HumanDetailesView>().ShowDialog();
+            _container.Resolve<HumanDetailedView>().ShowDialog();
         }
 
         /// <summary>
@@ -120,21 +121,26 @@ namespace MemoRandom.Client.ViewModels
             _container.Resolve<AboutView>().ShowDialog();
         }
 
+        /// <summary>
+        /// При открытии окна получаем список всех людей
+        /// </summary>
         private void OnStartHumansView()
         {
             HumansList = _dbController.GetHumasList();
-            HumanImage = new BitmapImage();
-            using (var mem = new MemoryStream(HumansList[^1].HumanImage))
-            {
-                mem.Position = 0;
-                HumanImage.BeginInit();
-                HumanImage.CreateOptions = BitmapCreateOptions.PreservePixelFormat;
-                HumanImage.CacheOption = BitmapCacheOption.OnLoad;
-                HumanImage.UriSource = null;
-                HumanImage.StreamSource = mem;
-                HumanImage.EndInit();
-            }
-            HumanImage.Freeze();
+
+            ////TODO Этот метод переписать для того, чтобы не плодить в безумном количестве сущности - подумать
+            //HumanImage = new BitmapImage();
+            //using (var mem = new MemoryStream(HumansList[HumansIndex].HumanImage))
+            //{
+            //    mem.Position = 0;
+            //    HumanImage.BeginInit();
+            //    HumanImage.CreateOptions = BitmapCreateOptions.PreservePixelFormat;
+            //    HumanImage.CacheOption = BitmapCacheOption.OnLoad;
+            //    HumanImage.UriSource = null;
+            //    HumanImage.StreamSource = mem;
+            //    HumanImage.EndInit();
+            //}
+            //HumanImage.Freeze();
         }
 
         #region CTOR
