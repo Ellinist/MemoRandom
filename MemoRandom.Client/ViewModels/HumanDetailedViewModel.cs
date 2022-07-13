@@ -281,6 +281,8 @@ namespace MemoRandom.Client.ViewModels
 
         private BitmapImage ConvertFromByteArray(byte[] array)
         {
+            if (array == null) return null;
+
             BitmapImage myBitmapImage = new BitmapImage();
             myBitmapImage.BeginInit();
             myBitmapImage.StreamSource = new MemoryStream(array);
