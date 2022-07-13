@@ -129,6 +129,9 @@ namespace MemoRandom.Client.ViewModels
             });
         }
 
+        /// <summary>
+        /// Вызов окна редактирования выбранного человека
+        /// </summary>
         private void EditHumanData()
         {
             _container.Resolve<HumanDetailedView>().ShowDialog();

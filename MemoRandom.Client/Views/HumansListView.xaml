@@ -106,12 +106,12 @@
                                         <DataGridTextColumn Header="ID"
                                                             IsReadOnly="True"
                                                             Binding="{Binding Path=HumanId}"
-                                                            Visibility="Visible"/>
+                                                            Visibility="Collapsed"/>
 
                                         <DataGridTextColumn Header="ID_Reason"
                                                             IsReadOnly="True"
                                                             Binding="{Binding Path=DeathReasonId}"
-                                                            Visibility="Visible"/>
+                                                            Visibility="Collapsed"/>
 
                                         <DataGridTextColumn Header="Фамилия"
                                                             IsReadOnly="True"

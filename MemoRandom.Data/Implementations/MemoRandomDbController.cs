@@ -171,6 +171,7 @@ namespace MemoRandom.Data.Implementations
                 try
                 {
                     var humansList = MemoContext.DbHumans.ToList();
+
                     HumansRepository.HumansList.Clear();
                     HumansRepository.HumansList = GetInnerHumans(humansList);
                 }

@@ -240,24 +240,43 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private void SaveHuman()
         {
-            // Пока для нового хьюмана
-            Human human = new()
+            var curHuman = _humanController.GetCurrentHuman();
+            if (curHuman != null)
             {
-                HumanId = Guid.NewGuid(),
-                LastName = LastName,
-                FirstName = FirstName,
-                Patronymic = Patronymic,
-                BirthDate = BirthDate,
-                BirthCountry = BirthCountry,
-                BirthPlace = BirthPlace,
-                DeathDate = DeathDate,
-                DeathCountry = DeathCountry,
-                DeathPlace = DeathPlace,
-                HumanImage = ConvertFromBitmapSource((BitmapSource)Image.Source),
-                DeathReasonId = DeathReasonId
-            };
+                curHuman.LastName = LastName;
+                curHuman.FirstName = FirstName;
+                curHuman.Patronymic = Patronymic;
+                curHuman.BirthDate = BirthDate;
+                curHuman.BirthCountry = BirthCountry;
+                curHuman.BirthPlace = BirthPlace;
+                curHuman.DeathDate = DeathDate;
+                curHuman.DeathCountry = DeathCountry;
+                curHuman.DeathPlace = DeathPlace;
+                curHuman.HumanImage = ConvertFromBitmapSource((BitmapSource)Image.Source);
+                curHuman.DeathReasonId = DeathReasonId;
 
-            _humanController.UpdateHumans(human);
+                _humanController.UpdateHumans(curHuman);
+            }
+            else
+            {
+                Human human = new()
+                {
+                    HumanId = Guid.NewGuid(),
+                    LastName = LastName,
+                    FirstName = FirstName,
+                    Patronymic = Patronymic,
+                    BirthDate = BirthDate,
+                    BirthCountry = BirthCountry,
+                    BirthPlace = BirthPlace,
+                    DeathDate = DeathDate,
+                    DeathCountry = DeathCountry,
+                    DeathPlace = DeathPlace,
+                    HumanImage = ConvertFromBitmapSource((BitmapSource)Image.Source),
+                    DeathReasonId = DeathReasonId
+                };
+
+                _humanController.UpdateHumans(human);
+            }
         }
 
         /// <summary>
@@ -267,6 +286,8 @@ namespace MemoRandom.Client.ViewModels
         /// <returns></returns>
         private byte[] ConvertFromBitmapSource(BitmapSource src)
         {
+            if(src == null) return null;
+
             byte[] bit;
             //BitmapSource temp = (BitmapSource)Image.Source;
             JpegBitmapEncoder encoder = new JpegBitmapEncoder();
