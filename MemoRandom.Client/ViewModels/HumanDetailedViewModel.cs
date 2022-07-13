@@ -218,7 +218,7 @@ namespace MemoRandom.Client.ViewModels
                     DeathDate = human.DeathDate;
                     DeathCountry = human.DeathCountry;
                     DeathPlace = human.DeathPlace;
-                    //Image.Source = ConvertFromBitmapSource(human.HumanImage);
+                    Image.Source = ConvertFromByteArray(human.HumanImage);
                 }
                 else
                 {
@@ -277,6 +277,16 @@ namespace MemoRandom.Client.ViewModels
 
                 _humanController.UpdateHumans(human);
             }
+        }
+
+        private BitmapImage ConvertFromByteArray(byte[] array)
+        {
+            BitmapImage myBitmapImage = new BitmapImage();
+            myBitmapImage.BeginInit();
+            myBitmapImage.StreamSource = new MemoryStream(array);
+            myBitmapImage.DecodePixelWidth = 200;
+            myBitmapImage.EndInit();
+            return myBitmapImage;
         }
 
         /// <summary>
