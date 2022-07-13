@@ -40,7 +40,7 @@ namespace MemoRandom.Data.Interfaces
         /// Получение списка людей из БД
         /// </summary>
         /// <returns></returns>
-        List<Human> GetHumasList();
+        void GetHumasList();
 
         /// <summary>
         /// Добавление человека в список людей в БД
@@ -48,5 +48,9 @@ namespace MemoRandom.Data.Interfaces
         /// <param name="human"></param>
         /// <returns></returns>
         bool AddHumanToList(Human human);
+
+        bool UpdateHumanInList(Human human);
+
+        bool DeleteHumanFromList(Human human);
     }
 }

@@ -15,8 +15,31 @@ namespace MemoRandom.Data.Interfaces
         /// <returns></returns>
         List<Human> GetHumansList();
 
+        /// <summary>
+        /// Установка текущего человека при работе со списком
+        /// Если null, то новая запись
+        /// </summary>
+        /// <param name="human"></param>
         void SetCurrentHuman(Human human);
 
+        /// <summary>
+        /// Получение текущего человека при работе со списком
+        /// </summary>
+        /// <returns></returns>
         Human GetCurrentHuman();
+
+        /// <summary>
+        /// Обновление (добавление или редактирование) списка людей
+        /// </summary>
+        /// <param name="human"></param>
+        /// <returns></returns>
+        bool UpdateHumans(Human human);
+
+        /// <summary>
+        /// Удаление человека из списка
+        /// </summary>
+        /// <param name="human"></param>
+        /// <returns></returns>
+        bool DeleteHuman(Human human);
     }
 }

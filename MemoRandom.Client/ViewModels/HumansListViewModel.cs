@@ -5,13 +5,12 @@ using Prism.Events;
 using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Net.Mime;
+using System.Threading.Tasks;
 using MemoRandom.Client.Views;
 using MemoRandom.Models.Models;
 using MemoRandom.Data.Interfaces;
 using System.Windows.Media.Imaging;
-using MemoRandom.Client.Configuration;
+using System.Windows.Threading;
 
 namespace MemoRandom.Client.ViewModels
 {
@@ -70,11 +69,11 @@ namespace MemoRandom.Client.ViewModels
                 _humansIndex = value;
                 if (value == -1)
                 {
-                    CurrentConfiguration.SetCurrentHuman(null);
+                    _humansController.SetCurrentHuman(null);
                 }
                 else
                 {
-                    CurrentConfiguration.SetCurrentHuman(HumansList[value]);
+                    _humansController.SetCurrentHuman(HumansList[value]);
                 }
                 RaisePropertyChanged(nameof(HumansIndex));
             }
@@ -116,13 +115,33 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private void AddHumanMenu()
         {
-            CurrentConfiguration.SetCurrentHuman(null);
+            _humansController.SetCurrentHuman(null);
             _container.Resolve<HumanDetailedView>().ShowDialog();
+            Task.Factory.StartNew(() =>
+            {
+                var result = _humansController.GetHumansList();
+                Dispatcher.CurrentDispatcher.Invoke(() =>
+                {
+                    HumansList = result;
+                    HumansIndex = 0;
+                    RaisePropertyChanged(nameof(HumansList));
+                });
+            });
         }
 
         private void EditHumanData()
         {
             _container.Resolve<HumanDetailedView>().ShowDialog();
+            Task.Factory.StartNew(() =>
+            {
+                var result = _humansController.GetHumansList();
+                Dispatcher.CurrentDispatcher.Invoke(() =>
+                {
+                    HumansList = result;
+                    HumansIndex = 0;
+                    RaisePropertyChanged(nameof(HumansList));
+                });
+            });
         }
 
         /// <summary>
@@ -138,11 +157,16 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private void OnStartHumansView()
         {
-            HumansList = _humansController.GetHumansList();
-            //CurrentConfiguration.CurrentHumansList = HumansList; // В топку
-
-            //_humansController.SetCurrentHuman(HumansList[0]);
-            HumansIndex = 0;
+            Task.Factory.StartNew(() =>
+            {
+                var result = _humansController.GetHumansList();
+                Dispatcher.CurrentDispatcher.Invoke(() =>
+                {
+                    HumansList = result;
+                    HumansIndex = 0;
+                    RaisePropertyChanged(nameof(HumansList));
+                });
+            });
         }
 
         #region CTOR

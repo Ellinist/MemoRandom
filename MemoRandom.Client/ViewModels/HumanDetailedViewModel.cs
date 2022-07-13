@@ -3,7 +3,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
-using MemoRandom.Client.Configuration;
+using MemoRandom.Data.Implementations;
 using MemoRandom.Data.Interfaces;
 using MemoRandom.Models.Models;
 using Prism.Commands;
@@ -17,7 +17,7 @@ namespace MemoRandom.Client.ViewModels
     public class HumanDetailedViewModel : BindableBase
     {
         #region PRIVATE FIELDS
-        private readonly IMemoRandomDbController _dbController;
+        private readonly IHumansController _humanController;
 
         private string   _lastName;
         private string   _firstName;
@@ -195,7 +195,6 @@ namespace MemoRandom.Client.ViewModels
         #endregion
 
         #region COMMANDS IMPLEMENTATION
-
         /// <summary>
         /// Метод, выполняемый после загрузки окна
         /// </summary>
@@ -206,7 +205,7 @@ namespace MemoRandom.Client.ViewModels
             {
                 Image = parameter as Image;
 
-                Human human = CurrentConfiguration.GetCurrentHuman();
+                Human human = _humanController.GetCurrentHuman();
 
                 if (human != null)
                 {
@@ -258,7 +257,7 @@ namespace MemoRandom.Client.ViewModels
                 DeathReasonId = DeathReasonId
             };
 
-            _dbController.AddHumanToList(human);
+            _humanController.UpdateHumans(human);
         }
 
         /// <summary>
@@ -310,9 +309,9 @@ namespace MemoRandom.Client.ViewModels
         }
 
         #region CTOR
-        public HumanDetailedViewModel(IMemoRandomDbController dbController)
+        public HumanDetailedViewModel(IHumansController humansController)
         {
-            _dbController = dbController ?? throw new ArgumentNullException(nameof(dbController));
+            _humanController = humansController ?? throw new ArgumentNullException(nameof(humansController));
 
             InitializeCommands();
         }

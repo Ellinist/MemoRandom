@@ -4,9 +4,11 @@ using Prism.Mvvm;
 using System.Collections.ObjectModel;
 using NLog;
 using System.Linq;
+using System.Threading.Tasks;
 using Prism.Commands;
 using Prism.Events;
 using System.Windows;
+using System.Windows.Threading;
 using MemoRandom.Data.Controllers;
 using MemoRandom.Data.Implementations;
 using MemoRandom.Data.Interfaces;
@@ -250,8 +252,17 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private void OnLoadedReasonsView()
         {
-            ReasonsList = _dbController.GetReasonsList();
-            RaisePropertyChanged(nameof(ReasonsList));
+            Task.Factory.StartNew(() =>
+            {
+                var result = _dbController.GetReasonsList();
+                Dispatcher.CurrentDispatcher.Invoke(() =>
+                {
+                    ReasonsList = result;
+                    RaisePropertyChanged(nameof(ReasonsList));
+                });
+            });
+            //ReasonsList = _dbController.GetReasonsList();
+            //RaisePropertyChanged(nameof(ReasonsList));
         }
         /// <summary>
         /// Команда добавления записи в справочник причин смерти
@@ -298,20 +309,27 @@ namespace MemoRandom.Client.ViewModels
                     ReasonsList.Add(rsn); // Если узел не выбран, то создаем в корне
                 }
 
-                if (!_dbController.AddReasonToList(rsn))
+                Task.Factory.StartNew(() =>
                 {
-                    MessageBox.Show("Не удалось сохранить причину", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
+                    var result = _dbController.AddReasonToList(rsn);
+                    Dispatcher.CurrentDispatcher.Invoke(() =>
+                    {
+                        if (!result)
+                        {
+                            MessageBox.Show("Не удалось сохранить причину", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
 
-                FieldsEnabled = false; // Делаем поля недоступными - пока не выберем узел и не выберем команду
-                CancelButtonEnabled = false; // После добавления новой записи кнопка отмены недоступна
-                ChangeSaveButtonEnabled = false; // После добавления новой записи кнопка изменения недоступна до выбора узла
-                DeleteButtonEnabled = false; // После добавления новой записи кнопка удаления недоступна до выбора узла
-                AddButtonText = AddButton; // Возвращаем название кнопки
+                        FieldsEnabled = false; // Делаем поля недоступными - пока не выберем узел и не выберем команду
+                        CancelButtonEnabled = false; // После добавления новой записи кнопка отмены недоступна
+                        ChangeSaveButtonEnabled = false; // После добавления новой записи кнопка изменения недоступна до выбора узла
+                        DeleteButtonEnabled = false; // После добавления новой записи кнопка удаления недоступна до выбора узла
+                        AddButtonText = AddButton; // Возвращаем название кнопки
 
-                SelectedReason.IsSelected = true;
-                RaisePropertyChanged(nameof(SelectedReason));
-                _addMode = false;
+                        SelectedReason.IsSelected = true;
+                        RaisePropertyChanged(nameof(SelectedReason));
+                        _addMode = false;
+                    });
+                });
             }
         }
         /// <summary>
@@ -333,10 +351,17 @@ namespace MemoRandom.Client.ViewModels
                 DeleteButtonEnabled = false; // После изменения записи кнопка удаления недоступна до выбора узла
                 CancelButtonEnabled = false; // После изменения записи кнопка отмены недоступна до выбора узла
 
-                if (!_dbController.UpdateReasonInList(SelectedReason))
+                Task.Factory.StartNew(() =>
                 {
-                    MessageBox.Show("Не удалось обновить данные!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
+                    var result = _dbController.UpdateReasonInList(SelectedReason);
+                    Dispatcher.CurrentDispatcher.Invoke(() =>
+                    {
+                        if (!result)
+                        {
+                            MessageBox.Show("Не удалось обновить данные!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
+                    });
+                });
             }
             else // Вход в режим редактирования
             {
@@ -380,19 +405,19 @@ namespace MemoRandom.Client.ViewModels
         {
             if (obj is not Reason selectedNode) return;
 
-
             if (selectedNode.ReasonParent != null)
             {
                 selectedNode.ReasonParent.ReasonChildren.Remove(selectedNode.ReasonParent.ReasonChildren.First(x => x.ReasonId == selectedNode.ReasonId));
-
-                _dbController.DeleteReasonInList(selectedNode);
             }
             else
             {
                 ReasonsList.Remove(selectedNode);
-
-                _dbController.DeleteReasonInList(selectedNode);
             }
+
+            Task.Factory.StartNew(() =>
+            {
+                _dbController.DeleteReasonInList(selectedNode);
+            });
 
             SelectedReason.IsSelected = false;
             SetEmptyFields(); // Очищаем поля окна

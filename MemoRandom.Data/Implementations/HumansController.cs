@@ -22,8 +22,8 @@ namespace MemoRandom.Data.Implementations
         /// <returns></returns>
         public List<Human> GetHumansList()
         {
-            HumansRepository.HumansList = _memoRandomDbController.GetHumasList();
-            return HumansRepository.HumansList;
+            _memoRandomDbController.GetHumasList(); // Формируем репозиторий
+            return HumansRepository.HumansList; // Возвращаем список людей из репозитория
         }
 
         /// <summary>
@@ -42,6 +42,38 @@ namespace MemoRandom.Data.Implementations
         public Human GetCurrentHuman()
         {
             return HumansRepository.CurrentHuman;
+        }
+
+        /// <summary>
+        /// Сохранение человека во внешнем хранилище
+        /// Если человек уже есть, то обновление записи
+        /// Если человек новый, то добавление записи
+        /// </summary>
+        /// <param name="human"></param>
+        /// <returns></returns>
+        public bool UpdateHumans(Human human)
+        {
+            if (GetCurrentHuman() != null) // Существующая запись
+            {
+                //TODO здесь вызов обновления записи
+
+                return _memoRandomDbController.UpdateHumanInList(human);
+            }
+            else // Новая запись
+            {
+                //TODO здесь добавление записи
+                return _memoRandomDbController.AddHumanToList(human);
+            }
+        }
+
+        /// <summary>
+        /// Удаление человека из внешнего хранилища
+        /// </summary>
+        /// <param name="human"></param>
+        /// <returns></returns>
+        public bool DeleteHuman(Human human)
+        {
+            return _memoRandomDbController.DeleteHumanFromList(human);
         }
 
         #region CTOR

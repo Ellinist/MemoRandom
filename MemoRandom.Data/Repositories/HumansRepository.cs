@@ -15,7 +15,7 @@ namespace MemoRandom.Data.Repositories
         /// <summary>
         /// Статический класс, получаемый из внешнего хранилища
         /// </summary>
-        public static List<Human> HumansList { get; set; }
+        public static List<Human> HumansList { get; set; } = new();
 
         /// <summary>
         /// Текущий человек, с которым ведется работа

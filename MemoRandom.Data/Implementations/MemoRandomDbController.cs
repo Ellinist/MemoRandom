@@ -4,21 +4,15 @@ using System.Collections.ObjectModel;
 using System.Configuration;
 using System.IO;
 using System.Linq;
-using System.Net.Mime;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Media;
 using MemoRandom.Models.Models;
 using MemoRandom.Data.Controllers;
 using MemoRandom.Data.DbModels;
 using MemoRandom.Data.Interfaces;
 using Microsoft.Data.SqlClient;
 using NLog;
-using System.Drawing.Imaging;
-using System.Windows.Media.Imaging;
 using MemoRandom.Data.Repositories;
-using Microsoft.VisualBasic;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace MemoRandom.Data.Implementations
 {
@@ -45,7 +39,23 @@ namespace MemoRandom.Data.Implementations
         /// <returns></returns>
         public ObservableCollection<Reason> GetReasonsList()
         {
-            return GettingReasons().Result;
+            using (MemoContext = new MemoRandomDbContext(GetConnectionString()))
+            {
+                try
+                {
+                    PlainReasonsList = MemoContext.DbReasons.ToList();
+
+                    ReasonsCollection = new();
+                    FormObservableCollection(PlainReasonsList, null); // Формирование иерархического списка
+                }
+                catch (Exception ex)
+                {
+                    ReasonsCollection = null; // В случае неуспеха чтения обнуляем иерархическую коллекцию
+                    _logger.Error($"Ошибка чтения файла настроек: {ex.HResult}");
+                }
+            }
+
+            return ReasonsCollection;
         }
 
         /// <summary>
@@ -55,7 +65,32 @@ namespace MemoRandom.Data.Implementations
         /// <returns></returns>
         public bool AddReasonToList(Reason reason)
         {
-            return AddingReason(reason).Result;
+            bool successResult = true;
+
+            using (MemoContext = new MemoRandomDbContext(GetConnectionString()))
+            {
+                try
+                {
+                    DbReason record = new DbReason()
+                    {
+                        DbReasonId = reason.ReasonId,
+                        DbReasonName = reason.ReasonName,
+                        DbReasonComment = reason.ReasonComment,
+                        DbReasonDescription = reason.ReasonDescription,
+                        DbReasonParentId = reason.ReasonParentId
+                    };
+                    MemoContext.DbReasons.Add(record);
+
+                    MemoContext.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    successResult = false;
+                    _logger.Error($"Ошибка записи файла справочника: {ex.HResult}");
+                }
+            }
+
+            return successResult;
         }
 
         /// <summary>
@@ -65,7 +100,35 @@ namespace MemoRandom.Data.Implementations
         /// <returns></returns>
         public bool UpdateReasonInList(Reason reason)
         {
-            return UpdatingReason(reason).Result;
+            bool successResult = true;
+
+            using (MemoContext = new MemoRandomDbContext(GetConnectionString()))
+            {
+                try
+                {
+                    var updatedReason = MemoContext.DbReasons.FirstOrDefault(x => x.DbReasonId == reason.ReasonId);
+                    if (updatedReason != null)
+                    {
+                        updatedReason.DbReasonName = reason.ReasonName;
+                        updatedReason.DbReasonComment = reason.ReasonComment;
+                        updatedReason.DbReasonDescription = reason.ReasonDescription;
+                        updatedReason.DbReasonParentId = reason.ReasonParentId;
+
+                        MemoContext.SaveChanges();
+                    }
+                    else
+                    {
+                        successResult = false; // На случай, если не найдена обновляемая причина в отслеживаемом наборе
+                    }
+                }
+                catch (Exception ex)
+                {
+                    successResult = false;
+                    _logger.Error($"Ошибка записи файла справочника: {ex.HResult}");
+                }
+            }
+
+            return successResult;
         }
 
         /// <summary>
@@ -75,7 +138,24 @@ namespace MemoRandom.Data.Implementations
         /// <returns></returns>
         public bool DeleteReasonInList(Reason reason)
         {
-            return DeletingReasons(reason).Result;
+            bool successResult = true;
+
+            using (MemoContext = new MemoRandomDbContext(GetConnectionString()))
+            {
+                try
+                {
+                    DeletingDaughters(reason, MemoContext);
+
+                    MemoContext.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    successResult = false;
+                    _logger.Error($"Ошибка записи файла справочника: {ex.HResult}");
+                }
+            }
+
+            return successResult;
         }
         #endregion
 
@@ -84,10 +164,22 @@ namespace MemoRandom.Data.Implementations
         /// Получение списка людей из БД
         /// </summary>
         /// <returns></returns>
-        public List<Human> GetHumasList()
+        public void GetHumasList()
         {
-            HumansRepository.HumansList = GettingHumans().Result;
-            return HumansRepository.HumansList; // Может уйти от дублирования?
+            using (MemoContext = new MemoRandomDbContext(GetConnectionString()))
+            {
+                try
+                {
+                    var humansList = MemoContext.DbHumans.ToList();
+                    HumansRepository.HumansList.Clear();
+                    HumansRepository.HumansList = GetInnerHumans(humansList);
+                }
+                catch (Exception ex)
+                {
+                    HumansRepository.HumansList = null; // В случае неуспеха чтения обнуляем иерархическую коллекцию
+                    _logger.Error($"Ошибка чтения файла по людям: {ex.HResult}");
+                }
+            }
         }
 
         /// <summary>
@@ -98,6 +190,102 @@ namespace MemoRandom.Data.Implementations
         public bool AddHumanToList(Human human)
         {
             return AddingHuman(human).Result;
+        }
+
+        /// <summary>
+        /// Обновление сущности человека в общем списке
+        /// </summary>
+        /// <param name="human"></param>
+        /// <returns></returns>
+        public bool UpdateHumanInList(Human human)
+        {
+            bool successResult = true;
+
+            using (MemoContext = new MemoRandomDbContext(GetConnectionString()))
+            {
+                try
+                {
+                    var updatedHuman = MemoContext.DbHumans.FirstOrDefault(x => x.DbHumanId == human.HumanId);
+                    if (updatedHuman != null) // Корректировка информации
+                    {
+                        updatedHuman.DbLastName = human.LastName;
+                        updatedHuman.DbFirstName = human.FirstName;
+                        updatedHuman.DbPatronymic = human.Patronymic;
+                        updatedHuman.DbBirthDate = human.BirthDate;
+                        updatedHuman.DbBirthCountry = human.BirthCountry;
+                        updatedHuman.DbBirthPlace = human.BirthPlace;
+                        updatedHuman.DbDeathDate = human.DeathDate;
+                        updatedHuman.DbDeathCountry = human.DeathCountry;
+                        updatedHuman.DbDeathPlace = human.DeathPlace;
+                        updatedHuman.DbDeathReasonId = human.DeathReasonId;
+                        updatedHuman.DbHumanImage = human.HumanImage;
+                        updatedHuman.DbImageFilePath = human.ImageFilePath;
+                        updatedHuman.DbHumanComments = human.HumanComments;
+
+                        MemoContext.SaveChanges();
+                    }
+                    else // Добавление новой записи
+                    {
+                        DbHuman record = new()
+                        {
+                            DbLastName = human.LastName,
+                            DbFirstName = human.FirstName,
+                            DbPatronymic = human.Patronymic,
+                            DbBirthDate = human.BirthDate,
+                            DbBirthCountry = human.BirthCountry,
+                            DbBirthPlace = human.BirthPlace,
+                            DbDeathDate = human.DeathDate,
+                            DbDeathCountry = human.DeathCountry,
+                            DbDeathPlace = human.DeathPlace,
+                            DbDeathReasonId = human.DeathReasonId,
+                            DbHumanImage = human.HumanImage,
+                            DbImageFilePath = human.ImageFilePath,
+                            DbHumanComments = human.HumanComments
+                    };
+
+                        MemoContext.DbHumans.Add(record);
+
+                        MemoContext.SaveChanges();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    successResult = false;
+                    _logger.Error($"Ошибка записи в список людей: {ex.HResult}");
+                }
+            }
+
+            return successResult;
+        }
+
+        /// <summary>
+        /// Удаление сущности человека из общего списка
+        /// </summary>
+        /// <param name="human"></param>
+        /// <returns></returns>
+        public bool DeleteHumanFromList(Human human)
+        {
+            bool successResult = true;
+
+            using (MemoContext = new MemoRandomDbContext(GetConnectionString()))
+            {
+                try
+                {
+                    var deletedHuman = MemoContext.DbHumans.FirstOrDefault(x => x.DbHumanId == human.HumanId);
+                    if (deletedHuman != null)
+                    {
+                        MemoContext.Remove(deletedHuman);
+                        MemoContext.SaveChanges();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    successResult = false;
+                    _logger.Error($"Ошибка удаление человека: {ex.HResult}");
+                }
+            }
+
+            return successResult;
         }
         #endregion
 
@@ -154,131 +342,6 @@ namespace MemoRandom.Data.Implementations
         }
 
         /// <summary>
-        /// Асинхронный метод получения справочника причин смерти
-        /// </summary>
-        /// <returns></returns>
-        private async Task<ObservableCollection<Reason>> GettingReasons()
-        {
-            await using (MemoContext = new MemoRandomDbContext(GetConnectionString()))
-            {
-                try
-                {
-                    PlainReasonsList = MemoContext.DbReasons.ToList();
-
-                    ReasonsCollection = new();
-                    FormObservableCollection(PlainReasonsList, null); // Формирование иерархического списка
-                }
-                catch (Exception ex)
-                {
-                    ReasonsCollection = null; // В случае неуспеха чтения обнуляем иерархическую коллекцию
-                    _logger.Error($"Ошибка чтения файла настроек: {ex.HResult}");
-                }
-            }
-
-            return ReasonsCollection;
-        }
-
-        /// <summary>
-        /// Асинхронный метод добавления новой причины смерти в справочник
-        /// </summary>
-        /// <param name="reason"></param>
-        /// <returns></returns>
-        private async Task<bool> AddingReason(Reason reason)
-        {
-            bool successResult = true;
-
-            await using (MemoContext = new MemoRandomDbContext(GetConnectionString()))
-            {
-                try
-                {
-                    DbReason record = new DbReason()
-                    {
-                        DbReasonId = reason.ReasonId,
-                        DbReasonName = reason.ReasonName,
-                        DbReasonComment = reason.ReasonComment,
-                        DbReasonDescription = reason.ReasonDescription,
-                        DbReasonParentId = reason.ReasonParentId
-                    };
-                    MemoContext.DbReasons.Add(record);
-
-                    MemoContext.SaveChanges();
-                }
-                catch (Exception ex)
-                {
-                    successResult = false;
-                    _logger.Error($"Ошибка записи файла справочника: {ex.HResult}");
-                }
-            }
-
-            return successResult;
-        }
-
-        /// <summary>
-        /// Асинхронный метод обновления причины смерти
-        /// </summary>
-        /// <param name="reason"></param>
-        /// <returns></returns>
-        private async Task<bool> UpdatingReason(Reason reason)
-        {
-            bool successResult = true;
-
-            await using (MemoContext = new MemoRandomDbContext(GetConnectionString()))
-            {
-                try
-                {
-                    var updatedReason = MemoContext.DbReasons.FirstOrDefault(x => x.DbReasonId == reason.ReasonId);
-                    if (updatedReason != null)
-                    {
-                        updatedReason.DbReasonName = reason.ReasonName;
-                        updatedReason.DbReasonComment = reason.ReasonComment;
-                        updatedReason.DbReasonDescription = reason.ReasonDescription;
-                        updatedReason.DbReasonParentId = reason.ReasonParentId;
-
-                        MemoContext.SaveChanges();
-                    }
-                    else
-                    {
-                        successResult = false; // На случай, если не найдена обновляемая причина в отслеживаемом наборе
-                    }
-                }
-                catch (Exception ex)
-                {
-                    successResult = false;
-                    _logger.Error($"Ошибка записи файла справочника: {ex.HResult}");
-                }
-            }
-
-            return successResult;
-        }
-
-        /// <summary>
-        /// Асинхронный метод удаления причины смерти и всех ее дочерних узлов
-        /// </summary>
-        /// <param name="reason"></param>
-        /// <returns></returns>
-        private async Task<bool> DeletingReasons(Reason reason)
-        {
-            bool successResult = true;
-
-            await using (MemoContext = new MemoRandomDbContext(GetConnectionString()))
-            {
-                try
-                {
-                    DeletingDaughters(reason, MemoContext);
-
-                    MemoContext.SaveChanges();
-                }
-                catch (Exception ex)
-                {
-                    successResult = false;
-                    _logger.Error($"Ошибка записи файла справочника: {ex.HResult}");
-                }
-            }
-
-            return successResult;
-        }
-
-        /// <summary>
         /// Рекурсивный метод удаления дочерних узлов для удаляемой причины смерти
         /// </summary>
         private void DeletingDaughters(Reason reason, MemoRandomDbContext context)
@@ -291,29 +354,6 @@ namespace MemoRandom.Data.Implementations
                 foreach (var child in reason.ReasonChildren) // Если есть дочерние узлы, то выполняем удаление и по ним
                 {
                     DeletingDaughters(child, context);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Получение списка людей
-        /// </summary>
-        /// <returns></returns>
-        private async Task<List<Human>> GettingHumans()
-        {
-            await using (MemoContext = new MemoRandomDbContext(GetConnectionString()))
-            {
-                try
-                {
-                    var humansList = MemoContext.DbHumans.ToList();
-
-                    return GetInnerHumans(humansList);
-                }
-                catch (Exception ex)
-                {
-                    ReasonsCollection = null; // В случае неуспеха чтения обнуляем иерархическую коллекцию
-                    _logger.Error($"Ошибка чтения файла настроек: {ex.HResult}");
-                    return null;
                 }
             }
         }
@@ -335,10 +375,6 @@ namespace MemoRandom.Data.Implementations
                     DeathDate = person.DbDeathDate,
                     DeathCountry = person.DbDeathCountry,
                     DeathPlace = person.DbDeathPlace,
-                    // Эти две строки - думать, как переместить в асинхронность иного рода
-                    //HumanImage = ConvertImageToArray(person.DbHumanImage),
-                    //ImageFilePath = person.DbImageFilePath,
-                    //HumanImage = ConvertToBitmapImage(person.DbHumanImage),
                     HumanImage = person.DbHumanImage,
                     DeathReasonId = person.DbDeathReasonId,
                     HumanComments = person.DbHumanComments
