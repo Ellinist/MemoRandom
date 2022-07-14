@@ -55,7 +55,7 @@
                              GradientStops="{StaticResource GlassStops}"/>
 
         <!--Задаем внешний стиль шрифта-->
-        <FontFamily x:Key="MainFont">/Fonts/Casanova.ttf#Casanova</FontFamily>
+        <FontFamily x:Key="MainFont">pack://application:,,,/Resources/Fonts/Casanova.ttf#Casanova</FontFamily>
 
         <!--Определяем шаблон работы элементов управления-->
         <ControlTemplate x:Key="ButtonTemplate" TargetType="{x:Type Button}">
