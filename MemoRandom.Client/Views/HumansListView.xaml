@@ -20,7 +20,8 @@
 
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
-            <i:InvokeCommandAction Command="{Binding OnStartHumansViewCommand}"/>
+            <i:InvokeCommandAction Command="{Binding OnStartHumansViewCommand}"
+                                   CommandParameter="{Binding ElementName=DgHumans}"/>
         </i:EventTrigger>
     </i:Interaction.Triggers>
 

@@ -11,6 +11,7 @@ using MemoRandom.Models.Models;
 using MemoRandom.Data.Interfaces;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+using System.Windows.Controls;
 
 namespace MemoRandom.Client.ViewModels
 {
@@ -23,6 +24,7 @@ namespace MemoRandom.Client.ViewModels
         private string _humansViewTitle = "Начало";
         private List<Human> _humansList = new();
         private int _humansIndex = 0;
+        private DataGrid _humansGrid;
         private BitmapImage _humanImage;
         private readonly ILogger _logger; // Экземпляр журнала
         private readonly IContainer _container; // Контейнер
@@ -78,6 +80,16 @@ namespace MemoRandom.Client.ViewModels
                 RaisePropertyChanged(nameof(HumansIndex));
             }
         }
+
+        public DataGrid HumansGrid
+        {
+            get => _humansGrid;
+            set
+            {
+                _humansGrid = value;
+                RaisePropertyChanged(nameof(HumansGrid));
+            }
+        }
         #endregion
 
         //private readonly IEventAggregator _eventAggregator;
@@ -86,7 +98,7 @@ namespace MemoRandom.Client.ViewModels
         //private readonly SubscriptionToken _humansDataFileChanging;
 
         #region Commands
-        public DelegateCommand OnStartHumansViewCommand { get; private set; }
+        public DelegateCommand<object> OnStartHumansViewCommand { get; private set; }
         public DelegateCommand AddHumanMenuCommand { get; private set; }
         public DelegateCommand EditHumanDataCommand { get; set; }
         public DelegateCommand SettingsMenuCommand { get; private set; }
@@ -101,7 +113,7 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private void InitializeCommands()
         {
-            OnStartHumansViewCommand = new DelegateCommand(OnStartHumansView);
+            OnStartHumansViewCommand = new DelegateCommand<object>(OnStartHumansView);
             AddHumanMenuCommand = new DelegateCommand(AddHumanMenu);
             EditHumanDataCommand = new DelegateCommand(EditHumanData);
             //StartMenuCommand = new DelegateCommand(OpenStartView);
@@ -117,16 +129,20 @@ namespace MemoRandom.Client.ViewModels
         {
             _humansController.SetCurrentHuman(null);
             _container.Resolve<HumanDetailedView>().ShowDialog();
-            Task.Factory.StartNew(() =>
-            {
-                var result = _humansController.GetHumansList();
-                Dispatcher.CurrentDispatcher.Invoke(() =>
-                {
-                    HumansList = result;
-                    HumansIndex = 0;
-                    RaisePropertyChanged(nameof(HumansList));
-                });
-            });
+            //Task.Factory.StartNew(() =>
+            //{
+            //    var result = _humansController.GetHumansList();
+            //    Dispatcher.CurrentDispatcher.Invoke(() =>
+            //    {
+            //        HumansList = result;
+            //        HumansIndex = 0;
+            //        RaisePropertyChanged(nameof(HumansList));
+            //    });
+            //});
+
+            HumansList.Clear();
+            HumansList = _humansController.GetHumansList();
+            HumansGrid.SelectedItem = HumansList[^1];
         }
 
         /// <summary>
@@ -134,17 +150,23 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private void EditHumanData()
         {
+            var prevIndex = HumansIndex;
             _container.Resolve<HumanDetailedView>().ShowDialog();
-            Task.Factory.StartNew(() =>
-            {
-                var result = _humansController.GetHumansList();
-                Dispatcher.CurrentDispatcher.Invoke(() =>
-                {
-                    HumansList = result;
-                    HumansIndex = 0;
-                    RaisePropertyChanged(nameof(HumansList));
-                });
-            });
+            //Task.Factory.StartNew(() =>
+            //{
+            //    var result = _humansController.GetHumansList();
+            //    Dispatcher.CurrentDispatcher.Invoke(() =>
+            //    {
+            //        HumansList = result;
+            //        HumansIndex = 0;
+            //        RaisePropertyChanged(nameof(HumansList));
+            //    });
+            //});
+
+            HumansGrid.SelectedItem = HumansGrid.Items[prevIndex];
+
+            var tt = HumansGrid.SelectedIndex;
+            HumansGrid.Focus();
         }
 
         /// <summary>
@@ -158,8 +180,14 @@ namespace MemoRandom.Client.ViewModels
         /// <summary>
         /// При открытии окна получаем список всех людей
         /// </summary>
-        private void OnStartHumansView()
+        private void OnStartHumansView(object parameter)
         {
+            var grid = parameter as DataGrid;
+            if(grid != null)
+            {
+                HumansGrid = grid;
+            }
+
             Task.Factory.StartNew(() =>
             {
                 var result = _humansController.GetHumansList();
