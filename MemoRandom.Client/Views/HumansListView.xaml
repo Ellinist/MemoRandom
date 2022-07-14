@@ -24,6 +24,13 @@
         </i:EventTrigger>
     </i:Interaction.Triggers>
 
+    <mah:MetroWindow.Resources>
+        <FontFamily x:Key="SurnameFont">pack://application:,,,/Resources/Fonts/Treasury.ttf#TreasuryFlourishC</FontFamily>
+        <FontFamily x:Key="NamePatronymicFont">pack://application:,,,/Resources/Fonts/DeutschGothic.ttf#Deutsch Gothic</FontFamily>
+        <FontFamily x:Key="TestFont">pack://application:,,,/Resources/Fonts/Vezitsa.ttf#Vezitsa</FontFamily>
+        <FontFamily x:Key="TestFont2">pack://application:,,,/Resources/Fonts/GothicCyr.ttf#True Gothic Cyr</FontFamily>
+    </mah:MetroWindow.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="40" MinHeight="40" MaxHeight="40"/>
@@ -203,10 +210,11 @@
 
                                 <!--Фамилия выбранного человека-->
                                 <Label Content="{Binding Path=LastName}"
-                                       Height="24"
+                                       Height="36"
                                        HorizontalAlignment="Center"
-                                       FontSize="22"
-                                       FontFamily="/Resources/#Beresta"
+                                       FontSize="30"
+                                       FontFamily="{StaticResource TestFont2}"
+                                       
                                        Padding="0"
                                        Foreground="DarkBlue"/>
 
@@ -216,26 +224,27 @@
                                         <!--Имя выбранного человека-->
                                         <Label Content="{Binding Path=FirstName}"
                                                Foreground="DarkBlue"
-                                               FontSize="22"
-                                               FontFamily="/Resources/#Beresta"
+                                               FontSize="24"
+                                               FontFamily="{StaticResource TestFont2}"
+                                               FontStyle="Italic"
                                                Padding="0,0,5,0"/>
                                         
                                         <!--Отчество выбранного человека-->
                                         <Label Content="{Binding Path=Patronymic}"
                                                Foreground="DarkBlue"
-                                               FontSize="22"
-                                               FontFamily="/Resources/#Beresta"
+                                               FontSize="24"
+                                               FontFamily="{StaticResource TestFont2}"
+                                               FontStyle="Italic"
                                                Padding="5,0,0,0"/>
                                     </StackPanel>
 
                                 <!--Число полных прожитых лет-->
                                 <!--Content="{Binding Path=FullYears}"-->
-                                <Label Content="Years"
+                                <Label Content="(100 лет)"
                                        HorizontalAlignment="Center"
                                        FontSize="22"
                                        Foreground="Crimson"
-                                       FontFamily="/Resources/#Roland"
-                                       FontWeight="Bold"
+                                       FontFamily="{StaticResource TestFont2}"
                                        Padding="0"/>
 
                             </StackPanel>

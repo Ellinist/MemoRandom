@@ -10,6 +10,11 @@
   <ItemGroup>
     <None Remove="Resources\Fonts\ArianaVioleta-dz2K.ttf" />
     <None Remove="Resources\Fonts\Casanova.ttf" />
+    <None Remove="Resources\Fonts\DeutschGothic.ttf" />
+    <None Remove="Resources\Fonts\GothicCyr.ttf" />
+    <None Remove="Resources\Fonts\MoulinRouge.ttf" />
+    <None Remove="Resources\Fonts\Treasury.ttf" />
+    <None Remove="Resources\Fonts\Vezitsa.ttf" />
     <None Remove="Resources\Icons\bxs-party.svg" />
     <None Remove="Resources\humanInfoIcon.ico" />
     <None Remove="Resources\mainWindowIcon.ico" />
@@ -47,6 +52,18 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\Fonts\Casanova.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Fonts\DeutschGothic.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Fonts\GothicCyr.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Fonts\Treasury.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Fonts\Vezitsa.ttf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\Pictures\EllinistAbout.jpg">
