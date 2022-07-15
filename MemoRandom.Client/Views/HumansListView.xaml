@@ -98,7 +98,8 @@
                                           ItemsSource="{Binding Path=HumansList}"
                                           AutoGenerateColumns="False"
                                           Margin="5, 5, 0, 5"
-                                          SelectedIndex="{Binding Path=HumansIndex, Mode=TwoWay}">
+                                          SelectedItem="{Binding Path=SelectedHuman}">
+                                    <!--SelectedIndex="{Binding Path=HumansIndex, Mode=TwoWay}"-->
 
                                     <DataGrid.ColumnHeaderStyle>
 
@@ -261,7 +262,7 @@
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" DockPanel.Dock="Bottom" Margin="5, 5, 5, 5">
                                     <Button Content="Подробности" Command="{Binding ShowAdditionInfoCommand}"
                                         Margin="0, 5, 10, 5" FontSize="18" FontWeight="Bold" Padding="10, 5, 10, 5"/>
-                                    <Button Content="Новая запись" Command="{Binding AddHumanMenuCommand}"
+                                    <Button Content="Новая запись" Command="{Binding AddHumanCommand}"
                                         Margin="10, 5, 10, 5" FontSize="18" FontWeight="Bold" Padding="10, 5, 10, 5"/>
                                     <Button Content="Редактировать запись" Command="{Binding EditHumanDataCommand}"
                                         Margin="10, 5, 10, 5" FontSize="18" FontWeight="Bold" Padding="10, 5, 10, 5"/>

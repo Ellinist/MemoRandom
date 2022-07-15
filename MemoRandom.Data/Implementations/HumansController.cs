@@ -51,18 +51,19 @@ namespace MemoRandom.Data.Implementations
         /// </summary>
         /// <param name="human"></param>
         /// <returns></returns>
-        public bool UpdateHumans(Human human)
+        public bool UpdateHumans()
         {
-            if (GetCurrentHuman() != null) // Существующая запись
+            var currentHuman = GetCurrentHuman();
+            if (currentHuman != null) // Существующая запись
             {
                 //TODO здесь вызов обновления записи
 
-                return _memoRandomDbController.UpdateHumanInList(human);
+                return _memoRandomDbController.UpdateHumanInList(currentHuman);
             }
             else // Новая запись
             {
                 //TODO здесь добавление записи
-                return _memoRandomDbController.AddHumanToList(human);
+                return _memoRandomDbController.AddHumanToList(currentHuman);
             }
         }
 
@@ -71,9 +72,17 @@ namespace MemoRandom.Data.Implementations
         /// </summary>
         /// <param name="human"></param>
         /// <returns></returns>
-        public bool DeleteHuman(Human human)
+        public bool DeleteHuman()
         {
-            return _memoRandomDbController.DeleteHumanFromList(human);
+            var currentHuman = GetCurrentHuman();
+            if(currentHuman != null)
+            {
+                return _memoRandomDbController.DeleteHumanFromList(currentHuman);
+            }
+            else
+            {
+                return false;
+            }
         }
 
         #region CTOR

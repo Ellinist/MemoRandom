@@ -33,13 +33,13 @@ namespace MemoRandom.Data.Interfaces
         /// </summary>
         /// <param name="human"></param>
         /// <returns></returns>
-        bool UpdateHumans(Human human);
+        bool UpdateHumans();
 
         /// <summary>
         /// Удаление человека из списка
         /// </summary>
         /// <param name="human"></param>
         /// <returns></returns>
-        bool DeleteHuman(Human human);
+        bool DeleteHuman();
     }
 }

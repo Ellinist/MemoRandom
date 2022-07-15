@@ -255,7 +255,7 @@ namespace MemoRandom.Client.ViewModels
                 curHuman.HumanImage = ConvertFromBitmapSource((BitmapSource)Image.Source);
                 curHuman.DeathReasonId = DeathReasonId;
 
-                _humanController.UpdateHumans(curHuman);
+                _humanController.SetCurrentHuman(curHuman);
             }
             else
             {
@@ -275,8 +275,10 @@ namespace MemoRandom.Client.ViewModels
                     DeathReasonId = DeathReasonId
                 };
 
-                _humanController.UpdateHumans(human);
+                _humanController.SetCurrentHuman(human);
             }
+
+            _humanController.UpdateHumans();
         }
 
         private BitmapImage ConvertFromByteArray(byte[] array)

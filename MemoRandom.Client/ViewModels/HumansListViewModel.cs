@@ -25,6 +25,7 @@ namespace MemoRandom.Client.ViewModels
         private string _humansViewTitle = "Начало";
         private List<Human> _humansList = new();
         private int _humansIndex = 0;
+        private Human _selectedHuman;
         private readonly ILogger _logger; // Экземпляр журнала
         private readonly IContainer _container; // Контейнер
         private readonly IEventAggregator _eventAggregator;
@@ -58,25 +59,46 @@ namespace MemoRandom.Client.ViewModels
             }
         }
 
+        ///// <summary>
+        ///// Индекс выбранного человека
+        ///// </summary>
+        //public int HumansIndex
+        //{
+        //    get => _humansIndex;
+        //    set
+        //    {
+        //        if (HumansList == null || HumansList.Count == 0) return;
+        //        _humansIndex = value;
+        //        if (value == -1)
+        //        {
+        //            _humansController.SetCurrentHuman(null);
+        //        }
+        //        else
+        //        {
+        //            _humansController.SetCurrentHuman(HumansList[value]);
+        //        }
+        //        RaisePropertyChanged(nameof(HumansIndex));
+        //    }
+        //}
+
         /// <summary>
-        /// Индекс выбранного человека
+        /// Выбранный в списке человек
         /// </summary>
-        public int HumansIndex
+        public Human SelectedHuman
         {
-            get => _humansIndex;
+            get => _selectedHuman;
             set
             {
-                if (HumansList == null || HumansList.Count == 0) return;
-                _humansIndex = value;
-                if (value == -1)
+                if(HumansList == null || HumansList.Count == 0 || value == null)
                 {
-                    _humansController.SetCurrentHuman(null);
+                    _humansController?.SetCurrentHuman(null);
                 }
                 else
                 {
-                    _humansController.SetCurrentHuman(HumansList[value]);
+                    _selectedHuman = value;
+                    _humansController.SetCurrentHuman(value);
+                    RaisePropertyChanged(nameof(SelectedHuman));
                 }
-                RaisePropertyChanged(nameof(HumansIndex));
             }
         }
         #endregion
@@ -132,7 +154,7 @@ namespace MemoRandom.Client.ViewModels
 
             HumansList.Clear();
             HumansList = _humansController.GetHumansList();
-            HumansIndex = 0; // Прыгаем на первую запись в списке
+            //HumansIndex = 0; // Прыгаем на первую запись в списке
         }
 
         /// <summary>
@@ -140,9 +162,9 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private void EditHumanData()
         {
-            var prevIndex = HumansIndex;
+            //var prevIndex = HumansIndex;
             _container.Resolve<HumanDetailedView>().ShowDialog();
-            HumansIndex = prevIndex;
+            //HumansIndex = prevIndex;
         }
 
         private void DeleteHuman()
@@ -151,11 +173,11 @@ namespace MemoRandom.Client.ViewModels
             var result = MessageBox.Show("Удалить выбранного человека?", "Удаление!", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if(result == MessageBoxResult.Yes)
             {
-                _humansController.DeleteHuman(_humansController.GetCurrentHuman());
+                _humansController.DeleteHuman();
 
                 HumansList.Clear();
                 HumansList = _humansController.GetHumansList();
-                HumansIndex = 0; // Прыгаем на первую запись в списке
+                //HumansIndex = 0; // Прыгаем на первую запись в списке
             }
         }
 
@@ -182,7 +204,7 @@ namespace MemoRandom.Client.ViewModels
                 });
             });
 
-            HumansIndex = 0;
+            //HumansIndex = 0;
         }
 
         #region CTOR
