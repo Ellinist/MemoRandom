@@ -13,6 +13,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using System.Windows.Controls;
 using System.Windows;
+using System.IO;
+using MemoRandom.Data.Repositories;
 
 namespace MemoRandom.Client.ViewModels
 {
@@ -81,6 +83,17 @@ namespace MemoRandom.Client.ViewModels
         //    }
         //}
 
+        private Image _personImage;
+        public Image PersonImage
+        {
+            get => _personImage;
+            set
+            {
+                _personImage = value;
+                RaisePropertyChanged(nameof(PersonImage));
+            }
+        }
+
         /// <summary>
         /// Выбранный в списке человек
         /// </summary>
@@ -96,7 +109,9 @@ namespace MemoRandom.Client.ViewModels
                 else
                 {
                     _selectedHuman = value;
+                    _humansController.GetHumanImage();
                     _humansController.SetCurrentHuman(value);
+                    PersonImage.Source = ConvertFromByteArray(HumansRepository.CurrentHuman.HumanImage);
                     RaisePropertyChanged(nameof(SelectedHuman));
                 }
             }
@@ -107,7 +122,7 @@ namespace MemoRandom.Client.ViewModels
         /// <summary>
         /// Команда запуска окна со списком людей
         /// </summary>
-        public DelegateCommand OnStartHumansViewCommand { get; private set; }
+        public DelegateCommand<object> OnStartHumansViewCommand { get; private set; }
 
         /// <summary>
         /// Команда добавления человека
@@ -137,11 +152,23 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private void InitializeCommands()
         {
-            OnStartHumansViewCommand = new DelegateCommand(OnStartHumansView);
+            OnStartHumansViewCommand = new DelegateCommand<object>(OnStartHumansView);
             AddHumanCommand = new DelegateCommand(AddHuman);
             EditHumanDataCommand = new DelegateCommand(EditHumanData);
             DeleteHumanCommand = new DelegateCommand(DeleteHuman);
             StartAboutCommand = new DelegateCommand(OpenAboutView);
+        }
+
+        private BitmapImage ConvertFromByteArray(byte[] array)
+        {
+            if (array == null) return null;
+
+            BitmapImage myBitmapImage = new BitmapImage();
+            myBitmapImage.BeginInit();
+            myBitmapImage.StreamSource = new MemoryStream(array);
+            myBitmapImage.DecodePixelWidth = 200;
+            myBitmapImage.EndInit();
+            return myBitmapImage;
         }
 
         /// <summary>
@@ -192,8 +219,14 @@ namespace MemoRandom.Client.ViewModels
         /// <summary>
         /// При открытии окна получаем список всех людей
         /// </summary>
-        private void OnStartHumansView()
+        private void OnStartHumansView(object parameter)
         {
+            var image = parameter as Image;
+            if(image != null)
+            {
+                PersonImage = image;
+            }
+
             Task.Factory.StartNew(() =>
             {
                 var result = _humansController.GetHumansList();

@@ -171,14 +171,24 @@ namespace MemoRandom.Data.Implementations
                 try
                 {
                     #region New BLOCK
+                    // читаем контекст, выбирая только основные поля (без изображений)
                     var newList = MemoContext.DbHumans.Select(h => new
                     {
                         DbHumanId = h.DbHumanId,
                         DbLastName = h.DbLastName,
                         DbFirstName = h.DbFirstName,
-                        DbBirthDate = h.DbBirthDate
+                        DbPatronymic = h.DbPatronymic,
+                        DbBirthDate = h.DbBirthDate,
+                        DbBirthCountry = h.DbBirthCountry,
+                        DbBirthPlace = h.DbBirthPlace,
+                        DbDeathDate = h.DbDeathDate,
+                        DbDeathCountry = h.DbDeathCountry,
+                        DbDeathPlace = h.DbDeathPlace,
+                        DbDeathReasonId = h.DbDeathReasonId,
+                        DbHumanComments = h.DbHumanComments
                     });
 
+                    // Перегоняем в результирующий список
                     List<Human> humansList = new();
                     foreach (var person in newList)
                     {
@@ -187,7 +197,15 @@ namespace MemoRandom.Data.Implementations
                             HumanId = person.DbHumanId,
                             LastName = person.DbLastName,
                             FirstName = person.DbFirstName,
+                            Patronymic = person.DbPatronymic,
                             BirthDate = person.DbBirthDate,
+                            BirthCountry = person.DbBirthCountry,
+                            BirthPlace = person.DbBirthPlace,
+                            DeathDate = person.DbDeathDate,
+                            DeathCountry = person.DbDeathCountry,
+                            DeathPlace = person.DbDeathPlace,
+                            DeathReasonId = person.DbDeathReasonId,
+                            HumanComments = person.DbHumanComments
                         };
                         humansList.Add(human);
                     }
@@ -224,6 +242,24 @@ namespace MemoRandom.Data.Implementations
                 resultList.Add(human);
             }
             return resultList;
+        }
+
+        public void GetPicture(Human human)
+        {
+            using (MemoContext = new MemoRandomDbContext(GetConnectionString()))
+            {
+                try
+                {
+                    var image = MemoContext.DbHumans.FirstOrDefault(x => x.DbHumanId == human.HumanId).DbHumanImage;
+                    var row = HumansRepository.HumansList.FirstOrDefault(x => x.HumanId == human.HumanId);
+                    row.HumanImage = image;
+                }
+                catch(Exception ex)
+                {
+                    //HumansRepository.HumansList = null; // В случае неуспеха чтения обнуляем иерархическую коллекцию
+                    _logger.Error($"Ошибка чтения изображения человека: {ex.HResult}");
+                }
+            }
         }
 
         /// <summary>

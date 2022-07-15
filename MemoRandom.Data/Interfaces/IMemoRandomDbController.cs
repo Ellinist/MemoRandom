@@ -52,5 +52,7 @@ namespace MemoRandom.Data.Interfaces
         bool UpdateHumanInList(Human human);
 
         bool DeleteHumanFromList(Human human);
+
+        void GetPicture(Human human);
     }
 }

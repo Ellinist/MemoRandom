@@ -85,6 +85,15 @@ namespace MemoRandom.Data.Implementations
             }
         }
 
+        public void GetHumanImage()
+        {
+            var currentHuman = GetCurrentHuman();
+            if(currentHuman != null)
+            {
+                _memoRandomDbController.GetPicture(currentHuman);
+            }
+        }
+
         #region CTOR
         public HumansController(IMemoRandomDbController memoRandomDbController)
         {
