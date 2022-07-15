@@ -170,10 +170,36 @@ namespace MemoRandom.Data.Implementations
             {
                 try
                 {
-                    var humansList = MemoContext.DbHumans.ToList();
+                    #region New BLOCK
+                    var newList = MemoContext.DbHumans.Select(h => new
+                    {
+                        DbHumanId = h.DbHumanId,
+                        DbLastName = h.DbLastName,
+                        DbFirstName = h.DbFirstName,
+                        DbBirthDate = h.DbBirthDate
+                    });
+
+                    List<Human> humansList = new();
+                    foreach (var person in newList)
+                    {
+                        Human human = new()
+                        {
+                            HumanId = person.DbHumanId,
+                            LastName = person.DbLastName,
+                            FirstName = person.DbFirstName,
+                            BirthDate = person.DbBirthDate,
+                        };
+                        humansList.Add(human);
+                    }
 
                     HumansRepository.HumansList.Clear();
-                    HumansRepository.HumansList = GetInnerHumans(humansList);
+                    HumansRepository.HumansList = humansList;
+                    #endregion
+
+                    //var humansList = MemoContext.DbHumans.ToList();
+
+                    //HumansRepository.HumansList.Clear();
+                    //HumansRepository.HumansList = GetInnerHumans(humansList);
                 }
                 catch (Exception ex)
                 {
@@ -181,6 +207,23 @@ namespace MemoRandom.Data.Implementations
                     _logger.Error($"Ошибка чтения файла по людям: {ex.HResult}");
                 }
             }
+        }
+
+        private List<Human> Experiment(IQueryable<DbHuman> list)
+        {
+            List<Human> resultList = new();
+            foreach (DbHuman person in list)
+            {
+                Human human = new()
+                {
+                    HumanId = person.DbHumanId,
+                    LastName = person.DbLastName,
+                    FirstName = person.DbFirstName,
+                    BirthDate = person.DbBirthDate,
+                };
+                resultList.Add(human);
+            }
+            return resultList;
         }
 
         /// <summary>
