@@ -227,23 +227,27 @@ namespace MemoRandom.Data.Implementations
             }
         }
 
-        private List<Human> Experiment(IQueryable<DbHuman> list)
-        {
-            List<Human> resultList = new();
-            foreach (DbHuman person in list)
-            {
-                Human human = new()
-                {
-                    HumanId = person.DbHumanId,
-                    LastName = person.DbLastName,
-                    FirstName = person.DbFirstName,
-                    BirthDate = person.DbBirthDate,
-                };
-                resultList.Add(human);
-            }
-            return resultList;
-        }
+        //private List<Human> Experiment(IQueryable<DbHuman> list)
+        //{
+        //    List<Human> resultList = new();
+        //    foreach (DbHuman person in list)
+        //    {
+        //        Human human = new()
+        //        {
+        //            HumanId = person.DbHumanId,
+        //            LastName = person.DbLastName,
+        //            FirstName = person.DbFirstName,
+        //            BirthDate = person.DbBirthDate,
+        //        };
+        //        resultList.Add(human);
+        //    }
+        //    return resultList;
+        //}
 
+        /// <summary>
+        /// Чтение изображения из внешнего хранилища
+        /// </summary>
+        /// <param name="human"></param>
         public void GetPicture(Human human)
         {
             using (MemoContext = new MemoRandomDbContext(GetConnectionString()))

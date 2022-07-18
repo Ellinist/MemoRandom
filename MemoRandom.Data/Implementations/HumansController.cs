@@ -85,6 +85,9 @@ namespace MemoRandom.Data.Implementations
             }
         }
 
+        /// <summary>
+        /// Получение изображения выбранного человека
+        /// </summary>
         public void GetHumanImage()
         {
             var currentHuman = GetCurrentHuman();

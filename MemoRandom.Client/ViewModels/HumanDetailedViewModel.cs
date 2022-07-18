@@ -253,6 +253,7 @@ namespace MemoRandom.Client.ViewModels
                 curHuman.DeathCountry = DeathCountry;
                 curHuman.DeathPlace = DeathPlace;
                 curHuman.HumanImage = ConvertFromBitmapSource((BitmapSource)Image.Source);
+                curHuman.ImageFilePath = $"./Images/{LastName}";
                 curHuman.DeathReasonId = DeathReasonId;
 
                 _humanController.SetCurrentHuman(curHuman);
@@ -272,6 +273,7 @@ namespace MemoRandom.Client.ViewModels
                     DeathCountry = DeathCountry,
                     DeathPlace = DeathPlace,
                     HumanImage = ConvertFromBitmapSource((BitmapSource)Image.Source),
+                    ImageFilePath = $"./Images/{LastName}",
                     DeathReasonId = DeathReasonId
                 };
 

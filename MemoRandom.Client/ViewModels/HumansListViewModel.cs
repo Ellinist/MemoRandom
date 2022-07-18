@@ -78,8 +78,11 @@ namespace MemoRandom.Client.ViewModels
                 else
                 {
                     _humansController.SetCurrentHuman(HumansList[value]);
+
+                    _humansController.GetHumanImage();
+                    PersonImage.Source = ConvertFromByteArray(HumansRepository.CurrentHuman.HumanImage);
+                    RaisePropertyChanged(nameof(PersonImage));
                 }
-                //MessageBox.Show($"Index = {value}", "Index");
                 RaisePropertyChanged(nameof(PersonIndex));
             }
         }
@@ -110,9 +113,9 @@ namespace MemoRandom.Client.ViewModels
                 else
                 {
                     _selectedHuman = value;
-                    //_humansController.GetHumanImage();
+                    
                     _humansController.SetCurrentHuman(value);
-                    //PersonImage.Source = ConvertFromByteArray(HumansRepository.CurrentHuman.HumanImage);
+                    
                     RaisePropertyChanged(nameof(SelectedHuman));
                 }
             }
@@ -192,14 +195,12 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private void EditHumanData()
         {
-            //var prevIndex = PersonIndex;
             _container.Resolve<HumanDetailedView>().ShowDialog();
 
             HumansList.Clear();
             HumansList = _humansController.GetHumansList();
             var currentHumanId = _humansController.GetCurrentHuman();
             PersonIndex = HumansList.FindIndex(x => x.HumanId == currentHumanId.HumanId); // Прыжок на индекс редактируемого человека
-            //PersonIndex = prevIndex;
             RaisePropertyChanged(nameof(PersonIndex));
         }
 
@@ -214,6 +215,10 @@ namespace MemoRandom.Client.ViewModels
                 HumansList.Clear();
                 HumansList = _humansController.GetHumansList();
                 PersonIndex = 0; // Прыгаем на первую запись в списке
+
+                _humansController.GetHumanImage();
+                PersonImage.Source = ConvertFromByteArray(HumansRepository.CurrentHuman.HumanImage);
+                RaisePropertyChanged(nameof(PersonImage));
                 RaisePropertyChanged(nameof(PersonIndex));
             }
         }
@@ -247,6 +252,7 @@ namespace MemoRandom.Client.ViewModels
                 });
             });
 
+            if (HumansList.Count == 0) return;
             PersonIndex = 0;
             RaisePropertyChanged(nameof(PersonIndex));
         }

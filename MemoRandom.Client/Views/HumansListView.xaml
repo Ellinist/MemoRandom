@@ -207,6 +207,7 @@
                                     <Image x:Name="PersonImage"
                                            Height="350" MinHeight="350" MaxHeight="350"
                                            Width="450"
+                                           Source="{Binding Path=PersonImage, UpdateSourceTrigger=PropertyChanged}"
                                            Stretch="Uniform"
                                            HorizontalAlignment="Center"/>
                                     <!--Source="{Binding Path=PersonImage}"-->
