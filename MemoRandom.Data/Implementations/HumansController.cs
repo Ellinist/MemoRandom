@@ -22,7 +22,7 @@ namespace MemoRandom.Data.Implementations
         /// <returns></returns>
         public List<Human> GetHumansList()
         {
-            _memoRandomDbController.GetHumasList(); // Формируем репозиторий
+            _memoRandomDbController.GetHumansList(); // Формируем репозиторий
             return HumansRepository.HumansList; // Возвращаем список людей из репозитория
         }
 

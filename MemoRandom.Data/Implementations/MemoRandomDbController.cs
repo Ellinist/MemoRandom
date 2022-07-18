@@ -164,7 +164,7 @@ namespace MemoRandom.Data.Implementations
         /// Получение списка людей из БД
         /// </summary>
         /// <returns></returns>
-        public void GetHumasList()
+        public void GetHumansList()
         {
             using (MemoContext = new MemoRandomDbContext(GetConnectionString()))
             {

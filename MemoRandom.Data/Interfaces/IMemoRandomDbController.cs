@@ -40,7 +40,7 @@ namespace MemoRandom.Data.Interfaces
         /// Получение списка людей из БД
         /// </summary>
         /// <returns></returns>
-        void GetHumasList();
+        void GetHumansList();
 
         /// <summary>
         /// Добавление человека в список людей в БД
