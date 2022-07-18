@@ -186,7 +186,7 @@ namespace MemoRandom.Data.Implementations
                         DbDeathPlace = h.DbDeathPlace,
                         DbDeathReasonId = h.DbDeathReasonId,
                         DbHumanComments = h.DbHumanComments
-                    });
+                    }).OrderBy(x => x.DbLastName);
 
                     // Перегоняем в результирующий список
                     List<Human> humansList = new();
@@ -308,6 +308,7 @@ namespace MemoRandom.Data.Implementations
                     {
                         DbHuman record = new()
                         {
+                            DbHumanId = human.HumanId,
                             DbLastName = human.LastName,
                             DbFirstName = human.FirstName,
                             DbPatronymic = human.Patronymic,
@@ -508,6 +509,7 @@ namespace MemoRandom.Data.Implementations
                 }
             }
 
+            HumansRepository.CurrentHuman = human;
             return successResult;
         }
         #endregion

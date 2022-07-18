@@ -99,7 +99,8 @@
                                           ItemsSource="{Binding Path=HumansList}"
                                           AutoGenerateColumns="False"
                                           Margin="5, 5, 0, 5"
-                                          SelectedItem="{Binding Path=SelectedHuman}">
+                                          SelectedItem="{Binding Path=SelectedHuman}"
+                                          SelectedIndex="{Binding Path=PersonIndex}">
                                     <!--SelectedIndex="{Binding Path=HumansIndex, Mode=TwoWay}"-->
 
                                     <DataGrid.ColumnHeaderStyle>

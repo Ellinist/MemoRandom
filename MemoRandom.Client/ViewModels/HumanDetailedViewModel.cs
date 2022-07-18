@@ -241,7 +241,7 @@ namespace MemoRandom.Client.ViewModels
         private void SaveHuman()
         {
             var curHuman = _humanController.GetCurrentHuman();
-            if (curHuman != null)
+            if (curHuman != null) // Редактирование
             {
                 curHuman.LastName = LastName;
                 curHuman.FirstName = FirstName;
@@ -257,7 +257,7 @@ namespace MemoRandom.Client.ViewModels
 
                 _humanController.SetCurrentHuman(curHuman);
             }
-            else
+            else // Добавление нового
             {
                 Human human = new()
                 {
