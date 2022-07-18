@@ -171,7 +171,7 @@ namespace MemoRandom.Data.Implementations
                 try
                 {
                     #region New BLOCK
-                    // читаем контекст, выбирая только основные поля (без изображений)
+                    // Читаем контекст, выбирая только основные поля (без изображений)
                     var newList = MemoContext.DbHumans.Select(h => new
                     {
                         DbHumanId = h.DbHumanId,
