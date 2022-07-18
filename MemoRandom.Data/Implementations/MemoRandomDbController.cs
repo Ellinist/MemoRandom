@@ -332,6 +332,21 @@ namespace MemoRandom.Data.Implementations
 
                         MemoContext.SaveChanges();
                     }
+
+                    //File.WriteAllBytes(human.ImageFilePath, human.HumanImage);
+
+                    if (!Directory.Exists("../Images/"))
+                    {
+                        Directory.CreateDirectory("../Images/");
+                    }
+
+                    using (MemoryStream ms = new MemoryStream(human.HumanImage))
+                    {
+                        using (var fs = new FileStream(human.ImageFilePath, FileMode.Create))
+                        {
+                            ms.WriteTo(fs);
+                        }
+                    }
                 }
                 catch (Exception ex)
                 {
