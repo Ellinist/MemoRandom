@@ -13,6 +13,16 @@ namespace MemoRandom.Data.Repositories
     public static class HumansRepository
     {
         /// <summary>
+        /// Строка соединения с базой данных
+        /// </summary>
+        public static string DbConnectionString { get; set; }
+
+        /// <summary>
+        /// Путь к папке хранения изображений
+        /// </summary>
+        public static string ImageFolder { get; set; }
+
+        /// <summary>
         /// Статический класс, получаемый из внешнего хранилища
         /// </summary>
         public static List<Human> HumansList { get; set; } = new();

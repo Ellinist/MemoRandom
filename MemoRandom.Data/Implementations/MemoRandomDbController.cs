@@ -18,7 +18,8 @@ namespace MemoRandom.Data.Implementations
 {
     public class MemoRandomDbController : IMemoRandomDbController
     {
-        private static readonly string _configName = "MsDbConfig";
+        private static readonly string _dbConfigName = "MsDbConfig";
+        private static readonly string _dbFolderName = "MsDbFolder";
         private readonly ILogger _logger;
         public static MemoRandomDbContext MemoContext { get; set; }
 
@@ -39,7 +40,7 @@ namespace MemoRandom.Data.Implementations
         /// <returns></returns>
         public ObservableCollection<Reason> GetReasonsList()
         {
-            using (MemoContext = new MemoRandomDbContext(GetConnectionString()))
+            using (MemoContext = new MemoRandomDbContext(HumansRepository.DbConnectionString))
             {
                 try
                 {
@@ -67,7 +68,7 @@ namespace MemoRandom.Data.Implementations
         {
             bool successResult = true;
 
-            using (MemoContext = new MemoRandomDbContext(GetConnectionString()))
+            using (MemoContext = new MemoRandomDbContext(HumansRepository.DbConnectionString))
             {
                 try
                 {
@@ -102,7 +103,7 @@ namespace MemoRandom.Data.Implementations
         {
             bool successResult = true;
 
-            using (MemoContext = new MemoRandomDbContext(GetConnectionString()))
+            using (MemoContext = new MemoRandomDbContext(HumansRepository.DbConnectionString))
             {
                 try
                 {
@@ -140,7 +141,7 @@ namespace MemoRandom.Data.Implementations
         {
             bool successResult = true;
 
-            using (MemoContext = new MemoRandomDbContext(GetConnectionString()))
+            using (MemoContext = new MemoRandomDbContext(HumansRepository.DbConnectionString))
             {
                 try
                 {
@@ -166,7 +167,7 @@ namespace MemoRandom.Data.Implementations
         /// <returns></returns>
         public void GetHumansList()
         {
-            using (MemoContext = new MemoRandomDbContext(GetConnectionString()))
+            using (MemoContext = new MemoRandomDbContext(HumansRepository.DbConnectionString))
             {
                 try
                 {
@@ -250,7 +251,7 @@ namespace MemoRandom.Data.Implementations
         /// <param name="human"></param>
         public void GetPicture(Human human)
         {
-            using (MemoContext = new MemoRandomDbContext(GetConnectionString()))
+            using (MemoContext = new MemoRandomDbContext(HumansRepository.DbConnectionString))
             {
                 try
                 {
@@ -285,7 +286,7 @@ namespace MemoRandom.Data.Implementations
         {
             bool successResult = true;
 
-            using (MemoContext = new MemoRandomDbContext(GetConnectionString()))
+            using (MemoContext = new MemoRandomDbContext(HumansRepository.DbConnectionString))
             {
                 try
                 {
@@ -367,7 +368,7 @@ namespace MemoRandom.Data.Implementations
         {
             bool successResult = true;
 
-            using (MemoContext = new MemoRandomDbContext(GetConnectionString()))
+            using (MemoContext = new MemoRandomDbContext(HumansRepository.DbConnectionString))
             {
                 try
                 {
@@ -494,7 +495,7 @@ namespace MemoRandom.Data.Implementations
         {
             bool successResult = true;
             
-            await using (MemoContext = new MemoRandomDbContext(GetConnectionString()))
+            await using (MemoContext = new MemoRandomDbContext(HumansRepository.DbConnectionString))
             {
                 try
                 {
@@ -533,26 +534,35 @@ namespace MemoRandom.Data.Implementations
         }
         #endregion
 
-        /// <summary>
-        /// Получение построителя соединения
-        /// </summary>
-        /// <returns></returns>
-        private string GetConnectionString()
-        {
+        ///// <summary>
+        ///// Получение построителя соединения
+        ///// </summary>
+        ///// <returns></returns>
+        //private string GetConnectionString()
+        //{
+        //    string filename = ConfigurationManager.AppSettings[_dbConfigName]; // Получение имени файла базы данных
+        //    if (filename == null) return null; // Если в файле конфигурации нет имени БД, то выходим (ничего не делаем)
+        //    string filepath = ConfigurationManager.AppSettings[_dbFolderName]; // Получаем имя папки, в которой лежит БД
+        //    if (filepath == null) return null; // Если в файле конфигурации нет имени папки, то выходим (ничего не делаем)
+        //    // Проверяем, существует ли папка
+        //    var temp = AppDomain.CurrentDomain.BaseDirectory;
+        //    var temp2 = temp + filepath;
+        //    if (!Directory.Exists(temp2))
+        //    {
+        //        Directory.CreateDirectory(temp2);
+        //    }
 
-            string filename = ConfigurationManager.AppSettings[_configName];
-            if (filename == null) return null;
-            string combinedPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, filename);
-            SqlConnectionStringBuilder connectionStringBuilder = new SqlConnectionStringBuilder
-            {
-                DataSource = @"Kotarius\KotariusServer",
-                AttachDBFilename = combinedPath,
-                InitialCatalog = Path.GetFileNameWithoutExtension(combinedPath),
-                IntegratedSecurity = true
-            };
+        //    string combinedPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, filename);
+        //    SqlConnectionStringBuilder connectionStringBuilder = new SqlConnectionStringBuilder
+        //    {
+        //        DataSource = @"Kotarius\KotariusServer",
+        //        AttachDBFilename = combinedPath,
+        //        InitialCatalog = Path.GetFileNameWithoutExtension(combinedPath),
+        //        IntegratedSecurity = true
+        //    };
 
-            return connectionStringBuilder.ConnectionString;
-        }
+        //    return connectionStringBuilder.ConnectionString;
+        //}
 
         #region CTOR
         public MemoRandomDbController(ILogger logger)

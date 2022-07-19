@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Configuration;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 using DryIoc;
 using MemoRandom.Client.Views;
+using MemoRandom.Data.Repositories;
+using Microsoft.Data.SqlClient;
 using NLog;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -14,6 +18,9 @@ namespace MemoRandom.Client.ViewModels
     public class StartMemoRandomViewModel : BindableBase
     {
         #region PRIVATE FIELDS
+        private static readonly string _dbConfigName = "MsDbConfig"; // Конфигурация БД
+        private static readonly string _dbFolderName = "MsDbFolder"; // Конфигурация папки с БД
+        private static readonly string _imageFolderName = "ImagePathConfig"; // Конфигурация папки с изображениями
         private string _startViewTitleDefault = "Memo-Random"; // Дефолтный заголовок стартового окна
         private string _reasonsButtonName = "Справочник";
         private string _humansButtonName = "Memo-Random";
@@ -126,8 +133,10 @@ namespace MemoRandom.Client.ViewModels
         {
             if (param is Window)
             {
+                SetInitialPaths(); // Начальная инициализация БД и путей
+
                 (param as Window).Closing += StartMemoRandomViewModel_Closing; // Подписываемся на событие закрытия окна
-                SetCurrentDateTime();
+                SetCurrentDateTime(); // Вызываем метод отображения текущего времени
             }
         }
         /// <summary>
@@ -167,9 +176,6 @@ namespace MemoRandom.Client.ViewModels
             });
         }
 
-
-
-
         /// <summary>
         /// Инициализация команд стартового окна
         /// </summary>
@@ -180,8 +186,49 @@ namespace MemoRandom.Client.ViewModels
             OpenHumansViewCommand = new DelegateCommand(OpenHumansView); // Команда открытия основного окна
         }
 
-        #region CTOR
+        /// <summary>
+        /// Метод инициализации базы данных и папок хранения БД и изображений
+        /// </summary>
+        private void SetInitialPaths()
+        {
+            string dbfilename = ConfigurationManager.AppSettings[_dbConfigName]; // Получение имени файла базы данных
+            if (dbfilename == null) return; // Если в файле конфигурации нет имени БД, то выходим (ничего не делаем)
+            string dbfilepath = ConfigurationManager.AppSettings[_dbFolderName]; // Получаем имя папки, в которой лежит БД
+            if (dbfilepath == null) return; // Если в файле конфигурации нет имени папки, то выходим (ничего не делаем)
+            string imagefilepath = ConfigurationManager.AppSettings[_imageFolderName]; // Имя папки с изображениями
+            if(imagefilepath == null) return; // Если в файле конфигурации нет имени папки, то выходим (ничего не делаем)
 
+            // Проверяем, существует ли папка хранения БД - только для случая генерации БД
+            var dbBaseDirectory = AppDomain.CurrentDomain.BaseDirectory + dbfilepath;
+            if (!Directory.Exists(dbBaseDirectory))
+            {
+                Directory.CreateDirectory(dbBaseDirectory);
+            }
+
+            // Проверяем, существует ли папка хранения изображений
+            HumansRepository.ImageFolder = AppDomain.CurrentDomain.BaseDirectory + imagefilepath;
+            if (!Directory.Exists(HumansRepository.ImageFolder))
+            {
+                Directory.CreateDirectory(HumansRepository.ImageFolder);
+            }
+
+            string combinedPath = Path.Combine(dbBaseDirectory, dbfilename);
+            SqlConnectionStringBuilder connectionStringBuilder = new SqlConnectionStringBuilder
+            {
+                DataSource = @"Kotarius\KotariusServer",
+                AttachDBFilename = combinedPath,
+                InitialCatalog = Path.GetFileNameWithoutExtension(combinedPath),
+                IntegratedSecurity = true
+            };
+            HumansRepository.DbConnectionString = connectionStringBuilder.ConnectionString;
+        }
+        #region CTOR
+        /// <summary>
+        /// Конструктор
+        /// </summary>
+        /// <param name="logger"></param>
+        /// <param name="container"></param>
+        /// <exception cref="ArgumentNullException"></exception>
         public StartMemoRandomViewModel(ILogger logger, IContainer container)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
