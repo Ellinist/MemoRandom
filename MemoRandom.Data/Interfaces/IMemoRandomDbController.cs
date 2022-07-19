@@ -37,32 +37,32 @@ namespace MemoRandom.Data.Interfaces
         /// <returns></returns>
         bool DeleteReasonInList(Reason reason);
 
-        /// <summary>
-        /// Получение списка людей из БД
-        /// </summary>
-        /// <returns></returns>
-        void GetHumansList();
+        ///// <summary>
+        ///// Получение списка людей из БД
+        ///// </summary>
+        ///// <returns></returns>
+        //void GetHumansList();
 
-        /// <summary>
-        /// Добавление человека в список людей в БД
-        /// </summary>
-        /// <param name="human"></param>
-        /// <returns></returns>
-        bool AddHumanToList(Human human, BitmapImage humanImage);
+        ///// <summary>
+        ///// Добавление человека в список людей в БД
+        ///// </summary>
+        ///// <param name="human"></param>
+        ///// <returns></returns>
+        //bool AddHumanToList(Human human, BitmapImage humanImage);
 
-        /// <summary>
-        /// Обновление человека в списке людей в БД
-        /// </summary>
-        /// <param name="human"></param>
-        /// <param name="humanImage"></param>
-        /// <returns></returns>
-        bool UpdateHumanInList(Human human, BitmapImage humanImage);
+        ///// <summary>
+        ///// Обновление человека в списке людей в БД
+        ///// </summary>
+        ///// <param name="human"></param>
+        ///// <param name="humanImage"></param>
+        ///// <returns></returns>
+        //bool UpdateHumanInList(Human human, BitmapImage humanImage);
 
-        /// <summary>
-        /// Удаление человека из БД
-        /// </summary>
-        /// <param name="human"></param>
-        /// <returns></returns>
-        bool DeleteHumanFromList(Human human);
+        ///// <summary>
+        ///// Удаление человека из БД
+        ///// </summary>
+        ///// <param name="human"></param>
+        ///// <returns></returns>
+        //bool DeleteHumanFromList(Human human);
     }
 }
