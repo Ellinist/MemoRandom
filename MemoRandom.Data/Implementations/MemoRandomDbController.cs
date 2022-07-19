@@ -185,6 +185,7 @@ namespace MemoRandom.Data.Implementations
                         DbDeathDate = h.DbDeathDate,
                         DbDeathCountry = h.DbDeathCountry,
                         DbDeathPlace = h.DbDeathPlace,
+                        DbImageFile = h.DbImageFile,
                         DbDeathReasonId = h.DbDeathReasonId,
                         DbHumanComments = h.DbHumanComments
                     }).OrderBy(x => x.DbLastName);
@@ -205,6 +206,7 @@ namespace MemoRandom.Data.Implementations
                             DeathDate = person.DbDeathDate,
                             DeathCountry = person.DbDeathCountry,
                             DeathPlace = person.DbDeathPlace,
+                            ImageFile = person.DbImageFile,
                             DeathReasonId = person.DbDeathReasonId,
                             HumanComments = person.DbHumanComments
                         };
@@ -228,44 +230,27 @@ namespace MemoRandom.Data.Implementations
             }
         }
 
-        //private List<Human> Experiment(IQueryable<DbHuman> list)
+        ///// <summary>
+        ///// Чтение изображения из внешнего хранилища
+        ///// </summary>
+        ///// <param name="human"></param>
+        //public void GetPicture(Human human)
         //{
-        //    List<Human> resultList = new();
-        //    foreach (DbHuman person in list)
+        //    using (MemoContext = new MemoRandomDbContext(HumansRepository.DbConnectionString))
         //    {
-        //        Human human = new()
+        //        try
         //        {
-        //            HumanId = person.DbHumanId,
-        //            LastName = person.DbLastName,
-        //            FirstName = person.DbFirstName,
-        //            BirthDate = person.DbBirthDate,
-        //        };
-        //        resultList.Add(human);
+        //            var image = MemoContext.DbHumans.FirstOrDefault(x => x.DbHumanId == human.HumanId).DbHumanImage;
+        //            var row = HumansRepository.HumansList.FirstOrDefault(x => x.HumanId == human.HumanId);
+        //            row.HumanImage = image;
+        //        }
+        //        catch(Exception ex)
+        //        {
+        //            //HumansRepository.HumansList = null; // В случае неуспеха чтения обнуляем иерархическую коллекцию
+        //            _logger.Error($"Ошибка чтения изображения человека: {ex.HResult}");
+        //        }
         //    }
-        //    return resultList;
         //}
-
-        /// <summary>
-        /// Чтение изображения из внешнего хранилища
-        /// </summary>
-        /// <param name="human"></param>
-        public void GetPicture(Human human)
-        {
-            using (MemoContext = new MemoRandomDbContext(HumansRepository.DbConnectionString))
-            {
-                try
-                {
-                    var image = MemoContext.DbHumans.FirstOrDefault(x => x.DbHumanId == human.HumanId).DbHumanImage;
-                    var row = HumansRepository.HumansList.FirstOrDefault(x => x.HumanId == human.HumanId);
-                    row.HumanImage = image;
-                }
-                catch(Exception ex)
-                {
-                    //HumansRepository.HumansList = null; // В случае неуспеха чтения обнуляем иерархическую коллекцию
-                    _logger.Error($"Ошибка чтения изображения человека: {ex.HResult}");
-                }
-            }
-        }
 
         /// <summary>
         /// Добавление сущности человека в общий список
@@ -274,7 +259,44 @@ namespace MemoRandom.Data.Implementations
         /// <returns></returns>
         public bool AddHumanToList(Human human)
         {
-            return AddingHuman(human).Result;
+            bool successResult = true;
+
+            using (MemoContext = new MemoRandomDbContext(HumansRepository.DbConnectionString))
+            {
+                try
+                {
+                    // Создаем новую запись
+                    DbHuman record = new DbHuman()
+                    {
+                        DbHumanId = human.HumanId,
+                        DbLastName = human.LastName,
+                        DbFirstName = human.FirstName,
+                        DbPatronymic = human.Patronymic,
+                        DbBirthDate = human.BirthDate,
+                        DbBirthCountry = human.BirthCountry,
+                        DbBirthPlace = human.BirthPlace,
+                        DbDeathDate = human.DeathDate,
+                        DbDeathCountry = human.DeathCountry,
+                        DbDeathPlace = human.DeathPlace,
+                        DbImageFile = human.ImageFile,
+                        DbDeathReasonId = human.DeathReasonId,
+                        DbHumanComments = human.HumanComments
+                    };
+                    MemoContext.DbHumans.Add(record);
+                    MemoContext.SaveChanges();
+
+                    SaveImageToFile(human); // Сохраняем изображение
+                }
+                catch (Exception ex)
+                {
+                    successResult = false;
+                    _logger.Error($"Ошибка записи информации по человеку: {ex.HResult}");
+                    MessageBox.Show($"Error: {ex.HResult}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+
+            HumansRepository.CurrentHuman = human;
+            return successResult;
         }
 
         /// <summary>
@@ -303,8 +325,7 @@ namespace MemoRandom.Data.Implementations
                         updatedHuman.DbDeathCountry = human.DeathCountry;
                         updatedHuman.DbDeathPlace = human.DeathPlace;
                         updatedHuman.DbDeathReasonId = human.DeathReasonId;
-                        updatedHuman.DbHumanImage = human.HumanImage;
-                        updatedHuman.DbImageFilePath = human.ImageFilePath;
+                        updatedHuman.DbImageFile = human.ImageFile;
                         updatedHuman.DbHumanComments = human.HumanComments;
 
                         MemoContext.SaveChanges();
@@ -324,30 +345,16 @@ namespace MemoRandom.Data.Implementations
                             DbDeathCountry = human.DeathCountry,
                             DbDeathPlace = human.DeathPlace,
                             DbDeathReasonId = human.DeathReasonId,
-                            DbHumanImage = human.HumanImage,
-                            DbImageFilePath = human.ImageFilePath,
+                            DbImageFile = human.ImageFile,
                             DbHumanComments = human.HumanComments
-                    };
+                        };
 
                         MemoContext.DbHumans.Add(record);
 
                         MemoContext.SaveChanges();
                     }
 
-                    //File.WriteAllBytes(human.ImageFilePath, human.HumanImage);
-
-                    if (!Directory.Exists("../Images/"))
-                    {
-                        Directory.CreateDirectory("../Images/");
-                    }
-
-                    using (MemoryStream ms = new MemoryStream(human.HumanImage))
-                    {
-                        using (var fs = new FileStream(human.ImageFilePath, FileMode.Create))
-                        {
-                            ms.WriteTo(fs);
-                        }
-                    }
+                    SaveImageToFile(human); // Сохраняем изображение
                 }
                 catch (Exception ex)
                 {
@@ -378,11 +385,19 @@ namespace MemoRandom.Data.Implementations
                         MemoContext.Remove(deletedHuman);
                         MemoContext.SaveChanges();
                     }
+
+                    if(human.ImageFile != string.Empty)
+                    {
+                        if (!DeleteImageFile(human.ImageFile))
+                        {
+                            successResult = false; // Если файл изображения удалить не удалось
+                        }
+                    }
                 }
                 catch (Exception ex)
                 {
                     successResult = false;
-                    _logger.Error($"Ошибка удаление человека: {ex.HResult}");
+                    _logger.Error($"Ошибка удаления человека: {ex.HResult}");
                 }
             }
 
@@ -391,6 +406,45 @@ namespace MemoRandom.Data.Implementations
         #endregion
 
         #region Auxiliary methods
+        /// <summary>
+        /// Сохранение изображения в файл
+        /// </summary>
+        /// <param name="human"></param>
+        private void SaveImageToFile(Human human)
+        {
+            string combinedImagePath = Path.Combine(HumansRepository.ImageFolder, human.ImageFile);
+            using (MemoryStream ms = new MemoryStream(human.HumanImage))
+            {
+                using (var fs = new FileStream(combinedImagePath, FileMode.Create))
+                {
+                    ms.WriteTo(fs);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Удаление файла изображения
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        private bool DeleteImageFile(string fileName)
+        {
+            bool successResult = true;
+
+            try
+            {
+                string combinedImagePath = Path.Combine(HumansRepository.ImageFolder, fileName);
+                File.Delete(combinedImagePath);
+            }
+            catch(Exception ex)
+            {
+                successResult = false;
+                _logger.Error($"Ошибка удаления файла изображения: {ex.HResult}");
+            }
+
+            return successResult;
+        }
+
         /// <summary>
         /// Формирование иерархической коллекции
         /// </summary>
@@ -458,111 +512,7 @@ namespace MemoRandom.Data.Implementations
                 }
             }
         }
-
-        private List<Human> GetInnerHumans(List<DbHuman> humans)
-        {
-            List<Human> resultList = new();
-            foreach (var person in humans)
-            {
-                Human human = new()
-                {
-                    HumanId = person.DbHumanId,
-                    LastName = person.DbLastName,
-                    FirstName = person.DbFirstName,
-                    Patronymic = person.DbPatronymic,
-                    BirthDate = person.DbBirthDate,
-                    BirthCountry = person.DbBirthCountry,
-                    BirthPlace = person.DbBirthPlace,
-                    DeathDate = person.DbDeathDate,
-                    DeathCountry = person.DbDeathCountry,
-                    DeathPlace = person.DbDeathPlace,
-                    HumanImage = person.DbHumanImage,
-                    DeathReasonId = person.DbDeathReasonId,
-                    HumanComments = person.DbHumanComments
-                };
-                resultList.Add(human);
-            }
-
-            return resultList;
-        }
-
-        /// <summary>
-        /// Асинхронный метод добавления человека в список БД
-        /// </summary>
-        /// <param name="human"></param>
-        /// <returns></returns>
-        private async Task<bool> AddingHuman(Human human)
-        {
-            bool successResult = true;
-            
-            await using (MemoContext = new MemoRandomDbContext(HumansRepository.DbConnectionString))
-            {
-                try
-                {
-                    // Создаем новую запись
-                    DbHuman record = new DbHuman()
-                    {
-                        DbHumanId       = human.HumanId,
-                        DbLastName      = human.LastName,
-                        DbFirstName     = human.FirstName,
-                        DbPatronymic    = human.Patronymic,
-                        DbBirthDate     = human.BirthDate,
-                        DbBirthCountry  = human.BirthCountry,
-                        DbBirthPlace    = human.BirthPlace,
-                        DbDeathDate     = human.DeathDate,
-                        DbDeathCountry  = human.DeathCountry,
-                        DbDeathPlace    = human.DeathPlace,
-                        DbHumanImage    = human.HumanImage,
-                        DbImageFilePath = human.ImageFilePath,
-                        DbDeathReasonId = human.DeathReasonId,
-                        DbHumanComments = human.HumanComments
-                    };
-                    MemoContext.DbHumans.Add(record);
-
-                    MemoContext.SaveChanges();
-                }
-                catch (Exception ex)
-                {
-                    successResult = false;
-                    _logger.Error($"Ошибка записи информации по человеку: {ex.HResult}");
-                    MessageBox.Show($"Error: {ex.HResult}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-            }
-
-            HumansRepository.CurrentHuman = human;
-            return successResult;
-        }
         #endregion
-
-        ///// <summary>
-        ///// Получение построителя соединения
-        ///// </summary>
-        ///// <returns></returns>
-        //private string GetConnectionString()
-        //{
-        //    string filename = ConfigurationManager.AppSettings[_dbConfigName]; // Получение имени файла базы данных
-        //    if (filename == null) return null; // Если в файле конфигурации нет имени БД, то выходим (ничего не делаем)
-        //    string filepath = ConfigurationManager.AppSettings[_dbFolderName]; // Получаем имя папки, в которой лежит БД
-        //    if (filepath == null) return null; // Если в файле конфигурации нет имени папки, то выходим (ничего не делаем)
-        //    // Проверяем, существует ли папка
-        //    var temp = AppDomain.CurrentDomain.BaseDirectory;
-        //    var temp2 = temp + filepath;
-        //    if (!Directory.Exists(temp2))
-        //    {
-        //        Directory.CreateDirectory(temp2);
-        //    }
-
-        //    string combinedPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, filename);
-        //    SqlConnectionStringBuilder connectionStringBuilder = new SqlConnectionStringBuilder
-        //    {
-        //        DataSource = @"Kotarius\KotariusServer",
-        //        AttachDBFilename = combinedPath,
-        //        InitialCatalog = Path.GetFileNameWithoutExtension(combinedPath),
-        //        IntegratedSecurity = true
-        //    };
-
-        //    return connectionStringBuilder.ConnectionString;
-        //}
 
         #region CTOR
         public MemoRandomDbController(ILogger logger)

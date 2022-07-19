@@ -253,17 +253,17 @@ namespace MemoRandom.Client.ViewModels
                 curHuman.DeathCountry = DeathCountry;
                 curHuman.DeathPlace = DeathPlace;
                 curHuman.HumanImage = ConvertFromBitmapSource((BitmapSource)Image.Source);
-                curHuman.ImageFilePath = "../Images/" + curHuman.HumanId + ".jpg";
+                curHuman.ImageFile = Image.Source != null ? curHuman.HumanId.ToString() + ".jpg" : string.Empty;
                 curHuman.DeathReasonId = DeathReasonId;
 
                 _humanController.SetCurrentHuman(curHuman);
             }
             else // Добавление нового
             {
-                var tempId = Guid.NewGuid();
+                var newHumanId = Guid.NewGuid();
                 Human human = new()
                 {
-                    HumanId = tempId,
+                    HumanId = newHumanId,
                     LastName = LastName,
                     FirstName = FirstName,
                     Patronymic = Patronymic,
@@ -274,7 +274,7 @@ namespace MemoRandom.Client.ViewModels
                     DeathCountry = DeathCountry,
                     DeathPlace = DeathPlace,
                     HumanImage = ConvertFromBitmapSource((BitmapSource)Image.Source),
-                    ImageFilePath = "../Images/" + tempId.ToString() + ".jpg",
+                    ImageFile = Image.Source != null ? newHumanId.ToString() + ".jpg" : string.Empty,
                     DeathReasonId = DeathReasonId
                 };
 

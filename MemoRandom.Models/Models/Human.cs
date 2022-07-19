@@ -23,7 +23,7 @@ namespace MemoRandom.Models.Models
         private string _deathCountry;
         private string _deathPlace;
         private byte[] _humanImage;
-        private string _imageFilePath;
+        private string _imageFile;
         private Guid _deathReasonId;
         private string _humanComments;
         #endregion
@@ -176,13 +176,13 @@ namespace MemoRandom.Models.Models
         /// <summary>
         /// На всякий случай добавляю свойство - путь к файлу изображения
         /// </summary>
-        public string ImageFilePath
+        public string ImageFile
         {
-            get => _imageFilePath;
+            get => _imageFile;
             set
             {
-                _imageFilePath = value;
-                RaisePropertyChanged(nameof(ImageFilePath));
+                _imageFile = value;
+                RaisePropertyChanged(nameof(ImageFile));
             }
         }
 

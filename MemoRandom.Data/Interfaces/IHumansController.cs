@@ -42,6 +42,6 @@ namespace MemoRandom.Data.Interfaces
         /// <returns></returns>
         bool DeleteHuman();
 
-        void GetHumanImage();
+        //void GetHumanImage();
     }
 }

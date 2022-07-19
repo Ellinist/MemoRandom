@@ -57,7 +57,6 @@ namespace MemoRandom.Data.Implementations
             if (currentHuman != null) // Существующая запись
             {
                 //TODO здесь вызов обновления записи
-
                 return _memoRandomDbController.UpdateHumanInList(currentHuman);
             }
             else // Новая запись
@@ -85,17 +84,17 @@ namespace MemoRandom.Data.Implementations
             }
         }
 
-        /// <summary>
-        /// Получение изображения выбранного человека
-        /// </summary>
-        public void GetHumanImage()
-        {
-            var currentHuman = GetCurrentHuman();
-            if(currentHuman != null)
-            {
-                _memoRandomDbController.GetPicture(currentHuman);
-            }
-        }
+        ///// <summary>
+        ///// Получение изображения выбранного человека
+        ///// </summary>
+        //public void GetHumanImage()
+        //{
+        //    var currentHuman = GetCurrentHuman();
+        //    if(currentHuman != null)
+        //    {
+        //        _memoRandomDbController.GetPicture(currentHuman);
+        //    }
+        //}
 
         #region CTOR
         public HumansController(IMemoRandomDbController memoRandomDbController)

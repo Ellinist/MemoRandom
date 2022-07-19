@@ -53,6 +53,6 @@ namespace MemoRandom.Data.Interfaces
 
         bool DeleteHumanFromList(Human human);
 
-        void GetPicture(Human human);
+        //void GetPicture(Human human);
     }
 }
