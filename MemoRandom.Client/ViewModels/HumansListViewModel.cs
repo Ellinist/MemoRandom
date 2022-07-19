@@ -28,6 +28,7 @@ namespace MemoRandom.Client.ViewModels
         private List<Human> _humansList = new();
         private int _personIndex;
         private Human _selectedHuman;
+        private Image _personImage;
         private readonly ILogger _logger; // Экземпляр журнала
         private readonly IContainer _container; // Контейнер
         private readonly IEventAggregator _eventAggregator;
@@ -77,18 +78,15 @@ namespace MemoRandom.Client.ViewModels
                 }
                 else
                 {
-                    _humansController.SetCurrentHuman(HumansList[value]);
-
-                    var t = _humansController.GetHumanImage();
-                    PersonImage.Source = t;
-                    //PersonImage.Source = ConvertFromByteArray(HumansRepository.CurrentHuman.HumanImage);
-                    RaisePropertyChanged(nameof(PersonImage));
+                    //_humansController.SetCurrentHuman(HumansList[value]);
                 }
                 RaisePropertyChanged(nameof(PersonIndex));
             }
         }
 
-        private Image _personImage;
+        /// <summary>
+        /// Контрол с изображением
+        /// </summary>
         public Image PersonImage
         {
             get => _personImage;
@@ -116,8 +114,10 @@ namespace MemoRandom.Client.ViewModels
                     _selectedHuman = value;
                     
                     _humansController.SetCurrentHuman(value);
-                    
                     RaisePropertyChanged(nameof(SelectedHuman));
+                    
+                    PersonImage.Source = _humansController.GetHumanImage();
+                    RaisePropertyChanged(nameof(PersonImage));
                 }
             }
         }
@@ -164,17 +164,17 @@ namespace MemoRandom.Client.ViewModels
             StartAboutCommand = new DelegateCommand(OpenAboutView);
         }
 
-        private BitmapImage ConvertFromByteArray(byte[] array)
-        {
-            if (array == null) return null;
+        //private BitmapImage ConvertFromByteArray(byte[] array)
+        //{
+        //    if (array == null) return null;
 
-            BitmapImage myBitmapImage = new BitmapImage();
-            myBitmapImage.BeginInit();
-            myBitmapImage.StreamSource = new MemoryStream(array);
-            myBitmapImage.DecodePixelWidth = 200;
-            myBitmapImage.EndInit();
-            return myBitmapImage;
-        }
+        //    BitmapImage myBitmapImage = new BitmapImage();
+        //    myBitmapImage.BeginInit();
+        //    myBitmapImage.StreamSource = new MemoryStream(array);
+        //    myBitmapImage.DecodePixelWidth = 200;
+        //    myBitmapImage.EndInit();
+        //    return myBitmapImage;
+        //}
 
         /// <summary>
         /// Запуск окна создания нового человека
@@ -205,6 +205,9 @@ namespace MemoRandom.Client.ViewModels
             RaisePropertyChanged(nameof(PersonIndex));
         }
 
+        /// <summary>
+        /// Удаление выбранного человека
+        /// </summary>
         private void DeleteHuman()
         {
             //TODO здесь удаляем выбранного в списке человека
@@ -217,8 +220,6 @@ namespace MemoRandom.Client.ViewModels
                 HumansList = _humansController.GetHumansList();
                 PersonIndex = 0; // Прыгаем на первую запись в списке
 
-                //_humansController.GetHumanImage();
-                //PersonImage.Source = ConvertFromByteArray(HumansRepository.CurrentHuman.HumanImage);
                 RaisePropertyChanged(nameof(PersonImage));
                 RaisePropertyChanged(nameof(PersonIndex));
             }
@@ -253,9 +254,11 @@ namespace MemoRandom.Client.ViewModels
                 });
             });
 
-            if (HumansList.Count == 0) return;
-            PersonIndex = 0;
-            RaisePropertyChanged(nameof(PersonIndex));
+            //if (HumansList.Count == 0) return;
+            //PersonIndex = 0;
+            //PersonImage.Source = _humansController.GetHumanImage();
+            //RaisePropertyChanged(nameof(PersonIndex));
+            //RaisePropertyChanged(nameof(PersonImage));
         }
 
         #region CTOR

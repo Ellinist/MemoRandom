@@ -273,9 +273,6 @@ namespace MemoRandom.Client.ViewModels
                     DeathDate = DeathDate,
                     DeathCountry = DeathCountry,
                     DeathPlace = DeathPlace,
-                    //HumanImage = ConvertFromBitmapSource((BitmapSource)Image.Source),
-                    //HumanImage = (BitmapImage)Image.Source,
-                    //HumanImage = Image.Source as BitmapImage,
                     HumanImage = BitmapSourceToBitmapImage((BitmapSource)Image.Source),
                     ImageFile = Image.Source != null ? newHumanId.ToString() + ".jpg" : string.Empty,
                     DeathReasonId = DeathReasonId
@@ -309,45 +306,45 @@ namespace MemoRandom.Client.ViewModels
             return myBitmapImage;
         }
 
-        /// <summary>
-        /// Преобразование байтового массива в BitmapImage
-        /// </summary>
-        /// <param name="array"></param>
-        /// <returns></returns>
-        private BitmapImage ConvertFromByteArray(byte[] array)
-        {
-            if (array == null) return null;
+        ///// <summary>
+        ///// Преобразование байтового массива в BitmapImage
+        ///// </summary>
+        ///// <param name="array"></param>
+        ///// <returns></returns>
+        //private BitmapImage ConvertFromByteArray(byte[] array)
+        //{
+        //    if (array == null) return null;
 
-            BitmapImage myBitmapImage = new BitmapImage();
-            myBitmapImage.BeginInit();
-            myBitmapImage.StreamSource = new MemoryStream(array);
-            myBitmapImage.DecodePixelWidth = 200;
-            myBitmapImage.EndInit();
-            return myBitmapImage;
-        }
+        //    BitmapImage myBitmapImage = new BitmapImage();
+        //    myBitmapImage.BeginInit();
+        //    myBitmapImage.StreamSource = new MemoryStream(array);
+        //    myBitmapImage.DecodePixelWidth = 200;
+        //    myBitmapImage.EndInit();
+        //    return myBitmapImage;
+        //}
 
-        /// <summary>
-        /// Преобразование BitmapSource в массив байтов
-        /// </summary>
-        /// <param name="src"></param>
-        /// <returns></returns>
-        private byte[] ConvertFromBitmapSource(BitmapSource src)
-        {
-            if(src == null) return null;
+        ///// <summary>
+        ///// Преобразование BitmapSource в массив байтов
+        ///// </summary>
+        ///// <param name="src"></param>
+        ///// <returns></returns>
+        //private byte[] ConvertFromBitmapSource(BitmapSource src)
+        //{
+        //    if(src == null) return null;
 
-            byte[] bit;
-            JpegBitmapEncoder encoder = new JpegBitmapEncoder();
-            encoder.QualityLevel = 100;
-            using (MemoryStream stream = new MemoryStream())
-            {
-                encoder.Frames.Add(BitmapFrame.Create(src));
-                encoder.Save(stream);
-                bit = stream.ToArray();
-                stream.Close();
-            }
+        //    byte[] bit;
+        //    JpegBitmapEncoder encoder = new JpegBitmapEncoder();
+        //    encoder.QualityLevel = 100;
+        //    using (MemoryStream stream = new MemoryStream())
+        //    {
+        //        encoder.Frames.Add(BitmapFrame.Create(src));
+        //        encoder.Save(stream);
+        //        bit = stream.ToArray();
+        //        stream.Close();
+        //    }
 
-            return bit;
-        }
+        //    return bit;
+        //}
 
         /// <summary>
         /// Метод загрузки изображения из буфера обмена
