@@ -3,15 +3,12 @@ using NLog;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using MemoRandom.Data.Interfaces;
 using MemoRandom.Data.Repositories;
 using MemoRandom.Models.Models;
 using MemoRandom.Data.Controllers;
 using MemoRandom.Data.DbModels;
-using System.Windows;
 
 namespace MemoRandom.Data.Implementations
 {
@@ -20,7 +17,6 @@ namespace MemoRandom.Data.Implementations
     /// </summary>
     public class HumansController : IHumansController
     {
-        private readonly IMemoRandomDbController _memoRandomDbController;
         private readonly ILogger _logger;
 
         public static MemoRandomDbContext MemoContext { get; set; }
@@ -49,20 +45,22 @@ namespace MemoRandom.Data.Implementations
                     // Читаем контекст, выбирая только основные поля (без изображений)
                     var newList = MemoContext.DbHumans.Select(h => new
                     {
-                        DbHumanId = h.DbHumanId,
-                        DbLastName = h.DbLastName,
-                        DbFirstName = h.DbFirstName,
-                        DbPatronymic = h.DbPatronymic,
-                        DbBirthDate = h.DbBirthDate,
-                        DbBirthCountry = h.DbBirthCountry,
-                        DbBirthPlace = h.DbBirthPlace,
-                        DbDeathDate = h.DbDeathDate,
-                        DbDeathCountry = h.DbDeathCountry,
-                        DbDeathPlace = h.DbDeathPlace,
-                        DbImageFile = h.DbImageFile,
-                        DbDeathReasonId = h.DbDeathReasonId,
-                        DbHumanComments = h.DbHumanComments
-                    }).OrderBy(x => x.DbLastName);
+                        h.DbHumanId,
+                        h.DbLastName,
+                        h.DbFirstName,
+                        h.DbPatronymic,
+                        h.DbBirthDate,
+                        h.DbBirthCountry,
+                        h.DbBirthPlace,
+                        h.DbDeathDate,
+                        h.DbDeathCountry,
+                        h.DbDeathPlace,
+                        h.DbImageFile,
+                        h.DbDeathReasonId,
+                        h.DbHumanComments,
+                        h.DbDaysLived,
+                        h.DbFullYearsLived
+                    }).OrderBy(x => x.DbFullYearsLived);
 
                     // Перегоняем в результирующий список
                     List<Human> humansList = new();
@@ -82,7 +80,9 @@ namespace MemoRandom.Data.Implementations
                             DeathPlace = person.DbDeathPlace,
                             ImageFile = person.DbImageFile,
                             DeathReasonId = person.DbDeathReasonId,
-                            HumanComments = person.DbHumanComments
+                            HumanComments = person.DbHumanComments,
+                            DaysLived = person.DbDaysLived,
+                            FullYearsLived = person.DbFullYearsLived
                         };
                         humansList.Add(human);
                     }
@@ -98,7 +98,6 @@ namespace MemoRandom.Data.Implementations
                 }
             }
         }
-
 
         /// <summary>
         /// Установка текущего человека, с которым ведется работа
@@ -159,6 +158,8 @@ namespace MemoRandom.Data.Implementations
                         updatedHuman.DbDeathReasonId = human.DeathReasonId;
                         updatedHuman.DbImageFile = human.ImageFile;
                         updatedHuman.DbHumanComments = human.HumanComments;
+                        updatedHuman.DbDaysLived = human.DaysLived;
+                        updatedHuman.DbFullYearsLived = human.FullYearsLived;
 
                         MemoContext.SaveChanges();
 
@@ -180,7 +181,9 @@ namespace MemoRandom.Data.Implementations
                             DbDeathPlace = human.DeathPlace,
                             DbDeathReasonId = human.DeathReasonId,
                             DbImageFile = human.ImageFile,
-                            DbHumanComments = human.HumanComments
+                            DbHumanComments = human.HumanComments,
+                            DbDaysLived = human.DaysLived,
+                            DbFullYearsLived = human.FullYearsLived
                         };
 
                         MemoContext.DbHumans.Add(record);
@@ -238,7 +241,6 @@ namespace MemoRandom.Data.Implementations
                 {
                     successResult = false;
                     _logger.Error($"Ошибка записи информации по человеку: {ex.HResult}");
-                    //MessageBox.Show($"Error: {ex.HResult}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
 
@@ -249,7 +251,6 @@ namespace MemoRandom.Data.Implementations
         /// <summary>
         /// Удаление человека из внешнего хранилища
         /// </summary>
-        /// <param name="human"></param>
         /// <returns></returns>
         public bool DeleteHuman()
         {
@@ -298,17 +299,15 @@ namespace MemoRandom.Data.Implementations
                 string combinedImagePath = Path.Combine(HumansRepository.ImageFolder, currentHuman.ImageFile);
 
                 //BitmapImage image = new BitmapImage(new Uri(combinedImagePath));
-                using (Stream stream = File.OpenRead(combinedImagePath))
-                {
-                    BitmapImage image = new BitmapImage();
-                    image.BeginInit();
-                    image.CacheOption = BitmapCacheOption.OnLoad;
-                    image.StreamSource = stream;
-                    image.EndInit();
-                    stream.Close();
+                using Stream stream = File.OpenRead(combinedImagePath);
+                BitmapImage image = new BitmapImage();
+                image.BeginInit();
+                image.CacheOption = BitmapCacheOption.OnLoad;
+                image.StreamSource = stream;
+                image.EndInit();
+                stream.Close();
 
-                    return image;
-                }
+                return image;
             }
 
             return null;
@@ -331,10 +330,8 @@ namespace MemoRandom.Data.Implementations
                 File.Delete(combinedImagePath);
             }
 
-            using (FileStream fs = new FileStream(combinedImagePath, FileMode.Create))
-            {
-                encoder.Save(fs);
-            }
+            using FileStream fs = new FileStream(combinedImagePath, FileMode.Create);
+            encoder.Save(fs);
         }
 
         /// <summary>
@@ -371,9 +368,8 @@ namespace MemoRandom.Data.Implementations
 
 
         #region CTOR
-        public HumansController(ILogger logger, IMemoRandomDbController memoRandomDbController)
+        public HumansController(ILogger logger)
         {
-            _memoRandomDbController = memoRandomDbController ?? throw new ArgumentNullException(nameof(memoRandomDbController));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
         #endregion

@@ -22,7 +22,7 @@ namespace MemoRandom.Client.ViewModels
         private string _reasonsViewTitle = "Справочник причин смерти";
         private readonly ILogger _logger; // Экземпляр журнала
         private readonly IEventAggregator _eventAggregator;
-        private readonly IMemoRandomDbController _dbController;
+        private readonly IReasonsController _dbController;
         private bool _cancelButtonEnabled = false; // Для кнопки отмены
         private bool _deleteButtonEnabled = false; // Для кнопки удаления
         private bool _changeSaveButtonEnabled = false; // Для кнопки изменения/сохранения
@@ -493,7 +493,7 @@ namespace MemoRandom.Client.ViewModels
 
         #region CTOR
 
-        public ReasonsViewModel(ILogger logger, IEventAggregator eventAggregator, IMemoRandomDbController dbController)
+        public ReasonsViewModel(ILogger logger, IEventAggregator eventAggregator, IReasonsController dbController)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));

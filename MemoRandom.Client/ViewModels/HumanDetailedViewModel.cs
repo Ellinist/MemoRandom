@@ -1,9 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Media.Imaging;
-using MemoRandom.Data.Implementations;
 using MemoRandom.Data.Interfaces;
 using MemoRandom.Models.Models;
 using Prism.Commands;
@@ -32,6 +30,9 @@ namespace MemoRandom.Client.ViewModels
         private string   _deathPlace;
         private Guid     _deathReasonId;
         private BitmapSource _imageSource;
+        private string _comments;
+        private int _daysLived;
+        private double _fullYearsLived;
         #endregion
 
         #region PROPS
@@ -177,6 +178,45 @@ namespace MemoRandom.Client.ViewModels
                 RaisePropertyChanged(nameof(ImageSource));
             }
         }
+
+        /// <summary>
+        /// Расширенный комментарий
+        /// </summary>
+        public string Comments
+        {
+            get => _comments;
+            set
+            {
+                _comments = value;
+                RaisePropertyChanged(nameof(Comments));
+            }
+        }
+
+        /// <summary>
+        /// Число полных прожитых дней
+        /// </summary>
+        public int DaysLived
+        {
+            get => _daysLived;
+            set
+            {
+                _daysLived = value;
+                RaisePropertyChanged(nameof(DaysLived));
+            }
+        }
+
+        /// <summary>
+        /// Число полных прожитых лет
+        /// </summary>
+        public double FullYearsLived
+        {
+            get => _fullYearsLived;
+            set
+            {
+                _fullYearsLived = value;
+                RaisePropertyChanged(nameof(FullYearsLived));
+            }
+        }
         #endregion
 
         #region COMMANDS
@@ -200,7 +240,6 @@ namespace MemoRandom.Client.ViewModels
         /// <summary>
         /// Метод, выполняемый после загрузки окна
         /// </summary>
-        /// <param name="parameter"></param>
         private void OnDetailedViewLoaded()
         {
             Human human = _humanController.GetCurrentHuman();
@@ -252,6 +291,8 @@ namespace MemoRandom.Client.ViewModels
                 curHuman.DeathPlace = DeathPlace;
                 curHuman.ImageFile = ImageSource != null ? curHuman.HumanId.ToString() + ".jpg" : string.Empty;
                 curHuman.DeathReasonId = DeathReasonId;
+                curHuman.DaysLived = (DeathDate - BirthDate).Days; // Считаем число прожитых дней
+                curHuman.FullYearsLived = (float)((DeathDate - BirthDate).Days / 365.25D); // Считаем число полных прожитых лет
 
                 _humanController.SetCurrentHuman(curHuman);
             }
@@ -271,8 +312,10 @@ namespace MemoRandom.Client.ViewModels
                     DeathCountry = DeathCountry,
                     DeathPlace = DeathPlace,
                     ImageFile = ImageSource != null ? newHumanId.ToString() + ".jpg" : string.Empty,
-                    DeathReasonId = DeathReasonId
-                };
+                    DeathReasonId = DeathReasonId,
+                    DaysLived = (DeathDate - BirthDate).Days, // Считаем число прожитых дней
+                    FullYearsLived = (float)((DeathDate - BirthDate).Days / 365.25) // Считаем число полных прожитых лет
+            };
 
                 _humanController.SetCurrentHuman(human);
             }

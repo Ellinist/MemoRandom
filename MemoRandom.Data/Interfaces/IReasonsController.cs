@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Windows.Media.Imaging;
+﻿using System.Collections.ObjectModel;
 using MemoRandom.Models.Models;
 
 namespace MemoRandom.Data.Interfaces
@@ -8,7 +6,7 @@ namespace MemoRandom.Data.Interfaces
     /// <summary>
     /// Интерфейс работы с БД
     /// </summary>
-    public interface IMemoRandomDbController
+    public interface IReasonsController
     {
         /// <summary>
         /// Получение древовидной коллекции списка причин смерти
@@ -36,33 +34,5 @@ namespace MemoRandom.Data.Interfaces
         /// <param name="reason"></param>
         /// <returns></returns>
         bool DeleteReasonInList(Reason reason);
-
-        ///// <summary>
-        ///// Получение списка людей из БД
-        ///// </summary>
-        ///// <returns></returns>
-        //void GetHumansList();
-
-        ///// <summary>
-        ///// Добавление человека в список людей в БД
-        ///// </summary>
-        ///// <param name="human"></param>
-        ///// <returns></returns>
-        //bool AddHumanToList(Human human, BitmapImage humanImage);
-
-        ///// <summary>
-        ///// Обновление человека в списке людей в БД
-        ///// </summary>
-        ///// <param name="human"></param>
-        ///// <param name="humanImage"></param>
-        ///// <returns></returns>
-        //bool UpdateHumanInList(Human human, BitmapImage humanImage);
-
-        ///// <summary>
-        ///// Удаление человека из БД
-        ///// </summary>
-        ///// <param name="human"></param>
-        ///// <returns></returns>
-        //bool DeleteHumanFromList(Human human);
     }
 }

@@ -24,5 +24,7 @@ namespace MemoRandom.Data.DbModels
         public string DbImageFile { get; set; }
         public Guid DbDeathReasonId { get; set; }
         public string DbHumanComments { get; set; }
+        public int DbDaysLived { get; set; }
+        public float DbFullYearsLived { get; set; }
     }
 }

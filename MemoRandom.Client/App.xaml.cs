@@ -41,7 +41,7 @@ namespace MemoRandom.Client
             //Регистрация интерфейса работы с людьми
             containerRegistry.RegisterSingleton<IHumansController, HumansController>();
 
-            containerRegistry.Register<IMemoRandomDbController, MemoRandomDbController>();
+            containerRegistry.Register<IReasonsController, ReasonsController>();
 
             #endregion
             

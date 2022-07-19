@@ -1,7 +1,5 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using Prism.Mvvm;
 
 namespace MemoRandom.Models.Models
@@ -22,10 +20,11 @@ namespace MemoRandom.Models.Models
         private DateTime _deathDate;
         private string _deathCountry;
         private string _deathPlace;
-        private BitmapImage _humanImage;
         private string _imageFile;
         private Guid _deathReasonId;
         private string _humanComments;
+        private int _daysLived;
+        private float _fullYearsLived;
         #endregion
 
         /// <summary>
@@ -199,6 +198,9 @@ namespace MemoRandom.Models.Models
             }
         }
 
+        /// <summary>
+        /// Расширенный комментарий
+        /// </summary>
         public string HumanComments
         {
             get => _humanComments;
@@ -206,6 +208,33 @@ namespace MemoRandom.Models.Models
             {
                 _humanComments = value;
                 RaisePropertyChanged(nameof(HumanComments));
+            }
+        }
+
+        /// <summary>
+        /// Число прожитых дней
+        /// Сохраняется в БД для ускорения чтения информации
+        /// </summary>
+        public int DaysLived
+        {
+            get => _daysLived;
+            set
+            {
+                _daysLived = value;
+                RaisePropertyChanged(nameof(DaysLived));
+            }
+        }
+
+        /// <summary>
+        /// Полное число прожитых лет - для упорядочения по возрастанию прожитых лет
+        /// </summary>
+        public float FullYearsLived
+        {
+            get => _fullYearsLived;
+            set
+            {
+                _fullYearsLived = value;
+                RaisePropertyChanged(nameof(FullYearsLived));
             }
         }
     }

@@ -184,9 +184,15 @@
 
                                         <DataGridTextColumn Header="Дней"
                                                             IsReadOnly="True"
-                                                            Binding="{Binding Path=FullDays}"
+                                                            Binding="{Binding Path=DaysLived}"
                                                             Width="*"
-                                                            Visibility="Collapsed"/>
+                                                            Visibility="Visible"/>
+
+                                        <DataGridTextColumn Header="Лет"
+                                                            IsReadOnly="True"
+                                                            Binding="{Binding Path=FullYearsLived}"
+                                                            Width="*"
+                                                            Visibility="Visible"/>
 
                                         <!--<DataGridTextColumn Header="FullYears" IsReadOnly="True" Binding="{Binding Path=FullYears}" Width="*" Visibility="Visible"/>-->
 
@@ -250,7 +256,7 @@
 
                                     <!--Число полных прожитых лет-->
                                     <!--Content="{Binding Path=FullYears}"-->
-                                    <Label Content="(100 лет)"
+                                    <Label Content="{Binding Path=FullYearsLived}"
                                        HorizontalAlignment="Center"
                                        FontSize="22"
                                        Foreground="Crimson"
