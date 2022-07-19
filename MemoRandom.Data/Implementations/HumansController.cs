@@ -96,10 +96,19 @@ namespace MemoRandom.Data.Implementations
             if (currentHuman != null && currentHuman.ImageFile != String.Empty)
             {
                 string combinedImagePath = Path.Combine(HumansRepository.ImageFolder, currentHuman.ImageFile);
-                
-                BitmapImage image = new BitmapImage(new Uri(combinedImagePath));
 
-                return image;
+                //BitmapImage image = new BitmapImage(new Uri(combinedImagePath));
+                using (Stream stream = File.OpenRead(combinedImagePath))
+                {
+                    BitmapImage image = new BitmapImage();
+                    image.BeginInit();
+                    image.CacheOption = BitmapCacheOption.OnLoad;
+                    image.StreamSource = stream;
+                    image.EndInit();
+                    stream.Close();
+
+                    return image;
+                }
             }
 
             return null;
