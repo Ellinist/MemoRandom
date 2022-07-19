@@ -160,18 +160,18 @@ namespace MemoRandom.Models.Models
             }
         }
 
-        /// <summary>
-        /// Свойство - изображение человека
-        /// </summary>
-        public BitmapImage HumanImage
-        {
-            get => _humanImage;
-            set
-            {
-                _humanImage = value;
-                RaisePropertyChanged(nameof(HumanImage));
-            }
-        }
+        ///// <summary>
+        ///// Свойство - изображение человека
+        ///// </summary>
+        //public BitmapImage HumanImage
+        //{
+        //    get => _humanImage;
+        //    set
+        //    {
+        //        _humanImage = value;
+        //        RaisePropertyChanged(nameof(HumanImage));
+        //    }
+        //}
 
         /// <summary>
         /// Путь к файлу изображения - все файлы хранятся в папке

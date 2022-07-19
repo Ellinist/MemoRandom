@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Windows.Media.Imaging;
 using MemoRandom.Models.Models;
 
 namespace MemoRandom.Data.Interfaces
@@ -47,12 +48,21 @@ namespace MemoRandom.Data.Interfaces
         /// </summary>
         /// <param name="human"></param>
         /// <returns></returns>
-        bool AddHumanToList(Human human);
+        bool AddHumanToList(Human human, BitmapImage humanImage);
 
-        bool UpdateHumanInList(Human human);
+        /// <summary>
+        /// Обновление человека в списке людей в БД
+        /// </summary>
+        /// <param name="human"></param>
+        /// <param name="humanImage"></param>
+        /// <returns></returns>
+        bool UpdateHumanInList(Human human, BitmapImage humanImage);
 
+        /// <summary>
+        /// Удаление человека из БД
+        /// </summary>
+        /// <param name="human"></param>
+        /// <returns></returns>
         bool DeleteHumanFromList(Human human);
-
-        //void GetPicture(Human human);
     }
 }

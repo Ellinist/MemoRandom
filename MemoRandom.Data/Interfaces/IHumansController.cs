@@ -34,7 +34,7 @@ namespace MemoRandom.Data.Interfaces
         /// </summary>
         /// <param name="human"></param>
         /// <returns></returns>
-        bool UpdateHumans();
+        bool UpdateHumans(BitmapImage humanImage);
 
         /// <summary>
         /// Удаление человека из списка

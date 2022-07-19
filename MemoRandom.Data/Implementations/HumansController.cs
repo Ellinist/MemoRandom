@@ -53,18 +53,18 @@ namespace MemoRandom.Data.Implementations
         /// </summary>
         /// <param name="human"></param>
         /// <returns></returns>
-        public bool UpdateHumans()
+        public bool UpdateHumans(BitmapImage humanImage)
         {
             var currentHuman = GetCurrentHuman();
             if (currentHuman != null) // Существующая запись
             {
                 //TODO здесь вызов обновления записи
-                return _memoRandomDbController.UpdateHumanInList(currentHuman);
+                return _memoRandomDbController.UpdateHumanInList(currentHuman, humanImage);
             }
             else // Новая запись
             {
                 //TODO здесь добавление записи
-                return _memoRandomDbController.AddHumanToList(currentHuman);
+                return _memoRandomDbController.AddHumanToList(currentHuman, humanImage);
             }
         }
 
@@ -96,7 +96,9 @@ namespace MemoRandom.Data.Implementations
             if (currentHuman != null && currentHuman.ImageFile != String.Empty)
             {
                 string combinedImagePath = Path.Combine(HumansRepository.ImageFolder, currentHuman.ImageFile);
+                
                 BitmapImage image = new BitmapImage(new Uri(combinedImagePath));
+
                 return image;
             }
 

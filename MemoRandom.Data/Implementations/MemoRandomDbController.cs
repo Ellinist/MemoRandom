@@ -231,34 +231,12 @@ namespace MemoRandom.Data.Implementations
             }
         }
 
-        ///// <summary>
-        ///// Чтение изображения из внешнего хранилища
-        ///// </summary>
-        ///// <param name="human"></param>
-        //public void GetPicture(Human human)
-        //{
-        //    using (MemoContext = new MemoRandomDbContext(HumansRepository.DbConnectionString))
-        //    {
-        //        try
-        //        {
-        //            var image = MemoContext.DbHumans.FirstOrDefault(x => x.DbHumanId == human.HumanId).DbHumanImage;
-        //            var row = HumansRepository.HumansList.FirstOrDefault(x => x.HumanId == human.HumanId);
-        //            row.HumanImage = image;
-        //        }
-        //        catch(Exception ex)
-        //        {
-        //            //HumansRepository.HumansList = null; // В случае неуспеха чтения обнуляем иерархическую коллекцию
-        //            _logger.Error($"Ошибка чтения изображения человека: {ex.HResult}");
-        //        }
-        //    }
-        //}
-
         /// <summary>
         /// Добавление сущности человека в общий список
         /// </summary>
         /// <param name="human"></param>
         /// <returns></returns>
-        public bool AddHumanToList(Human human)
+        public bool AddHumanToList(Human human, BitmapImage humanImage)
         {
             bool successResult = true;
 
@@ -286,7 +264,7 @@ namespace MemoRandom.Data.Implementations
                     MemoContext.DbHumans.Add(record);
                     MemoContext.SaveChanges();
 
-                    SaveImageToFile(human); // Сохраняем изображение
+                    SaveImageToFile(human, humanImage); // Сохраняем изображение
                 }
                 catch (Exception ex)
                 {
@@ -305,7 +283,7 @@ namespace MemoRandom.Data.Implementations
         /// </summary>
         /// <param name="human"></param>
         /// <returns></returns>
-        public bool UpdateHumanInList(Human human)
+        public bool UpdateHumanInList(Human human, BitmapImage humanImage)
         {
             bool successResult = true;
 
@@ -330,6 +308,8 @@ namespace MemoRandom.Data.Implementations
                         updatedHuman.DbHumanComments = human.HumanComments;
 
                         MemoContext.SaveChanges();
+
+                        SaveImageToFile(human, humanImage); // Сохраняем изображение
                     }
                     else // Добавление новой записи
                     {
@@ -351,11 +331,10 @@ namespace MemoRandom.Data.Implementations
                         };
 
                         MemoContext.DbHumans.Add(record);
-
                         MemoContext.SaveChanges();
                     }
 
-                    SaveImageToFile(human); // Сохраняем изображение
+                    SaveImageToFile(human, humanImage); // Сохраняем изображение
                 }
                 catch (Exception ex)
                 {
@@ -411,24 +390,23 @@ namespace MemoRandom.Data.Implementations
         /// Сохранение изображения в файл
         /// </summary>
         /// <param name="human"></param>
-        private void SaveImageToFile(Human human)
+        private void SaveImageToFile(Human human, BitmapImage humanImage)
         {
             string combinedImagePath = Path.Combine(HumansRepository.ImageFolder, human.ImageFile);
 
             JpegBitmapEncoder encoder = new JpegBitmapEncoder();
-            encoder.Frames.Add(BitmapFrame.Create(human.HumanImage));
+            encoder.Frames.Add(BitmapFrame.Create(humanImage));
+
+            if (File.Exists(combinedImagePath))
+            {
+                //DeleteImageFile(human.ImageFile);
+                File.Delete(combinedImagePath);
+            }
+
             using (FileStream fs = new FileStream(combinedImagePath, FileMode.Create))
             {
                 encoder.Save(fs);
             }
-
-            //using (MemoryStream ms = new MemoryStream(human.HumanImage))
-            //{
-            //    using (var fs = new FileStream(combinedImagePath, FileMode.Create))
-            //    {
-            //        ms.WriteTo(fs);
-            //    }
-            //}
         }
 
         /// <summary>
