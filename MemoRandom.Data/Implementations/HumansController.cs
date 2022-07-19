@@ -92,7 +92,8 @@ namespace MemoRandom.Data.Implementations
         public BitmapImage GetHumanImage()
         {
             var currentHuman = GetCurrentHuman();
-            if (currentHuman != null)
+            // Читаем файл изображения, если выбранный человек существует и у него есть изображение
+            if (currentHuman != null && currentHuman.ImageFile != String.Empty)
             {
                 string combinedImagePath = Path.Combine(HumansRepository.ImageFolder, currentHuman.ImageFile);
                 BitmapImage image = new BitmapImage(new Uri(combinedImagePath));

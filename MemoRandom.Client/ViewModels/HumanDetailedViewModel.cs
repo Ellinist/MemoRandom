@@ -218,8 +218,7 @@ namespace MemoRandom.Client.ViewModels
                     DeathDate = human.DeathDate;
                     DeathCountry = human.DeathCountry;
                     DeathPlace = human.DeathPlace;
-                    //Image.Source = ConvertFromByteArray(human.HumanImage);
-                    Image.Source = human.HumanImage;
+                    Image.Source = _humanController.GetHumanImage(); // Загружаем изображение
                 }
                 else
                 {
@@ -253,7 +252,6 @@ namespace MemoRandom.Client.ViewModels
                 curHuman.DeathDate = DeathDate;
                 curHuman.DeathCountry = DeathCountry;
                 curHuman.DeathPlace = DeathPlace;
-                //curHuman.HumanImage = ConvertFromBitmapSource((BitmapSource)Image.Source);
                 curHuman.HumanImage = (BitmapImage)Image.Source;
                 curHuman.ImageFile = Image.Source != null ? curHuman.HumanId.ToString() + ".jpg" : string.Empty;
                 curHuman.DeathReasonId = DeathReasonId;
