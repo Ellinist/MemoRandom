@@ -30,6 +30,8 @@ namespace MemoRandom.Client.ViewModels
         private string   _deathPlace;
         private Guid     _deathReasonId;
         private BitmapSource _imageSource;
+
+        private Window _currentWiew;
         #endregion
 
         #region PROPS
@@ -181,7 +183,7 @@ namespace MemoRandom.Client.ViewModels
         /// <summary>
         /// Команда загрузки окна детальных данных по человеку
         /// </summary>
-        public DelegateCommand OnDetailedViewLoadedCommand { get; private set; }
+        public DelegateCommand<object> OnDetailedViewLoadedCommand { get; private set; }
         
         /// <summary>
         /// Команда сохранения данных по человеку
@@ -199,8 +201,13 @@ namespace MemoRandom.Client.ViewModels
         /// Метод, выполняемый после загрузки окна
         /// </summary>
         /// <param name="parameter"></param>
-        private void OnDetailedViewLoaded()
+        private void OnDetailedViewLoaded(object parameter)
         {
+            if (parameter is Window)
+            {
+                _currentWiew = parameter as Window;
+            }
+
             Human human = _humanController.GetCurrentHuman();
 
             if (human != null)
@@ -276,6 +283,8 @@ namespace MemoRandom.Client.ViewModels
             }
 
             _humanController.UpdateHumans(BitmapSourceToBitmapImage(ImageSource));
+
+            _currentWiew.Close();
         }
 
         /// <summary>
@@ -361,7 +370,7 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private void InitializeCommands()
         {
-            OnDetailedViewLoadedCommand = new DelegateCommand(OnDetailedViewLoaded);
+            OnDetailedViewLoadedCommand = new DelegateCommand<object>(OnDetailedViewLoaded);
             SaveHumanCommand = new DelegateCommand(SaveHuman);
             ImageLoadCommand = new DelegateCommand(ImageLoad);
         }

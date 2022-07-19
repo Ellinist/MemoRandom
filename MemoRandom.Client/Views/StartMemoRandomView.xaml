@@ -24,8 +24,7 @@
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding OnLoadedStartMemoRandomViewCommand}"
-                                   CommandParameter="{Binding ElementName=StartView}"
-                                   />
+                                   CommandParameter="{Binding ElementName=StartView}"/>
         </i:EventTrigger>
     </i:Interaction.Triggers>
 
