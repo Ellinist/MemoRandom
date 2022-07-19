@@ -79,8 +79,9 @@ namespace MemoRandom.Client.ViewModels
                 {
                     _humansController.SetCurrentHuman(HumansList[value]);
 
-                    //_humansController.GetHumanImage();
-                    PersonImage.Source = ConvertFromByteArray(HumansRepository.CurrentHuman.HumanImage);
+                    var t = _humansController.GetHumanImage();
+                    PersonImage.Source = t;
+                    //PersonImage.Source = ConvertFromByteArray(HumansRepository.CurrentHuman.HumanImage);
                     RaisePropertyChanged(nameof(PersonImage));
                 }
                 RaisePropertyChanged(nameof(PersonIndex));
@@ -217,7 +218,7 @@ namespace MemoRandom.Client.ViewModels
                 PersonIndex = 0; // Прыгаем на первую запись в списке
 
                 //_humansController.GetHumanImage();
-                PersonImage.Source = ConvertFromByteArray(HumansRepository.CurrentHuman.HumanImage);
+                //PersonImage.Source = ConvertFromByteArray(HumansRepository.CurrentHuman.HumanImage);
                 RaisePropertyChanged(nameof(PersonImage));
                 RaisePropertyChanged(nameof(PersonIndex));
             }

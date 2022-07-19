@@ -13,6 +13,7 @@ using MemoRandom.Data.Interfaces;
 using Microsoft.Data.SqlClient;
 using NLog;
 using MemoRandom.Data.Repositories;
+using System.Windows.Media.Imaging;
 
 namespace MemoRandom.Data.Implementations
 {
@@ -413,13 +414,21 @@ namespace MemoRandom.Data.Implementations
         private void SaveImageToFile(Human human)
         {
             string combinedImagePath = Path.Combine(HumansRepository.ImageFolder, human.ImageFile);
-            using (MemoryStream ms = new MemoryStream(human.HumanImage))
+
+            JpegBitmapEncoder encoder = new JpegBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(human.HumanImage));
+            using (FileStream fs = new FileStream(combinedImagePath, FileMode.Create))
             {
-                using (var fs = new FileStream(combinedImagePath, FileMode.Create))
-                {
-                    ms.WriteTo(fs);
-                }
+                encoder.Save(fs);
             }
+
+            //using (MemoryStream ms = new MemoryStream(human.HumanImage))
+            //{
+            //    using (var fs = new FileStream(combinedImagePath, FileMode.Create))
+            //    {
+            //        ms.WriteTo(fs);
+            //    }
+            //}
         }
 
         /// <summary>

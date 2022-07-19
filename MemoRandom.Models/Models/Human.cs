@@ -22,7 +22,7 @@ namespace MemoRandom.Models.Models
         private DateTime _deathDate;
         private string _deathCountry;
         private string _deathPlace;
-        private byte[] _humanImage;
+        private BitmapImage _humanImage;
         private string _imageFile;
         private Guid _deathReasonId;
         private string _humanComments;
@@ -163,7 +163,7 @@ namespace MemoRandom.Models.Models
         /// <summary>
         /// Свойство - изображение человека
         /// </summary>
-        public byte[] HumanImage
+        public BitmapImage HumanImage
         {
             get => _humanImage;
             set
@@ -174,7 +174,7 @@ namespace MemoRandom.Models.Models
         }
 
         /// <summary>
-        /// На всякий случай добавляю свойство - путь к файлу изображения
+        /// Путь к файлу изображения - все файлы хранятся в папке
         /// </summary>
         public string ImageFile
         {

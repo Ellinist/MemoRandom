@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
 using MemoRandom.Models.Models;
 
 namespace MemoRandom.Data.Interfaces
@@ -42,6 +43,6 @@ namespace MemoRandom.Data.Interfaces
         /// <returns></returns>
         bool DeleteHuman();
 
-        //void GetHumanImage();
+        BitmapImage GetHumanImage();
     }
 }

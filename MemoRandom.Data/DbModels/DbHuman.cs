@@ -21,7 +21,6 @@ namespace MemoRandom.Data.DbModels
         public DateTime DbDeathDate { get; set; }
         public string DbDeathCountry { get; set; }
         public string DbDeathPlace { get; set; }
-        //public byte[] DbHumanImage { get; set; }
         public string DbImageFile { get; set; }
         public Guid DbDeathReasonId { get; set; }
         public string DbHumanComments { get; set; }

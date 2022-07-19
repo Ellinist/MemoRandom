@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
 using MemoRandom.Data.Interfaces;
 using MemoRandom.Data.Repositories;
 using MemoRandom.Models.Models;
@@ -84,17 +86,21 @@ namespace MemoRandom.Data.Implementations
             }
         }
 
-        ///// <summary>
-        ///// Получение изображения выбранного человека
-        ///// </summary>
-        //public void GetHumanImage()
-        //{
-        //    var currentHuman = GetCurrentHuman();
-        //    if(currentHuman != null)
-        //    {
-        //        _memoRandomDbController.GetPicture(currentHuman);
-        //    }
-        //}
+        /// <summary>
+        /// Получение изображения выбранного человека
+        /// </summary>
+        public BitmapImage GetHumanImage()
+        {
+            var currentHuman = GetCurrentHuman();
+            if (currentHuman != null)
+            {
+                string combinedImagePath = Path.Combine(HumansRepository.ImageFolder, currentHuman.ImageFile);
+                BitmapImage image = new BitmapImage(new Uri(combinedImagePath));
+                return image;
+            }
+
+            return null;
+        }
 
         #region CTOR
         public HumansController(IMemoRandomDbController memoRandomDbController)

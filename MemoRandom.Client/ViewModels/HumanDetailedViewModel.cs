@@ -218,7 +218,8 @@ namespace MemoRandom.Client.ViewModels
                     DeathDate = human.DeathDate;
                     DeathCountry = human.DeathCountry;
                     DeathPlace = human.DeathPlace;
-                    Image.Source = ConvertFromByteArray(human.HumanImage);
+                    //Image.Source = ConvertFromByteArray(human.HumanImage);
+                    Image.Source = human.HumanImage;
                 }
                 else
                 {
@@ -252,7 +253,8 @@ namespace MemoRandom.Client.ViewModels
                 curHuman.DeathDate = DeathDate;
                 curHuman.DeathCountry = DeathCountry;
                 curHuman.DeathPlace = DeathPlace;
-                curHuman.HumanImage = ConvertFromBitmapSource((BitmapSource)Image.Source);
+                //curHuman.HumanImage = ConvertFromBitmapSource((BitmapSource)Image.Source);
+                curHuman.HumanImage = (BitmapImage)Image.Source;
                 curHuman.ImageFile = Image.Source != null ? curHuman.HumanId.ToString() + ".jpg" : string.Empty;
                 curHuman.DeathReasonId = DeathReasonId;
 
@@ -273,7 +275,10 @@ namespace MemoRandom.Client.ViewModels
                     DeathDate = DeathDate,
                     DeathCountry = DeathCountry,
                     DeathPlace = DeathPlace,
-                    HumanImage = ConvertFromBitmapSource((BitmapSource)Image.Source),
+                    //HumanImage = ConvertFromBitmapSource((BitmapSource)Image.Source),
+                    //HumanImage = (BitmapImage)Image.Source,
+                    //HumanImage = Image.Source as BitmapImage,
+                    HumanImage = BitmapSourceToBitmapImage((BitmapSource)Image.Source),
                     ImageFile = Image.Source != null ? newHumanId.ToString() + ".jpg" : string.Empty,
                     DeathReasonId = DeathReasonId
                 };
@@ -284,6 +289,33 @@ namespace MemoRandom.Client.ViewModels
             _humanController.UpdateHumans();
         }
 
+        /// <summary>
+        /// Преобразование экранного изображения в BitmapImage
+        /// </summary>
+        /// <param name="src"></param>
+        /// <returns></returns>
+        private BitmapImage BitmapSourceToBitmapImage(BitmapSource src)
+        {
+            if (src == null) return null;
+
+            MemoryStream ms = new MemoryStream();
+            BmpBitmapEncoder encoder = new BmpBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(src));
+            encoder.Save(ms);
+            ms.Position = 0;
+
+            BitmapImage myBitmapImage = new BitmapImage();
+            myBitmapImage.BeginInit();
+            myBitmapImage.StreamSource = ms;
+            myBitmapImage.EndInit();
+            return myBitmapImage;
+        }
+
+        /// <summary>
+        /// Преобразование байтового массива в BitmapImage
+        /// </summary>
+        /// <param name="array"></param>
+        /// <returns></returns>
         private BitmapImage ConvertFromByteArray(byte[] array)
         {
             if (array == null) return null;
@@ -306,7 +338,6 @@ namespace MemoRandom.Client.ViewModels
             if(src == null) return null;
 
             byte[] bit;
-            //BitmapSource temp = (BitmapSource)Image.Source;
             JpegBitmapEncoder encoder = new JpegBitmapEncoder();
             encoder.QualityLevel = 100;
             using (MemoryStream stream = new MemoryStream())
