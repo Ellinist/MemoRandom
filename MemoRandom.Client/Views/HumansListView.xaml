@@ -20,8 +20,7 @@
 
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
-            <i:InvokeCommandAction Command="{Binding OnStartHumansViewCommand}"
-                                   CommandParameter="{Binding ElementName=PersonImage}"/>
+            <i:InvokeCommandAction Command="{Binding OnStartHumansViewCommand}"/>
         </i:EventTrigger>
     </i:Interaction.Triggers>
 
@@ -194,27 +193,33 @@
                                     </DataGrid.Columns>
                                 </DataGrid>
                             </Border>
-                            
-                            <!--Зона изображения выбранного человека и основных его характеристик-->
-                            <StackPanel Grid.Column="1"
-                                        DataContext="{Binding ElementName=DgHumans, Path=SelectedValue}"
-                                        Margin="5, 5, 5, 5">
 
-                                <Border BorderBrush="Black"
+                            <Grid Grid.Column="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+
+                                <Border Grid.Row="0"
+                                        BorderBrush="Black"
                                         BorderThickness="1">
 
                                     <!--Изображение выбранного человека-->
                                     <Image x:Name="PersonImage"
                                            Height="350" MinHeight="350" MaxHeight="350"
                                            Width="450"
-                                           Source="{Binding Path=PersonImage, UpdateSourceTrigger=PropertyChanged}"
+                                           Source="{Binding Path=ImageSource}"
                                            Stretch="Uniform"
                                            HorizontalAlignment="Center"/>
-                                    <!--Source="{Binding Path=PersonImage}"-->
                                 </Border>
 
-                                <!--Фамилия выбранного человека-->
-                                <Label Content="{Binding Path=LastName}"
+                                <!--Зона изображения выбранного человека и основных его характеристик-->
+                                <StackPanel Grid.Column="1" Grid.Row="1"
+                                        DataContext="{Binding ElementName=DgHumans, Path=SelectedValue}"
+                                        Margin="5, 5, 5, 5">
+
+                                    <!--Фамилия выбранного человека-->
+                                    <Label Content="{Binding Path=LastName}"
                                        Height="36"
                                        HorizontalAlignment="Center"
                                        FontSize="30"
@@ -225,7 +230,7 @@
 
                                     <StackPanel Orientation="Horizontal"
                                                 HorizontalAlignment="Center">
-                                        
+
                                         <!--Имя выбранного человека-->
                                         <Label Content="{Binding Path=FirstName}"
                                                Foreground="DarkBlue"
@@ -233,7 +238,7 @@
                                                FontFamily="{StaticResource TestFont2}"
                                                FontStyle="Italic"
                                                Padding="0,0,5,0"/>
-                                        
+
                                         <!--Отчество выбранного человека-->
                                         <Label Content="{Binding Path=Patronymic}"
                                                Foreground="DarkBlue"
@@ -243,16 +248,17 @@
                                                Padding="5,0,0,0"/>
                                     </StackPanel>
 
-                                <!--Число полных прожитых лет-->
-                                <!--Content="{Binding Path=FullYears}"-->
-                                <Label Content="(100 лет)"
+                                    <!--Число полных прожитых лет-->
+                                    <!--Content="{Binding Path=FullYears}"-->
+                                    <Label Content="(100 лет)"
                                        HorizontalAlignment="Center"
                                        FontSize="22"
                                        Foreground="Crimson"
                                        FontFamily="{StaticResource TestFont2}"
                                        Padding="0"/>
 
-                            </StackPanel>
+                                </StackPanel>
+                            </Grid>
                         </Grid>
 
                         <!--Нижняя зона с комментарием, кнопками и подробными характеристиками-->

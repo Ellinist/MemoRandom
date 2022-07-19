@@ -29,7 +29,7 @@ namespace MemoRandom.Client.ViewModels
         private string   _deathCountry;
         private string   _deathPlace;
         private Guid     _deathReasonId;
-        private Image    _image;
+        private BitmapSource _imageSource;
         #endregion
 
         #region PROPS
@@ -164,15 +164,15 @@ namespace MemoRandom.Client.ViewModels
         }
 
         /// <summary>
-        /// Элемент управления - для изображения
+        /// Свойство-изображение
         /// </summary>
-        public Image Image
+        public BitmapSource ImageSource
         {
-            get => _image;
+            get => _imageSource;
             set
             {
-                _image = value;
-                RaisePropertyChanged(nameof(Image));
+                _imageSource = value;
+                RaisePropertyChanged(nameof(ImageSource));
             }
         }
         #endregion
@@ -181,7 +181,7 @@ namespace MemoRandom.Client.ViewModels
         /// <summary>
         /// Команда загрузки окна детальных данных по человеку
         /// </summary>
-        public DelegateCommand<object> OnDetailedViewLoadedCommand { get; private set; }
+        public DelegateCommand OnDetailedViewLoadedCommand { get; private set; }
         
         /// <summary>
         /// Команда сохранения данных по человеку
@@ -199,40 +199,36 @@ namespace MemoRandom.Client.ViewModels
         /// Метод, выполняемый после загрузки окна
         /// </summary>
         /// <param name="parameter"></param>
-        private void OnDetailedViewLoaded(object parameter)
+        private void OnDetailedViewLoaded()
         {
-            if (parameter as Image != null)
+            Human human = _humanController.GetCurrentHuman();
+
+            if (human != null)
             {
-                Image = parameter as Image;
-
-                Human human = _humanController.GetCurrentHuman();
-
-                if (human != null)
-                {
-                    LastName = human.LastName;
-                    FirstName = human.FirstName;
-                    Patronymic = human.Patronymic;
-                    BirthDate = human.BirthDate;
-                    BirthCountry = human.BirthCountry;
-                    BirthPlace = human.BirthPlace;
-                    DeathDate = human.DeathDate;
-                    DeathCountry = human.DeathCountry;
-                    DeathPlace = human.DeathPlace;
-                    Image.Source = _humanController.GetHumanImage(); // Загружаем изображение
-                }
-                else
-                {
-                    LastName = "Введите фамилию";
-                    FirstName = "Введите имя";
-                    Patronymic = "Введите отчество";
-                    BirthDate = DateTime.Now;
-                    BirthCountry = "Введите страну рождения";
-                    BirthPlace = "Введите место рождения";
-                    DeathDate = DateTime.Now;
-                    DeathCountry = "Введите страну смерти";
-                    DeathPlace = "Введите место смерти";
-                }
+                LastName = human.LastName;
+                FirstName = human.FirstName;
+                Patronymic = human.Patronymic;
+                BirthDate = human.BirthDate;
+                BirthCountry = human.BirthCountry;
+                BirthPlace = human.BirthPlace;
+                DeathDate = human.DeathDate;
+                DeathCountry = human.DeathCountry;
+                DeathPlace = human.DeathPlace;
+                ImageSource = (BitmapSource)_humanController.GetHumanImage(); // Загружаем изображение
             }
+            else
+            {
+                LastName = "Введите фамилию";
+                FirstName = "Введите имя";
+                Patronymic = "Введите отчество";
+                BirthDate = DateTime.Now;
+                BirthCountry = "Введите страну рождения";
+                BirthPlace = "Введите место рождения";
+                DeathDate = DateTime.Now;
+                DeathCountry = "Введите страну смерти";
+                DeathPlace = "Введите место смерти";
+            }
+
         }
 
         /// <summary>
@@ -252,8 +248,7 @@ namespace MemoRandom.Client.ViewModels
                 curHuman.DeathDate = DeathDate;
                 curHuman.DeathCountry = DeathCountry;
                 curHuman.DeathPlace = DeathPlace;
-                //curHuman.HumanImage = (BitmapImage)Image.Source;
-                curHuman.ImageFile = Image.Source != null ? curHuman.HumanId.ToString() + ".jpg" : string.Empty;
+                curHuman.ImageFile = ImageSource != null ? curHuman.HumanId.ToString() + ".jpg" : string.Empty;
                 curHuman.DeathReasonId = DeathReasonId;
 
                 _humanController.SetCurrentHuman(curHuman);
@@ -273,15 +268,14 @@ namespace MemoRandom.Client.ViewModels
                     DeathDate = DeathDate,
                     DeathCountry = DeathCountry,
                     DeathPlace = DeathPlace,
-                    //HumanImage = BitmapSourceToBitmapImage((BitmapSource)Image.Source),
-                    ImageFile = Image.Source != null ? newHumanId.ToString() + ".jpg" : string.Empty,
+                    ImageFile = ImageSource != null ? newHumanId.ToString() + ".jpg" : string.Empty,
                     DeathReasonId = DeathReasonId
                 };
 
                 _humanController.SetCurrentHuman(human);
             }
 
-            _humanController.UpdateHumans(BitmapSourceToBitmapImage((BitmapSource)Image.Source));
+            _humanController.UpdateHumans(BitmapSourceToBitmapImage(ImageSource));
         }
 
         /// <summary>
@@ -353,7 +347,7 @@ namespace MemoRandom.Client.ViewModels
         {
             if (Clipboard.ContainsImage())
             {
-                Image.Source = Clipboard.GetImage();
+                ImageSource = Clipboard.GetImage();
             }
             else
             {
@@ -367,7 +361,7 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private void InitializeCommands()
         {
-            OnDetailedViewLoadedCommand = new DelegateCommand<object>(OnDetailedViewLoaded);
+            OnDetailedViewLoadedCommand = new DelegateCommand(OnDetailedViewLoaded);
             SaveHumanCommand = new DelegateCommand(SaveHuman);
             ImageLoadCommand = new DelegateCommand(ImageLoad);
         }
