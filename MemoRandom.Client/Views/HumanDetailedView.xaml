@@ -13,8 +13,7 @@
 
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
-            <i:InvokeCommandAction Command="{Binding OnDetailedViewLoadedCommand}"
-                                   CommandParameter="{Binding ElementName=DetailesView}"/>
+            <i:InvokeCommandAction Command="{Binding OnDetailedViewLoadedCommand}"/>
         </i:EventTrigger>
     </i:Interaction.Triggers>
     

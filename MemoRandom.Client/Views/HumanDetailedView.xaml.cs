@@ -12,6 +12,13 @@ namespace MemoRandom.Client.Views
         public HumanDetailedView(HumanDetailedViewModel vm)
         {
             InitializeComponent();
+
+            //Closing += vm.HumanDetailedView_Closing; // Подписка на событие закрытия окна
+            if(vm.CloseAction == null)
+            {
+                vm.CloseAction = new System.Action(this.Close);
+            }
+
             DataContext = vm;
         }
     }
