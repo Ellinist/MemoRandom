@@ -70,16 +70,8 @@ namespace MemoRandom.Client.ViewModels
             get => _personIndex;
             set
             {
-                if (HumansList == null || HumansList.Count == 0) return;
                 _personIndex = value;
-                if (value == -1)
-                {
-                    //_humansController.SetCurrentHuman(null);
-                }
-                else
-                {
-                    //_humansController.SetCurrentHuman(HumansList[value]);
-                }
+                
                 RaisePropertyChanged(nameof(PersonIndex));
             }
         }
@@ -105,17 +97,13 @@ namespace MemoRandom.Client.ViewModels
             get => _selectedHuman;
             set
             {
-                if(HumansList == null || HumansList.Count == 0 || value == null)
-                {
-                    //_humansController?.SetCurrentHuman(null);
-                }
-                else
+                if(HumansList != null && HumansList.Count > 0 && value != null)
                 {
                     _selectedHuman = value;
-                    
+
                     _humansController.SetCurrentHuman(value);
                     RaisePropertyChanged(nameof(SelectedHuman));
-                    
+
                     PersonImage.Source = _humansController.GetHumanImage();
                     RaisePropertyChanged(nameof(PersonImage));
                 }
@@ -220,7 +208,7 @@ namespace MemoRandom.Client.ViewModels
                 HumansList = _humansController.GetHumansList();
                 PersonIndex = 0; // Прыгаем на первую запись в списке
 
-                RaisePropertyChanged(nameof(PersonImage));
+                //RaisePropertyChanged(nameof(PersonImage));
                 RaisePropertyChanged(nameof(PersonIndex));
             }
         }
@@ -253,12 +241,6 @@ namespace MemoRandom.Client.ViewModels
                     RaisePropertyChanged(nameof(HumansList));
                 });
             });
-
-            //if (HumansList.Count == 0) return;
-            //PersonIndex = 0;
-            //PersonImage.Source = _humansController.GetHumanImage();
-            //RaisePropertyChanged(nameof(PersonIndex));
-            //RaisePropertyChanged(nameof(PersonImage));
         }
 
         #region CTOR
