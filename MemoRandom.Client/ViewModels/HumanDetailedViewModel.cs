@@ -35,7 +35,7 @@ namespace MemoRandom.Client.ViewModels
         private string _humanComments;
         private int _daysLived;
         private double _fullYearsLived;
-        private ObservableCollection<Reason> _collection = new();
+        private ObservableCollection<Reason> _reasonsList = new();
         #endregion
 
         #region PROPS
@@ -221,13 +221,13 @@ namespace MemoRandom.Client.ViewModels
             }
         }
 
-        public ObservableCollection<Reason> Collection
+        public ObservableCollection<Reason> ReasonsList
         {
-            get => _collection;
+            get => _reasonsList;
             set
             {
-                _collection = value;
-                RaisePropertyChanged(nameof(Collection));
+                _reasonsList = value;
+                RaisePropertyChanged(nameof(ReasonsList));
             }
         }
         #endregion
@@ -284,7 +284,7 @@ namespace MemoRandom.Client.ViewModels
                 DeathPlace = "Введите место смерти";
                 HumanComments = "Введите краткое описание";
             }
-            Collection = ReasonsRepository.ReasonsCollection;
+            ReasonsList = ReasonsRepository.ReasonsCollection;
         }
 
         /// <summary>

@@ -272,31 +272,55 @@
                             </TreeView.ItemContainerStyle>
                         </TreeView>--><!--
                     </Popup>-->
-                    <ComboBox Grid.Row="10" Grid.Column="1">
-                        <Border Width="100" Height="50" BorderThickness="4" BorderBrush="Black">
+
+                    <!--<ComboBox Grid.Row="10" Grid.Column="1">
+                        <Border Width="900" Height="400" BorderThickness="4" BorderBrush="Black" Margin="5">
                             
                         </Border>
-                    </ComboBox>
-                    <!--<ComboBox Grid.Row="10" Grid.Column="1"
-                              Style="{StaticResource FontCharacteristics}">
-                        <ComboBoxItem>
-                            <TreeView ItemsSource="{Binding Collection}">
-                                <TreeView.Resources>
-                                    <HierarchicalDataTemplate DataType="{x:Type models:Reason}" ItemsSource="{Binding ReasonChildren}">
-                                        <TextBlock Text="{Binding Path=ReasonName}"/>
-                                    </HierarchicalDataTemplate>
-                                </TreeView.Resources>
-                                <TreeView.ItemContainerStyle>
-                                    <Style TargetType="TreeViewItem">
-                                        <Setter Property="IsSelected" Value="{Binding IsSelected}"/>
-                                        <Setter Property="FontSize" Value="18"/>
-                                        <Setter Property="FontWeight" Value="Bold"/>
-                                        <Setter Property="IsExpanded" Value="True"/>
-                                    </Style>
-                                </TreeView.ItemContainerStyle>
-                            </TreeView>
-                        </ComboBoxItem>
                     </ComboBox>-->
+
+                    
+                    <ComboBox Grid.Row="10" Grid.Column="1"
+                              Style="{StaticResource FontCharacteristics}">
+                        <ScrollViewer CanContentScroll="True"
+                                      HorizontalScrollBarVisibility="Auto"
+                                      VerticalScrollBarVisibility="Auto">
+                            <ComboBoxItem>
+                                <TreeView x:Name="ReasonsTree"
+                                          Style="{StaticResource MahApps.Styles.TreeView}"
+                                          ItemsSource="{Binding ReasonsList, Mode=TwoWay, NotifyOnSourceUpdated=True}">
+                                    <TreeView.Resources>
+                                        <HierarchicalDataTemplate DataType="{x:Type models:Reason}" ItemsSource="{Binding ReasonChildren}">
+                                            <TextBlock Text="{Binding Path=ReasonName}"/>
+                                        </HierarchicalDataTemplate>
+                                    </TreeView.Resources>
+                                    <TreeView.ItemContainerStyle>
+                                        <Style TargetType="TreeViewItem">
+                                            <Setter Property="IsSelected" Value="{Binding IsSelected}"/>
+                                            <Setter Property="FontSize" Value="18"/>
+                                            <Setter Property="FontWeight" Value="Bold"/>
+                                            <Setter Property="IsExpanded" Value="True"/>
+                                        </Style>
+                                    </TreeView.ItemContainerStyle>
+                                    <!--<i:Interaction.Triggers>
+
+                                        --><!--Команда выбора узла--><!--
+                                        <i:EventTrigger EventName="SelectedItemChanged">
+                                            <i:InvokeCommandAction Command="{Binding SelectNodeCommand}"
+                                                                   CommandParameter="{Binding ElementName=ReasonsTree, Path=SelectedItem}"/>
+                                        </i:EventTrigger>
+
+                                        --><!--Команда отмены выбора - клик на свободном поле--><!--
+                                        <i:EventTrigger EventName="MouseDown">
+                                            <i:InvokeCommandAction Command="{Binding EmptyClickCommand}"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>-->
+                                </TreeView>
+                            </ComboBoxItem>
+                        </ScrollViewer>
+                    </ComboBox>
+                    
+                        
                               
                               
                     <!--ItemsSource="{Binding ReasonsRepository.ReasonsList}"
