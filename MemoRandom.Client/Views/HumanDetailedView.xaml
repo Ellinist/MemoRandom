@@ -5,6 +5,8 @@
                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                  xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
                  xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+                 xmlns:models="clr-namespace:MemoRandom.Models.Models;assembly=MemoRandom.Models"
+                 xmlns:rsn="clr-namespace:MemoRandom.Data.DbModels;assembly=MemoRandom.Data"
                  xmlns:local="clr-namespace:MemoRandom.Client.Views"
                  Icon="pack://application:,,,/Resources/Icons/humanInfoIcon.ico"
                  mc:Ignorable="d"
@@ -246,13 +248,58 @@
                                HorizontalAlignment="Right"/>
                     
                     <!--Здесь тщательно все продумать-->
-                    <ComboBox Grid.Row="10" Grid.Column="1"
-                              ItemsSource="{Binding ReasonsRepository.ReasonsList}"
+                    <Popup Grid.Row="10" Grid.Column="1" Name="pLink" IsOpen="True"
+                           StaysOpen="False" Placement="Mouse" MaxWidth="150"
+                           PopupAnimation="Scroll" AllowsTransparency="True">
+                        <Border BorderBrush="LightBlue" BorderThickness="2" Background="White">
+                            <TextBlock Margin="10" TextWrapping="Wrap">
+                                Посмотреть на
+                            </TextBlock>
+                        </Border>
+                        <!--<TreeView ItemsSource="{Binding Collection}">
+                            <TreeView.Resources>
+                                <HierarchicalDataTemplate DataType="{x:Type models:Reason}" ItemsSource="{Binding ReasonChildren}">
+                                    <TextBlock Text="{Binding Path=ReasonName}"/>
+                                </HierarchicalDataTemplate>
+                            </TreeView.Resources>
+                            <TreeView.ItemContainerStyle>
+                                <Style TargetType="TreeViewItem">
+                                    <Setter Property="IsSelected" Value="{Binding IsSelected}"/>
+                                    <Setter Property="FontSize" Value="18"/>
+                                    <Setter Property="FontWeight" Value="Bold"/>
+                                    <Setter Property="IsExpanded" Value="True"/>
+                                </Style>
+                            </TreeView.ItemContainerStyle>
+                        </TreeView>-->
+                    </Popup>
+                    <!--<ComboBox Grid.Row="10" Grid.Column="1"
+                              Style="{StaticResource FontCharacteristics}">
+                        <ComboBoxItem>
+                            <TreeView ItemsSource="{Binding Collection}">
+                                <TreeView.Resources>
+                                    <HierarchicalDataTemplate DataType="{x:Type models:Reason}" ItemsSource="{Binding ReasonChildren}">
+                                        <TextBlock Text="{Binding Path=ReasonName}"/>
+                                    </HierarchicalDataTemplate>
+                                </TreeView.Resources>
+                                <TreeView.ItemContainerStyle>
+                                    <Style TargetType="TreeViewItem">
+                                        <Setter Property="IsSelected" Value="{Binding IsSelected}"/>
+                                        <Setter Property="FontSize" Value="18"/>
+                                        <Setter Property="FontWeight" Value="Bold"/>
+                                        <Setter Property="IsExpanded" Value="True"/>
+                                    </Style>
+                                </TreeView.ItemContainerStyle>
+                            </TreeView>
+                        </ComboBoxItem>
+                    </ComboBox>-->
+                              
+                              
+                    <!--ItemsSource="{Binding ReasonsRepository.ReasonsList}"
                               DisplayMemberPath="ReasonName"
                               SelectedItem="ReasonName"
                               SelectedValuePath="ReasonName"
-                              SelectedValue="{Binding HumanReasonId}"
-                              Style="{StaticResource FontCharacteristics}"/>
+                              SelectedValue="{Binding HumanReasonId}"-->
+                    
                     <Button Grid.Row="10" Grid.Column="2"
                             Content="Изменить"
                             Command="{Binding ChangeDeathReason}"/>

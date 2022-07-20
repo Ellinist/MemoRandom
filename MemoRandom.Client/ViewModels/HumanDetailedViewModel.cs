@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using MemoRandom.Data.Interfaces;
+using MemoRandom.Data.Repositories;
 using MemoRandom.Models.Models;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -33,6 +35,7 @@ namespace MemoRandom.Client.ViewModels
         private string _humanComments;
         private int _daysLived;
         private double _fullYearsLived;
+        private ObservableCollection<Reason> _collection = new();
         #endregion
 
         #region PROPS
@@ -217,6 +220,16 @@ namespace MemoRandom.Client.ViewModels
                 RaisePropertyChanged(nameof(FullYearsLived));
             }
         }
+
+        public ObservableCollection<Reason> Collection
+        {
+            get => _collection;
+            set
+            {
+                _collection = value;
+                RaisePropertyChanged(nameof(Collection));
+            }
+        }
         #endregion
 
         #region COMMANDS
@@ -271,7 +284,7 @@ namespace MemoRandom.Client.ViewModels
                 DeathPlace = "Введите место смерти";
                 HumanComments = "Введите краткое описание";
             }
-
+            Collection = ReasonsRepository.ReasonsCollection;
         }
 
         /// <summary>
