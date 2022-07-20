@@ -244,9 +244,15 @@
                                Background="AliceBlue"
                                Text="Причина смерти:"
                                HorizontalAlignment="Right"/>
-                    <TextBlock Grid.Row="10" Grid.Column="1"
-                               Text="{Binding DeathReasonId}"
-                               Style="{StaticResource FontCharacteristics}"/>
+                    
+                    <!--Здесь тщательно все продумать-->
+                    <ComboBox Grid.Row="10" Grid.Column="1"
+                              ItemsSource="{Binding ReasonsRepository.ReasonsList}"
+                              DisplayMemberPath="ReasonName"
+                              SelectedItem="ReasonName"
+                              SelectedValuePath="ReasonName"
+                              SelectedValue="{Binding HumanReasonId}"
+                              Style="{StaticResource FontCharacteristics}"/>
                     <Button Grid.Row="10" Grid.Column="2"
                             Content="Изменить"
                             Command="{Binding ChangeDeathReason}"/>
