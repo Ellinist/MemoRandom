@@ -13,12 +13,14 @@
                  Icon="pack://application:,,,/Resources/Icons/mainWindowIcon.ico"
                  ContentRendered="MetroWindow_ContentRendered"
                  Title="{Binding HumansViewTitle}"
-                 Height="700" Width="1400"
-                 MinWidth="1360"
-                 MinHeight="800"
-                 WindowStartupLocation="CenterScreen">
+                 Height="900" Width="1600"
+                 MinWidth="1600"
+                 MinHeight="900"
+                 WindowStartupLocation="CenterScreen"
+                 WindowState="Maximized">
 
     <i:Interaction.Triggers>
+        <!--Команда загрузки окна-->
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding OnStartHumansViewCommand}"/>
         </i:EventTrigger>
@@ -79,125 +81,56 @@
                             <Grid.ColumnDefinitions>
 
                                 <!--Зона списка людей-->
-                                <ColumnDefinition></ColumnDefinition>
+                                <ColumnDefinition/>
 
                                 <!--Зона изображения и основных данных выбранного человека-->
-                                <ColumnDefinition MinWidth="450" MaxWidth="450"></ColumnDefinition>
+                                <ColumnDefinition MinWidth="450" MaxWidth="450" Width="450"></ColumnDefinition>
                             </Grid.ColumnDefinitions>
 
-                            <Border Grid.Column="0"
+                            <Border Grid.Column="0" 
+                                    ScrollViewer.CanContentScroll="True"
+                                    Margin="3, 0, 5, 5"
                                     BorderBrush="Black"
                                     BorderThickness="1">
 
-                                <DataGrid x:Name="DgHumans"
+                                <!--Здесь думать, надо ли скроллинг делать?-->
+                                <ListView x:Name="DgHumans"
                                           SelectionMode="Single"
                                           UseLayoutRounding="True"
-                                          CanUserAddRows="False"
-                                          IsReadOnly="True"
-                                          AlternatingRowBackground="Aqua"
                                           ItemsSource="{Binding Path=HumansList}"
-                                          AutoGenerateColumns="False"
-                                          Margin="5, 5, 0, 5"
+                                          Margin="1"
                                           SelectedItem="{Binding Path=SelectedHuman}"
                                           SelectedIndex="{Binding Path=PersonIndex}">
-                                    <!--SelectedIndex="{Binding Path=HumansIndex, Mode=TwoWay}"-->
-
-                                    <DataGrid.ColumnHeaderStyle>
-
-                                        <!--Задание характеристик отображения заголовка таблицы-->
-                                        <Style TargetType="{x:Type DataGridColumnHeader}">
-                                            <Setter Property="Background" Value="#CAD9FF"/>
-                                            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                    <!--<ListView.ItemContainerStyle>
+                                        <Style TargetType="ListViewItem">
+                                            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                                            --><!--<Setter Property="HorizontalAlignment" Value="Center"/>--><!--
                                         </Style>
-                                    </DataGrid.ColumnHeaderStyle>
-
-                                    <DataGrid.Columns>
-                                        <DataGridTextColumn Header="ID"
-                                                            IsReadOnly="True"
-                                                            Binding="{Binding Path=HumanId}"
-                                                            Visibility="Collapsed"/>
-
-                                        <DataGridTextColumn Header="ID_Reason"
-                                                            IsReadOnly="True"
-                                                            Binding="{Binding Path=DeathReasonId}"
-                                                            Visibility="Collapsed"/>
-
-                                        <DataGridTextColumn Header="Фамилия"
-                                                            IsReadOnly="True"
-                                                            Binding="{Binding Path=LastName}"
-                                                            Width="*"
-                                                            MinWidth="110"/>
-
-                                        <DataGridTextColumn Header="Имя"
-                                                            IsReadOnly="True"
-                                                            Binding="{Binding Path=FirstName}"
-                                                            Width="*"
-                                                            MinWidth="100"/>
-
-                                        <DataGridTextColumn Header="Отчество"
-                                                            IsReadOnly="True"
-                                                            Binding="{Binding Path=Patronymic}"
-                                                            Width="*"
-                                                            MinWidth="100"/>
-
-                                        <DataGridTextColumn Header="Дата рождения"
-                                                            IsReadOnly="True"
-                                                            Width="120"
-                                                            Binding="{Binding Path=BirthDate, StringFormat='dd MMMM yyyy',ConverterCulture='ru-RU', Mode=OneWay}">
-                                            <DataGridTextColumn.CellStyle>
-                                                <Style>
-                                                    <Setter Property="TextBlock.TextAlignment" Value="Center"/>
-                                                </Style>
-                                            </DataGridTextColumn.CellStyle>
-                                        </DataGridTextColumn>
-
-                                        <DataGridTextColumn Header="Родная страна"
-                                                            IsReadOnly="True"
-                                                            Binding="{Binding Path=BirthCountry}"
-                                                            Width="*"/>
-
-                                        <DataGridTextColumn Header="Место рождения"
-                                                            IsReadOnly="True"
-                                                            Binding="{Binding Path=BirthPlace}"
-                                                            Width="2*"/>
-
-                                        <DataGridTextColumn Header="Дата смерти"
-                                                            IsReadOnly="True"
-                                                            Width="120"
-                                                            Binding="{Binding Path=DeathDate, StringFormat='dd MMMM yyyy',ConverterCulture='ru-RU', Mode=OneWay}">
-                                            <DataGridTextColumn.CellStyle>
-                                                <Style>
-                                                    <Setter Property="TextBlock.TextAlignment" Value="Center"/>
-                                                </Style>
-                                            </DataGridTextColumn.CellStyle>
-                                        </DataGridTextColumn>
-
-                                        <DataGridTextColumn Header="Страна смерти"
-                                                            IsReadOnly="True"
-                                                            Binding="{Binding Path=DeathCountry}"
-                                                            Width="*"/>
-
-                                        <DataGridTextColumn Header="Место смерти"
-                                                            IsReadOnly="True"
-                                                            Binding="{Binding Path=DeathPlace}"
-                                                            Width="2*"/>
-
-                                        <DataGridTextColumn Header="Дней"
-                                                            IsReadOnly="True"
-                                                            Binding="{Binding Path=DaysLived}"
-                                                            Width="*"
-                                                            Visibility="Visible"/>
-
-                                        <DataGridTextColumn Header="Лет"
-                                                            IsReadOnly="True"
-                                                            Binding="{Binding Path=FullYearsLived}"
-                                                            Width="*"
-                                                            Visibility="Visible"/>
-
-                                        <!--<DataGridTextColumn Header="FullYears" IsReadOnly="True" Binding="{Binding Path=FullYears}" Width="*" Visibility="Visible"/>-->
-
-                                    </DataGrid.Columns>
-                                </DataGrid>
+                                    </ListView.ItemContainerStyle>-->
+                                    <ListView.View>
+                                        <GridView AllowsColumnReorder="True">
+                                            <GridViewColumn Header="Фамилия">
+                                                <GridViewColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <TextBlock Text="{Binding Path=LastName}"/>
+                                                    </DataTemplate>
+                                                </GridViewColumn.CellTemplate>
+                                            </GridViewColumn>
+                                            <GridViewColumn DisplayMemberBinding="{Binding Path=FirstName}" Header="Имя"/>
+                                            <GridViewColumn DisplayMemberBinding="{Binding Path=Patronymic}" Header="Отчество"/>
+                                            <GridViewColumn DisplayMemberBinding="{Binding Path=BirthDate, StringFormat='dd MMMM yyyy',ConverterCulture='ru-RU', Mode=OneWay}"
+                                                            Header="Дата рождения"/>
+                                            <GridViewColumn DisplayMemberBinding="{Binding Path=BirthCountry}" Header="Родная страна"/>
+                                            <GridViewColumn DisplayMemberBinding="{Binding Path=BirthPlace}" Header="Место рождения"/>
+                                            <GridViewColumn DisplayMemberBinding="{Binding Path=DeathDate, StringFormat='dd MMMM yyyy',ConverterCulture='ru-RU', Mode=OneWay}"
+                                                            Header="Дата смерти"/>
+                                            <GridViewColumn DisplayMemberBinding="{Binding Path=DeathCountry}" Header="Страна смерти"/>
+                                            <GridViewColumn DisplayMemberBinding="{Binding Path=DeathPlace}" Header="Место смерти"/>
+                                            <GridViewColumn DisplayMemberBinding="{Binding Path=DaysLived}" Header="Дней"/>
+                                            <GridViewColumn DisplayMemberBinding="{Binding Path=FullYearsLived}" Header="Лет"/>
+                                        </GridView>
+                                    </ListView.View>
+                                </ListView>
                             </Border>
 
                             <Grid Grid.Column="1">
@@ -509,3 +442,116 @@
         </Grid>
     </Grid>
 </mah:MetroWindow>
+
+
+
+<!--CanUserAddRows="False"-->
+<!--IsReadOnly="True"-->
+<!--AutoGenerateColumns="False"-->
+<!--AlternatingRowBackground="Aqua"-->
+
+<!--<DataGrid.ColumnHeaderStyle>
+
+                                        -->
+<!--Задание характеристик отображения заголовка таблицы-->
+<!--
+                                        <Style TargetType="{x:Type DataGridColumnHeader}">
+                                            <Setter Property="Background" Value="#CAD9FF"/>
+                                            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                        </Style>
+                                    </DataGrid.ColumnHeaderStyle>-->
+
+<!--<DataGrid.Columns>
+                                        <DataGridTextColumn Header="ID"
+                                                            IsReadOnly="True"
+                                                            Binding="{Binding Path=HumanId}"
+                                                            Visibility="Collapsed"/>
+
+                                        <DataGridTextColumn Header="ID_Reason"
+                                                            IsReadOnly="True"
+                                                            Binding="{Binding Path=DeathReasonId}"
+                                                            Visibility="Collapsed"/>
+
+                                        <DataGridTextColumn Header="Фамилия"
+                                                            IsReadOnly="True"
+                                                            Binding="{Binding Path=LastName}"
+                                                            Width="*"
+                                                            MinWidth="110"/>
+
+                                        <DataGridTextColumn Header="Имя"
+                                                            IsReadOnly="True"
+                                                            Binding="{Binding Path=FirstName}"
+                                                            Width="*"
+                                                            MinWidth="100"/>
+
+                                        <DataGridTextColumn Header="Отчество"
+                                                            IsReadOnly="True"
+                                                            Binding="{Binding Path=Patronymic}"
+                                                            Width="*"
+                                                            MinWidth="100"/>
+
+                                        <DataGridTextColumn Header="Дата рождения"
+                                                            IsReadOnly="True"
+                                                            Width="120"
+                                                            Binding="{Binding Path=BirthDate, StringFormat='dd MMMM yyyy',ConverterCulture='ru-RU', Mode=OneWay}">
+                                            <DataGridTextColumn.CellStyle>
+                                                <Style>
+                                                    -->
+<!--<Setter Property="TextBlock.Margin" Value="5"/>-->
+<!--<Setter Property="Margin" Value="2"/>-->
+<!--<Setter Property="Padding" Value="3"/>-->
+<!--<Setter Property="VerticalAlignment" Value="Center"/>-->
+<!--
+                                                    <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+                                                </Style>
+                                            </DataGridTextColumn.CellStyle>
+                                        </DataGridTextColumn>
+
+                                        <DataGridTextColumn Header="Родная страна"
+                                                            IsReadOnly="True"
+                                                            Binding="{Binding Path=BirthCountry}"
+                                                            Width="*"/>
+
+                                        <DataGridTextColumn Header="Место рождения"
+                                                            IsReadOnly="True"
+                                                            Binding="{Binding Path=BirthPlace}"
+                                                            Width="2*"/>
+
+                                        <DataGridTextColumn Header="Дата смерти"
+                                                            IsReadOnly="True"
+                                                            Width="120"
+                                                            Binding="{Binding Path=DeathDate, StringFormat='dd MMMM yyyy',ConverterCulture='ru-RU', Mode=OneWay}">
+                                            <DataGridTextColumn.CellStyle>
+                                                <Style>
+                                                    <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+                                                </Style>
+                                            </DataGridTextColumn.CellStyle>
+                                        </DataGridTextColumn>
+
+                                        <DataGridTextColumn Header="Страна смерти"
+                                                            IsReadOnly="True"
+                                                            Binding="{Binding Path=DeathCountry}"
+                                                            Width="*"/>
+
+                                        <DataGridTextColumn Header="Место смерти"
+                                                            IsReadOnly="True"
+                                                            Binding="{Binding Path=DeathPlace}"
+                                                            Width="2*"/>
+
+                                        <DataGridTextColumn Header="Дней"
+                                                            IsReadOnly="True"
+                                                            Binding="{Binding Path=DaysLived}"
+                                                            Width="*"
+                                                            Visibility="Visible"/>
+
+                                        <DataGridTextColumn Header="Лет"
+                                                            IsReadOnly="True"
+                                                            Binding="{Binding Path=FullYearsLived}"
+                                                            Width="*"
+                                                            Visibility="Visible"/>
+
+                                        -->
+<!--<DataGridTextColumn Header="FullYears" IsReadOnly="True" Binding="{Binding Path=FullYears}" Width="*" Visibility="Visible"/>-->
+<!--
+
+                                    </DataGrid.Columns>-->

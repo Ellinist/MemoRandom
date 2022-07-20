@@ -295,10 +295,12 @@
 
             <Button Grid.Column="0"
                     Content="Сохранить"
+                    FontSize="24"
                     Command="{Binding SaveHumanCommand}"
                     CommandParameter="{Binding ElementName=HumanIdentificator}"/>
             <Button Grid.Column="1"
                     Content="Отменить"
+                    FontSize="24"
                     Command="{Binding OnPasteCommand}"
                     CommandParameter="{Binding ElementName=MyImage}"/>
         </Grid>
