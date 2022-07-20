@@ -202,7 +202,8 @@
 
                             <Grid Grid.Column="1">
                                 <Grid.RowDefinitions>
-                                    <RowDefinition/>
+                                    <RowDefinition Height="350"/>
+                                    <RowDefinition Height="76"/>
                                     <RowDefinition/>
                                 </Grid.RowDefinitions>
 
@@ -213,7 +214,7 @@
                                     <!--Изображение выбранного человека-->
                                     <Image x:Name="PersonImage"
                                            Height="350" MinHeight="350" MaxHeight="350"
-                                           Width="450"
+                                           Width="450" 
                                            Source="{Binding Path=ImageSource}"
                                            Stretch="Uniform"
                                            HorizontalAlignment="Center"/>
@@ -253,17 +254,19 @@
                                                FontStyle="Italic"
                                                Padding="5,0,0,0"/>
                                     </StackPanel>
-
-                                    <!--Число полных прожитых лет-->
-                                    <!--Content="{Binding Path=FullYears}"-->
-                                    <Label Content="{Binding Path=FullYearsLived}"
-                                       HorizontalAlignment="Center"
-                                       FontSize="22"
-                                       Foreground="Crimson"
-                                       FontFamily="{StaticResource TestFont2}"
-                                       Padding="0"/>
-
                                 </StackPanel>
+                                
+                                <!--Число полных прожитых лет-->
+                                <!--Content="{Binding Path=FullYears}"-->
+                                <DockPanel Grid.Column="1" Grid.Row="2">
+                                    <Label DockPanel.Dock="Top"
+                                           Content="{Binding Path=DisplayedYears}"
+                                           HorizontalAlignment="Center"
+                                           FontSize="22"
+                                           Foreground="Crimson"
+                                           FontFamily="{StaticResource TestFont2}"
+                                           Padding="0"/>
+                                </DockPanel>
                             </Grid>
                         </Grid>
 

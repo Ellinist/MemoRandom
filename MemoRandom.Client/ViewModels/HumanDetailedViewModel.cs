@@ -30,7 +30,7 @@ namespace MemoRandom.Client.ViewModels
         private string   _deathPlace;
         private Guid     _deathReasonId;
         private BitmapSource _imageSource;
-        private string _comments;
+        private string _humanComments;
         private int _daysLived;
         private double _fullYearsLived;
         #endregion
@@ -182,13 +182,13 @@ namespace MemoRandom.Client.ViewModels
         /// <summary>
         /// Расширенный комментарий
         /// </summary>
-        public string Comments
+        public string HumanComments
         {
-            get => _comments;
+            get => _humanComments;
             set
             {
-                _comments = value;
-                RaisePropertyChanged(nameof(Comments));
+                _humanComments = value;
+                RaisePropertyChanged(nameof(HumanComments));
             }
         }
 
@@ -255,6 +255,7 @@ namespace MemoRandom.Client.ViewModels
                 DeathDate = human.DeathDate;
                 DeathCountry = human.DeathCountry;
                 DeathPlace = human.DeathPlace;
+                HumanComments = human.HumanComments;
                 ImageSource = (BitmapSource)_humanController.GetHumanImage(); // Загружаем изображение
             }
             else
@@ -268,6 +269,7 @@ namespace MemoRandom.Client.ViewModels
                 DeathDate = DateTime.Now;
                 DeathCountry = "Введите страну смерти";
                 DeathPlace = "Введите место смерти";
+                HumanComments = "Введите краткое описание";
             }
 
         }
@@ -290,6 +292,7 @@ namespace MemoRandom.Client.ViewModels
                 curHuman.DeathCountry = DeathCountry;
                 curHuman.DeathPlace = DeathPlace;
                 curHuman.ImageFile = ImageSource != null ? curHuman.HumanId.ToString() + ".jpg" : string.Empty;
+                curHuman.HumanComments = HumanComments;
                 curHuman.DeathReasonId = DeathReasonId;
                 curHuman.DaysLived = (DeathDate - BirthDate).Days; // Считаем число прожитых дней
                 curHuman.FullYearsLived = (float)((DeathDate - BirthDate).Days / 365.25D); // Считаем число полных прожитых лет
@@ -312,6 +315,7 @@ namespace MemoRandom.Client.ViewModels
                     DeathCountry = DeathCountry,
                     DeathPlace = DeathPlace,
                     ImageFile = ImageSource != null ? newHumanId.ToString() + ".jpg" : string.Empty,
+                    HumanComments = HumanComments,
                     DeathReasonId = DeathReasonId,
                     DaysLived = (DeathDate - BirthDate).Days, // Считаем число прожитых дней
                     FullYearsLived = (float)((DeathDate - BirthDate).Days / 365.25) // Считаем число полных прожитых лет

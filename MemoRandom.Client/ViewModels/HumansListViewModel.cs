@@ -12,6 +12,7 @@ using MemoRandom.Data.Interfaces;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using System.Windows;
+using System.Text;
 
 namespace MemoRandom.Client.ViewModels
 {
@@ -26,6 +27,7 @@ namespace MemoRandom.Client.ViewModels
         private int _personIndex;
         private Human _selectedHuman;
         private BitmapSource _imageSource;
+        private string _displayedYears;
         private readonly ILogger _logger; // Экземпляр журнала
         private readonly IContainer _container; // Контейнер
         private readonly IEventAggregator _eventAggregator;
@@ -98,13 +100,38 @@ namespace MemoRandom.Client.ViewModels
                 {
                     _selectedHuman = value;
 
+                    // При смене выбранного человека устанавливаем его текущим
                     _humansController.SetCurrentHuman(value);
                     RaisePropertyChanged(nameof(SelectedHuman));
 
+                    // Изменение изображения
                     ImageSource = _humansController.GetHumanImage();
                     RaisePropertyChanged(nameof(ImageSource));
+
+                    // Изменение текста прожитых лет
+                    SetFullYearsText(SelectedHuman);
                 }
             }
+        }
+
+        /// <summary>
+        /// Отображаемое значение прожитых лет
+        /// </summary>
+        public string DisplayedYears
+        {
+            get => _displayedYears;
+            set
+            {
+                _displayedYears = value;
+                RaisePropertyChanged(nameof(DisplayedYears));
+            }
+        }
+        #endregion
+
+        #region Частные методы
+        private void SetFullYearsText(Human selectedHuman)
+        {
+            DisplayedYears = "(" + selectedHuman.FullYearsLived + " лет)"; // Заменить на другой метод
         }
         #endregion
 
