@@ -248,7 +248,7 @@
                                HorizontalAlignment="Right"/>
                     
                     <!--Здесь тщательно все продумать-->
-                    <Popup Grid.Row="10" Grid.Column="1" Name="pLink" IsOpen="True"
+                    <!--<Popup Grid.Row="10" Grid.Column="1" Name="pLink" IsOpen="True"
                            StaysOpen="False" Placement="Mouse" MaxWidth="150"
                            PopupAnimation="Scroll" AllowsTransparency="True">
                         <Border BorderBrush="LightBlue" BorderThickness="2" Background="White">
@@ -256,7 +256,7 @@
                                 Посмотреть на
                             </TextBlock>
                         </Border>
-                        <!--<TreeView ItemsSource="{Binding Collection}">
+                        --><!--<TreeView ItemsSource="{Binding Collection}">
                             <TreeView.Resources>
                                 <HierarchicalDataTemplate DataType="{x:Type models:Reason}" ItemsSource="{Binding ReasonChildren}">
                                     <TextBlock Text="{Binding Path=ReasonName}"/>
@@ -270,8 +270,13 @@
                                     <Setter Property="IsExpanded" Value="True"/>
                                 </Style>
                             </TreeView.ItemContainerStyle>
-                        </TreeView>-->
-                    </Popup>
+                        </TreeView>--><!--
+                    </Popup>-->
+                    <ComboBox Grid.Row="10" Grid.Column="1">
+                        <Border Width="100" Height="50" BorderThickness="4" BorderBrush="Black">
+                            
+                        </Border>
+                    </ComboBox>
                     <!--<ComboBox Grid.Row="10" Grid.Column="1"
                               Style="{StaticResource FontCharacteristics}">
                         <ComboBoxItem>
