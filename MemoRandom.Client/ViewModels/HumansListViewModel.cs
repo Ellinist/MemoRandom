@@ -27,7 +27,8 @@ namespace MemoRandom.Client.ViewModels
         private int _personIndex;
         private Human _selectedHuman;
         private BitmapSource _imageSource;
-        private string _displayedYears;
+        private string _displayedYears = "";
+        private StringBuilder YearsText = new();
         private readonly ILogger _logger; // Экземпляр журнала
         private readonly IContainer _container; // Контейнер
         private readonly IEventAggregator _eventAggregator;
@@ -119,7 +120,7 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         public string DisplayedYears
         {
-            get => _displayedYears;
+            get => _displayedYears.ToString();
             set
             {
                 _displayedYears = value;
@@ -131,7 +132,25 @@ namespace MemoRandom.Client.ViewModels
         #region Частные методы
         private void SetFullYearsText(Human selectedHuman)
         {
-            DisplayedYears = "(" + selectedHuman.FullYearsLived + " лет)"; // Заменить на другой метод
+            int years = (int)Math.Round(selectedHuman.FullYearsLived, 0); // Считаем число полных лет
+            YearsText.Clear();
+            int t1, t2;
+            t1 = years % 10;
+            t2 = years % 100;
+            if (t1 == 1 && t2 != 11)
+            {
+                YearsText.Append("(" + years + " полный год)");
+            }
+            else if(t1 >= 2 && t1 <= 4 && (t2 < 10 || t2 >= 20))
+            {
+                YearsText.Append("(" + years + " полных года)");
+            }
+            else
+            {
+                YearsText.Append("(" + years + " полных лет)");
+            }
+            
+            DisplayedYears = YearsText.ToString();
         }
         #endregion
 
