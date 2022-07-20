@@ -134,6 +134,7 @@ namespace MemoRandom.Client.ViewModels
             if (param is Window)
             {
                 SetInitialPaths(); // Начальная инициализация БД и путей
+                GetInitialReasons(); // Получаем справочник причин смерти
 
                 (param as Window).Closing += StartMemoRandomViewModel_Closing; // Подписываемся на событие закрытия окна
                 SetCurrentDateTime(); // Вызываем метод отображения текущего времени
@@ -222,6 +223,12 @@ namespace MemoRandom.Client.ViewModels
             };
             HumansRepository.DbConnectionString = connectionStringBuilder.ConnectionString;
         }
+
+        private void GetInitialReasons()
+        {
+
+        }
+
         #region CTOR
         /// <summary>
         /// Конструктор

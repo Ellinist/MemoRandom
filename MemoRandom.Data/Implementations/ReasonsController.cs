@@ -21,10 +21,10 @@ namespace MemoRandom.Data.Implementations
         /// </summary>
         private List<DbReason> PlainReasonsList { get; set; } = new();
 
-        /// <summary>
-        /// Иерархическая коллекция причин смерти
-        /// </summary>
-        private ObservableCollection<Reason> ReasonsCollection { get; set; }
+        ///// <summary>
+        ///// Иерархическая коллекция причин смерти
+        ///// </summary>
+        //private ObservableCollection<Reason> ReasonsCollection { get; set; }
 
         #region Блок справочника причин смерти
         /// <summary>
@@ -40,17 +40,18 @@ namespace MemoRandom.Data.Implementations
                 {
                     PlainReasonsList = MemoContext.DbReasons.ToList();
 
-                    ReasonsCollection = new();
+                    ReasonsRepository.ReasonsCollection.Clear();
                     FormObservableCollection(PlainReasonsList, null); // Формирование иерархического списка
+                    FormReasonsList(PlainReasonsList);
                 }
                 catch (Exception ex)
                 {
-                    ReasonsCollection = null; // В случае неуспеха чтения обнуляем иерархическую коллекцию
+                    ReasonsRepository.ReasonsCollection = null; // В случае неуспеха чтения обнуляем иерархическую коллекцию
                     _logger.Error($"Ошибка чтения файла настроек: {ex.HResult}");
                 }
             }
 
-            return ReasonsCollection;
+            return ReasonsRepository.ReasonsCollection;
         }
 
         /// <summary>
@@ -74,6 +75,7 @@ namespace MemoRandom.Data.Implementations
                         DbReasonDescription = reason.ReasonDescription,
                         DbReasonParentId = reason.ReasonParentId
                     };
+                    ReasonsRepository.ReasonsList.Add(reason);
                     MemoContext.DbReasons.Add(record);
 
                     MemoContext.SaveChanges();
@@ -109,6 +111,11 @@ namespace MemoRandom.Data.Implementations
                         updatedReason.DbReasonDescription = reason.ReasonDescription;
                         updatedReason.DbReasonParentId = reason.ReasonParentId;
 
+                        var correctedReason = ReasonsRepository.ReasonsList.FirstOrDefault(x => x.ReasonId == reason.ReasonId);
+                        correctedReason.ReasonName = reason.ReasonName;
+                        correctedReason.ReasonComment = reason.ReasonComment;
+                        correctedReason.ReasonDescription = reason.ReasonDescription;
+
                         MemoContext.SaveChanges();
                     }
                     else
@@ -139,6 +146,7 @@ namespace MemoRandom.Data.Implementations
             {
                 try
                 {
+                    //TODO Здесь как-то проверить, привязана ли причина к тому или иному человеку
                     DeletingDaughters(reason, MemoContext);
 
                     MemoContext.SaveChanges();
@@ -155,6 +163,23 @@ namespace MemoRandom.Data.Implementations
         #endregion
 
         #region Auxiliary methods
+        private void FormReasonsList(List<DbReason> reasons)
+        {
+            ReasonsRepository.ReasonsList?.Clear();
+            foreach (var reason in reasons)
+            {
+                // Формируем только те поля, которые нужны для отображения
+                Reason rsn = new()
+                {
+                    ReasonId = reason.DbReasonId,
+                    ReasonName = reason.DbReasonName,
+                    ReasonComment = reason.DbReasonComment, // Под вопросом
+                    ReasonDescription = reason.DbReasonDescription // Под вопросом
+                };
+                ReasonsRepository.ReasonsList.Add(rsn);
+            }
+        }
+
         /// <summary>
         /// Формирование иерархической коллекции
         /// </summary>
@@ -174,7 +199,7 @@ namespace MemoRandom.Data.Implementations
                         ReasonComment = reasons[i].DbReasonComment,
                         ReasonDescription = reasons[i].DbReasonDescription
                     };
-                    ReasonsCollection.Add(rsn);
+                    ReasonsRepository.ReasonsCollection.Add(rsn);
 
                     // Проверка на наличие дочерних узлов
                     List<DbReason> daughters = PlainReasonsList.FindAll(x => x.DbReasonParentId == rsn.ReasonId);

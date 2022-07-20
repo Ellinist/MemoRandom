@@ -101,6 +101,16 @@
                                           Margin="1"
                                           SelectedItem="{Binding Path=SelectedHuman}"
                                           SelectedIndex="{Binding Path=PersonIndex}">
+                                    <ListView.Resources>
+                                        <Style TargetType="{x:Type GridViewColumnHeader}">
+                                            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                            <Setter Property="FontSize" Value="13"/>
+                                            <Setter Property="FontWeight" Value="Bold"/>
+                                        </Style>
+                                        <Style TargetType="{x:Type GridViewRowPresenter}">
+                                            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                                        </Style>
+                                    </ListView.Resources>
                                     <!--<ListView.ItemContainerStyle>
                                         <Style TargetType="ListViewItem">
                                             <Setter Property="HorizontalContentAlignment" Value="Left"/>
@@ -118,12 +128,10 @@
                                             </GridViewColumn>
                                             <GridViewColumn DisplayMemberBinding="{Binding Path=FirstName}" Header="Имя"/>
                                             <GridViewColumn DisplayMemberBinding="{Binding Path=Patronymic}" Header="Отчество"/>
-                                            <GridViewColumn DisplayMemberBinding="{Binding Path=BirthDate, StringFormat='dd MMMM yyyy',ConverterCulture='ru-RU', Mode=OneWay}"
-                                                            Header="Дата рождения"/>
+                                            <GridViewColumn DisplayMemberBinding="{Binding Path=BirthDate, StringFormat='dd MMMM yyyy',ConverterCulture='ru-RU', Mode=OneWay}" Header="Дата рождения"/>
                                             <GridViewColumn DisplayMemberBinding="{Binding Path=BirthCountry}" Header="Родная страна"/>
                                             <GridViewColumn DisplayMemberBinding="{Binding Path=BirthPlace}" Header="Место рождения"/>
-                                            <GridViewColumn DisplayMemberBinding="{Binding Path=DeathDate, StringFormat='dd MMMM yyyy',ConverterCulture='ru-RU', Mode=OneWay}"
-                                                            Header="Дата смерти"/>
+                                            <GridViewColumn DisplayMemberBinding="{Binding Path=DeathDate, StringFormat='dd MMMM yyyy',ConverterCulture='ru-RU', Mode=OneWay}" Header="Дата смерти"/>
                                             <GridViewColumn DisplayMemberBinding="{Binding Path=DeathCountry}" Header="Страна смерти"/>
                                             <GridViewColumn DisplayMemberBinding="{Binding Path=DeathPlace}" Header="Место смерти"/>
                                             <GridViewColumn DisplayMemberBinding="{Binding Path=DaysLived}" Header="Дней"/>
