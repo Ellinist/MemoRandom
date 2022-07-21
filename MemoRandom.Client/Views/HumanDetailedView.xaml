@@ -227,6 +227,7 @@
                              Style="{StaticResource FontCharacteristics}"
                              Text="{Binding HumanComments}"
                              HorizontalAlignment="Stretch"
+                             TextWrapping="Wrap"
                              HorizontalContentAlignment="Left"/>
                     
                     <!--Причина смерти-->
