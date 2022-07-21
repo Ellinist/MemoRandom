@@ -236,7 +236,6 @@
                                Style="{StaticResource FontCharacteristics}"
                                Text="Причина смерти:"
                                HorizontalAlignment="Right"/>
-
                     <TextBox Grid.Row="10" Grid.Column="1"
                              Margin="0"
                              Padding="1, 0, 3, 0"
@@ -246,6 +245,7 @@
                              HorizontalContentAlignment="Left"
                              IsReadOnly="True"/>
 
+                    <!--Всплывающее окно TreeView с иерархической коллекцией причин смерти-->
                     <ComboBox Grid.Row="10" Grid.Column="2"
                               IsDropDownOpen="{Binding OpenComboState}" 
                               Style="{StaticResource FontCharacteristics}">
@@ -290,15 +290,23 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="7*"/>
                 <RowDefinition Height="2*"/>
+                <RowDefinition/>
+                <RowDefinition/>
             </Grid.RowDefinitions>
 
             <Image x:Name="PersonImage"
+                   Width="450" MinWidth="450" MaxWidth="450"
+                   Height="350" MinHeight="350" MaxHeight="350"
                    Grid.Row="0"
                    Source="{Binding Path=ImageSource}"/>
 
             <Button Grid.Row="1"
                     Content="Загрузить картинку"
                     Command="{Binding ImageLoadCommand}"/>
+
+            <Canvas Grid.Row="2" Background="AliceBlue">
+                
+            </Canvas>
         </Grid>
 
         <Grid Grid.Row="1" Grid.ColumnSpan="2">
