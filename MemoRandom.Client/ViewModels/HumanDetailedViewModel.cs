@@ -32,6 +32,7 @@ namespace MemoRandom.Client.ViewModels
         private string   _deathCountry;
         private string   _deathPlace;
         private Guid     _deathReasonId;
+        private Reason   _selectedReason;
         private BitmapSource _imageSource;
         private string _humanComments;
         private int _daysLived;
@@ -39,6 +40,7 @@ namespace MemoRandom.Client.ViewModels
         private ObservableCollection<Reason> _reasonsList;
         private List<Reason> _plainReasonsList;
         private string _humanDeathReasonName;
+        private bool _openComboState = false; // По умолчанию комбобокс свернут
         #endregion
 
         #region PROPS
@@ -263,7 +265,29 @@ namespace MemoRandom.Client.ViewModels
             }
         }
 
-        private string HumanReasonId { get; set; }
+        public bool OpenComboState
+        {
+            get => _openComboState;
+            set
+            {
+                _openComboState = value;
+                RaisePropertyChanged(nameof(OpenComboState));
+            }
+        }
+
+        /// <summary>
+        /// Выбранный узел (причина смерти) в иерархическом дереве
+        /// </summary>
+        public Reason SelectedReason
+        {
+            get => _selectedReason;
+            set
+            {
+                if (_selectedReason == value) return;
+                _selectedReason = value;
+                RaisePropertyChanged(nameof(SelectedReason));
+            }
+        }
         #endregion
 
         #region COMMANDS
@@ -281,6 +305,8 @@ namespace MemoRandom.Client.ViewModels
         /// Команда загрузки изображения
         /// </summary>
         public DelegateCommand ImageLoadCommand { get; private set; }
+
+        public DelegateCommand<object> SelectNodeCommand { get; private set; }
         #endregion
 
         #region COMMANDS IMPLEMENTATION
@@ -303,7 +329,7 @@ namespace MemoRandom.Client.ViewModels
                 DeathCountry = human.DeathCountry;
                 DeathPlace = human.DeathPlace;
                 HumanComments = human.HumanComments;
-                HumanReasonId = human.DeathReasonId.ToString();
+                DeathReasonId = human.DeathReasonId;
                 ImageSource = (BitmapSource)_humanController.GetHumanImage(); // Загружаем изображение
             }
             else
@@ -321,8 +347,8 @@ namespace MemoRandom.Client.ViewModels
             }
             ReasonsList = Reasons.ReasonsCollection;
             PlainReasonsList = Reasons.PlainReasonsList;
-            var t = PlainReasonsList.Find(x => x.ReasonId.ToString() == HumanReasonId);
-            if(t != null)
+            var t = PlainReasonsList.Find(x => x.ReasonId == DeathReasonId);
+            if (t != null)
             {
                 HumanDeathReasonName = t.ReasonName;
             }
@@ -407,6 +433,19 @@ namespace MemoRandom.Client.ViewModels
             return myBitmapImage;
         }
 
+        private void SelectNode(object obj)
+        {
+            SelectedReason = obj as Reason;
+            if(SelectedReason != null)
+            {
+                DeathReasonId = SelectedReason.ReasonId;
+                HumanDeathReasonName = SelectedReason.ReasonName;
+                RaisePropertyChanged(nameof(HumanDeathReasonName));
+                OpenComboState = false;
+                RaisePropertyChanged(nameof(OpenComboState));
+            }
+        }
+
         ///// <summary>
         ///// Преобразование байтового массива в BitmapImage
         ///// </summary>
@@ -471,6 +510,7 @@ namespace MemoRandom.Client.ViewModels
             OnDetailedViewLoadedCommand = new DelegateCommand(OnDetailedViewLoaded);
             SaveHumanCommand = new DelegateCommand(SaveHuman);
             ImageLoadCommand = new DelegateCommand(ImageLoad);
+            SelectNodeCommand = new DelegateCommand<object>(SelectNode);
         }
 
         #region CTOR
