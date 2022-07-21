@@ -6,6 +6,8 @@ using NLog;
 using MemoRandom.Client.Views;
 using MemoRandom.Data.Interfaces;
 using MemoRandom.Data.Implementations;
+using MemoRandom.Models.Interfaces;
+using MemoRandom.Models.Implementations;
 
 namespace MemoRandom.Client
 {
@@ -38,11 +40,12 @@ namespace MemoRandom.Client
 
 
             #region Контроллеры работы с внешними хранилищами информации
-            //Регистрация интерфейса работы с людьми
+            // Регистрация интерфейса работы с людьми
             containerRegistry.RegisterSingleton<IHumansController, HumansController>();
+            // Регистрация интерфейса работы со справочником причин смерти
+            containerRegistry.RegisterSingleton<IReasonsController, ReasonsController>();
 
-            containerRegistry.Register<IReasonsController, ReasonsController>();
-
+            containerRegistry.RegisterSingleton<IReasonsHelper, ReasonsHelper>();
             #endregion
             
             

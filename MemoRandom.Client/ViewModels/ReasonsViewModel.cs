@@ -13,6 +13,9 @@ using MemoRandom.Data.Controllers;
 using MemoRandom.Data.Implementations;
 using MemoRandom.Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using MemoRandom.Data.Repositories;
+using MemoRandom.Models.Interfaces;
+using System.Collections.Generic;
 
 namespace MemoRandom.Client.ViewModels
 {
@@ -23,6 +26,7 @@ namespace MemoRandom.Client.ViewModels
         private readonly ILogger _logger; // Экземпляр журнала
         private readonly IEventAggregator _eventAggregator;
         private readonly IReasonsController _dbController;
+        private readonly IReasonsHelper _reasonsHelper;
         private bool _cancelButtonEnabled = false; // Для кнопки отмены
         private bool _deleteButtonEnabled = false; // Для кнопки удаления
         private bool _changeSaveButtonEnabled = false; // Для кнопки изменения/сохранения
@@ -204,6 +208,7 @@ namespace MemoRandom.Client.ViewModels
                 _reasonsList = value;
             }
         }
+        private List<Reason> PlainReasonsList { get; set; }
         #endregion
 
         #region COMMANDS
@@ -245,25 +250,17 @@ namespace MemoRandom.Client.ViewModels
         public DelegateCommand LoadCommand { get; private set; }
         #endregion
 
-
         #region Блок отработки команд
         /// <summary>
         /// Загрузка окна и получение справочника причин смерти
         /// </summary>
         private void OnLoadedReasonsView()
         {
-            Task.Factory.StartNew(() =>
-            {
-                var result = _dbController.GetReasonsList();
-                Dispatcher.CurrentDispatcher.Invoke(() =>
-                {
-                    ReasonsList = result;
-                    RaisePropertyChanged(nameof(ReasonsList));
-                });
-            });
-            //ReasonsList = _dbController.GetReasonsList();
-            //RaisePropertyChanged(nameof(ReasonsList));
+            ReasonsList = _reasonsHelper.GetReasonsHierarchicalCollection(); // Получаем иерархическую коллекцию
+            PlainReasonsList = _reasonsHelper.GetReasonsPlainList(); // Получаем плоский список
+            RaisePropertyChanged(nameof(ReasonsList));
         }
+
         /// <summary>
         /// Команда добавления записи в справочник причин смерти
         /// </summary>
@@ -272,10 +269,10 @@ namespace MemoRandom.Client.ViewModels
             if (!_addMode) // Заход в блок внесения изменений в поля окна
             {
                 SelectedReason = obj as Reason;
-                CancelButtonEnabled = true; // Кнопка отмены разблокирована - на случай, если передумали
-                ChangeSaveButtonEnabled = false; // В режиме добавления кнопка редактирования недоступна
-                DeleteButtonEnabled = false; // В режиме редактирования кнопка удаления недоступна
-                AddButtonText = SaveButton;
+                CancelButtonEnabled     = true;       // Кнопка отмены разблокирована - на случай, если передумали
+                ChangeSaveButtonEnabled = false;      // В режиме добавления кнопка редактирования недоступна
+                DeleteButtonEnabled     = false;      // В режиме редактирования кнопка удаления недоступна
+                AddButtonText           = SaveButton;
 
                 FieldsEnabled = true;
                 _addMode = true;
@@ -300,6 +297,7 @@ namespace MemoRandom.Client.ViewModels
                     rsn.ReasonParentId = SelectedReason.ReasonId;
                     rsn.ReasonParent = SelectedReason;
                     SelectedReason.ReasonChildren.Add(rsn);
+                    PlainReasonsList.Add(rsn);
                     SelectedReason = rsn;
                 }
                 else
@@ -307,11 +305,12 @@ namespace MemoRandom.Client.ViewModels
                     rsn.ReasonParentId = Guid.Empty;
                     SelectedReason = rsn;
                     ReasonsList.Add(rsn); // Если узел не выбран, то создаем в корне
+                    PlainReasonsList.Add(rsn);
                 }
 
                 Task.Factory.StartNew(() =>
                 {
-                    var result = _dbController.AddReasonToList(rsn);
+                    var result = _dbController.AddReasonToList(rsn); // Записываем изменение во внешнее хранилище
                     Dispatcher.CurrentDispatcher.Invoke(() =>
                     {
                         if (!result)
@@ -330,8 +329,11 @@ namespace MemoRandom.Client.ViewModels
                         _addMode = false;
                     });
                 });
+
+                RaisePropertyChanged(nameof(ReasonsList));
             }
         }
+
         /// <summary>
         /// Команда внесения в иерархическое дерево произведенных изменений
         /// </summary>
@@ -339,17 +341,21 @@ namespace MemoRandom.Client.ViewModels
         {
             if (_changeMode) // Если в режиме редактирования - завершение
             {
-                SelectedReason.ReasonName = ReasonName;
-                SelectedReason.ReasonComment = ReasonComment;
+                var currentReason = PlainReasonsList.FirstOrDefault(x => x.ReasonId == SelectedReason.ReasonId);
+                SelectedReason.ReasonName        = ReasonName;
+                currentReason.ReasonName         = ReasonName;
+                SelectedReason.ReasonComment     = ReasonComment;
+                currentReason.ReasonComment      = ReasonComment;
                 SelectedReason.ReasonDescription = ReasonDescription;
+                currentReason.ReasonDescription  = ReasonDescription;
 
-                FieldsEnabled = false;
-                SaveButtonText = ChangeButton;
-                _changeMode = false; // Флаг, что не в режиме редактирования
-                AddSaveButtonEnabled = true; // При выходе из режима редактирования кнопка добавления становится доступной
+                FieldsEnabled           = false;
+                SaveButtonText          = ChangeButton;
+                _changeMode             = false; // Флаг, что не в режиме редактирования
+                AddSaveButtonEnabled    = true;  // При выходе из режима редактирования кнопка добавления становится доступной
                 ChangeSaveButtonEnabled = false; // После изменения записи кнопка изменения недоступна до выбора узла
-                DeleteButtonEnabled = false; // После изменения записи кнопка удаления недоступна до выбора узла
-                CancelButtonEnabled = false; // После изменения записи кнопка отмены недоступна до выбора узла
+                DeleteButtonEnabled     = false; // После изменения записи кнопка удаления недоступна до выбора узла
+                CancelButtonEnabled     = false; // После изменения записи кнопка отмены недоступна до выбора узла
 
                 Task.Factory.StartNew(() =>
                 {
@@ -362,17 +368,20 @@ namespace MemoRandom.Client.ViewModels
                         }
                     });
                 });
+
+                RaisePropertyChanged(nameof(ReasonsList));
             }
             else // Вход в режим редактирования
             {
-                AddSaveButtonEnabled = false; // При входе в режим редактирования кнопка добавления недоступна
-                DeleteButtonEnabled = false; // При входе в режим редактирования кнопка удаления недоступна
-                CancelButtonEnabled = true; // В режиме редактирования кнопка отмены доступна
-                FieldsEnabled = true; // Поля становятся доступными
-                SaveButtonText = SaveButton; // Меняем название кнопки
-                _changeMode = true; // Флаг, что в режиме редактирования
+                AddSaveButtonEnabled = false;      // При входе в режим редактирования кнопка добавления недоступна
+                DeleteButtonEnabled  = false;      // При входе в режим редактирования кнопка удаления недоступна
+                CancelButtonEnabled  = true;       // В режиме редактирования кнопка отмены доступна
+                FieldsEnabled        = true;       // Поля становятся доступными
+                SaveButtonText       = SaveButton; // Меняем название кнопки
+                _changeMode          = true;       // Флаг, что в режиме редактирования
             }
         }
+
         /// <summary>
         /// Команда выбора элемента в иерархическом дереве причин смерти
         /// </summary>
@@ -381,13 +390,13 @@ namespace MemoRandom.Client.ViewModels
         {
             if (obj == null)
             {
-                DeleteButtonEnabled = false;     // При нулевом узле удалять нечего - кнопка недоступна
+                DeleteButtonEnabled     = false; // При нулевом узле удалять нечего - кнопка недоступна
                 ChangeSaveButtonEnabled = false; // При нулевом узле нечего редактировать - кнопка недоступна
                 SetEmptyFields(); // Очищаем поля окна
             }
             else
             {
-                DeleteButtonEnabled = true;     // Узел выбран - кнопка удаления доступна
+                DeleteButtonEnabled     = true; // Узел выбран - кнопка удаления доступна
                 ChangeSaveButtonEnabled = true; // Узел выбран - кнопка редактирования/сохранения доступна
                 SelectedReason = obj as Reason;
                 ReasonName = SelectedReason?.ReasonName;
@@ -395,6 +404,7 @@ namespace MemoRandom.Client.ViewModels
                 ReasonDescription = SelectedReason?.ReasonDescription;
             }
         }
+
         /// <summary>
         /// Команда удаления узла (причины смерти)
         /// При этом автоматом удаляются все дочерние узлы
@@ -414,16 +424,22 @@ namespace MemoRandom.Client.ViewModels
                 ReasonsList.Remove(selectedNode);
             }
 
+            var currentReason = PlainReasonsList.FirstOrDefault(x => x.ReasonId == selectedNode.ReasonId);
+            PlainReasonsList.Remove(currentReason);
+
             Task.Factory.StartNew(() =>
             {
                 _dbController.DeleteReasonInList(selectedNode);
             });
+
+            RaisePropertyChanged(nameof(ReasonsList));
 
             SelectedReason.IsSelected = false;
             SetEmptyFields(); // Очищаем поля окна
             DeleteButtonEnabled = false; // Удаление выполнено - кнопка удаления становится недоступной
             ChangeSaveButtonEnabled = false; // Удаление выполнено - кнопка редактирования становится недоступной
         }
+        
         /// <summary>
         /// Команда отмены внесенных для узла изменений
         /// </summary>
@@ -449,6 +465,7 @@ namespace MemoRandom.Client.ViewModels
             _addMode = false;
             _changeMode = false;
         }
+        
         /// <summary>
         /// Команда обработки снятия выделения узла при клике на пустом месте TreeView
         /// </summary>
@@ -462,6 +479,7 @@ namespace MemoRandom.Client.ViewModels
             SelectedReason.IsSelected = false;
             SelectedReason = null;
         }
+        
         /// <summary>
         /// Метод установки пустых полей окна
         /// </summary>
@@ -492,15 +510,40 @@ namespace MemoRandom.Client.ViewModels
         }
 
         #region CTOR
-
-        public ReasonsViewModel(ILogger logger, IEventAggregator eventAggregator, IReasonsController dbController)
+        /// <summary>
+        /// Конструктор
+        /// </summary>
+        /// <param name="logger"></param>
+        /// <param name="eventAggregator"></param>
+        /// <param name="dbController"></param>
+        /// <param name="reasonsHelper"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        public ReasonsViewModel(ILogger logger, IEventAggregator eventAggregator, IReasonsController dbController, IReasonsHelper reasonsHelper)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
             _dbController = dbController ?? throw new ArgumentNullException(nameof(dbController));
+            _reasonsHelper = reasonsHelper ?? throw new ArgumentNullException(nameof(reasonsHelper));
 
             InitializeCommands();
         }
         #endregion
     }
 }
+
+
+
+
+
+//Task.Factory.StartNew(() =>
+//{
+//    //var result = _dbController.GetReasonsList();
+
+//    //Dispatcher.CurrentDispatcher.Invoke(() =>
+//    //{
+//    //    ReasonsList = result;
+//    //    RaisePropertyChanged(nameof(ReasonsList));
+//    //});
+//});
+//ReasonsList = _dbController.GetReasonsList();
+//RaisePropertyChanged(nameof(ReasonsList));

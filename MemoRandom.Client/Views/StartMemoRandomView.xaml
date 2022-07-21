@@ -152,11 +152,15 @@
             </Label.Content>
         </Label>
         <Button Grid.Row="2" Grid.Column="0"
+                x:Name="ReasonsButton"
+                Visibility="Hidden"
                 Content="{Binding ReasonsButtonName}"
                 FontFamily="{StaticResource MainFont}"
                 Template="{StaticResource ButtonTemplate}"
                 Command="{Binding Path=OpenReasonsViewCommand}"/>
         <Button Grid.Row="2" Grid.Column="2"
+                x:Name="HumansButton"
+                Visibility="Hidden"
                 Content="{Binding HumansButtonName}"
                 FontFamily="{StaticResource MainFont}"
                 Template="{StaticResource ButtonTemplate}"

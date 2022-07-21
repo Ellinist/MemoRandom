@@ -12,7 +12,7 @@ namespace MemoRandom.Data.Interfaces
         /// Получение древовидной коллекции списка причин смерти
         /// </summary>
         /// <returns></returns>
-        ObservableCollection<Reason> GetReasonsList();
+        bool GetReasonsList();
 
         /// <summary>
         /// Добавление причины с общий список

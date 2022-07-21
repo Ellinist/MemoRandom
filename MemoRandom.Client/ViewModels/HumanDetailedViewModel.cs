@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows;
@@ -35,7 +36,9 @@ namespace MemoRandom.Client.ViewModels
         private string _humanComments;
         private int _daysLived;
         private double _fullYearsLived;
-        private ObservableCollection<Reason> _reasonsList = new();
+        private ObservableCollection<Reason> _reasonsList;
+        private List<Reason> _plainReasonsList;
+        private string _humanDeathReasonName;
         #endregion
 
         #region PROPS
@@ -221,6 +224,9 @@ namespace MemoRandom.Client.ViewModels
             }
         }
 
+        /// <summary>
+        /// Иерархическая коллекция справочника причин смерти
+        /// </summary>
         public ObservableCollection<Reason> ReasonsList
         {
             get => _reasonsList;
@@ -230,6 +236,34 @@ namespace MemoRandom.Client.ViewModels
                 RaisePropertyChanged(nameof(ReasonsList));
             }
         }
+
+        /// <summary>
+        /// Плоский список справочника причин смерти для вытягивания названия причины
+        /// </summary>
+        public List<Reason> PlainReasonsList
+        {
+            get => _plainReasonsList;
+            set
+            {
+                _plainReasonsList = value;
+                RaisePropertyChanged(nameof(PlainReasonsList));
+            }
+        }
+
+        /// <summary>
+        /// Отображаемая причина смерти
+        /// </summary>
+        public string HumanDeathReasonName
+        {
+            get => _humanDeathReasonName;
+            set
+            {
+                _humanDeathReasonName = value;
+                RaisePropertyChanged(nameof(HumanDeathReasonName));
+            }
+        }
+
+        private string HumanReasonId { get; set; }
         #endregion
 
         #region COMMANDS
@@ -269,6 +303,7 @@ namespace MemoRandom.Client.ViewModels
                 DeathCountry = human.DeathCountry;
                 DeathPlace = human.DeathPlace;
                 HumanComments = human.HumanComments;
+                HumanReasonId = human.DeathReasonId.ToString();
                 ImageSource = (BitmapSource)_humanController.GetHumanImage(); // Загружаем изображение
             }
             else
@@ -284,7 +319,15 @@ namespace MemoRandom.Client.ViewModels
                 DeathPlace = "Введите место смерти";
                 HumanComments = "Введите краткое описание";
             }
-            ReasonsList = ReasonsRepository.ReasonsCollection;
+            ReasonsList = Reasons.ReasonsCollection;
+            PlainReasonsList = Reasons.PlainReasonsList;
+            var t = PlainReasonsList.Find(x => x.ReasonId.ToString() == HumanReasonId);
+            if(t != null)
+            {
+                HumanDeathReasonName = t.ReasonName;
+            }
+            RaisePropertyChanged(nameof(ReasonsList));
+            RaisePropertyChanged(nameof(HumanDeathReasonName));
         }
 
         /// <summary>

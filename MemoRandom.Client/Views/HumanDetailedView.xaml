@@ -246,47 +246,22 @@
                                Background="AliceBlue"
                                Text="Причина смерти:"
                                HorizontalAlignment="Right"/>
-                    
-                    <!--Здесь тщательно все продумать-->
-                    <!--<Popup Grid.Row="10" Grid.Column="1" Name="pLink" IsOpen="True"
-                           StaysOpen="False" Placement="Mouse" MaxWidth="150"
-                           PopupAnimation="Scroll" AllowsTransparency="True">
-                        <Border BorderBrush="LightBlue" BorderThickness="2" Background="White">
-                            <TextBlock Margin="10" TextWrapping="Wrap">
-                                Посмотреть на
-                            </TextBlock>
-                        </Border>
-                        --><!--<TreeView ItemsSource="{Binding Collection}">
-                            <TreeView.Resources>
-                                <HierarchicalDataTemplate DataType="{x:Type models:Reason}" ItemsSource="{Binding ReasonChildren}">
-                                    <TextBlock Text="{Binding Path=ReasonName}"/>
-                                </HierarchicalDataTemplate>
-                            </TreeView.Resources>
-                            <TreeView.ItemContainerStyle>
-                                <Style TargetType="TreeViewItem">
-                                    <Setter Property="IsSelected" Value="{Binding IsSelected}"/>
-                                    <Setter Property="FontSize" Value="18"/>
-                                    <Setter Property="FontWeight" Value="Bold"/>
-                                    <Setter Property="IsExpanded" Value="True"/>
-                                </Style>
-                            </TreeView.ItemContainerStyle>
-                        </TreeView>--><!--
-                    </Popup>-->
 
-                    <!--<ComboBox Grid.Row="10" Grid.Column="1">
-                        <Border Width="900" Height="400" BorderThickness="4" BorderBrush="Black" Margin="5">
-                            
-                        </Border>
-                    </ComboBox>-->
+                    <TextBlock Grid.Row="10" Grid.Column="1"
+                               Margin="0"
+                               Padding="1, 0, 3, 0"
+                               Style="{StaticResource FontCharacteristics}"
+                               Text="{Binding HumanDeathReasonName}"
+                               HorizontalAlignment="Left"/>
 
-                    
-                    <ComboBox Grid.Row="10" Grid.Column="1"
+                    <ComboBox Grid.Row="10" Grid.Column="2"
                               Style="{StaticResource FontCharacteristics}">
                         <ScrollViewer CanContentScroll="True"
                                       HorizontalScrollBarVisibility="Auto"
                                       VerticalScrollBarVisibility="Auto">
                             <ComboBoxItem>
                                 <TreeView x:Name="ReasonsTree"
+                                          Width="400" Height="400"
                                           Style="{StaticResource MahApps.Styles.TreeView}"
                                           ItemsSource="{Binding ReasonsList, Mode=TwoWay, NotifyOnSourceUpdated=True}">
                                     <TreeView.Resources>
@@ -319,40 +294,9 @@
                             </ComboBoxItem>
                         </ScrollViewer>
                     </ComboBox>
-                    
-                        
-                              
-                              
-                    <!--ItemsSource="{Binding ReasonsRepository.ReasonsList}"
-                              DisplayMemberPath="ReasonName"
-                              SelectedItem="ReasonName"
-                              SelectedValuePath="ReasonName"
-                              SelectedValue="{Binding HumanReasonId}"-->
-                    
-                    <Button Grid.Row="10" Grid.Column="2"
-                            Content="Изменить"
-                            Command="{Binding ChangeDeathReason}"/>
-
-                    <!--Скрытый идентификатор HumanId-->
-                    <!--
-                    <TextBox Grid.Row="0" Grid.Column="0"
-                               Name="HumanIdentificator"
-                               Text="{Binding HumanId}"
-                               Visibility="Hidden"/>-->
                 </Grid>
             </ScrollViewer>
         </GroupBox>
-
-        <!--Кнопка, как подложка для изображения (иначе не работают события клика мыши)--><!--
-        <Button Grid.Column="1" Grid.Row="0"
-                Style="{DynamicResource NoChromeButton}">
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="MouseDoubleClick">
-                    <i:InvokeCommandAction Command="{Binding OnPasteCommand}"></i:InvokeCommandAction>
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-            
-        </Button>-->
 
         <Grid Grid.Row="0" Grid.Column="1">
             <Grid.RowDefinitions>

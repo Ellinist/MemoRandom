@@ -8,12 +8,14 @@ using MemoRandom.Data.DbModels;
 using MemoRandom.Data.Interfaces;
 using NLog;
 using MemoRandom.Data.Repositories;
+using MemoRandom.Models.Interfaces;
 
 namespace MemoRandom.Data.Implementations
 {
     public class ReasonsController : IReasonsController
     {
         private readonly ILogger _logger;
+        private readonly IReasonsHelper _reasonsHelper;
         public static MemoRandomDbContext MemoContext { get; set; }
 
         /// <summary>
@@ -21,10 +23,10 @@ namespace MemoRandom.Data.Implementations
         /// </summary>
         private List<DbReason> PlainReasonsList { get; set; } = new();
 
-        ///// <summary>
-        ///// Иерархическая коллекция причин смерти
-        ///// </summary>
-        //private ObservableCollection<Reason> ReasonsCollection { get; set; }
+        /// <summary>
+        /// Иерархическая коллекция причин смерти
+        /// </summary>
+        private ObservableCollection<Reason> ReasonsCollection { get; set; } = new();
 
         #region Блок справочника причин смерти
         /// <summary>
@@ -32,26 +34,29 @@ namespace MemoRandom.Data.Implementations
         /// </summary>
         /// <param name="file"></param>
         /// <returns></returns>
-        public ObservableCollection<Reason> GetReasonsList()
+        public bool GetReasonsList()
         {
+            bool successResult = true;
+
             using (MemoContext = new MemoRandomDbContext(HumansRepository.DbConnectionString))
             {
                 try
                 {
-                    PlainReasonsList = MemoContext.DbReasons.ToList();
+                    PlainReasonsList = MemoContext.DbReasons.ToList(); // Читаем контекст базы данных
 
-                    ReasonsRepository.ReasonsCollection.Clear();
                     FormObservableCollection(PlainReasonsList, null); // Формирование иерархического списка
-                    FormReasonsList(PlainReasonsList);
+                    _reasonsHelper.SetReasonsHierarchicalCollection(ReasonsCollection); // Занесение полученного списка в статический класс
+                    _reasonsHelper.SetReasonsPlainList(FormPlainReasonsList(PlainReasonsList)); // Занесение плоского списка в статический класс
                 }
                 catch (Exception ex)
                 {
-                    ReasonsRepository.ReasonsCollection = null; // В случае неуспеха чтения обнуляем иерархическую коллекцию
+                    ReasonsCollection = null; // В случае неуспеха чтения обнуляем иерархическую коллекцию
+                    successResult = false; // Устанавливаем флаг неуспеха операции
                     _logger.Error($"Ошибка чтения файла настроек: {ex.HResult}");
                 }
             }
 
-            return ReasonsRepository.ReasonsCollection;
+            return successResult;
         }
 
         /// <summary>
@@ -75,9 +80,9 @@ namespace MemoRandom.Data.Implementations
                         DbReasonDescription = reason.ReasonDescription,
                         DbReasonParentId = reason.ReasonParentId
                     };
-                    ReasonsRepository.ReasonsList.Add(reason);
+                    //ReasonsCollection.Add(reason);
+                    //_reasonsHelper.SetReasonsHierarchicalCollection(ReasonsCollection); // Занесение полученного списка в статический класс
                     MemoContext.DbReasons.Add(record);
-
                     MemoContext.SaveChanges();
                 }
                 catch (Exception ex)
@@ -111,10 +116,10 @@ namespace MemoRandom.Data.Implementations
                         updatedReason.DbReasonDescription = reason.ReasonDescription;
                         updatedReason.DbReasonParentId = reason.ReasonParentId;
 
-                        var correctedReason = ReasonsRepository.ReasonsList.FirstOrDefault(x => x.ReasonId == reason.ReasonId);
-                        correctedReason.ReasonName = reason.ReasonName;
-                        correctedReason.ReasonComment = reason.ReasonComment;
-                        correctedReason.ReasonDescription = reason.ReasonDescription;
+                        //var correctedReason = ReasonsRepository.ReasonsList.FirstOrDefault(x => x.ReasonId == reason.ReasonId);
+                        //correctedReason.ReasonName = reason.ReasonName;
+                        //correctedReason.ReasonComment = reason.ReasonComment;
+                        //correctedReason.ReasonDescription = reason.ReasonDescription;
 
                         MemoContext.SaveChanges();
                     }
@@ -163,9 +168,10 @@ namespace MemoRandom.Data.Implementations
         #endregion
 
         #region Auxiliary methods
-        private void FormReasonsList(List<DbReason> reasons)
+        private List<Reason> FormPlainReasonsList(List<DbReason> reasons)
         {
-            ReasonsRepository.ReasonsList?.Clear();
+            List<Reason> plainReasonsList = new();
+
             foreach (var reason in reasons)
             {
                 // Формируем только те поля, которые нужны для отображения
@@ -176,8 +182,10 @@ namespace MemoRandom.Data.Implementations
                     ReasonComment = reason.DbReasonComment, // Под вопросом
                     ReasonDescription = reason.DbReasonDescription // Под вопросом
                 };
-                ReasonsRepository.ReasonsList.Add(rsn);
+                plainReasonsList.Add(rsn);
             }
+
+            return plainReasonsList;
         }
 
         /// <summary>
@@ -199,7 +207,7 @@ namespace MemoRandom.Data.Implementations
                         ReasonComment = reasons[i].DbReasonComment,
                         ReasonDescription = reasons[i].DbReasonDescription
                     };
-                    ReasonsRepository.ReasonsCollection.Add(rsn);
+                    ReasonsCollection.Add(rsn);
 
                     // Проверка на наличие дочерних узлов
                     List<DbReason> daughters = PlainReasonsList.FindAll(x => x.DbReasonParentId == rsn.ReasonId);
@@ -250,9 +258,16 @@ namespace MemoRandom.Data.Implementations
         #endregion
 
         #region CTOR
-        public ReasonsController(ILogger logger)
+        /// <summary>
+        /// Конструктор
+        /// </summary>
+        /// <param name="logger"></param>
+        /// <param name="reasonsHelper"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        public ReasonsController(ILogger logger, IReasonsHelper reasonsHelper)
         {
-            _logger = logger;
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _reasonsHelper = reasonsHelper ?? throw new ArgumentNullException(nameof(reasonsHelper));
         }
         #endregion
     }

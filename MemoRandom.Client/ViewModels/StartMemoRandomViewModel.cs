@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Threading;
 using DryIoc;
 using MemoRandom.Client.Views;
+using MemoRandom.Data.Interfaces;
 using MemoRandom.Data.Repositories;
 using Microsoft.Data.SqlClient;
 using NLog;
@@ -17,6 +18,8 @@ namespace MemoRandom.Client.ViewModels
 {
     public class StartMemoRandomViewModel : BindableBase
     {
+        public Action ButtonsVisibility { get; set; } // Действие видимости кнопок
+
         #region PRIVATE FIELDS
         private static readonly string _dbConfigName = "MsDbConfig"; // Конфигурация БД
         private static readonly string _dbFolderName = "MsDbFolder"; // Конфигурация папки с БД
@@ -27,6 +30,7 @@ namespace MemoRandom.Client.ViewModels
         private DateTime _currentDateTime = DateTime.Now;
         private readonly ILogger _logger; // Экземпляр журнала
         private readonly IContainer _container; // Контейнер
+        private readonly IReasonsController _reasonsController;
         private bool _active = true; // Флаг активности текущего окна
         #endregion
 
@@ -224,9 +228,23 @@ namespace MemoRandom.Client.ViewModels
             HumansRepository.DbConnectionString = connectionStringBuilder.ConnectionString;
         }
 
+        /// <summary>
+        /// Чтение справочника причин смерти
+        /// </summary>
         private void GetInitialReasons()
         {
-
+            Task.Factory.StartNew(() =>
+            {
+                var result = _reasonsController.GetReasonsList();
+                if (result)
+                {
+                    ButtonsVisibility(); // Чтение справоника выполнено - кнопки делаем видимыми
+                }
+                else
+                {
+                    MessageBox.Show("Чтение справочника причин смерти не удалось!", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            });
         }
 
         #region CTOR
@@ -236,10 +254,11 @@ namespace MemoRandom.Client.ViewModels
         /// <param name="logger"></param>
         /// <param name="container"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public StartMemoRandomViewModel(ILogger logger, IContainer container)
+        public StartMemoRandomViewModel(ILogger logger, IContainer container, IReasonsController reasonsController)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _container = container ?? throw new ArgumentNullException(nameof(container));
+            _reasonsController = reasonsController ?? throw new ArgumentNullException(nameof(reasonsController));
 
             InitializeCommands();
         }
