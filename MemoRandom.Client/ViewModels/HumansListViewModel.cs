@@ -5,6 +5,7 @@ using Prism.Events;
 using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using MemoRandom.Client.Views;
 using MemoRandom.Models.Models;
@@ -28,7 +29,9 @@ namespace MemoRandom.Client.ViewModels
         private Human _selectedHuman;
         private BitmapSource _imageSource;
         private string _displayedYears = "";
-        private StringBuilder YearsText = new();
+        private List<Reason> _plainReasonsList;
+        private string _humanDeathReasonName;
+        private readonly StringBuilder YearsText = new();
         private readonly ILogger _logger; // Экземпляр журнала
         private readonly IContainer _container; // Контейнер
         private readonly IEventAggregator _eventAggregator;
@@ -111,6 +114,11 @@ namespace MemoRandom.Client.ViewModels
 
                     // Изменение текста прожитых лет
                     SetFullYearsText(SelectedHuman);
+
+                    // Изменение названия причины смерти
+                    var res = PlainReasonsList.FirstOrDefault(x => x.ReasonId == SelectedHuman.DeathReasonId);
+                    HumanDeathReasonName = res.ReasonName;
+                    RaisePropertyChanged(nameof(HumanDeathReasonName));
                 }
             }
         }
@@ -125,6 +133,29 @@ namespace MemoRandom.Client.ViewModels
             {
                 _displayedYears = value;
                 RaisePropertyChanged(nameof(DisplayedYears));
+            }
+        }
+
+        public string HumanDeathReasonName
+        {
+            get => _humanDeathReasonName;
+            set
+            {
+                _humanDeathReasonName = value;
+                RaisePropertyChanged(nameof(HumanDeathReasonName));
+            }
+        }
+
+        /// <summary>
+        /// Плоский список справочника причин смерти для вытягивания названия причины
+        /// </summary>
+        public List<Reason> PlainReasonsList
+        {
+            get => _plainReasonsList;
+            set
+            {
+                _plainReasonsList = value;
+                RaisePropertyChanged(nameof(PlainReasonsList));
             }
         }
         #endregion
@@ -280,6 +311,8 @@ namespace MemoRandom.Client.ViewModels
                     RaisePropertyChanged(nameof(HumansList));
                 });
             });
+
+            PlainReasonsList = Reasons.PlainReasonsList;
         }
 
         #region CTOR

@@ -265,6 +265,9 @@ namespace MemoRandom.Client.ViewModels
             }
         }
 
+        /// <summary>
+        /// Состояние выпадающего окна с TreeView - развернуто или свернуто
+        /// </summary>
         public bool OpenComboState
         {
             get => _openComboState;

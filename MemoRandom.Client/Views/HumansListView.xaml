@@ -245,139 +245,144 @@
                                                    TextWrapping="WrapWithOverflow"/>
                                     </ScrollViewer>
                                 </Border>
-
                             </DockPanel>
 
-                            <Grid Grid.Column="1" Margin="5" DataContext="{Binding ElementName=DgHumans, Path=SelectedValue}">
-                                <Grid.ColumnDefinitions>
-
-                                    <!--Блок заголовков-->
-                                    <ColumnDefinition Width="4*"></ColumnDefinition>
-
-                                    <!--Блок результатов-->
-                                    <ColumnDefinition Width="7*"></ColumnDefinition >
-                                </Grid.ColumnDefinitions>
+                            <Grid Grid.Column="1" Margin="5">
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="3*"/>
-                                    <RowDefinition Height="2*"/>
-                                    <RowDefinition Height="2*"/>
-                                    <RowDefinition Height="2*"/>
-                                    <RowDefinition Height="2*"/>
-                                    <RowDefinition Height="2*"/>
-                                    <RowDefinition Height="2*"/>
+                                    <RowDefinition Height="40" MinHeight="40" MaxHeight="40"/>
+                                    <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
 
-                                <!--Заголовок подробностей-->
-                                <Label Grid.Column="0"
-                                       Grid.Row="0"
-                                       Content="Причина смерти:"
-                                       HorizontalContentAlignment="Right"
-                                       FontSize="18"
-                                       Padding="0, 2, 5, 0"/>
+                                <Grid Grid.Row="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
 
-                                <Label Grid.Column="1"
-                                       Grid.Row="0"
-                                       Content="{Binding Path=ReasonName}"
-                                       Padding="5, 0, 0, 5"
-                                       HorizontalContentAlignment="Left"
-                                       FontSize="20"
-                                       FontFamily="/Resources/#Roland"
-                                       FontWeight="Bold"/>
+                                    <!--Причина смерти-->
+                                    <TextBlock Grid.Column="0"
+                                               Text="Причина смерти:"
+                                               HorizontalAlignment="Right"
+                                               FontSize="28"/>
+                                    <TextBlock Grid.Column="1"
+                                               Text="{Binding Path=HumanDeathReasonName}"
+                                               HorizontalAlignment="Left"
+                                               FontSize="20"/>
+                                </Grid>
 
-                                <Label Grid.Column="0"
-                                       Grid.Row="1"
+                                <Grid Grid.Row="1"  Margin="5" DataContext="{Binding ElementName=DgHumans, Path=SelectedValue}">
+                                    <Grid.ColumnDefinitions>
+
+                                        <!--Блок заголовков-->
+                                        <ColumnDefinition Width="4*"></ColumnDefinition>
+
+                                        <!--Блок результатов-->
+                                        <ColumnDefinition Width="7*"></ColumnDefinition >
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="3*"/>
+                                        <RowDefinition Height="2*"/>
+                                        <RowDefinition Height="2*"/>
+                                        <RowDefinition Height="2*"/>
+                                        <RowDefinition Height="2*"/>
+                                        <RowDefinition Height="2*"/>
+                                    </Grid.RowDefinitions>
+
+                                    <Label Grid.Column="0"
+                                       Grid.Row="0"
                                        Content="Дата рождения:"
                                        HorizontalContentAlignment="Right"
                                        FontSize="14"
                                        Padding="0, 0, 5, 0"/>
 
-                                <Label Grid.Column="1"
-                                       Grid.Row="1"
+                                    <Label Grid.Column="1"
+                                       Grid.Row="0"
                                        Padding="5, 0, 0, 0"
                                        HorizontalContentAlignment="Left" FontSize="14">
-                                    <Label.Content>
-                                        <TextBlock Text="{Binding Path=BirthDate, StringFormat='dd MMMM yyyy', ConverterCulture='ru-RU'}"
+                                        <Label.Content>
+                                            <TextBlock Text="{Binding Path=BirthDate, StringFormat='dd MMMM yyyy', ConverterCulture='ru-RU'}"
                                                    FontWeight="Bold"/>
-                                    </Label.Content>
-                                </Label>
+                                        </Label.Content>
+                                    </Label>
 
-                                <Label Grid.Column="0"
-                                       Grid.Row="2"
+                                    <Label Grid.Column="0"
+                                       Grid.Row="1"
                                        Content="Родная страна:"
                                        HorizontalContentAlignment="Right"
                                        FontSize="14"
                                        Padding="0, 0, 5, 0"/>
 
-                                <Label Grid.Column="1"
-                                       Grid.Row="2"
+                                    <Label Grid.Column="1"
+                                       Grid.Row="1"
                                        Content="{Binding Path=BirthCountry}"
                                        Padding="5, 0, 0, 0"
                                        HorizontalContentAlignment="Left"
                                        FontSize="14"
                                        FontWeight="Bold"/>
 
-                                <Label Grid.Column="0"
-                                       Grid.Row="3"
+                                    <Label Grid.Column="0"
+                                       Grid.Row="2"
                                        Content="Место рождения:"
                                        HorizontalContentAlignment="Right"
                                        FontSize="14"
                                        Padding="0, 0, 5, 0"/>
 
-                                <Label Grid.Column="1"
-                                       Grid.Row="3"
+                                    <Label Grid.Column="1"
+                                       Grid.Row="2"
                                        Content="{Binding Path=BirthPlace}"
                                        Padding="5, 0, 0, 0"
                                        HorizontalContentAlignment="Left"
                                        FontSize="14"
                                        FontWeight="Bold"/>
 
-                                <Label Grid.Column="0"
-                                       Grid.Row="4"
+                                    <Label Grid.Column="0"
+                                       Grid.Row="3"
                                        Content="Дата смерти:"
                                        HorizontalContentAlignment="Right"
                                        FontSize="14"
                                        Padding="0, 0, 5, 0"/>
 
-                                <Label Grid.Column="1"
-                                       Grid.Row="4"
+                                    <Label Grid.Column="1"
+                                       Grid.Row="3"
                                        Padding="5, 0, 0, 0"
                                        HorizontalContentAlignment="Left"
                                        FontSize="14">
-                                    <Label.Content>
-                                        <TextBlock Text="{Binding Path=DeathDate, StringFormat='dd MMMM yyyy' , ConverterCulture='ru-RU'}"
+                                        <Label.Content>
+                                            <TextBlock Text="{Binding Path=DeathDate, StringFormat='dd MMMM yyyy' , ConverterCulture='ru-RU'}"
                                                    FontWeight="Bold"/>
-                                    </Label.Content>
-                                </Label>
+                                        </Label.Content>
+                                    </Label>
 
-                                <Label Grid.Column="0"
-                                       Grid.Row="5"
+                                    <Label Grid.Column="0"
+                                       Grid.Row="4"
                                        Content="Страна смерти:"
                                        HorizontalContentAlignment="Right"
                                        FontSize="14"
                                        Padding="0, 0, 5, 0"/>
 
-                                <Label Grid.Column="1"
-                                       Grid.Row="5"
+                                    <Label Grid.Column="1"
+                                       Grid.Row="4"
                                        Content="{Binding Path=DeathCountry}"
                                        Padding="5, 0, 0, 0"
                                        HorizontalContentAlignment="Left"
                                        FontSize="14"
                                        FontWeight="Bold"/>
 
-                                <Label Grid.Column="0"
-                                       Grid.Row="6"
+                                    <Label Grid.Column="0"
+                                       Grid.Row="5"
                                        Content="Место смерти:"
                                        HorizontalContentAlignment="Right"
                                        FontSize="14"
                                        Padding="0, 0, 5, 0"/>
 
-                                <Label Grid.Column="1"
-                                       Grid.Row="6"
+                                    <Label Grid.Column="1"
+                                       Grid.Row="5"
                                        Content="{Binding Path=DeathPlace}"
                                        Padding="5, 0, 0, 0"
                                        HorizontalContentAlignment="Left"
                                        FontSize="14"
                                        FontWeight="Bold"/>
+                                </Grid>
                             </Grid>
                         </Grid>
                     </Grid>
