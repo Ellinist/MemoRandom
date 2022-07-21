@@ -11,6 +11,7 @@
                  Icon="pack://application:,,,/Resources/Icons/humanInfoIcon.ico"
                  mc:Ignorable="d"
                  x:Name="DetailesView"
+                 WindowState="Maximized"
                  Title="Редактирование или добавление клиента" Height="680" Width="1200">
 
     <i:Interaction.Triggers>
