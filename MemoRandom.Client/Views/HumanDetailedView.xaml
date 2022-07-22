@@ -326,7 +326,7 @@
                                 <RowDefinition Height="50"/>
                             </Grid.RowDefinitions>
 
-                            <!--Изображение исходное-->
+                            <!--Итоговое исходное-->
                             <Image Grid.Row="0"
                                    x:Name="PersonImage2"
                                    Width="450" MinWidth="450" MaxWidth="450"

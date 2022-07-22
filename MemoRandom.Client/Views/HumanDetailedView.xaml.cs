@@ -19,6 +19,11 @@ namespace MemoRandom.Client.Views
                 vm.CloseAction = new System.Action(this.Close);
             }
 
+            PersonImage.MouseLeftButtonDown += vm.PersonImage_MouseLeftButtonDown;
+            PersonImage.MouseLeftButtonUp += vm.PersonImage_MouseLeftButtonUp;
+            PersonImage.MouseMove += vm.PersonImage_MouseMove;
+            PersonImage.MouseWheel += vm.PersonImage_MouseWheel;
+
             DataContext = vm;
         }
     }

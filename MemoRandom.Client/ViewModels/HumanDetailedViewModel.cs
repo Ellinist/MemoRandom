@@ -449,6 +449,50 @@ namespace MemoRandom.Client.ViewModels
             }
         }
 
+        #region Блок работы с изображением
+        /// <summary>
+        /// Обработчик нажатия левой кнопки мыши на исходном изображении
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void PersonImage_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+
+        }
+
+        /// <summary>
+        /// Обработчик отпускания левой кнопки мыши на исходном изображении
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void PersonImage_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+
+        }
+
+        /// <summary>
+        /// Обработчик движения мыши над исходным изображением
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="System.NotImplementedException"></exception>
+        public void PersonImage_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+
+        }
+
+        /// <summary>
+        /// Обработчик прокрутки колесом мыши над исходным изображением
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="System.NotImplementedException"></exception>
+        public void PersonImage_MouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
+        {
+            
+        }
+        #endregion
+
         ///// <summary>
         ///// Преобразование байтового массива в BitmapImage
         ///// </summary>
