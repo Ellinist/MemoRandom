@@ -301,7 +301,7 @@
                                    Height="350" MinHeight="350" MaxHeight="350"
                                    Source="{Binding Path=ImageSource}"/>
 
-                            <Button Grid.Row="1" Grid.Column="0"
+                            <Button Grid.Row="1"
                                     Content="Загрузить картинку"
                                     Command="{Binding ImageLoadCommand}"/>
                         </Grid>
@@ -318,7 +318,24 @@
                     <GroupBox Grid.Column="2"
                               Header="Итоговое изображение"
                               Style="{StaticResource MahApps.Styles.GroupBox}">
-                        
+
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition Height="50"/>
+                            </Grid.RowDefinitions>
+
+                            <!--Изображение исходное-->
+                            <Image Grid.Row="0"
+                                   x:Name="PersonImage2"
+                                   Width="450" MinWidth="450" MaxWidth="450"
+                                   Height="350" MinHeight="350" MaxHeight="350"
+                                   Source="{Binding Path=ImageSource}"/>
+
+                            <Button Grid.Row="1"
+                                    Content="Сохранить картинку"
+                                    Command="{Binding ImageLoadCommand}"/>
+                        </Grid>
                     </GroupBox>
 
                 </Grid>

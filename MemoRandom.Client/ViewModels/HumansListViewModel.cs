@@ -164,6 +164,10 @@ namespace MemoRandom.Client.ViewModels
         #endregion
 
         #region Частные методы
+        /// <summary>
+        /// Формирование текстов для отображения прожитых лет в соответствии с числом
+        /// </summary>
+        /// <param name="selectedHuman"></param>
         private void SetFullYearsText(Human selectedHuman)
         {
             int years = (int)Math.Round(selectedHuman.FullYearsLived, 0); // Считаем число полных лет
@@ -249,6 +253,9 @@ namespace MemoRandom.Client.ViewModels
             var currentHumanId = _humansController.GetCurrentHuman();
             PersonIndex = HumansList.FindIndex(x => x.HumanId == currentHumanId.HumanId); // Прыжок на индекс добавленного человека
             RaisePropertyChanged(nameof(PersonIndex));
+
+            var currentReason = PlainReasonsList.FirstOrDefault(x => x.ReasonId == SelectedHuman.DeathReasonId);
+            HumanDeathReasonName = currentReason.ReasonName;
         }
 
         /// <summary>
@@ -263,6 +270,9 @@ namespace MemoRandom.Client.ViewModels
             var currentHumanId = _humansController.GetCurrentHuman();
             PersonIndex = HumansList.FindIndex(x => x.HumanId == currentHumanId.HumanId); // Прыжок на индекс редактируемого человека
             RaisePropertyChanged(nameof(PersonIndex));
+
+            var currentReason = PlainReasonsList.FirstOrDefault(x => x.ReasonId == SelectedHuman.DeathReasonId);
+            HumanDeathReasonName = currentReason.ReasonName;
         }
 
         /// <summary>
