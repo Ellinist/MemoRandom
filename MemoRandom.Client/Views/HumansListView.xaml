@@ -96,47 +96,55 @@
                                     BorderThickness="0.4">
 
                                 <!--Здесь думать, надо ли скроллинг делать?-->
-                                <ListView x:Name="DgHumans"
+                                <DataGrid x:Name="DgHumans"
                                           SelectionMode="Single"
                                           UseLayoutRounding="True"
+                                          CanUserAddRows="False"
+                                          IsSynchronizedWithCurrentItem="True"
+                                          AutoGenerateColumns="False"
                                           ItemsSource="{Binding Path=HumansList}"
                                           Margin="1"
                                           SelectedItem="{Binding Path=SelectedHuman}"
                                           SelectedIndex="{Binding Path=PersonIndex}">
                                     
-                                    <ListView.Resources>
-                                        <Style TargetType="{x:Type GridViewColumnHeader}">
-                                            <Setter Property="HorizontalContentAlignment" Value="Center"/>
-                                            <Setter Property="FontSize" Value="13"/>
-                                            <Setter Property="FontWeight" Value="Bold"/>
-                                        </Style>
-                                        <Style TargetType="{x:Type GridViewRowPresenter}">
-                                            <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                                        </Style>
-                                    </ListView.Resources>
-
-                                    <ListView.View>
-                                        <GridView AllowsColumnReorder="True">
-                                            <GridViewColumn Header="Фамилия">
-                                                <GridViewColumn.CellTemplate>
-                                                    <DataTemplate>
-                                                        <TextBlock Text="{Binding Path=LastName}"/>
-                                                    </DataTemplate>
-                                                </GridViewColumn.CellTemplate>
-                                            </GridViewColumn>
-                                            <GridViewColumn DisplayMemberBinding="{Binding Path=FirstName}" Header="Имя"/>
-                                            <GridViewColumn DisplayMemberBinding="{Binding Path=Patronymic}" Header="Отчество"/>
-                                            <GridViewColumn DisplayMemberBinding="{Binding Path=BirthDate, StringFormat='dd MMMM yyyy',ConverterCulture='ru-RU', Mode=OneWay}" Header="Дата рождения"/>
-                                            <GridViewColumn DisplayMemberBinding="{Binding Path=BirthCountry}" Header="Родная страна"/>
-                                            <GridViewColumn DisplayMemberBinding="{Binding Path=BirthPlace}" Header="Место рождения"/>
-                                            <GridViewColumn DisplayMemberBinding="{Binding Path=DeathDate, StringFormat='dd MMMM yyyy',ConverterCulture='ru-RU', Mode=OneWay}" Header="Дата смерти"/>
-                                            <GridViewColumn DisplayMemberBinding="{Binding Path=DeathCountry}" Header="Страна смерти"/>
-                                            <GridViewColumn DisplayMemberBinding="{Binding Path=DeathPlace}" Header="Место смерти"/>
-                                            <GridViewColumn DisplayMemberBinding="{Binding Path=DaysLived}" Header="Дней"/>
-                                            <GridViewColumn DisplayMemberBinding="{Binding Path=FullYearsLived}" Header="Лет"/>
-                                        </GridView>
-                                    </ListView.View>
-                                </ListView>
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Фамилия"
+                                                            IsReadOnly="True"
+                                                            Binding="{Binding Path=LastName}"/>
+                                        <DataGridTextColumn Header="Имя"
+                                                            IsReadOnly="True"
+                                                            Binding="{Binding Path=FirstName}"/>
+                                        <DataGridTextColumn Header="Отчество"
+                                                            IsReadOnly="True"
+                                                            Binding="{Binding Path=Patronymic}"/>
+                                        <DataGridTextColumn Header="Дата рождения"
+                                                            IsReadOnly="True"
+                                                            Width="120"
+                                                            Binding="{Binding Path=BirthDate, StringFormat='dd MMMM yyyy',ConverterCulture='ru-RU', Mode=OneWay}"/>
+                                        <DataGridTextColumn Header="Родная страна"
+                                                            IsReadOnly="True"
+                                                            Binding="{Binding Path=BirthCountry}"/>
+                                        <DataGridTextColumn Header="Место рождения"
+                                                            IsReadOnly="True"
+                                                            Binding="{Binding Path=BirthPlace}"/>
+                                        <DataGridTextColumn Header="Дата смерти"
+                                                            IsReadOnly="True"
+                                                            Width="120"
+                                                            Binding="{Binding Path=DeathDate, StringFormat='dd MMMM yyyy',ConverterCulture='ru-RU', Mode=OneWay}"/>
+                                        <DataGridTextColumn Header="Страна смерти"
+                                                            IsReadOnly="True"
+                                                            Binding="{Binding Path=DeathCountry}"/>
+                                        <DataGridTextColumn Header="Место смерти"
+                                                            IsReadOnly="True"
+                                                            Binding="{Binding Path=DeathPlace}"/>
+                                        <DataGridTextColumn Header="Дней"
+                                                            IsReadOnly="True"
+                                                            Binding="{Binding Path=DaysLived}"/>
+                                        <DataGridTextColumn Header="Лет"
+                                                            IsReadOnly="True"
+                                                            Binding="{Binding Path=FullYearsLived}"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
                             </Border>
 
                             <Grid Grid.Column="1">

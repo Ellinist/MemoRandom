@@ -170,7 +170,7 @@ namespace MemoRandom.Client.ViewModels
         /// <param name="selectedHuman"></param>
         private void SetFullYearsText(Human selectedHuman)
         {
-            int years = (int)Math.Round(selectedHuman.FullYearsLived, 0); // Считаем число полных лет
+            int years = (int)Math.Floor(selectedHuman.FullYearsLived); // Считаем число полных лет
             YearsText.Clear();
             int t1, t2;
             t1 = years % 10;
