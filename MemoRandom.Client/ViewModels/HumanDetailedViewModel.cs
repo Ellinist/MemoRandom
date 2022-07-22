@@ -41,6 +41,7 @@ namespace MemoRandom.Client.ViewModels
         private List<Reason> _plainReasonsList;
         private string _humanDeathReasonName;
         private bool _openComboState = false; // По умолчанию комбобокс свернут
+        private double _scale = 0.1;
         #endregion
 
         #region PROPS
@@ -289,6 +290,16 @@ namespace MemoRandom.Client.ViewModels
                 if (_selectedReason == value) return;
                 _selectedReason = value;
                 RaisePropertyChanged(nameof(SelectedReason));
+            }
+        }
+
+        public double Scale
+        {
+            get => _scale;
+            set
+            {
+                _scale = value;
+                RaisePropertyChanged(nameof(Scale));
             }
         }
         #endregion

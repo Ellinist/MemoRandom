@@ -297,15 +297,21 @@
                             <!--Изображение исходное-->
                             <Grid Grid.Row="0">
                                 <Canvas Grid.Row="0"
+                                        ClipToBounds="True"
                                         Width="450" MinWidth="450" MaxWidth="450"
                                         Height="350" MinHeight="350" MaxHeight="350">
                                     <Image Grid.Row="0"
-                                       Canvas.Left="0"
-                                       Canvas.Top="-200"
-                                       Stretch="None"
-                                       
-                                       x:Name="PersonImage"
-                                       Source="{Binding Path=ImageSource}"/>
+                                           Canvas.Left="-50"
+                                           Canvas.Top="0"
+                                           Stretch="None"
+                                           x:Name="PersonImage"
+                                           Source="{Binding Path=ImageSource}">
+                                        <Image.LayoutTransform>
+                                            <ScaleTransform ScaleX="0.5" ScaleY="0.5"/>
+                                        </Image.LayoutTransform>
+                                    </Image>
+                                    <!--RenderTransform="{Binding Scale}"-->
+                                    <!--Не работает - вылет RenderSize="{Binding Scale}"-->
                                 </Canvas>
                             </Grid>
 
