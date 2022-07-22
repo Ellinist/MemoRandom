@@ -41,7 +41,10 @@ namespace MemoRandom.Client.ViewModels
         private List<Reason> _plainReasonsList;
         private string _humanDeathReasonName;
         private bool _openComboState = false; // По умолчанию комбобокс свернут
-        private double _scale = 0.1;
+        private double _left = 0; // Левый верхний угол изображения на канве (координата X)
+        private double _top = 0;  // Левый верхний угол изображения на канве (координата Y)
+        private double _scaleX = 1; // Масштаб по оси X
+        private double _scaleY = 1; // Масштаб по оси Y
         #endregion
 
         #region PROPS
@@ -293,13 +296,43 @@ namespace MemoRandom.Client.ViewModels
             }
         }
 
-        public double Scale
+        public double Left
         {
-            get => _scale;
+            get => _left;
             set
             {
-                _scale = value;
-                RaisePropertyChanged(nameof(Scale));
+                _left = value;
+                RaisePropertyChanged(nameof(Left));
+            }
+        }
+
+        public double Top
+        {
+            get => _top;
+            set
+            {
+                _top = value;
+                RaisePropertyChanged(nameof(Top));
+            }
+        }
+
+        public double ScaleX
+        {
+            get => _scaleX;
+            set
+            {
+                _scaleX = value;
+                RaisePropertyChanged(nameof(ScaleX));
+            }
+        }
+
+        public double ScaleY
+        {
+            get => _scaleY;
+            set
+            {
+                _scaleY = value;
+                RaisePropertyChanged(nameof(ScaleY));
             }
         }
         #endregion
@@ -500,7 +533,17 @@ namespace MemoRandom.Client.ViewModels
         /// <exception cref="System.NotImplementedException"></exception>
         public void PersonImage_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            
+            if (e.Delta < 0)
+            {
+                ScaleX += 0.01;
+                ScaleY += 0.01;
+            }
+            else
+            {
+                ScaleX -= 0.01;
+                ScaleY -= 0.01;
+            }
+
         }
         #endregion
 
