@@ -296,6 +296,7 @@
 
                             <!--Изображение исходное-->
                             <Image Grid.Row="0"
+                                   Stretch="None"
                                    x:Name="PersonImage"
                                    Width="450" MinWidth="450" MaxWidth="450"
                                    Height="350" MinHeight="350" MaxHeight="350"
