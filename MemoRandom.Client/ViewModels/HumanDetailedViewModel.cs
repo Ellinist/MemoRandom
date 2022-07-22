@@ -595,6 +595,10 @@ namespace MemoRandom.Client.ViewModels
             if (Clipboard.ContainsImage())
             {
                 ImageSource = Clipboard.GetImage();
+                var w = ImageSource.Width;
+                var h = ImageSource.Height;
+                Left = -(h - 350) / 2;
+                Top = -(w - 450) / 2;
             }
             else
             {

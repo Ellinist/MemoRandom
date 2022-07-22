@@ -304,8 +304,8 @@
                                     
                                     <!--Исходная картинка-->
                                     <Image Grid.Row="0"
-                                           Canvas.Left="-50"
-                                           Canvas.Top="0"
+                                           Canvas.Left="{Binding Left}"
+                                           Canvas.Top="{Binding Top}"
                                            Stretch="None"
                                            x:Name="PersonImage"
                                            Source="{Binding Path=ImageSource}">
