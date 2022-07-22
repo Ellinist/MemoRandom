@@ -115,10 +115,13 @@ namespace MemoRandom.Client.ViewModels
                     // Изменение текста прожитых лет
                     SetFullYearsText(SelectedHuman);
 
-                    // Изменение названия причины смерти
+                    // Название причины смерти
                     var res = PlainReasonsList.FirstOrDefault(x => x.ReasonId == SelectedHuman.DeathReasonId);
-                    HumanDeathReasonName = res.ReasonName;
-                    RaisePropertyChanged(nameof(HumanDeathReasonName));
+                    if(res != null)
+                    {
+                        HumanDeathReasonName = res.ReasonName;
+                        RaisePropertyChanged(nameof(HumanDeathReasonName));
+                    }
                 }
             }
         }

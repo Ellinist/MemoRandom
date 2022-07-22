@@ -26,218 +26,185 @@
             <Setter Property="Control.FontSize" Value="20"/>
             <Setter Property="ItemsControl.FontWeight" Value="Bold"/>
         </Style>
-
-        
-        <!--<Style x:Key="NoChromeButton" TargetType="{x:Type Button}">
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Foreground" Value="Transparent"/>
-            <Setter Property="HorizontalContentAlignment" Value="Center"/>
-            <Setter Property="VerticalContentAlignment" Value="Center"/>
-            <Setter Property="Padding" Value="1"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type Button}">
-                        <Grid x:Name="Chrome" Background="{TemplateBinding Background}" SnapsToDevicePixels="true">
-                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
-                        </Grid>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsEnabled" Value="false">
-                                <Setter Property="Foreground" Value="#ADADAD"/>
-                                <Setter Property="Opacity" TargetName="Chrome" Value="0.5"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>-->
     </mah:MetroWindow.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
+            
+            <!--Строка для основных текстовых данных-->
+            <RowDefinition/>
+            
+            <!--Строка для работы с изображениями-->
             <RowDefinition/>
             
             <!--Строка для кнопок "Сохранить" и "Отменить"-->
             <RowDefinition Height="80"/>
         </Grid.RowDefinitions>
-        
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <!--Блок описательный-->
-            <ColumnDefinition/>
-            <!--Блок изображений-->
-        </Grid.ColumnDefinitions>
 
-        <GroupBox Grid.Column="0" Grid.Row="0"
-                  Style="{StaticResource MahApps.Styles.GroupBox}"
-                  Header="Основные данные">
-            <ScrollViewer>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1.9*"/>
-                        <ColumnDefinition Width="3.3*"/>
-                        <ColumnDefinition Width="30"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="32"/>
-                        <RowDefinition Height="32"/>
-                        <RowDefinition Height="32"/>
-                        <RowDefinition Height="32"/>
-                        <RowDefinition Height="32"/>
-                        <RowDefinition Height="32"/>
-                        <RowDefinition Height="32"/>
-                        <RowDefinition Height="32"/>
-                        <RowDefinition Height="32"/>
-                        <RowDefinition/>
-                        <RowDefinition Height="40"/>
-                    </Grid.RowDefinitions>
+        <!--Блок работы с основными текстовыми данными-->
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
 
-                    <!--Фамилия человека-->
-                    <TextBlock Grid.Row="0" Grid.Column="0"
+            <GroupBox Grid.Column="0"
+                      Margin="5, 2, 2, 2"
+                      Style="{StaticResource MahApps.Styles.GroupBox}"
+                      Header="Основные данные">
+                <ScrollViewer>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1.9*"/>
+                            <ColumnDefinition Width="3.3*"/>
+                            <ColumnDefinition Width="30"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="32"/>
+                            <RowDefinition Height="32"/>
+                            <RowDefinition Height="32"/>
+                            <RowDefinition Height="32"/>
+                            <RowDefinition Height="32"/>
+                            <RowDefinition Height="32"/>
+                            <RowDefinition Height="32"/>
+                            <RowDefinition Height="32"/>
+                            <RowDefinition Height="32"/>
+                            <RowDefinition Height="32"/>
+                        </Grid.RowDefinitions>
+
+                        <!--Фамилия человека-->
+                        <TextBlock Grid.Row="0" Grid.Column="0"
                                Margin="0"
                                Padding="1, 0, 3, 0"
                                Style="{StaticResource FontCharacteristics}"
                                Text="Фамилия:"
                                HorizontalAlignment="Right"/>
-                    <TextBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2"
+                        <TextBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2"
                              Padding="3, 0, 1, 0"
                              Style="{StaticResource FontCharacteristics}"
                              Text="{Binding LastName}"
                              HorizontalAlignment="Stretch"
                              HorizontalContentAlignment="Left"/>
 
-                    <!--Имя человека-->
-                    <TextBlock Grid.Row="1" Grid.Column="0"
+                        <!--Имя человека-->
+                        <TextBlock Grid.Row="1" Grid.Column="0"
                                Margin="0"
                                Padding="1, 0, 3, 0"
                                Style="{StaticResource FontCharacteristics}"
                                Text="Имя:"
                                HorizontalAlignment="Right"/>
-                    <TextBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
+                        <TextBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
                              Padding="3, 0, 1, 0"
                              Style="{StaticResource FontCharacteristics}"
                              Text="{Binding FirstName}"
                              HorizontalAlignment="Stretch"
                              HorizontalContentAlignment="Left"/>
 
-                    <!--Отчество-->
-                    <TextBlock Grid.Row="2" Grid.Column="0"
+                        <!--Отчество-->
+                        <TextBlock Grid.Row="2" Grid.Column="0"
                                Margin="0"
                                Padding="1, 0, 3, 0"
                                Style="{StaticResource FontCharacteristics}"
                                Text="Отчество:"
                                HorizontalAlignment="Right"/>
-                    <TextBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2"
+                        <TextBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2"
                              Padding="3, 0, 1, 0"
                              Style="{StaticResource FontCharacteristics}"
                              Text="{Binding Patronymic}"
                              HorizontalAlignment="Stretch"
                              HorizontalContentAlignment="Left"/>
 
-                    <!--Дата рождения-->
-                    <TextBlock Grid.Row="3" Grid.Column="0"
+                        <!--Дата рождения-->
+                        <TextBlock Grid.Row="3" Grid.Column="0"
                                Margin="0"
                                Padding="1, 0, 3, 0"
                                Style="{StaticResource FontCharacteristics}"
                                Text="Дата рождения:"
                                HorizontalAlignment="Right"/>
-                    <DatePicker Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2"
+                        <DatePicker Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2"
                                 FontSize="17"
                                 FontWeight="Bold"
                                 VerticalAlignment="Center"
                                 SelectedDate="{Binding BirthDate}"/>
 
-                    <!--Страна рождения-->
-                    <TextBlock Grid.Row="4" Grid.Column="0"
+                        <!--Страна рождения-->
+                        <TextBlock Grid.Row="4" Grid.Column="0"
                                Margin="0"
                                Padding="1, 0, 3, 0"
                                Style="{StaticResource FontCharacteristics}"
                                Text="Страна рождения:"
                                HorizontalAlignment="Right"/>
-                    <TextBox Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2"
+                        <TextBox Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2"
                              Padding="3, 0, 1, 0"
                              Style="{StaticResource FontCharacteristics}"
                              Text="{Binding BirthCountry}"
                              HorizontalAlignment="Stretch"
                              HorizontalContentAlignment="Left"/>
 
-                    <!--Место рождения-->
-                    <TextBlock Grid.Row="5" Grid.Column="0"
+                        <!--Место рождения-->
+                        <TextBlock Grid.Row="5" Grid.Column="0"
                                Margin="0"
                                Padding="1, 0, 3, 0"
                                Style="{StaticResource FontCharacteristics}"
                                Text="Место рождения:"
                                HorizontalAlignment="Right"/>
-                    <TextBox Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2"
+                        <TextBox Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2"
                              Padding="3, 0, 1, 0"
                              Style="{StaticResource FontCharacteristics}"
                              Text="{Binding BirthPlace}"
                              HorizontalAlignment="Stretch"
                              HorizontalContentAlignment="Left"/>
 
-                    <!--Дата смерти-->
-                    <TextBlock Grid.Row="6" Grid.Column="0"
+                        <!--Дата смерти-->
+                        <TextBlock Grid.Row="6" Grid.Column="0"
                                Margin="0"
                                Padding="1, 0, 3, 0"
                                Style="{StaticResource FontCharacteristics}"
                                Text="Дата смерти:"
                                HorizontalAlignment="Right"/>
-                    <DatePicker Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2"
+                        <DatePicker Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2"
                                 FontSize="17"
                                 FontWeight="Bold"
                                 VerticalAlignment="Center"
                                 SelectedDate="{Binding DeathDate}"/>
 
-                    <!--Страна смерти-->
-                    <TextBlock Grid.Row="7" Grid.Column="0"
+                        <!--Страна смерти-->
+                        <TextBlock Grid.Row="7" Grid.Column="0"
                                Margin="0"
                                Padding="1, 0, 3, 0"
                                Style="{StaticResource FontCharacteristics}"
                                Text="Страна смерти:"
                                HorizontalAlignment="Right"/>
-                    <TextBox Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="2"
+                        <TextBox Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="2"
                              Padding="3, 0, 1, 0"
                              Style="{StaticResource FontCharacteristics}"
                              Text="{Binding DeathCountry}"
                              HorizontalAlignment="Stretch"
                              HorizontalContentAlignment="Left"/>
 
-                    <!--Место смерти-->
-                    <TextBlock Grid.Row="8" Grid.Column="0"
+                        <!--Место смерти-->
+                        <TextBlock Grid.Row="8" Grid.Column="0"
                                Margin="0"
                                Padding="1, 0, 3, 0"
                                Style="{StaticResource FontCharacteristics}"
                                Text="Место смерти:"
                                HorizontalAlignment="Right"/>
-                    <TextBox Grid.Row="8" Grid.Column="1" Grid.ColumnSpan="2"
+                        <TextBox Grid.Row="8" Grid.Column="1" Grid.ColumnSpan="2"
                              Padding="3, 0, 1, 0"
                              Style="{StaticResource FontCharacteristics}"
                              Text="{Binding DeathPlace}"
                              HorizontalAlignment="Stretch"
                              HorizontalContentAlignment="Left"/>
 
-                    <!--Расширенный комментарий-->
-                    <TextBlock Grid.Row="9" Grid.Column="0"
-                               Margin="0"
-                               Padding="1, 0, 3, 0"
-                               Style="{StaticResource FontCharacteristics}"
-                               Text="Комментарий:"
-                               HorizontalAlignment="Right"/>
-                    <TextBox Grid.Row="9" Grid.Column="1" Grid.ColumnSpan="2"
-                             Padding="3, 0, 1, 0"
-                             Style="{StaticResource FontCharacteristics}"
-                             Text="{Binding HumanComments}"
-                             HorizontalAlignment="Stretch"
-                             TextWrapping="Wrap"
-                             HorizontalContentAlignment="Left"/>
-                    
-                    <!--Причина смерти-->
-                    <TextBlock Grid.Row="10" Grid.Column="0"
+                        <!--Причина смерти-->
+                        <TextBlock Grid.Row="10" Grid.Column="0"
                                Margin="0"
                                Padding="1, 0, 3, 0"
                                Style="{StaticResource FontCharacteristics}"
                                Text="Причина смерти:"
                                HorizontalAlignment="Right"/>
-                    <TextBox Grid.Row="10" Grid.Column="1"
+                        <TextBox Grid.Row="10" Grid.Column="1"
                              Margin="0"
                              Padding="1, 0, 3, 0"
                              Style="{StaticResource FontCharacteristics}"
@@ -246,71 +213,120 @@
                              HorizontalContentAlignment="Left"
                              IsReadOnly="True"/>
 
-                    <!--Всплывающее окно TreeView с иерархической коллекцией причин смерти-->
-                    <ComboBox Grid.Row="10" Grid.Column="2"
+                        <!--Всплывающее окно TreeView с иерархической коллекцией причин смерти-->
+                        <ComboBox Grid.Row="10" Grid.Column="2"
                               IsDropDownOpen="{Binding OpenComboState}" 
                               Style="{StaticResource FontCharacteristics}">
-                        <ScrollViewer CanContentScroll="True"
+                            <ScrollViewer CanContentScroll="True"
                                       HorizontalScrollBarVisibility="Auto"
                                       VerticalScrollBarVisibility="Auto">
-                            <ComboBoxItem>
-                                <TreeView x:Name="ReasonsTree"
-                                          Width="400" Height="400"
-                                          Style="{StaticResource MahApps.Styles.TreeView}"
-                                          ItemsSource="{Binding ReasonsList, Mode=TwoWay, NotifyOnSourceUpdated=True}">
-                                    <TreeView.Resources>
-                                        <HierarchicalDataTemplate DataType="{x:Type models:Reason}" ItemsSource="{Binding ReasonChildren}">
-                                            <TextBlock Text="{Binding Path=ReasonName}"/>
-                                        </HierarchicalDataTemplate>
-                                    </TreeView.Resources>
-                                    <TreeView.ItemContainerStyle>
-                                        <Style TargetType="TreeViewItem">
-                                            <Setter Property="IsSelected" Value="{Binding IsSelected}"/>
-                                            <Setter Property="FontSize" Value="18"/>
-                                            <Setter Property="FontWeight" Value="Bold"/>
-                                            <Setter Property="IsExpanded" Value="True"/>
-                                        </Style>
-                                    </TreeView.ItemContainerStyle>
-                                    <i:Interaction.Triggers>
+                                <ComboBoxItem>
+                                    <TreeView x:Name="ReasonsTree"
+                                              Width="400" Height="400"
+                                              Style="{StaticResource MahApps.Styles.TreeView}"
+                                              ItemsSource="{Binding ReasonsList, Mode=TwoWay, NotifyOnSourceUpdated=True}">
+                                        <TreeView.Resources>
+                                            <HierarchicalDataTemplate DataType="{x:Type models:Reason}" ItemsSource="{Binding ReasonChildren}">
+                                                <TextBlock Text="{Binding Path=ReasonName}"/>
+                                            </HierarchicalDataTemplate>
+                                        </TreeView.Resources>
+                                        <TreeView.ItemContainerStyle>
+                                            <Style TargetType="TreeViewItem">
+                                                <Setter Property="IsSelected" Value="{Binding IsSelected}"/>
+                                                <Setter Property="FontSize" Value="18"/>
+                                                <Setter Property="FontWeight" Value="Bold"/>
+                                                <Setter Property="IsExpanded" Value="True"/>
+                                            </Style>
+                                        </TreeView.ItemContainerStyle>
+                                        <i:Interaction.Triggers>
 
-                                        <!--Двойной клик на узле-->
-                                        <i:EventTrigger EventName="MouseDoubleClick">
-                                            <i:InvokeCommandAction Command="{Binding SelectNodeCommand}"
-                                                                   CommandParameter="{Binding ElementName=ReasonsTree, Path=SelectedItem}"/>
-                                        </i:EventTrigger>
-                                    </i:Interaction.Triggers>
-                                </TreeView>
-                            </ComboBoxItem>
-                        </ScrollViewer>
-                    </ComboBox>
-                </Grid>
-            </ScrollViewer>
-        </GroupBox>
+                                            <!--Двойной клик на узле-->
+                                            <i:EventTrigger EventName="MouseDoubleClick">
+                                                <i:InvokeCommandAction Command="{Binding SelectNodeCommand}"
+                                                                       CommandParameter="{Binding ElementName=ReasonsTree, Path=SelectedItem}"/>
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </TreeView>
+                                </ComboBoxItem>
+                            </ScrollViewer>
+                        </ComboBox>
+                    </Grid>
+                </ScrollViewer>
+            </GroupBox>
 
-        <Grid Grid.Row="0" Grid.Column="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="7*"/>
-                <RowDefinition Height="2*"/>
-                <RowDefinition/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
-
-            <Image x:Name="PersonImage"
-                   Width="450" MinWidth="450" MaxWidth="450"
-                   Height="350" MinHeight="350" MaxHeight="350"
-                   Grid.Row="0"
-                   Source="{Binding Path=ImageSource}"/>
-
-            <Button Grid.Row="1"
-                    Content="Загрузить картинку"
-                    Command="{Binding ImageLoadCommand}"/>
-
-            <Canvas Grid.Row="2" Background="AliceBlue">
-                
-            </Canvas>
+            <!--Расширенный комментарий-->
+            <Grid Grid.Column="1">
+                <GroupBox Margin="2, 2, 5, 2"
+                          Style="{StaticResource MahApps.Styles.GroupBox}"
+                          Header="Расширенный комментарий">
+                    <TextBox Padding="3, 0, 1, 0"
+                             Style="{StaticResource FontCharacteristics}"
+                             Text="{Binding HumanComments}"
+                             HorizontalAlignment="Stretch"
+                             TextWrapping="Wrap"
+                             HorizontalContentAlignment="Left"/>
+                </GroupBox>
+            </Grid>
         </Grid>
 
-        <Grid Grid.Row="1" Grid.ColumnSpan="2">
+        <!--Блок для работы с изображениями-->
+        <Grid Grid.Row="1">
+            
+            
+            <GroupBox Margin="5, 2, 2, 5"
+                      Style="{StaticResource MahApps.Styles.GroupBox}"
+                      Header="Блок работы с изображениями">
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <GroupBox Grid.Column="0"
+                              Header="Исходное изображение"
+                              Style="{StaticResource MahApps.Styles.GroupBox}">
+
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition Height="50"/>
+                            </Grid.RowDefinitions>
+
+                            <!--Изображение исходное-->
+                            <Image Grid.Row="0"
+                                   x:Name="PersonImage"
+                                   Width="450" MinWidth="450" MaxWidth="450"
+                                   Height="350" MinHeight="350" MaxHeight="350"
+                                   Source="{Binding Path=ImageSource}"/>
+
+                            <Button Grid.Row="1" Grid.Column="0"
+                                    Content="Загрузить картинку"
+                                    Command="{Binding ImageLoadCommand}"/>
+                        </Grid>
+                    </GroupBox>
+
+                    <Button Grid.Column="1"
+                            Margin="35"
+                            Content=">>>"
+                            FontSize="100"
+                            Background="BurlyWood">
+                        
+                    </Button>
+                    
+                    <GroupBox Grid.Column="2"
+                              Header="Итоговое изображение"
+                              Style="{StaticResource MahApps.Styles.GroupBox}">
+                        
+                    </GroupBox>
+
+                </Grid>
+            </GroupBox>
+        </Grid>
+        
+        <!--Блок основных кнопок сохранения или отмены-->
+        <Grid Grid.Row="2" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
@@ -321,6 +337,7 @@
                     FontSize="24"
                     Command="{Binding SaveHumanCommand}"
                     CommandParameter="{Binding ElementName=HumanIdentificator}"/>
+            
             <Button Grid.Column="1"
                     Content="Отменить"
                     FontSize="24"
