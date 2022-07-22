@@ -295,12 +295,19 @@
                             </Grid.RowDefinitions>
 
                             <!--Изображение исходное-->
-                            <Image Grid.Row="0"
-                                   Stretch="None"
-                                   x:Name="PersonImage"
-                                   Width="450" MinWidth="450" MaxWidth="450"
-                                   Height="350" MinHeight="350" MaxHeight="350"
-                                   Source="{Binding Path=ImageSource}"/>
+                            <Grid Grid.Row="0">
+                                <Canvas Grid.Row="0"
+                                        Width="450" MinWidth="450" MaxWidth="450"
+                                        Height="350" MinHeight="350" MaxHeight="350">
+                                    <Image Grid.Row="0"
+                                       Canvas.Left="0"
+                                       Canvas.Top="-200"
+                                       Stretch="None"
+                                       
+                                       x:Name="PersonImage"
+                                       Source="{Binding Path=ImageSource}"/>
+                                </Canvas>
+                            </Grid>
 
                             <Button Grid.Row="1"
                                     Content="Загрузить картинку"
@@ -331,6 +338,7 @@
                                    x:Name="PersonImage2"
                                    Width="450" MinWidth="450" MaxWidth="450"
                                    Height="350" MinHeight="350" MaxHeight="350"
+                                   
                                    Source="{Binding Path=ImageSource}"/>
 
                             <Button Grid.Row="1"
