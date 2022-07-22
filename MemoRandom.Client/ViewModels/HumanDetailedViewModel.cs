@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using MemoRandom.Data.Interfaces;
-using MemoRandom.Data.Repositories;
 using MemoRandom.Models.Models;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -455,7 +455,7 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void PersonImage_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        public void PersonImage_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
 
         }
@@ -465,7 +465,7 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void PersonImage_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        public void PersonImage_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
 
         }
@@ -476,7 +476,7 @@ namespace MemoRandom.Client.ViewModels
         /// <param name="sender"></param>
         /// <param name="e"></param>
         /// <exception cref="System.NotImplementedException"></exception>
-        public void PersonImage_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+        public void PersonImage_MouseMove(object sender, MouseEventArgs e)
         {
 
         }
@@ -487,7 +487,7 @@ namespace MemoRandom.Client.ViewModels
         /// <param name="sender"></param>
         /// <param name="e"></param>
         /// <exception cref="System.NotImplementedException"></exception>
-        public void PersonImage_MouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
+        public void PersonImage_MouseWheel(object sender, MouseWheelEventArgs e)
         {
             
         }
