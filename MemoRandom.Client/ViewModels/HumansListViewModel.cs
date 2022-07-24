@@ -194,25 +194,28 @@ namespace MemoRandom.Client.ViewModels
 
         #region Commands
         /// <summary>
-        /// Команда запуска окна со списком людей
-        /// </summary>
-        public DelegateCommand OnStartHumansViewCommand { get; private set; }
-        /// <summary>
         /// Команда добавления человека
         /// </summary>
         public DelegateCommand AddHumanCommand { get; private set; }
+
         /// <summary>
         /// Команда редактирования данных по выбранному человеку
         /// </summary>
         public DelegateCommand EditHumanDataCommand { get; private set; }
+        
         /// <summary>
         /// Команда удаления выбранного человека
         /// </summary>
         public DelegateCommand DeleteHumanCommand { get; private set; }
+        
         public DelegateCommand SettingsMenuCommand { get; private set; }
+        
         public DelegateCommand HumansListMenuCommand { get; private set; }
+        
         public DelegateCommand StartMenuCommand { get; private set; }
+        
         public DelegateCommand StartAboutCommand { get; private set; }
+        
         public DelegateCommand AddNewHumanCommand { get; private set; }
         #endregion
 
@@ -221,7 +224,6 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private void InitializeCommands()
         {
-            OnStartHumansViewCommand = new DelegateCommand(OnStartHumansView);
             AddHumanCommand = new DelegateCommand(AddHuman);
             EditHumanDataCommand = new DelegateCommand(EditHumanData);
             DeleteHumanCommand = new DelegateCommand(DeleteHuman);
@@ -248,14 +250,22 @@ namespace MemoRandom.Client.ViewModels
             _humansController.SetCurrentHuman(null); // Новая запись - флаг
             _container.Resolve<HumanDetailedView>().ShowDialog(); // Открываем окно создания/редактирования
 
+            var currentHumanId = _humansController.GetCurrentHuman();
             HumansList.Clear();
             HumansList = _humansController.GetHumansList();
-            var currentHumanId = _humansController.GetCurrentHuman();
-            PersonIndex = HumansList.FindIndex(x => x.HumanId == currentHumanId.HumanId); // Прыжок на индекс добавленного человека
-            RaisePropertyChanged(nameof(PersonIndex));
 
-            var currentReason = PlainReasonsList.FirstOrDefault(x => x.ReasonId == SelectedHuman.DeathReasonId);
-            HumanDeathReasonName = currentReason.ReasonName;
+            if (currentHumanId != null)
+            {
+                PersonIndex = HumansList.FindIndex(x => x.HumanId == currentHumanId.HumanId); // Прыжок на индекс добавленного человека
+                RaisePropertyChanged(nameof(PersonIndex));
+                //SelectedHuman = _humansController.GetCurrentHuman();
+
+                var currentReason = PlainReasonsList.FirstOrDefault(x => x.ReasonId == SelectedHuman.DeathReasonId);
+                if (currentReason != null)
+                {
+                    HumanDeathReasonName = currentReason.ReasonName;
+                }
+            }
         }
 
         /// <summary>
@@ -265,14 +275,18 @@ namespace MemoRandom.Client.ViewModels
         {
             _container.Resolve<HumanDetailedView>().ShowDialog();
 
+            var currentHumanId = _humansController.GetCurrentHuman();
             HumansList.Clear();
             HumansList = _humansController.GetHumansList();
-            var currentHumanId = _humansController.GetCurrentHuman();
+            
             PersonIndex = HumansList.FindIndex(x => x.HumanId == currentHumanId.HumanId); // Прыжок на индекс редактируемого человека
             RaisePropertyChanged(nameof(PersonIndex));
 
             var currentReason = PlainReasonsList.FirstOrDefault(x => x.ReasonId == SelectedHuman.DeathReasonId);
-            HumanDeathReasonName = currentReason.ReasonName;
+            if (currentReason != null)
+            {
+                HumanDeathReasonName = currentReason.ReasonName;
+            }
         }
 
         /// <summary>
@@ -311,9 +325,11 @@ namespace MemoRandom.Client.ViewModels
         }
 
         /// <summary>
-        /// При открытии окна получаем список всех людей
+        /// Загрузка окна со списком людей
         /// </summary>
-        private void OnStartHumansView()
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void MetroWindow_Loaded(object sender, RoutedEventArgs e)
         {
             Task.Factory.StartNew(() =>
             {

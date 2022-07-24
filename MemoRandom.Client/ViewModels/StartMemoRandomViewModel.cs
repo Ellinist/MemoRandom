@@ -1,18 +1,18 @@
-﻿using System;
-using System.Configuration;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Threading;
+﻿using NLog;
+using System;
 using DryIoc;
+using System.IO;
+using Prism.Mvvm;
+using System.Windows;
+using Prism.Commands;
+using System.Threading;
+using System.Configuration;
+using System.Threading.Tasks;
 using MemoRandom.Client.Views;
+using System.Windows.Threading;
+using Microsoft.Data.SqlClient;
 using MemoRandom.Data.Interfaces;
 using MemoRandom.Data.Repositories;
-using Microsoft.Data.SqlClient;
-using NLog;
-using Prism.Commands;
-using Prism.Mvvm;
 
 namespace MemoRandom.Client.ViewModels
 {
@@ -50,6 +50,7 @@ namespace MemoRandom.Client.ViewModels
                 }
             }
         }
+
         /// <summary>
         /// Название кнопки вызова справочника причин смерти
         /// </summary>
@@ -62,6 +63,7 @@ namespace MemoRandom.Client.ViewModels
                 RaisePropertyChanged();
             }
         }
+
         /// <summary>
         /// Название кнопки вызова основного рабочего окна
         /// </summary>
@@ -74,6 +76,7 @@ namespace MemoRandom.Client.ViewModels
                 RaisePropertyChanged();
             }
         }
+
         /// <summary>
         /// Текущая дата/время
         /// </summary>
@@ -88,30 +91,26 @@ namespace MemoRandom.Client.ViewModels
         }
         #endregion
 
-        #region COMMANDS
-        ///// <summary>
-        ///// Команда подключения к базе данных
-        ///// </summary>
-        //public DelegateCommand ConnectDbCommand { get; private set; }
-        /// <summary>
-        /// Команда открытия окна справочника причин смерти
-        /// </summary>
-        public DelegateCommand OpenReasonsViewCommand { get; private set; }
-        /// <summary>
-        /// Команда открытия окна по люядм
-        /// </summary>
-        public DelegateCommand OpenHumansViewCommand { get; private set; }
-        /// <summary>
-        /// Команда загрузки окна
-        /// </summary>
-        public DelegateCommand<object> OnLoadedStartMemoRandomViewCommand { get; private set; }
-        #endregion
-
         #region COMMAND IMPLEMENTATION
+        /// <summary>
+        /// Открытие окна со списком людей  
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void HumansButton_Click(object sender, RoutedEventArgs e)
+        {
+            _active = false;
+            _container.Resolve<HumansListView>().ShowDialog();
+            _active = true;
+            SetCurrentDateTime(); // Какой ужас - надо как-то по-другому делать!
+        }
+
         /// <summary>
         /// Открытие окна справочника причин смерти
         /// </summary>
-        private void OpenReasonsView()
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void ReasonsButton_Click(object sender, RoutedEventArgs e)
         {
             _active = false;
             _container.Resolve<ReasonsView>().ShowDialog();
@@ -119,31 +118,6 @@ namespace MemoRandom.Client.ViewModels
             SetCurrentDateTime(); // Какой ужас - надо как-то по-другому делать!
         }
 
-        /// <summary>
-        /// Открытие основного окна работы программы
-        /// </summary>
-        private void OpenHumansView()
-        {
-            _active = false;
-            _container.Resolve<HumansListView>().ShowDialog();
-            _active = true;
-            SetCurrentDateTime(); // Какой ужас - надо как-то по-другому делать!
-        }
-        
-        /// <summary>
-        /// Открытие главного окна программы
-        /// </summary>
-        private void OnLoadedStartMemoRandomView(object param)
-        {
-            if (param is Window)
-            {
-                SetInitialPaths(); // Начальная инициализация БД и путей
-                GetInitialReasons(); // Получаем справочник причин смерти
-
-                (param as Window).Closing += StartMemoRandomViewModel_Closing; // Подписываемся на событие закрытия окна
-                SetCurrentDateTime(); // Вызываем метод отображения текущего времени
-            }
-        }
         /// <summary>
         /// Обработчик системной кнопки закрытия окна
         /// </summary>
@@ -159,6 +133,23 @@ namespace MemoRandom.Client.ViewModels
             else
             {
                 e.Cancel = true; // Окно закрывается
+            }
+        }
+
+        /// <summary>
+        /// Загрузка стартового окна программы
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void StartView_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (sender is Window)
+            {
+                SetInitialPaths(); // Начальная инициализация БД и путей
+                GetInitialReasons(); // Получаем справочник причин смерти
+
+                (sender as Window).Closing += StartMemoRandomViewModel_Closing; // Подписываемся на событие закрытия окна
+                SetCurrentDateTime(); // Вызываем метод отображения текущего времени
             }
         }
         #endregion
@@ -179,16 +170,6 @@ namespace MemoRandom.Client.ViewModels
                     });
                 }
             });
-        }
-
-        /// <summary>
-        /// Инициализация команд стартового окна
-        /// </summary>
-        private void InitializeCommands()
-        {
-            OnLoadedStartMemoRandomViewCommand = new DelegateCommand<object>(OnLoadedStartMemoRandomView); // Загрузка окна
-            OpenReasonsViewCommand = new DelegateCommand(OpenReasonsView); // Команда открытия окна причин смерти
-            OpenHumansViewCommand = new DelegateCommand(OpenHumansView); // Команда открытия основного окна
         }
 
         /// <summary>
@@ -259,8 +240,6 @@ namespace MemoRandom.Client.ViewModels
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _container = container ?? throw new ArgumentNullException(nameof(container));
             _reasonsController = reasonsController ?? throw new ArgumentNullException(nameof(reasonsController));
-
-            InitializeCommands();
         }
         #endregion
     }

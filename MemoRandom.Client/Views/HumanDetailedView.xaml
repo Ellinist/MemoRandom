@@ -12,16 +12,10 @@
                  mc:Ignorable="d"
                  x:Name="DetailesView"
                  WindowState="Maximized"
-                 Title="Редактирование или добавление клиента" Height="680" Width="1200">
-
-    <i:Interaction.Triggers>
-        <i:EventTrigger EventName="Loaded">
-            <i:InvokeCommandAction Command="{Binding OnDetailedViewLoadedCommand}"/>
-        </i:EventTrigger>
-    </i:Interaction.Triggers>
+                 Title="Редактирование или добавление клиента" Height="680" Width="1200"
+                 Loaded="DetailedView_Loaded">
     
     <mah:MetroWindow.Resources>
-
         <Style x:Key="FontCharacteristics">
             <Setter Property="Control.FontSize" Value="20"/>
             <Setter Property="ItemsControl.FontWeight" Value="Bold"/>
@@ -35,10 +29,10 @@
             <RowDefinition/>
             
             <!--Строка для работы с изображениями-->
-            <RowDefinition/>
+            <RowDefinition MinHeight="480"/>
             
             <!--Строка для кнопок "Сохранить" и "Отменить"-->
-            <RowDefinition Height="80"/>
+            <RowDefinition Height="60"/>
         </Grid.RowDefinitions>
 
         <!--Блок работы с основными текстовыми данными-->
@@ -222,7 +216,7 @@
                                       VerticalScrollBarVisibility="Auto">
                                 <ComboBoxItem>
                                     <TreeView x:Name="ReasonsTree"
-                                              Width="400" Height="400"
+                                              Width="400" Height="200"
                                               Style="{StaticResource MahApps.Styles.TreeView}"
                                               ItemsSource="{Binding ReasonsList, Mode=TwoWay, NotifyOnSourceUpdated=True}">
                                         <TreeView.Resources>
@@ -264,6 +258,7 @@
                              Text="{Binding HumanComments}"
                              HorizontalAlignment="Stretch"
                              TextWrapping="Wrap"
+                             AcceptsReturn="True"
                              HorizontalContentAlignment="Left"/>
                 </GroupBox>
             </Grid>
@@ -271,7 +266,6 @@
 
         <!--Блок для работы с изображениями-->
         <Grid Grid.Row="1">
-            
             
             <GroupBox Margin="5, 2, 2, 5"
                       Style="{StaticResource MahApps.Styles.GroupBox}"
@@ -291,29 +285,33 @@
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition/>
-                                <RowDefinition Height="50"/>
+                                <RowDefinition Height="40"/>
                             </Grid.RowDefinitions>
 
                             <!--Изображение исходное-->
                             <Grid Grid.Row="0">
-                                <Canvas Grid.Row="0"
-                                        
-                                        ClipToBounds="True"
-                                        Width="450" MinWidth="450" MaxWidth="450"
-                                        Height="350" MinHeight="350" MaxHeight="350">
-                                    
-                                    <!--Исходная картинка-->
-                                    <Image Grid.Row="0"
-                                           Canvas.Left="{Binding Left}"
-                                           Canvas.Top="{Binding Top}"
-                                           Stretch="None"
-                                           x:Name="PersonImage"
-                                           Source="{Binding Path=ImageSource}">
-                                        <Image.LayoutTransform>
-                                            <ScaleTransform ScaleX="{Binding ScaleX}" ScaleY="{Binding ScaleY}"/>
-                                        </Image.LayoutTransform>
-                                    </Image>
-                                </Canvas>
+                                <Border BorderBrush="Black"
+                                        BorderThickness="1"
+                                        Margin="1"
+                                        Height="350"
+                                        Width="450">
+                                    <Canvas x:Name="SourceCanvas"
+                                            ClipToBounds="True"
+                                            Width="450" MinWidth="450" MaxWidth="450"
+                                            Height="350" MinHeight="350" MaxHeight="350">
+
+                                        <!--Исходная картинка-->
+                                        <Image Canvas.Left="{Binding Left}"
+                                               Canvas.Top="{Binding Top}"
+                                               Stretch="None"
+                                               x:Name="PersonImage"
+                                               Source="{Binding Path=SourceImageSource}">
+                                            <Image.LayoutTransform>
+                                                <ScaleTransform ScaleX="{Binding ScaleX}" ScaleY="{Binding ScaleY}"/>
+                                            </Image.LayoutTransform>
+                                        </Image>
+                                    </Canvas>
+                                </Border>
                             </Grid>
 
                             <Button Grid.Row="1"
@@ -326,7 +324,9 @@
                             Margin="35"
                             Content=">>>"
                             FontSize="100"
-                            Background="BurlyWood">
+                            Background="BurlyWood"
+                            Command="{Binding Path=SetTargetImageCommand}"
+                            CommandParameter="{Binding ElementName=SourceCanvas}">
                         
                     </Button>
                     
@@ -337,16 +337,20 @@
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition/>
-                                <RowDefinition Height="50"/>
+                                <RowDefinition Height="40"/>
                             </Grid.RowDefinitions>
 
                             <!--Итоговое исходное-->
-                            <Image Grid.Row="0"
-                                   x:Name="PersonImage2"
-                                   Width="450" MinWidth="450" MaxWidth="450"
-                                   Height="350" MinHeight="350" MaxHeight="350"
-                                   
-                                   Source="{Binding Path=ImageSource}"/>
+                            <Border Grid.Row="0"
+                                    Height="350" Width="450"
+                                    Margin="2"
+                                    BorderBrush="Black"
+                                    BorderThickness="1">
+                                <Image x:Name="TargetImage"
+                                       Width="450" MinWidth="450" MaxWidth="450"
+                                       Height="350" MinHeight="350" MaxHeight="350"
+                                       Source="{Binding Path=TargetImageSource}"/>
+                            </Border>
 
                             <Button Grid.Row="1"
                                     Content="Сохранить картинку"

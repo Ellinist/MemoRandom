@@ -11,20 +11,12 @@
                  mc:Ignorable="d"
                  ShowIconOnTitleBar="True"
                  Icon="pack://application:,,,/Resources/Icons/mainWindowIcon.ico"
-                 ContentRendered="MetroWindow_ContentRendered"
                  Title="{Binding HumansViewTitle}"
                  Height="900" Width="1600"
                  MinWidth="1600"
                  MinHeight="900"
                  WindowStartupLocation="CenterScreen"
-                 WindowState="Maximized">
-
-    <i:Interaction.Triggers>
-        <!--Команда загрузки окна-->
-        <i:EventTrigger EventName="Loaded">
-            <i:InvokeCommandAction Command="{Binding OnStartHumansViewCommand}"/>
-        </i:EventTrigger>
-    </i:Interaction.Triggers>
+                 WindowState="Maximized" Loaded="MetroWindow_Loaded">
 
     <mah:MetroWindow.Resources>
         <FontFamily x:Key="SurnameFont">pack://application:,,,/Resources/Fonts/Treasury.ttf#TreasuryFlourishC</FontFamily>

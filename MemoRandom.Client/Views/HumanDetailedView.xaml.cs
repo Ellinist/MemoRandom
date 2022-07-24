@@ -5,16 +5,31 @@ using MemoRandom.Client.ViewModels;
 namespace MemoRandom.Client.Views
 {
     /// <summary>
-    /// Логика взаимодействия для HumanDetailesView.xaml
+    /// Логика взаимодействия для HumanDetailedView.xaml
     /// </summary>
     public partial class HumanDetailedView /*: MetroWindow*/
     {
+        private readonly HumanDetailedViewModel _vm; // Модель представления окна редактирования/добавления человека
+
+        /// <summary>
+        /// Загрузка окна редактирования/добавления человека
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void DetailedView_Loaded(object sender, RoutedEventArgs e)
+        {
+            _vm.DetailedView_Loaded(sender, e);
+        }
+
+
+        #region CTOR
         public HumanDetailedView(HumanDetailedViewModel vm)
         {
+            _vm = vm;
+
             InitializeComponent();
 
-            //Closing += vm.HumanDetailedView_Closing; // Подписка на событие закрытия окна
-            if(vm.CloseAction == null)
+            if (vm.CloseAction == null)
             {
                 vm.CloseAction = new System.Action(this.Close);
             }
@@ -26,5 +41,6 @@ namespace MemoRandom.Client.Views
 
             DataContext = vm;
         }
+        #endregion
     }
 }

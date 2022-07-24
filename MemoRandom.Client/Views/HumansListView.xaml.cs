@@ -8,14 +8,27 @@ namespace MemoRandom.Client.Views
     /// </summary>
     public partial class HumansListView : MetroWindow
     {
-        private void MetroWindow_ContentRendered(object sender, System.EventArgs e)
+        private readonly HumansListViewModel _vm;
+
+        /// <summary>
+        /// Загрузка окна со списком людей
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MetroWindow_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
-            Activate();
+            _vm.MetroWindow_Loaded(sender, e);
         }
 
         #region CTOR
+        /// <summary>
+        /// Конструктор
+        /// </summary>
+        /// <param name="vm"></param>
         public HumansListView(HumansListViewModel vm)
         {
+            _vm = vm;
+
             InitializeComponent();
 
             DataContext = vm;

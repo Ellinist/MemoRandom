@@ -2,13 +2,17 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Security.Cryptography;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using MemoRandom.Data.Interfaces;
 using MemoRandom.Models.Models;
 using Prism.Commands;
 using Prism.Mvvm;
+//using System.Drawing;
 
 namespace MemoRandom.Client.ViewModels
 {
@@ -33,7 +37,8 @@ namespace MemoRandom.Client.ViewModels
         private string   _deathPlace;
         private Guid     _deathReasonId;
         private Reason   _selectedReason;
-        private BitmapSource _imageSource;
+        private BitmapSource _targetImageSource;
+        private BitmapSource _sourceImageSource;
         private string _humanComments;
         private int _daysLived;
         private double _fullYearsLived;
@@ -179,17 +184,31 @@ namespace MemoRandom.Client.ViewModels
         }
 
         /// <summary>
-        /// Свойство-изображение
+        /// Свойство - итоговое изображение
         /// </summary>
-        public BitmapSource ImageSource
+        public BitmapSource TargetImageSource
         {
-            get => _imageSource;
+            get => _targetImageSource;
             set
             {
-                _imageSource = value;
-                RaisePropertyChanged(nameof(ImageSource));
+                _targetImageSource = value;
+                RaisePropertyChanged(nameof(TargetImageSource));
             }
         }
+
+        /// <summary>
+        /// Свойство - исходное изображение
+        /// </summary>
+        public BitmapSource SourceImageSource
+        {
+            get => _sourceImageSource;
+            set
+            {
+                _sourceImageSource = value;
+                RaisePropertyChanged(nameof(SourceImageSource));
+            }
+        }
+
 
         /// <summary>
         /// Расширенный комментарий
@@ -337,12 +356,126 @@ namespace MemoRandom.Client.ViewModels
         }
         #endregion
 
-        #region COMMANDS
+        private bool _isDown = false;
+        private double _startXPosition; // Стартовая координата абсцисс курсора мыши в Image
+        private double _startYPosition; // Стартовая координата ординат курсора мыши в Image
+        private double _deltaX; // Отклонение X-позиции курсора от X-позиции изображения
+        private double _deltaY; // Отклонение Y-позиции курсора от Y-позиции изображения
+
+        #region Блок работы с изображением
+
+        private void SetTargetImage(object obj)
+        {
+            var canv = obj as Canvas;
+            if (canv != null)
+            {
+                var target = new RenderTargetBitmap((int)(canv.RenderSize.Width), (int)(canv.RenderSize.Height), 96, 96, PixelFormats.Pbgra32);
+                var brush = new VisualBrush(canv);
+
+                var visual = new DrawingVisual();
+                var drawingContext = visual.RenderOpen();
+
+
+                drawingContext.DrawRectangle(brush, null, new Rect(new Point(0, 0), new Point(canv.RenderSize.Width, canv.RenderSize.Height)));
+
+                drawingContext.Close();
+
+                target.Render(visual);
+
+                //using (var fileStream = new FileStream(@"G:\\Test.png", FileMode.Create))
+                //{
+                //    BitmapEncoder encoder = new PngBitmapEncoder();
+                //    encoder.Frames.Add(BitmapFrame.Create(target));
+                //    encoder.Save(fileStream);
+                //}
+
+                TargetImageSource = target;
+            }
+        }
+
         /// <summary>
-        /// Команда загрузки окна детальных данных по человеку
+        /// Обработчик нажатия левой кнопки мыши на исходном изображении
         /// </summary>
-        public DelegateCommand OnDetailedViewLoadedCommand { get; private set; }
-        
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void PersonImage_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            var obj = (sender as Image);
+            if (!_isDown)
+            {
+                _isDown = true;
+                if (obj != null)
+                {
+                    Point t2 = obj.PointToScreen(Mouse.GetPosition(obj));
+                    _startXPosition = t2.X;
+                    _startYPosition = t2.Y;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Обработчик отпускания левой кнопки мыши на исходном изображении
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void PersonImage_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            _isDown = false;
+            //_startXPosition = _deltaX;
+            //_startYPosition = _deltaY;
+        }
+
+        /// <summary>
+        /// Обработчик движения мыши над исходным изображением
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void PersonImage_MouseMove(object sender, MouseEventArgs e)
+        {
+            var obj = (sender as Image);
+            if (_isDown)
+            {
+                Point t = obj.PointToScreen(Mouse.GetPosition(obj));
+
+                //if ((_startXPosition - t.X) > Double.Epsilon)
+                //{
+                //    _deltaX = _startXPosition - t.X;
+                //    Left -= _deltaX / 300;
+                //}
+                _deltaX = _startXPosition - t.X;
+                Left -= _deltaX / 500;
+
+                //if ((_startYPosition - t.Y) > Double.Epsilon)
+                //{
+                //    _deltaY = _startYPosition - t.Y;
+                //    Top -= _deltaY / 300;
+                //}
+                _deltaY = _startYPosition - t.Y;
+                Top -= _deltaY / 500;
+            }
+        }
+
+        /// <summary>
+        /// Обработчик прокрутки колесом мыши над исходным изображением
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void PersonImage_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if (e.Delta < 0)
+            {
+                ScaleX -= 0.01;
+                ScaleY -= 0.01;
+            }
+            else
+            {
+                ScaleX += 0.01;
+                ScaleY += 0.01;
+            }
+        }
+        #endregion
+
+        #region COMMANDS
         /// <summary>
         /// Команда сохранения данных по человеку
         /// </summary>
@@ -354,13 +487,17 @@ namespace MemoRandom.Client.ViewModels
         public DelegateCommand ImageLoadCommand { get; private set; }
 
         public DelegateCommand<object> SelectNodeCommand { get; private set; }
+
+        public DelegateCommand<object> SetTargetImageCommand { get; private set; }
         #endregion
 
         #region COMMANDS IMPLEMENTATION
         /// <summary>
-        /// Метод, выполняемый после загрузки окна
+        /// Загрузка окна добавления/редактирования человека
         /// </summary>
-        private void OnDetailedViewLoaded()
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void DetailedView_Loaded(object sender, RoutedEventArgs e)
         {
             Human human = _humanController.GetCurrentHuman();
 
@@ -377,7 +514,7 @@ namespace MemoRandom.Client.ViewModels
                 DeathPlace = human.DeathPlace;
                 HumanComments = human.HumanComments;
                 DeathReasonId = human.DeathReasonId;
-                ImageSource = (BitmapSource)_humanController.GetHumanImage(); // Загружаем изображение
+                TargetImageSource = (BitmapSource)_humanController.GetHumanImage(); // Загружаем изображение
             }
             else
             {
@@ -420,7 +557,7 @@ namespace MemoRandom.Client.ViewModels
                 curHuman.DeathDate = DeathDate;
                 curHuman.DeathCountry = DeathCountry;
                 curHuman.DeathPlace = DeathPlace;
-                curHuman.ImageFile = ImageSource != null ? curHuman.HumanId.ToString() + ".jpg" : string.Empty;
+                curHuman.ImageFile = TargetImageSource != null ? curHuman.HumanId.ToString() + ".jpg" : string.Empty;
                 curHuman.HumanComments = HumanComments;
                 curHuman.DeathReasonId = DeathReasonId;
                 curHuman.DaysLived = (DeathDate - BirthDate).Days; // Считаем число прожитых дней
@@ -443,7 +580,7 @@ namespace MemoRandom.Client.ViewModels
                     DeathDate = DeathDate,
                     DeathCountry = DeathCountry,
                     DeathPlace = DeathPlace,
-                    ImageFile = ImageSource != null ? newHumanId.ToString() + ".jpg" : string.Empty,
+                    ImageFile = TargetImageSource != null ? newHumanId.ToString() + ".jpg" : string.Empty,
                     HumanComments = HumanComments,
                     DeathReasonId = DeathReasonId,
                     DaysLived = (DeathDate - BirthDate).Days, // Считаем число прожитых дней
@@ -453,7 +590,7 @@ namespace MemoRandom.Client.ViewModels
                 _humanController.SetCurrentHuman(human);
             }
 
-            _humanController.UpdateHumans(BitmapSourceToBitmapImage(ImageSource));
+            _humanController.UpdateHumans(BitmapSourceToBitmapImage(TargetImageSource));
 
             CloseAction(); // Закрываем окно
         }
@@ -493,100 +630,6 @@ namespace MemoRandom.Client.ViewModels
             }
         }
 
-        #region Блок работы с изображением
-        /// <summary>
-        /// Обработчик нажатия левой кнопки мыши на исходном изображении
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        public void PersonImage_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-
-        }
-
-        /// <summary>
-        /// Обработчик отпускания левой кнопки мыши на исходном изображении
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        public void PersonImage_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-
-        }
-
-        /// <summary>
-        /// Обработчик движения мыши над исходным изображением
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        /// <exception cref="System.NotImplementedException"></exception>
-        public void PersonImage_MouseMove(object sender, MouseEventArgs e)
-        {
-
-        }
-
-        /// <summary>
-        /// Обработчик прокрутки колесом мыши над исходным изображением
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        /// <exception cref="System.NotImplementedException"></exception>
-        public void PersonImage_MouseWheel(object sender, MouseWheelEventArgs e)
-        {
-            if (e.Delta < 0)
-            {
-                ScaleX += 0.01;
-                ScaleY += 0.01;
-            }
-            else
-            {
-                ScaleX -= 0.01;
-                ScaleY -= 0.01;
-            }
-
-        }
-        #endregion
-
-        ///// <summary>
-        ///// Преобразование байтового массива в BitmapImage
-        ///// </summary>
-        ///// <param name="array"></param>
-        ///// <returns></returns>
-        //private BitmapImage ConvertFromByteArray(byte[] array)
-        //{
-        //    if (array == null) return null;
-
-        //    BitmapImage myBitmapImage = new BitmapImage();
-        //    myBitmapImage.BeginInit();
-        //    myBitmapImage.StreamSource = new MemoryStream(array);
-        //    myBitmapImage.DecodePixelWidth = 200;
-        //    myBitmapImage.EndInit();
-        //    return myBitmapImage;
-        //}
-
-        ///// <summary>
-        ///// Преобразование BitmapSource в массив байтов
-        ///// </summary>
-        ///// <param name="src"></param>
-        ///// <returns></returns>
-        //private byte[] ConvertFromBitmapSource(BitmapSource src)
-        //{
-        //    if(src == null) return null;
-
-        //    byte[] bit;
-        //    JpegBitmapEncoder encoder = new JpegBitmapEncoder();
-        //    encoder.QualityLevel = 100;
-        //    using (MemoryStream stream = new MemoryStream())
-        //    {
-        //        encoder.Frames.Add(BitmapFrame.Create(src));
-        //        encoder.Save(stream);
-        //        bit = stream.ToArray();
-        //        stream.Close();
-        //    }
-
-        //    return bit;
-        //}
-
         /// <summary>
         /// Метод загрузки изображения из буфера обмена
         /// </summary>
@@ -594,9 +637,9 @@ namespace MemoRandom.Client.ViewModels
         {
             if (Clipboard.ContainsImage())
             {
-                ImageSource = Clipboard.GetImage();
-                var w = ImageSource.Width;
-                var h = ImageSource.Height;
+                SourceImageSource = Clipboard.GetImage();
+                var w = SourceImageSource.Width;
+                var h = SourceImageSource.Height;
                 Left = -(h - 350) / 2;
                 Top = -(w - 450) / 2;
             }
@@ -612,10 +655,10 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private void InitializeCommands()
         {
-            OnDetailedViewLoadedCommand = new DelegateCommand(OnDetailedViewLoaded);
-            SaveHumanCommand = new DelegateCommand(SaveHuman);
-            ImageLoadCommand = new DelegateCommand(ImageLoad);
+            SaveHumanCommand  = new DelegateCommand(SaveHuman);
+            ImageLoadCommand  = new DelegateCommand(ImageLoad);
             SelectNodeCommand = new DelegateCommand<object>(SelectNode);
+            SetTargetImageCommand = new DelegateCommand<object>(SetTargetImage);
         }
 
         #region CTOR
@@ -628,3 +671,45 @@ namespace MemoRandom.Client.ViewModels
         #endregion
     }
 }
+
+
+
+///// <summary>
+///// Преобразование байтового массива в BitmapImage
+///// </summary>
+///// <param name="array"></param>
+///// <returns></returns>
+//private BitmapImage ConvertFromByteArray(byte[] array)
+//{
+//    if (array == null) return null;
+
+//    BitmapImage myBitmapImage = new BitmapImage();
+//    myBitmapImage.BeginInit();
+//    myBitmapImage.StreamSource = new MemoryStream(array);
+//    myBitmapImage.DecodePixelWidth = 200;
+//    myBitmapImage.EndInit();
+//    return myBitmapImage;
+//}
+
+///// <summary>
+///// Преобразование BitmapSource в массив байтов
+///// </summary>
+///// <param name="src"></param>
+///// <returns></returns>
+//private byte[] ConvertFromBitmapSource(BitmapSource src)
+//{
+//    if(src == null) return null;
+
+//    byte[] bit;
+//    JpegBitmapEncoder encoder = new JpegBitmapEncoder();
+//    encoder.QualityLevel = 100;
+//    using (MemoryStream stream = new MemoryStream())
+//    {
+//        encoder.Frames.Add(BitmapFrame.Create(src));
+//        encoder.Save(stream);
+//        bit = stream.ToArray();
+//        stream.Close();
+//    }
+
+//    return bit;
+//}

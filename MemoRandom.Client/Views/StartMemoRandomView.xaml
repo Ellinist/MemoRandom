@@ -1,6 +1,5 @@
 ﻿<mah:MetroWindow x:Class="MemoRandom.Client.Views.StartMemoRandomView"
                  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                 xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -10,7 +9,6 @@
                  Title="{Binding StartViewHeader}" Height="200" Width="680"
                  MinHeight="240" MinWidth="680"
                  MaxHeight="240" MaxWidth="680"
-                 ContentRendered="MetroWindow_ContentRendered"
                  IsCloseButtonEnabled="True"
                  ShowMinButton="False"
                  IsMinButtonEnabled="False"
@@ -19,14 +17,8 @@
                  ShowIconOnTitleBar="True"
                  Icon="pack://application:,,,/Resources/Icons/startIcon.ico"
                  x:Name="StartView"
-                 Background="Black" WindowStartupLocation="CenterScreen">
-
-    <i:Interaction.Triggers>
-        <i:EventTrigger EventName="Loaded">
-            <i:InvokeCommandAction Command="{Binding OnLoadedStartMemoRandomViewCommand}"
-                                   CommandParameter="{Binding ElementName=StartView}"/>
-        </i:EventTrigger>
-    </i:Interaction.Triggers>
+                 Background="Black" WindowStartupLocation="CenterScreen"
+                 Loaded="StartView_Loaded">
 
     <mah:MetroWindow.Resources>
         <!--Задаем градиентный стиль для кнопок-->
@@ -151,19 +143,23 @@
                 <TextBlock Text="{Binding CurrentDateTime, StringFormat=\{0:dd MMMM yyyy HH:mm:ss\}, ConverterCulture=Ru}"/>
             </Label.Content>
         </Label>
+
+        <!--Кнопка открытия окна справочника причин смерти-->
         <Button Grid.Row="2" Grid.Column="0"
                 x:Name="ReasonsButton"
                 Visibility="Hidden"
                 Content="{Binding ReasonsButtonName}"
                 FontFamily="{StaticResource MainFont}"
                 Template="{StaticResource ButtonTemplate}"
-                Command="{Binding Path=OpenReasonsViewCommand}"/>
+                Click="ReasonsButton_Click"/>
+
+        <!--Кнопка открытия окна со списком людей-->
         <Button Grid.Row="2" Grid.Column="2"
                 x:Name="HumansButton"
                 Visibility="Hidden"
                 Content="{Binding HumansButtonName}"
                 FontFamily="{StaticResource MainFont}"
                 Template="{StaticResource ButtonTemplate}"
-                Command="{Binding Path=OpenHumansViewCommand}"/>
+                Click="HumansButton_Click"/>
     </Grid>
 </mah:MetroWindow>

@@ -213,10 +213,6 @@ namespace MemoRandom.Client.ViewModels
 
         #region COMMANDS
         /// <summary>
-        /// Команда загрузки окна справочника причин смерти
-        /// </summary>
-        public DelegateCommand OnLoadedReasonsViewCommand { get; private set; }
-        /// <summary>
         ///Команда внесения причины смерти в иерархическое дерево
         /// </summary>
         public DelegateCommand<object> InsertCommand { get; private set; }
@@ -252,9 +248,11 @@ namespace MemoRandom.Client.ViewModels
 
         #region Блок отработки команд
         /// <summary>
-        /// Загрузка окна и получение справочника причин смерти
+        /// Загрузка окна справочника причин смерти
         /// </summary>
-        private void OnLoadedReasonsView()
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void ReasonsDictionary_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
             ReasonsList = _reasonsHelper.GetReasonsHierarchicalCollection(); // Получаем иерархическую коллекцию
             PlainReasonsList = _reasonsHelper.GetReasonsPlainList(); // Получаем плоский список
@@ -496,7 +494,7 @@ namespace MemoRandom.Client.ViewModels
 
 
         /// <summary>
-        /// Инициализация комманд
+        /// Инициализация команд
         /// </summary>
         private void InitializeCommands()
         {
@@ -506,7 +504,6 @@ namespace MemoRandom.Client.ViewModels
             CancelCommand = new DelegateCommand<object>(OnCancelCommand);
             EmptyClickCommand = new DelegateCommand(OnEmptyClickCommand);
             ChangeCommand = new DelegateCommand(OnChangeCommand);
-            OnLoadedReasonsViewCommand = new DelegateCommand(OnLoadedReasonsView);
         }
 
         #region CTOR

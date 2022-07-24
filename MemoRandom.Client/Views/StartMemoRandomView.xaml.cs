@@ -8,16 +8,54 @@ namespace MemoRandom.Client.Views
     /// </summary>
     public partial class StartMemoRandomView
     {
-        private void MetroWindow_ContentRendered(object sender, System.EventArgs e)
+        private readonly StartMemoRandomViewModel _vm; // Модель представления стартового окна
+
+        /// <summary>
+        /// Событие загрузки окна
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void StartView_Loaded(object sender, RoutedEventArgs e)
         {
-            Activate();
+            _vm.StartView_Loaded(sender, e);
         }
 
+        /// <summary>
+        /// Событие нажатия на кнопку открытия окна справочника причин смерти
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ReasonsButton_Click(object sender, RoutedEventArgs e)
+        {
+            _vm.ReasonsButton_Click(sender, e);
+        }
+
+        /// <summary>
+        /// Событие нажатия на кнопку открытия окна со списком людей
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void HumansButton_Click(object sender, RoutedEventArgs e)
+        {
+            _vm.HumansButton_Click(sender, e);
+        }
+
+
+
+
+
+        #region CTOR
+        /// <summary>
+        /// Конструктор
+        /// </summary>
+        /// <param name="vm"></param>
         public StartMemoRandomView(StartMemoRandomViewModel vm)
         {
+            _vm = vm;
+
             InitializeComponent();
 
-            if(vm.ButtonsVisibility == null)
+            if (vm.ButtonsVisibility == null)
             {
                 // Делегат установки видимости кнопок после чтения справочника причин смерти
                 vm.ButtonsVisibility = new System.Action(() =>
@@ -25,12 +63,13 @@ namespace MemoRandom.Client.Views
                     Dispatcher.Invoke(() =>
                     {
                         ReasonsButton.Visibility = Visibility.Visible;
-                        HumansButton.Visibility  = Visibility.Visible;
+                        HumansButton.Visibility = Visibility.Visible;
                     });
                 });
             }
 
             DataContext = vm;
         }
+        #endregion
     }
 }
