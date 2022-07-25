@@ -320,15 +320,61 @@
                         </Grid>
                     </GroupBox>
 
-                    <Button Grid.Column="1"
-                            Margin="35"
+                    <Grid Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="40"/>
+                            <RowDefinition Height="40"/>
+                            <RowDefinition Height="40"/>
+                            <RowDefinition Height="40"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Start X: " Width="80"/>
+                                <TextBlock Text="{Binding StartX}" Width="100"/>
+                                <TextBlock Text="Start Y: " Width="80"/>
+                                <TextBlock Text="{Binding StartY}" Width="100"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <Grid Grid.Row="1">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Current X: " Width="80"/>
+                                <TextBlock Text="{Binding CurrentX}" Width="100"/>
+                                <TextBlock Text="Current Y: " Width="80"/>
+                                <TextBlock Text="{Binding CurrentY}" Width="100"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <Grid Grid.Row="2">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Delta X: " Width="80"/>
+                                <TextBlock Text="{Binding DeltaX}" Width="100"/>
+                                <TextBlock Text="Delta Y: " Width="80"/>
+                                <TextBlock Text="{Binding DeltaY}" Width="100"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <Grid Grid.Row="3">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Left: " Width="80"/>
+                                <TextBlock Text="{Binding Left}" Width="100"/>
+                                <TextBlock Text="Top: " Width="80"/>
+                                <TextBlock Text="{Binding Top}" Width="100"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <Button Grid.Row="4"
+                            Margin="15, 5, 15, 5"
                             Content=">>>"
                             FontSize="100"
                             Background="BurlyWood"
                             Command="{Binding Path=SetTargetImageCommand}"
                             CommandParameter="{Binding ElementName=SourceCanvas}">
-                        
-                    </Button>
+
+                        </Button>
+                    </Grid>
                     
                     <GroupBox Grid.Column="2"
                               Header="Итоговое изображение"

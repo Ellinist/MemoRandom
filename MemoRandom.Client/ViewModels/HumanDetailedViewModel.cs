@@ -50,6 +50,13 @@ namespace MemoRandom.Client.ViewModels
         private double _top = 0;  // Левый верхний угол изображения на канве (координата Y)
         private double _scaleX = 1; // Масштаб по оси X
         private double _scaleY = 1; // Масштаб по оси Y
+
+        private double _startX;
+        private double _startY;
+        private double _currentX;
+        private double _currentY;
+        private double _deltaX;
+        private double _deltaY;
         #endregion
 
         #region PROPS
@@ -209,7 +216,6 @@ namespace MemoRandom.Client.ViewModels
             }
         }
 
-
         /// <summary>
         /// Расширенный комментарий
         /// </summary>
@@ -354,13 +360,50 @@ namespace MemoRandom.Client.ViewModels
                 RaisePropertyChanged(nameof(ScaleY));
             }
         }
+
+
+        public double StartX
+        {
+            get => _startX;
+            set { _startX = value; RaisePropertyChanged(nameof(StartX)); }
+        }
+
+        public double StartY
+        {
+            get => _startY;
+            set { _startY = value; RaisePropertyChanged(nameof(StartY)); }
+        }
+
+        public double CurrentX
+        {
+            get => _currentX;
+            set { _currentX = value; RaisePropertyChanged(nameof(CurrentX)); }
+        }
+
+        public double CurrentY
+        {
+            get => _currentY;
+            set { _currentY = value; RaisePropertyChanged(nameof(CurrentY)); }
+        }
+
+        public double DeltaX
+        {
+            get => _deltaX;
+            set { _deltaX = value; RaisePropertyChanged(nameof(DeltaX)); }
+        }
+
+        public double DeltaY
+        {
+            get => _deltaY;
+            set { _deltaY = value; RaisePropertyChanged(nameof(DeltaY)); }
+        }
         #endregion
 
         private bool _isDown = false;
-        private double _startXPosition; // Стартовая координата абсцисс курсора мыши в Image
-        private double _startYPosition; // Стартовая координата ординат курсора мыши в Image
-        private double _deltaX; // Отклонение X-позиции курсора от X-позиции изображения
-        private double _deltaY; // Отклонение Y-позиции курсора от Y-позиции изображения
+        //private double _startXPosition; // Стартовая координата абсцисс курсора мыши в Image
+        //private double _startYPosition; // Стартовая координата ординат курсора мыши в Image
+        //private double _deltaX; // Отклонение X-позиции курсора от X-позиции изображения
+        //private double _deltaY; // Отклонение Y-позиции курсора от Y-позиции изображения
 
         #region Блок работы с изображением
 
@@ -407,8 +450,10 @@ namespace MemoRandom.Client.ViewModels
                 if (obj != null)
                 {
                     Point t2 = obj.PointToScreen(Mouse.GetPosition(obj));
-                    _startXPosition = t2.X;
-                    _startYPosition = t2.Y;
+                    //_startXPosition = t2.X;
+                    StartX = t2.X;
+                    //_startYPosition = t2.Y;
+                    StartY = t2.Y;
                 }
             }
         }
@@ -437,21 +482,32 @@ namespace MemoRandom.Client.ViewModels
             {
                 Point t = obj.PointToScreen(Mouse.GetPosition(obj));
 
-                //if ((_startXPosition - t.X) > Double.Epsilon)
-                //{
-                //    _deltaX = _startXPosition - t.X;
-                //    Left -= _deltaX / 300;
-                //}
-                _deltaX = _startXPosition - t.X;
-                Left -= _deltaX / 500;
+                CurrentX = t.X;
+                CurrentY = t.Y;
 
-                //if ((_startYPosition - t.Y) > Double.Epsilon)
-                //{
-                //    _deltaY = _startYPosition - t.Y;
-                //    Top -= _deltaY / 300;
-                //}
-                _deltaY = _startYPosition - t.Y;
-                Top -= _deltaY / 500;
+                DeltaX = CurrentX - StartX;
+                DeltaY = CurrentY - StartY;
+
+                Left += DeltaX;
+                Top += DeltaY;
+
+                StartX = CurrentX;
+                StartY = CurrentY;
+                ////if ((_startXPosition - t.X) > Double.Epsilon)
+                ////{
+                ////    _deltaX = _startXPosition - t.X;
+                ////    Left -= _deltaX / 300;
+                ////}
+                //_deltaX = _startXPosition - t.X;
+                //Left -= _deltaX / 500;
+
+                ////if ((_startYPosition - t.Y) > Double.Epsilon)
+                ////{
+                ////    _deltaY = _startYPosition - t.Y;
+                ////    Top -= _deltaY / 300;
+                ////}
+                //_deltaY = _startYPosition - t.Y;
+                //Top -= _deltaY / 500;
             }
         }
 
