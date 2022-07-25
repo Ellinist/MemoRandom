@@ -57,6 +57,10 @@ namespace MemoRandom.Client.ViewModels
         private double _currentY;
         private double _deltaX;
         private double _deltaY;
+        private double _imageX;
+        private double _imageY;
+        private Canvas _canvas;
+        private Window _window;
         #endregion
 
         #region PROPS
@@ -397,40 +401,60 @@ namespace MemoRandom.Client.ViewModels
             get => _deltaY;
             set { _deltaY = value; RaisePropertyChanged(nameof(DeltaY)); }
         }
+
+        public double ImageX
+        {
+            get => _imageX;
+            set { _imageX = value; RaisePropertyChanged(nameof(ImageX)); }
+        }
+
+        public double ImageY
+        {
+            get => _imageY;
+            set { _imageY = value; RaisePropertyChanged(nameof(ImageY)); }
+        }
+
+        public Canvas Canv
+        {
+            get => _canvas;
+            set
+            {
+                _canvas = value;
+                RaisePropertyChanged(nameof(Canv));
+            }
+        }
+
+        public Window DetailedWiew
+        {
+            get => _window;
+            set
+            {
+                _window = value;
+                RaisePropertyChanged(nameof(DetailedWiew));
+            }
+        }
         #endregion
 
         private bool _isDown = false;
-        //private double _startXPosition; // Стартовая координата абсцисс курсора мыши в Image
-        //private double _startYPosition; // Стартовая координата ординат курсора мыши в Image
-        //private double _deltaX; // Отклонение X-позиции курсора от X-позиции изображения
-        //private double _deltaY; // Отклонение Y-позиции курсора от Y-позиции изображения
 
         #region Блок работы с изображением
-
         private void SetTargetImage(object obj)
         {
-            var canv = obj as Canvas;
-            if (canv != null)
+            var Canv = obj as Canvas;
+            if (Canv != null)
             {
-                var target = new RenderTargetBitmap((int)(canv.RenderSize.Width), (int)(canv.RenderSize.Height), 96, 96, PixelFormats.Pbgra32);
-                var brush = new VisualBrush(canv);
+                var target = new RenderTargetBitmap((int)(Canv.RenderSize.Width), (int)(Canv.RenderSize.Height), 96, 96, PixelFormats.Pbgra32);
+                var brush = new VisualBrush(Canv);
 
                 var visual = new DrawingVisual();
                 var drawingContext = visual.RenderOpen();
 
 
-                drawingContext.DrawRectangle(brush, null, new Rect(new Point(0, 0), new Point(canv.RenderSize.Width, canv.RenderSize.Height)));
+                drawingContext.DrawRectangle(brush, null, new Rect(new Point(0, 0), new Point(Canv.RenderSize.Width, Canv.RenderSize.Height)));
 
                 drawingContext.Close();
 
                 target.Render(visual);
-
-                //using (var fileStream = new FileStream(@"G:\\Test.png", FileMode.Create))
-                //{
-                //    BitmapEncoder encoder = new PngBitmapEncoder();
-                //    encoder.Frames.Add(BitmapFrame.Create(target));
-                //    encoder.Save(fileStream);
-                //}
 
                 TargetImageSource = target;
             }
@@ -450,9 +474,7 @@ namespace MemoRandom.Client.ViewModels
                 if (obj != null)
                 {
                     Point t2 = obj.PointToScreen(Mouse.GetPosition(obj));
-                    //_startXPosition = t2.X;
                     StartX = t2.X;
-                    //_startYPosition = t2.Y;
                     StartY = t2.Y;
                 }
             }
@@ -466,8 +488,6 @@ namespace MemoRandom.Client.ViewModels
         public void PersonImage_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             _isDown = false;
-            //_startXPosition = _deltaX;
-            //_startYPosition = _deltaY;
         }
 
         /// <summary>
@@ -493,21 +513,6 @@ namespace MemoRandom.Client.ViewModels
 
                 StartX = CurrentX;
                 StartY = CurrentY;
-                ////if ((_startXPosition - t.X) > Double.Epsilon)
-                ////{
-                ////    _deltaX = _startXPosition - t.X;
-                ////    Left -= _deltaX / 300;
-                ////}
-                //_deltaX = _startXPosition - t.X;
-                //Left -= _deltaX / 500;
-
-                ////if ((_startYPosition - t.Y) > Double.Epsilon)
-                ////{
-                ////    _deltaY = _startYPosition - t.Y;
-                ////    Top -= _deltaY / 300;
-                ////}
-                //_deltaY = _startYPosition - t.Y;
-                //Top -= _deltaY / 500;
             }
         }
 
@@ -553,8 +558,10 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void DetailedView_Loaded(object sender, RoutedEventArgs e)
+        public void DetailedView_Loaded(object sender, RoutedEventArgs e/*, Canvas canvas*/)
         {
+            DetailedWiew = sender as Window;
+
             Human human = _humanController.GetCurrentHuman();
 
             if (human != null)
@@ -594,7 +601,32 @@ namespace MemoRandom.Client.ViewModels
             }
             RaisePropertyChanged(nameof(ReasonsList));
             RaisePropertyChanged(nameof(HumanDeathReasonName));
+
+            //var positionTransform = canvas.TransformToAncestor(sender as Window);
+            //var areaPosition = positionTransform.Transform(new Point(0, 0));
+            //ImageX = areaPosition.X;
+            //ImageY = areaPosition.Y;
         }
+
+        public void SourceCanvas_MouseEnter(object sender, MouseEventArgs e)
+        {
+            var canvPoint = (sender as Canvas).PointToScreen(new Point(0, 0));
+
+            ImageX = canvPoint.X;
+            ImageY = canvPoint.Y;
+            //var positionTransform = (sender as Canvas).TransformToAncestor(DetailedWiew);
+            //var areaPosition = positionTransform.Transform(new Point(0, 0));
+            //ImageX = areaPosition.X;
+            //ImageY = areaPosition.Y;
+        }
+
+        //public void DetailesView_LocationChanged(object sender, EventArgs e, Canvas canvas)
+        //{
+        //    var positionTransform = canvas.TransformToAncestor(sender as Window);
+        //    var areaPosition = positionTransform.Transform(new Point(0, 0));
+        //    ImageX = areaPosition.X;
+        //    ImageY = areaPosition.Y;
+        //}
 
         /// <summary>
         /// Сохранение данных по человеку

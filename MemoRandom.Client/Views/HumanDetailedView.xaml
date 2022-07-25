@@ -14,7 +14,8 @@
                  WindowState="Maximized"
                  Title="Редактирование или добавление клиента" Height="680" Width="1200"
                  Loaded="DetailedView_Loaded">
-    
+    <!--LocationChanged="DetailesView_LocationChanged"-->
+
     <mah:MetroWindow.Resources>
         <Style x:Key="FontCharacteristics">
             <Setter Property="Control.FontSize" Value="20"/>
@@ -326,6 +327,7 @@
                             <RowDefinition Height="40"/>
                             <RowDefinition Height="40"/>
                             <RowDefinition Height="40"/>
+                            <RowDefinition Height="40"/>
                             <RowDefinition/>
                         </Grid.RowDefinitions>
 
@@ -365,7 +367,16 @@
                             </StackPanel>
                         </Grid>
 
-                        <Button Grid.Row="4"
+                        <Grid Grid.Row="4">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="ImageX: " Width="80"/>
+                                <TextBlock Text="{Binding ImageX}" Width="100"/>
+                                <TextBlock Text="ImageY: " Width="80"/>
+                                <TextBlock Text="{Binding ImageY}" Width="100"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <Button Grid.Row="5"
                             Margin="15, 5, 15, 5"
                             Content=">>>"
                             FontSize="100"
