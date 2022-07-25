@@ -18,7 +18,7 @@ namespace MemoRandom.Client.Views
         /// <param name="e"></param>
         private void DetailedView_Loaded(object sender, RoutedEventArgs e)
         {
-            _vm.DetailedView_Loaded(sender, e/*, SourceCanvas*/);
+            _vm.DetailedView_Loaded(sender, e);
         }
 
 
@@ -37,16 +37,11 @@ namespace MemoRandom.Client.Views
             PersonImage.MouseLeftButtonDown += vm.PersonImage_MouseLeftButtonDown;
             PersonImage.MouseLeftButtonUp += vm.PersonImage_MouseLeftButtonUp;
             PersonImage.MouseMove += vm.PersonImage_MouseMove;
-            PersonImage.MouseWheel += vm.PersonImage_MouseWheel;
+            SourceCanvas.MouseWheel += vm.SourceCanvas_MouseWheel;
             SourceCanvas.MouseEnter += vm.SourceCanvas_MouseEnter;
 
             DataContext = vm;
         }
         #endregion
-
-        //private void DetailesView_LocationChanged(object sender, System.EventArgs e)
-        //{
-        //    _vm.DetailesView_LocationChanged(sender, e, SourceCanvas);
-        //}
     }
 }

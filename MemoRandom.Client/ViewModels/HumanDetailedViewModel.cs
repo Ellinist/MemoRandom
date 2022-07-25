@@ -61,6 +61,8 @@ namespace MemoRandom.Client.ViewModels
         private double _imageY;
         private Canvas _canvas;
         private Window _window;
+        private double _leftShiftX;
+        private double _rightShiftX;
         #endregion
 
         #region PROPS
@@ -433,6 +435,26 @@ namespace MemoRandom.Client.ViewModels
                 RaisePropertyChanged(nameof(DetailedWiew));
             }
         }
+
+        public double LeftShiftX
+        {
+            get => _leftShiftX;
+            set
+            {
+                _leftShiftX = value;
+                RaisePropertyChanged(nameof(LeftShiftX));
+            }
+        }
+
+        public double RightShiftX
+        {
+            get => _rightShiftX;
+            set
+            {
+                _rightShiftX = value;
+                RaisePropertyChanged(nameof(RightShiftX));
+            }
+        }
         #endregion
 
         private bool _isDown = false;
@@ -521,17 +543,31 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void PersonImage_MouseWheel(object sender, MouseWheelEventArgs e)
+        public void SourceCanvas_MouseWheel(object sender, MouseWheelEventArgs e)
         {
+            var p = (sender as Canvas).PointToScreen(Mouse.GetPosition(sender as Canvas));
+
             if (e.Delta < 0)
             {
                 ScaleX -= 0.01;
                 ScaleY -= 0.01;
+
+                Left = (450 - SourceImageSource.Width * ScaleX) / 2;
+                Top = (350 - SourceImageSource.Height * ScaleY) / 2;
+                //LeftShiftX = (p.X - (ImageX + Left));
+                ////Left = (p.X - (ImageX + Left)) * ScaleX;
+                //RightShiftX = SourceImageSource.Width + Left + ImageX - p.X;
             }
             else
             {
                 ScaleX += 0.01;
                 ScaleY += 0.01;
+
+                Left = (450 - SourceImageSource.Width * ScaleX) / 2;
+                Top = (350 - SourceImageSource.Height * ScaleY) / 2;
+                //LeftShiftX = (p.X - (ImageX + Left));
+                ////Left = (p.X - (ImageX + Left)) * ScaleX;
+                //RightShiftX = SourceImageSource.Width + Left + ImageX - p.X;
             }
         }
         #endregion
@@ -558,7 +594,7 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void DetailedView_Loaded(object sender, RoutedEventArgs e/*, Canvas canvas*/)
+        public void DetailedView_Loaded(object sender, RoutedEventArgs e)
         {
             DetailedWiew = sender as Window;
 
@@ -601,11 +637,6 @@ namespace MemoRandom.Client.ViewModels
             }
             RaisePropertyChanged(nameof(ReasonsList));
             RaisePropertyChanged(nameof(HumanDeathReasonName));
-
-            //var positionTransform = canvas.TransformToAncestor(sender as Window);
-            //var areaPosition = positionTransform.Transform(new Point(0, 0));
-            //ImageX = areaPosition.X;
-            //ImageY = areaPosition.Y;
         }
 
         public void SourceCanvas_MouseEnter(object sender, MouseEventArgs e)
@@ -614,19 +645,7 @@ namespace MemoRandom.Client.ViewModels
 
             ImageX = canvPoint.X;
             ImageY = canvPoint.Y;
-            //var positionTransform = (sender as Canvas).TransformToAncestor(DetailedWiew);
-            //var areaPosition = positionTransform.Transform(new Point(0, 0));
-            //ImageX = areaPosition.X;
-            //ImageY = areaPosition.Y;
         }
-
-        //public void DetailesView_LocationChanged(object sender, EventArgs e, Canvas canvas)
-        //{
-        //    var positionTransform = canvas.TransformToAncestor(sender as Window);
-        //    var areaPosition = positionTransform.Transform(new Point(0, 0));
-        //    ImageX = areaPosition.X;
-        //    ImageY = areaPosition.Y;
-        //}
 
         /// <summary>
         /// Сохранение данных по человеку
@@ -728,8 +747,8 @@ namespace MemoRandom.Client.ViewModels
                 SourceImageSource = Clipboard.GetImage();
                 var w = SourceImageSource.Width;
                 var h = SourceImageSource.Height;
-                Left = -(h - 350) / 2;
-                Top = -(w - 450) / 2;
+                Left = -(w - 450) / 2;
+                Top = -(h - 350) / 2;
             }
             else
             {

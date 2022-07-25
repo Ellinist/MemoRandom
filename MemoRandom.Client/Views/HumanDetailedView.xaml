@@ -328,6 +328,9 @@
                             <RowDefinition Height="40"/>
                             <RowDefinition Height="40"/>
                             <RowDefinition Height="40"/>
+                            <!--Новый блок-->
+                            <RowDefinition Height="40"/>
+                            <RowDefinition Height="40"/>
                             <RowDefinition/>
                         </Grid.RowDefinitions>
 
@@ -375,8 +378,27 @@
                                 <TextBlock Text="{Binding ImageY}" Width="100"/>
                             </StackPanel>
                         </Grid>
+                        
+                        <!--Новый блок-->
+                        <Grid Grid.Row="5">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="LeftShiftX: " Width="80"/>
+                                <TextBlock Text="{Binding LeftShiftX}" Width="100"/>
+                                <TextBlock Text="ToShiftY: " Width="80"/>
+                                <TextBlock Text="{Binding ImageY}" Width="100"/>
+                            </StackPanel>
+                        </Grid>
 
-                        <Button Grid.Row="5"
+                        <Grid Grid.Row="6">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="RightShiftX: " Width="80"/>
+                                <TextBlock Text="{Binding RightShiftX}" Width="100"/>
+                                <TextBlock Text="BottomShiftY: " Width="80"/>
+                                <TextBlock Text="{Binding ImageY}" Width="100"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <Button Grid.Row="7"
                             Margin="15, 5, 15, 5"
                             Content=">>>"
                             FontSize="100"
