@@ -35,10 +35,8 @@ namespace MemoRandom.Client.Views
             }
 
             PersonImage.MouseLeftButtonDown += vm.PersonImage_MouseLeftButtonDown;
-            PersonImage.MouseLeftButtonUp += vm.PersonImage_MouseLeftButtonUp;
             PersonImage.MouseMove += vm.PersonImage_MouseMove;
             SourceCanvas.MouseWheel += vm.SourceCanvas_MouseWheel;
-            SourceCanvas.MouseEnter += vm.SourceCanvas_MouseEnter;
 
             DataContext = vm;
         }
