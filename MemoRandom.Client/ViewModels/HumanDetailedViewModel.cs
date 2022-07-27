@@ -63,6 +63,8 @@ namespace MemoRandom.Client.ViewModels
         private Window _window;
         private double _imageX;
         private double _imageY;
+        private double _tempX;
+        private double _tempY;
         #endregion
 
         #region PROPS
@@ -450,6 +452,26 @@ namespace MemoRandom.Client.ViewModels
                 RaisePropertyChanged(nameof(DeltaY));
             }
         }
+
+        public double TempX
+        {
+            get => _tempX;
+            set
+            {
+                _tempX = value;
+                RaisePropertyChanged(nameof(TempX));
+            }
+        }
+
+        public double TempY
+        {
+            get => _tempY;
+            set
+            {
+                _tempY = value;
+                RaisePropertyChanged(nameof(TempY));
+            }
+        }
         #endregion
 
         private bool _isDown = false;
@@ -496,8 +518,8 @@ namespace MemoRandom.Client.ViewModels
                 _startX = t2.X;
                 _startY = t2.Y;
 
-                tempX = _startX;
-                tempY = _startY;
+                //TempX = _startX;
+                //TempY = _startY;
             }
         }
 
@@ -509,10 +531,11 @@ namespace MemoRandom.Client.ViewModels
         public void PersonImage_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             //_isDown = false;
-            tempX += _startX;
+            TempX += DeltaX;
+            TempY += DeltaY;
         }
 
-        private double tempX, tempY;
+        //private double tempX, tempY;
 
         /// <summary>
         /// Обработчик движения мыши над исходным изображением
@@ -531,6 +554,9 @@ namespace MemoRandom.Client.ViewModels
 
                 DeltaX = currentX - _startX;
                 DeltaY = currentY - _startY;
+
+                TempX += DeltaX;
+                TempY += DeltaY;
 
                 Left += DeltaX;
                 Top += DeltaY;
@@ -554,8 +580,8 @@ namespace MemoRandom.Client.ViewModels
                 ScaleX -= 0.01;
                 ScaleY -= 0.01;
 
-                Left = (SourceWidth - (SourceImageSource.Width/* - tempX*/) * ScaleX) / 2;
-                Top = (SourceHeight - SourceImageSource.Height * ScaleY) / 2;
+                Left = (SourceWidth - (SourceImageSource.Width) * ScaleX) / 2 + TempX;
+                Top = (SourceHeight - SourceImageSource.Height * ScaleY) / 2 + TempY;
 
                 CursorX = p.X;
                 CursorY = p.Y;
@@ -568,8 +594,8 @@ namespace MemoRandom.Client.ViewModels
                 ScaleX += 0.01;
                 ScaleY += 0.01;
 
-                Left = (SourceWidth - (SourceImageSource.Width/* - tempX*/) * ScaleX) / 2;
-                Top = (SourceHeight - SourceImageSource.Height * ScaleY) / 2;
+                Left = (SourceWidth - (SourceImageSource.Width) * ScaleX) / 2 + TempX;
+                Top = (SourceHeight - SourceImageSource.Height * ScaleY) / 2 + TempY;
 
                 CursorX = p.X;
                 CursorY = p.Y;
@@ -585,6 +611,13 @@ namespace MemoRandom.Client.ViewModels
 
             ImageX = canvPoint.X;
             ImageY = canvPoint.Y;
+            //if (e.LeftButton == MouseButtonState.Pressed)
+            //{
+            //    var canvPoint = (sender as Canvas).PointToScreen(new Point(0, 0));
+
+            //    ImageX = canvPoint.X;
+            //    ImageY = canvPoint.Y;
+            //}
         }
         #endregion
 

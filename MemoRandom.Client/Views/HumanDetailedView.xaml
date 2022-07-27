@@ -336,33 +336,6 @@
 
                         <Grid Grid.Row="0">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="Cursor X: " Width="80"/>
-                                <TextBlock Text="{Binding CursorX}" Width="100"/>
-                                <TextBlock Text="Cursor Y: " Width="80"/>
-                                <TextBlock Text="{Binding CursorY}" Width="100"/>
-                            </StackPanel>
-                        </Grid>
-
-                        <Grid Grid.Row="1">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="Image X: " Width="80"/>
-                                <TextBlock Text="{Binding ImageX}" Width="100"/>
-                                <TextBlock Text="Image Y: " Width="80"/>
-                                <TextBlock Text="{Binding ImageY}" Width="100"/>
-                            </StackPanel>
-                        </Grid>
-
-                        <Grid Grid.Row="2">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="Delta X: " Width="80"/>
-                                <TextBlock Text="{Binding DeltaX}" Width="100"/>
-                                <TextBlock Text="Delta Y: " Width="80"/>
-                                <TextBlock Text="{Binding DeltaY}" Width="100"/>
-                            </StackPanel>
-                        </Grid>
-
-                        <Grid Grid.Row="3">
-                            <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="Left: " Width="80"/>
                                 <TextBlock Text="{Binding Left}" Width="100"/>
                                 <TextBlock Text="Top: " Width="80"/>
@@ -370,7 +343,34 @@
                             </StackPanel>
                         </Grid>
 
-                        <Grid Grid.Row="4">
+                        <Grid Grid.Row="1">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="DeltaX: " Width="80"/>
+                                <TextBlock Text="{Binding DeltaX}" Width="100"/>
+                                <TextBlock Text="DeltaY: " Width="80"/>
+                                <TextBlock Text="{Binding DeltaY}" Width="100"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <Grid Grid.Row="2">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="ScaleX: " Width="80"/>
+                                <TextBlock Text="{Binding ScaleX}" Width="100"/>
+                                <TextBlock Text="ScaleY: " Width="80"/>
+                                <TextBlock Text="{Binding ScaleY}" Width="100"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <Grid Grid.Row="3">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="TempX: " Width="80"/>
+                                <TextBlock Text="{Binding TempX}" Width="100"/>
+                                <TextBlock Text="TempY: " Width="80"/>
+                                <TextBlock Text="{Binding TempY}" Width="100"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <!--<Grid Grid.Row="4">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="ImageX: " Width="80"/>
                                 <TextBlock Text="{Binding ImageX}" Width="100"/>
@@ -379,13 +379,13 @@
                             </StackPanel>
                         </Grid>
                         
-                        <!--Новый блок-->
+                        --><!--Новый блок--><!--
                         <Grid Grid.Row="5">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="LeftShiftX: " Width="80"/>
-                                <TextBlock Text="{Binding LeftShiftX}" Width="100"/>
-                                <TextBlock Text="ToShiftY: " Width="80"/>
-                                <TextBlock Text="{Binding ImageY}" Width="100"/>
+                                <TextBlock Text="{Binding TempX}" Width="100"/>
+                                <TextBlock Text="TopShiftY: " Width="80"/>
+                                <TextBlock Text="{Binding TempY}" Width="100"/>
                             </StackPanel>
                         </Grid>
 
@@ -406,7 +406,7 @@
                             Command="{Binding Path=SetTargetImageCommand}"
                             CommandParameter="{Binding ElementName=SourceCanvas}">
 
-                        </Button>
+                        </Button>-->
                     </Grid>
                     
                     <GroupBox Grid.Column="2"
