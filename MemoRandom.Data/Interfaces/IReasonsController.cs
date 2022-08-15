@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using MemoRandom.Models.Models;
 
 namespace MemoRandom.Data.Interfaces
@@ -12,7 +13,7 @@ namespace MemoRandom.Data.Interfaces
         /// Получение древовидной коллекции списка причин смерти
         /// </summary>
         /// <returns></returns>
-        bool GetReasonsList();
+        List<Reason> GetReasons();
 
         /// <summary>
         /// Добавление причины с общий список

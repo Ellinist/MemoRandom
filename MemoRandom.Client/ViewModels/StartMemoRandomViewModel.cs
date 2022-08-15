@@ -13,6 +13,9 @@ using System.Windows.Threading;
 using Microsoft.Data.SqlClient;
 using MemoRandom.Data.Interfaces;
 using MemoRandom.Data.Repositories;
+using MemoRandom.Models.Models;
+using MemoRandom.Data.DbModels;
+using System.Collections.Generic;
 
 namespace MemoRandom.Client.ViewModels
 {
@@ -93,7 +96,7 @@ namespace MemoRandom.Client.ViewModels
 
         #region COMMAND IMPLEMENTATION
         /// <summary>
-        /// Открытие окна со списком людей  
+        /// Открытие окна со списком людей
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -145,7 +148,7 @@ namespace MemoRandom.Client.ViewModels
         {
             if (sender is Window)
             {
-                SetInitialPaths(); // Начальная инициализация БД и путей
+                SetInitialPaths();   // Начальная инициализация БД (или любой другой фигни) и путей
                 GetInitialReasons(); // Получаем справочник причин смерти
 
                 (sender as Window).Closing += StartMemoRandomViewModel_Closing; // Подписываемся на событие закрытия окна
@@ -201,9 +204,9 @@ namespace MemoRandom.Client.ViewModels
             string combinedPath = Path.Combine(dbBaseDirectory, dbfilename);
             SqlConnectionStringBuilder connectionStringBuilder = new SqlConnectionStringBuilder
             {
-                DataSource = @"Kotarius\KotariusServer",
-                AttachDBFilename = combinedPath,
-                InitialCatalog = Path.GetFileNameWithoutExtension(combinedPath),
+                DataSource         = @"Kotarius\KotariusServer",
+                AttachDBFilename   = combinedPath,
+                InitialCatalog     = Path.GetFileNameWithoutExtension(combinedPath),
                 IntegratedSecurity = true
             };
             HumansRepository.DbConnectionString = connectionStringBuilder.ConnectionString;
@@ -212,13 +215,16 @@ namespace MemoRandom.Client.ViewModels
         /// <summary>
         /// Чтение справочника причин смерти
         /// </summary>
-        private void GetInitialReasons()
+        private async void GetInitialReasons()
         {
-            Task.Factory.StartNew(() =>
+            List<Reason> reasonsResult = new();
+            await Task.Run(() =>
             {
-                var result = _reasonsController.GetReasonsList();
-                if (result)
+                reasonsResult = _reasonsController.GetReasons();
+                if (reasonsResult != null)
                 {
+                    Reasons.PlainReasonsList = reasonsResult; // Заносим плоский список в статический класс
+                    FormObservableCollection(Reasons.PlainReasonsList, null); // Формируем иерархическую коллекцию
                     ButtonsVisibility(); // Чтение справоника выполнено - кнопки делаем видимыми
                 }
                 else
@@ -227,6 +233,64 @@ namespace MemoRandom.Client.ViewModels
                 }
             });
         }
+
+        /// <summary>
+        /// Формирование иерархической коллекции
+        /// </summary>
+        /// <param name="reasons">Плоский список</param>
+        /// <param name="headReason">Головной элемент (экземпляр класса)</param>
+        private void FormObservableCollection(List<Reason> reasons, Reason headReason)
+        {
+            for (int i = 0; i < reasons.Count; i++)
+            {
+                if (reasons[i].ReasonParentId == Guid.Empty) // Случай корневых узлов
+                {
+                    Reason rsn = new()
+                    {
+                        ReasonParentId    = reasons[i].ReasonParentId,
+                        ReasonId          = reasons[i].ReasonId,
+                        ReasonName        = reasons[i].ReasonName,
+                        ReasonComment     = reasons[i].ReasonComment,
+                        ReasonDescription = reasons[i].ReasonDescription
+                    };
+                    Reasons.ReasonsCollection.Add(rsn);
+
+                    // Проверка на наличие дочерних узлов
+                    List<Reason> daughters = Reasons.PlainReasonsList.FindAll(x => x.ReasonParentId == rsn.ReasonId);
+                    if (daughters.Count != 0) // Если дочерние узлы найдены
+                    {
+                        FormObservableCollection(daughters, rsn); // Вызываем рекурсивно
+                    }
+                }
+                else if (headReason != null)// Случай вложенных узлов
+                {
+                    Reason rsn = new()
+                    {
+                        ReasonId          = reasons[i].ReasonId,
+                        ReasonName        = reasons[i].ReasonName,
+                        ReasonComment     = reasons[i].ReasonComment,
+                        ReasonDescription = reasons[i].ReasonDescription,
+                        ReasonParentId    = headReason.ReasonId,
+                        ReasonParent      = headReason
+                    };
+                    headReason.ReasonChildren.Add(rsn);
+
+                    // Проверка на наличие дочерних узлов
+                    List<Reason> daughters = Reasons.PlainReasonsList.FindAll(x => x.ReasonParentId == rsn.ReasonId);
+                    if (daughters.Count != 0) // Если дочерние узлы найдены
+                    {
+                        FormObservableCollection(daughters, rsn); // Вызываем рекурсивно
+                    }
+                }
+            }
+        }
+
+
+
+
+
+
+
 
         #region CTOR
         /// <summary>
@@ -237,8 +301,8 @@ namespace MemoRandom.Client.ViewModels
         /// <exception cref="ArgumentNullException"></exception>
         public StartMemoRandomViewModel(ILogger logger, IContainer container, IReasonsController reasonsController)
         {
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _container = container ?? throw new ArgumentNullException(nameof(container));
+            _logger            = logger ?? throw new ArgumentNullException(nameof(logger));
+            _container         = container ?? throw new ArgumentNullException(nameof(container));
             _reasonsController = reasonsController ?? throw new ArgumentNullException(nameof(reasonsController));
         }
         #endregion

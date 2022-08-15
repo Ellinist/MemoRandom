@@ -17,8 +17,7 @@
                  ShowIconOnTitleBar="True"
                  Icon="pack://application:,,,/Resources/Icons/startIcon.ico"
                  x:Name="StartView"
-                 Background="Black" WindowStartupLocation="CenterScreen"
-                 Loaded="StartView_Loaded">
+                 Background="Black" WindowStartupLocation="CenterScreen">
 
     <mah:MetroWindow.Resources>
         <!--Задаем градиентный стиль для кнопок-->
@@ -150,8 +149,7 @@
                 Visibility="Hidden"
                 Content="{Binding ReasonsButtonName}"
                 FontFamily="{StaticResource MainFont}"
-                Template="{StaticResource ButtonTemplate}"
-                Click="ReasonsButton_Click"/>
+                Template="{StaticResource ButtonTemplate}"/>
 
         <!--Кнопка открытия окна со списком людей-->
         <Button Grid.Row="2" Grid.Column="2"
@@ -159,7 +157,6 @@
                 Visibility="Hidden"
                 Content="{Binding HumansButtonName}"
                 FontFamily="{StaticResource MainFont}"
-                Template="{StaticResource ButtonTemplate}"
-                Click="HumansButton_Click"/>
+                Template="{StaticResource ButtonTemplate}"/>
     </Grid>
 </mah:MetroWindow>

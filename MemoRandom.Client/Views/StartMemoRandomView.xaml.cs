@@ -11,27 +11,28 @@ namespace MemoRandom.Client.Views
         private readonly StartMemoRandomViewModel _vm; // Модель представления стартового окна
 
         /// <summary>
-        /// Событие загрузки окна
+        /// Событие загрузки стартового окна
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void StartView_Loaded(object sender, RoutedEventArgs e)
+        private void StartMemoRandomView_Loaded(object sender, RoutedEventArgs e)
         {
             _vm.StartView_Loaded(sender, e);
         }
 
         /// <summary>
-        /// Событие нажатия на кнопку открытия окна справочника причин смерти
+        /// Нажатие на кнопку вызова справочника причин смерти
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void ReasonsButton_Click(object sender, RoutedEventArgs e)
+        /// <exception cref="System.NotImplementedException"></exception>
+        private void ReasonsButton_Click1(object sender, RoutedEventArgs e)
         {
             _vm.ReasonsButton_Click(sender, e);
         }
 
         /// <summary>
-        /// Событие нажатия на кнопку открытия окна со списком людей
+        /// Нажатие на кнопку вызова основного окна работы
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -55,6 +56,12 @@ namespace MemoRandom.Client.Views
 
             InitializeComponent();
 
+            DataContext = vm;
+
+            this.Loaded         += StartMemoRandomView_Loaded; // Загрузка стартового окна
+            ReasonsButton.Click += ReasonsButton_Click1; // Вызов окна справочника причин смерти
+            HumansButton.Click  += HumansButton_Click; // Вызов основного окна работы
+
             if (vm.ButtonsVisibility == null)
             {
                 // Делегат установки видимости кнопок после чтения справочника причин смерти
@@ -63,12 +70,10 @@ namespace MemoRandom.Client.Views
                     Dispatcher.Invoke(() =>
                     {
                         ReasonsButton.Visibility = Visibility.Visible;
-                        HumansButton.Visibility = Visibility.Visible;
+                        HumansButton.Visibility  = Visibility.Visible;
                     });
                 });
             }
-
-            DataContext = vm;
         }
         #endregion
     }
