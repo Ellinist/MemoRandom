@@ -25,7 +25,7 @@ namespace MemoRandom.Data.Implementations
         /// Получение списка людей из внешнего хранилища
         /// </summary>
         /// <returns></returns>
-        public List<Human> GetHumansList()
+        public List<Human> GetHumans()
         {
             ReadHumansList(); // Формируем репозиторий
             return HumansRepository.HumansList; // Возвращаем список людей из репозитория
@@ -367,7 +367,18 @@ namespace MemoRandom.Data.Implementations
         }
 
 
+
+
+
+
+
+
         #region CTOR
+        /// <summary>
+        /// Конструктор
+        /// </summary>
+        /// <param name="logger"></param>
+        /// <exception cref="ArgumentNullException"></exception>
         public HumansController(ILogger logger)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));

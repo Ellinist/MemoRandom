@@ -6,6 +6,7 @@
                  xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
                  xmlns:uc="clr-namespace:MemoRandom.Client.Views.UserControls"
                  xmlns:fa="http://schemas.fontawesome.io/icons/"
+                 xmlns:hl="clr-namespace:MemoRandom.Models.Models;assembly=MemoRandom.Models"
                  xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
                  xmlns:local="clr-namespace:MemoRandom.Client.Views"
                  mc:Ignorable="d"

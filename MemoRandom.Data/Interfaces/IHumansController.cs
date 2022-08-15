@@ -10,7 +10,7 @@ namespace MemoRandom.Data.Interfaces
         /// Получение списка людей из внешнего хранилища
         /// </summary>
         /// <returns></returns>
-        List<Human> GetHumansList();
+        List<Human> GetHumans();
 
         /// <summary>
         /// Установка текущего человека при работе со списком

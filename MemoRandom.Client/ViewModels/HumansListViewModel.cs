@@ -139,6 +139,9 @@ namespace MemoRandom.Client.ViewModels
             }
         }
 
+        /// <summary>
+        /// Название причины смерти
+        /// </summary>
         public string HumanDeathReasonName
         {
             get => _humanDeathReasonName;
@@ -230,18 +233,6 @@ namespace MemoRandom.Client.ViewModels
             StartAboutCommand = new DelegateCommand(OpenAboutView);
         }
 
-        //private BitmapImage ConvertFromByteArray(byte[] array)
-        //{
-        //    if (array == null) return null;
-
-        //    BitmapImage myBitmapImage = new BitmapImage();
-        //    myBitmapImage.BeginInit();
-        //    myBitmapImage.StreamSource = new MemoryStream(array);
-        //    myBitmapImage.DecodePixelWidth = 200;
-        //    myBitmapImage.EndInit();
-        //    return myBitmapImage;
-        //}
-
         /// <summary>
         /// Запуск окна создания нового человека
         /// </summary>
@@ -252,7 +243,7 @@ namespace MemoRandom.Client.ViewModels
 
             var currentHumanId = _humansController.GetCurrentHuman();
             HumansList.Clear();
-            HumansList = _humansController.GetHumansList();
+            HumansList = _humansController.GetHumans();
 
             if (currentHumanId != null)
             {
@@ -277,7 +268,7 @@ namespace MemoRandom.Client.ViewModels
 
             var currentHumanId = _humansController.GetCurrentHuman();
             HumansList.Clear();
-            HumansList = _humansController.GetHumansList();
+            HumansList = _humansController.GetHumans();
             
             PersonIndex = HumansList.FindIndex(x => x.HumanId == currentHumanId.HumanId); // Прыжок на индекс редактируемого человека
             RaisePropertyChanged(nameof(PersonIndex));
@@ -301,7 +292,7 @@ namespace MemoRandom.Client.ViewModels
                 _humansController.DeleteHuman();
 
                 HumansList.Clear();
-                HumansList = _humansController.GetHumansList();
+                HumansList = _humansController.GetHumans();
                 
                 if(HumansList.Count == 0)
                 {
@@ -333,7 +324,7 @@ namespace MemoRandom.Client.ViewModels
         {
             Task.Factory.StartNew(() =>
             {
-                var result = _humansController.GetHumansList();
+                var result = _humansController.GetHumans();
                 Dispatcher.CurrentDispatcher.Invoke(() =>
                 {
                     HumansList = result;
@@ -366,3 +357,17 @@ namespace MemoRandom.Client.ViewModels
         #endregion
     }
 }
+
+
+
+//private BitmapImage ConvertFromByteArray(byte[] array)
+//{
+//    if (array == null) return null;
+
+//    BitmapImage myBitmapImage = new BitmapImage();
+//    myBitmapImage.BeginInit();
+//    myBitmapImage.StreamSource = new MemoryStream(array);
+//    myBitmapImage.DecodePixelWidth = 200;
+//    myBitmapImage.EndInit();
+//    return myBitmapImage;
+//}
