@@ -95,7 +95,7 @@
                                           CanUserAddRows="False"
                                           IsSynchronizedWithCurrentItem="True"
                                           AutoGenerateColumns="False"
-                                          ItemsSource="{Binding Path=HumansList}"
+                                          ItemsSource="{Binding HumansList}"
                                           Margin="1"
                                           SelectedItem="{Binding Path=SelectedHuman}"
                                           SelectedIndex="{Binding Path=PersonIndex}">

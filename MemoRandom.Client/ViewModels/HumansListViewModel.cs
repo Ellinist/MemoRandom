@@ -24,7 +24,7 @@ namespace MemoRandom.Client.ViewModels
     {
         #region PRIVATE FIELDS
         private string _humansViewTitle = "Начало";
-        private List<Human> _humansList = new();
+        //private List<Human> _humansList = new();
         private int _personIndex;
         private Human _selectedHuman;
         private BitmapSource _imageSource;
@@ -57,10 +57,10 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         public List<Human> HumansList
         {
-            get => _humansList;
+            get => Humans.HumansList;
             set
             {
-                _humansList = value;
+                Humans.HumansList = value;
                 RaisePropertyChanged(nameof(HumansList));
             }
         }
@@ -327,8 +327,8 @@ namespace MemoRandom.Client.ViewModels
                 var result = _humansController.GetHumans();
                 Dispatcher.CurrentDispatcher.Invoke(() =>
                 {
-                    HumansList = result;
-                    RaisePropertyChanged(nameof(HumansList));
+                    Humans.HumansList = result;
+                    RaisePropertyChanged(nameof(Humans.HumansList));
                 });
             });
 
