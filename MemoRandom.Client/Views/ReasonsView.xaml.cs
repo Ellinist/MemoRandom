@@ -8,11 +8,6 @@ namespace MemoRandom.Client.Views
     /// </summary>
     public partial class ReasonsView : MetroWindow
     {
-        private readonly ReasonsViewModel _vm; // Модель представления справочника причин смерти
-
-
-
-
         #region CTOR
         /// <summary>
         /// Конструктор
@@ -20,8 +15,6 @@ namespace MemoRandom.Client.Views
         /// <param name="vm"></param>
         public ReasonsView(ReasonsViewModel vm)
         {
-            _vm = vm;
-
             InitializeComponent();
             DataContext = vm;
         }

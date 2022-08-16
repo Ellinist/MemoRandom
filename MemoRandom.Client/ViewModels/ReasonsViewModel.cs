@@ -17,29 +17,27 @@ namespace MemoRandom.Client.ViewModels
     public class ReasonsViewModel : BindableBase
     {
         #region PRIVATE FIELDS
-        private string _reasonsViewTitle = "Справочник причин смерти";
+        private string   _reasonsViewTitle = "Справочник причин смерти";
         private readonly ILogger _logger; // Экземпляр журнала
         private readonly IEventAggregator _eventAggregator;
         private readonly IMsSqlController _dbController;
-        private bool _cancelButtonEnabled = false; // Для кнопки отмены
-        private bool _deleteButtonEnabled = false; // Для кнопки удаления
-        private bool _changeSaveButtonEnabled = false; // Для кнопки изменения/сохранения
-        private bool _addSaveButtonEnabled = true;  // Для кнопки добавления/сохранения
-        private bool _fieldsEnabled = false; // Для доступности полей окна
-        private bool _changeMode = false; // Флаг редактирования записи
-        private bool _addMode = false; // Флаг добавления записи
-        private const string ChangeButton = "Изменить";
-        private const string AddButton = "Добавить";
-        private const string SaveButton = "Сохранить";
-        private string _saveButtonText = ChangeButton;
-        private string _addButtonText = AddButton;
-        private string _changeButtonText = "Изменить";
+        private bool     _cancelButtonEnabled     = false; // Для кнопки отмены
+        private bool     _deleteButtonEnabled     = false; // Для кнопки удаления
+        private bool     _changeSaveButtonEnabled = false; // Для кнопки изменения/сохранения
+        private bool     _addSaveButtonEnabled    = true;  // Для кнопки добавления/сохранения
+        private bool     _fieldsEnabled           = false; // Для доступности полей окна
+        private bool     _changeMode              = false; // Флаг редактирования записи
+        private bool     _addMode                 = false; // Флаг добавления записи
+        private const string CHANGE_BUTTON        = "Изменить";
+        private const string ADD_BUTTON           = "Добавить";
+        private const string SAVE_BUTTON          = "Сохранить";
+        private string _saveButtonText            = CHANGE_BUTTON;
+        private string _addButtonText             = ADD_BUTTON;
 
         private string _reasonName;
         private string _reasonComment;
         private string _reasonDescription;
         private Reason _selectedReason;
-        //private ObservableCollection<Reason> _reasonsList = new();
         #endregion
 
         #region PROPS
@@ -268,15 +266,15 @@ namespace MemoRandom.Client.ViewModels
         /// <summary>
         /// Команда добавления записи в справочник причин смерти
         /// </summary>
-        private void OnInsertCommand(object obj)
+        private async void OnInsertCommand(object obj)
         {
             if (!_addMode) // Заход в блок внесения изменений в поля окна
             {
-                SelectedReason = obj as Reason;
+                SelectedReason          = obj as Reason;
                 CancelButtonEnabled     = true;       // Кнопка отмены разблокирована - на случай, если передумали
                 ChangeSaveButtonEnabled = false;      // В режиме добавления кнопка редактирования недоступна
                 DeleteButtonEnabled     = false;      // В режиме редактирования кнопка удаления недоступна
-                AddButtonText           = SaveButton;
+                AddButtonText           = SAVE_BUTTON;
 
                 FieldsEnabled = true;
                 _addMode = true;
@@ -291,28 +289,28 @@ namespace MemoRandom.Client.ViewModels
                 // Создаем новый экземпляр причины смерти
                 Reason rsn = new()
                 {
-                    ReasonId = Guid.NewGuid(), // Регистрация нового идентификатора
-                    ReasonName = ReasonName,
-                    ReasonComment = ReasonComment ?? string.Empty,
+                    ReasonId          = Guid.NewGuid(), // Регистрация нового идентификатора
+                    ReasonName        = ReasonName,
+                    ReasonComment     = ReasonComment ?? string.Empty,
                     ReasonDescription = ReasonDescription ?? string.Empty
                 };
                 if (SelectedReason != null) // Если узел выбран, то создаем дочку
                 {
                     rsn.ReasonParentId = SelectedReason.ReasonId;
-                    rsn.ReasonParent = SelectedReason;
+                    rsn.ReasonParent   = SelectedReason;
+                    SelectedReason     = rsn;
                     SelectedReason.ReasonChildren.Add(rsn);
                     PlainReasonsList.Add(rsn);
-                    SelectedReason = rsn;
                 }
                 else
                 {
                     rsn.ReasonParentId = Guid.Empty;
-                    SelectedReason = rsn;
+                    SelectedReason     = rsn;
                     ReasonsList.Add(rsn); // Если узел не выбран, то создаем в корне
                     PlainReasonsList.Add(rsn);
                 }
 
-                Task.Factory.StartNew(() =>
+                await Task.Run(() =>
                 {
                     var result = _dbController.AddReasonToList(rsn); // Записываем изменение во внешнее хранилище
                     Dispatcher.CurrentDispatcher.Invoke(() =>
@@ -322,11 +320,11 @@ namespace MemoRandom.Client.ViewModels
                             MessageBox.Show("Не удалось сохранить причину", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
                         }
 
-                        FieldsEnabled = false; // Делаем поля недоступными - пока не выберем узел и не выберем команду
-                        CancelButtonEnabled = false; // После добавления новой записи кнопка отмены недоступна
+                        FieldsEnabled           = false; // Делаем поля недоступными - пока не выберем узел и не выберем команду
+                        CancelButtonEnabled     = false; // После добавления новой записи кнопка отмены недоступна
                         ChangeSaveButtonEnabled = false; // После добавления новой записи кнопка изменения недоступна до выбора узла
-                        DeleteButtonEnabled = false; // После добавления новой записи кнопка удаления недоступна до выбора узла
-                        AddButtonText = AddButton; // Возвращаем название кнопки
+                        DeleteButtonEnabled     = false; // После добавления новой записи кнопка удаления недоступна до выбора узла
+                        AddButtonText           = ADD_BUTTON; // Возвращаем название кнопки
 
                         SelectedReason.IsSelected = true;
                         RaisePropertyChanged(nameof(SelectedReason));
@@ -354,7 +352,7 @@ namespace MemoRandom.Client.ViewModels
                 currentReason.ReasonDescription  = ReasonDescription;
 
                 FieldsEnabled           = false;
-                SaveButtonText          = ChangeButton;
+                SaveButtonText          = CHANGE_BUTTON;
                 _changeMode             = false; // Флаг, что не в режиме редактирования
                 AddSaveButtonEnabled    = true;  // При выходе из режима редактирования кнопка добавления становится доступной
                 ChangeSaveButtonEnabled = false; // После изменения записи кнопка изменения недоступна до выбора узла
@@ -381,7 +379,7 @@ namespace MemoRandom.Client.ViewModels
                 DeleteButtonEnabled  = false;      // При входе в режим редактирования кнопка удаления недоступна
                 CancelButtonEnabled  = true;       // В режиме редактирования кнопка отмены доступна
                 FieldsEnabled        = true;       // Поля становятся доступными
-                SaveButtonText       = SaveButton; // Меняем название кнопки
+                SaveButtonText       = SAVE_BUTTON; // Меняем название кнопки
                 _changeMode          = true;       // Флаг, что в режиме редактирования
             }
         }
@@ -402,10 +400,10 @@ namespace MemoRandom.Client.ViewModels
             {
                 DeleteButtonEnabled     = true; // Узел выбран - кнопка удаления доступна
                 ChangeSaveButtonEnabled = true; // Узел выбран - кнопка редактирования/сохранения доступна
-                SelectedReason = obj as Reason;
-                ReasonName = SelectedReason?.ReasonName;
-                ReasonComment = SelectedReason?.ReasonComment;
-                ReasonDescription = SelectedReason?.ReasonDescription;
+                SelectedReason          = obj as Reason;
+                ReasonName              = SelectedReason?.ReasonName;
+                ReasonComment           = SelectedReason?.ReasonComment;
+                ReasonDescription       = SelectedReason?.ReasonDescription;
             }
         }
 
@@ -450,24 +448,24 @@ namespace MemoRandom.Client.ViewModels
         /// <param name="obj"></param>
         private void OnCancelCommand(object obj)
         {
-            SelectedReason = obj as Reason;
-            ReasonName = SelectedReason?.ReasonName;
-            ReasonComment = SelectedReason?.ReasonComment;
-            ReasonDescription = SelectedReason?.ReasonDescription;
+            SelectedReason            = obj as Reason;
+            ReasonName                = SelectedReason?.ReasonName;
+            ReasonComment             = SelectedReason?.ReasonComment;
+            ReasonDescription         = SelectedReason?.ReasonDescription;
 
             SelectedReason.IsSelected = true;
-            CancelButtonEnabled = false; // После отмены кнопка становится недоступной
-            AddSaveButtonEnabled = true; // После отмены кнопка добавления становится доступной
-            ChangeSaveButtonEnabled = false; // После отмены кнопка изменения становится недоступной
+            CancelButtonEnabled       = false; // После отмены кнопка становится недоступной
+            AddSaveButtonEnabled      = true; // После отмены кнопка добавления становится доступной
+            ChangeSaveButtonEnabled   = false; // После отмены кнопка изменения становится недоступной
 
             #region Все названия кнопок возвращаются в свои первоначальные состояния
-            AddButtonText = AddButton;
-            SaveButtonText = ChangeButton;
+            AddButtonText  = ADD_BUTTON;
+            SaveButtonText = CHANGE_BUTTON;
             #endregion
 
             FieldsEnabled = false;
-            _addMode = false;
-            _changeMode = false;
+            _addMode      = false;
+            _changeMode   = false;
         }
         
         /// <summary>
@@ -475,13 +473,13 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private void OnEmptyClickCommand()
         {
-            CancelButtonEnabled = false;     // Кнопка отмены недоступна - нечего отменять
+            CancelButtonEnabled     = false;     // Кнопка отмены недоступна - нечего отменять
             ChangeSaveButtonEnabled = false; // Кнопка редактирования/сохранения недоступна - нечего редактировать
 
             if (SelectedReason == null) return;
 
             SelectedReason.IsSelected = false;
-            SelectedReason = null;
+            SelectedReason            = null;
         }
         
         /// <summary>
@@ -489,8 +487,8 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private void SetEmptyFields()
         {
-            ReasonName = string.Empty;
-            ReasonComment = string.Empty;
+            ReasonName        = string.Empty;
+            ReasonComment     = string.Empty;
             ReasonDescription = string.Empty;
         }
         #endregion
@@ -500,12 +498,12 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private void InitializeCommands()
         {
-            InsertCommand = new DelegateCommand<object>(OnInsertCommand);
+            InsertCommand     = new DelegateCommand<object>(OnInsertCommand);
             SelectNodeCommand = new DelegateCommand<object>(OnSelectNodeCommand);
             DeleteNodeCommand = new DelegateCommand<object>(OnDeleteNodeCommand);
-            CancelCommand = new DelegateCommand<object>(OnCancelCommand);
+            CancelCommand     = new DelegateCommand<object>(OnCancelCommand);
             EmptyClickCommand = new DelegateCommand(OnEmptyClickCommand);
-            ChangeCommand = new DelegateCommand(OnChangeCommand);
+            ChangeCommand     = new DelegateCommand(OnChangeCommand);
         }
 
 

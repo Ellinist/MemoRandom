@@ -73,7 +73,7 @@ namespace MemoRandom.Data.Implementations
             }
             catch (Exception ex)
             {
-
+                success = false;
                 _logger.Error($"Ошибка установки стартовых путей и строки подкючения: {ex.HResult}");
             }
             

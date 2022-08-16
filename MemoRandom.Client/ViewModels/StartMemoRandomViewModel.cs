@@ -19,13 +19,18 @@ namespace MemoRandom.Client.ViewModels
         public Action ButtonsVisibility { get; set; } // Действие видимости кнопок
 
         #region PRIVATE FIELDS
-        private static readonly string _dbConfigName = "MsDbConfig"; // Конфигурация БД
-        private static readonly string _dbFolderName = "MsDbFolder"; // Конфигурация папки с БД
+        private static string _storageFileName;   // Название файла хранения информации (БД или Xml)
+        private static string _storageFilePath;   // Имя папки, где хранится информация
+        private static string _storageImagesPath; // Имя папки, где хранятся изображения
+
+        private static readonly string _dbConfigName    = "MsDbConfig"; // Конфигурация БД
+        private static readonly string _dbFolderName    = "MsDbFolder"; // Конфигурация папки с БД
         private static readonly string _imageFolderName = "ImagePathConfig"; // Конфигурация папки с изображениями
-        private string _startViewTitleDefault = "Memo-Random"; // Дефолтный заголовок стартового окна
-        private string _reasonsButtonName = "Справочник";
-        private string _humansButtonName = "Memo-Random";
-        private DateTime _currentDateTime = DateTime.Now;
+        private string _startViewTitleDefault           = "Memo-Random"; // Дефолтный заголовок стартового окна
+        private string _reasonsButtonName               = "Справочник";
+        private string _humansButtonName                = "Memo-Random";
+        private DateTime _currentDateTime               = DateTime.Now;
+        
         private readonly ILogger _logger; // Экземпляр журнала
         private readonly IContainer _container; // Контейнер
         private readonly IMsSqlController _msSqlController;
@@ -175,38 +180,21 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private void SetInitialPaths()
         {
-            string dbfilename = ConfigurationManager.AppSettings[_dbConfigName]; // Получение имени файла базы данных
-            if (dbfilename == null) return; // Если в файле конфигурации нет имени БД, то выходим (ничего не делаем)
-            string dbfilepath = ConfigurationManager.AppSettings[_dbFolderName]; // Получаем имя папки, в которой лежит БД
-            if (dbfilepath == null) return; // Если в файле конфигурации нет имени папки, то выходим (ничего не делаем)
-            string imagefilepath = ConfigurationManager.AppSettings[_imageFolderName]; // Имя папки с изображениями
-            if(imagefilepath == null) return; // Если в файле конфигурации нет имени папки, то выходим (ничего не делаем)
+            _storageFileName = ConfigurationManager.AppSettings[_dbConfigName]; // Получение имени файла хранилища информации
+            if (_storageFileName == null) return; // Если в файле конфигурации нет имени хранилища, то выходим (ничего не делаем)
+            _storageFilePath = ConfigurationManager.AppSettings[_dbFolderName]; // Получаем имя папки, в которой лежит хранилище
+            if (_storageFilePath == null) return; // Если в файле конфигурации нет имени папки, то выходим (ничего не делаем)
+            _storageImagesPath = ConfigurationManager.AppSettings[_imageFolderName]; // Имя папки с изображениями
+            if(_storageImagesPath == null) return; // Если в файле конфигурации нет имени папки, то выходим (ничего не делаем)
 
-            var res = _msSqlController.SetPaths(dbfilename, dbfilepath, imagefilepath, @"Kotarius\KotariusServer");
-
-            //// Проверяем, существует ли папка хранения БД - только для случая генерации БД
-            //var dbBaseDirectory = AppDomain.CurrentDomain.BaseDirectory + dbfilepath;
-            //if (!Directory.Exists(dbBaseDirectory))
-            //{
-            //    Directory.CreateDirectory(dbBaseDirectory);
-            //}
-
-            //// Проверяем, существует ли папка хранения изображений
-            //HumansRepository.ImageFolder = AppDomain.CurrentDomain.BaseDirectory + imagefilepath;
-            //if (!Directory.Exists(HumansRepository.ImageFolder))
-            //{
-            //    Directory.CreateDirectory(HumansRepository.ImageFolder);
-            //}
-
-            //string combinedPath = Path.Combine(dbBaseDirectory, dbfilename);
-            //SqlConnectionStringBuilder connectionStringBuilder = new SqlConnectionStringBuilder
-            //{
-            //    DataSource         = @"Kotarius\KotariusServer",
-            //    AttachDBFilename   = combinedPath,
-            //    InitialCatalog     = Path.GetFileNameWithoutExtension(combinedPath),
-            //    IntegratedSecurity = true
-            //};
-            //HumansRepository.DbConnectionString = connectionStringBuilder.ConnectionString;
+            #region Вместо интерфейса вызова БД можно использовать интерфейс работы с XML-файлами
+            // ВНИМАНИЕ! В параметрах есть имя сервера - только для работы с БД
+            var res = _msSqlController.SetPaths(_storageFileName, _storageFilePath, _storageImagesPath, @"Kotarius\KotariusServer");
+            if (!res)
+            {
+                MessageBox.Show("Ошибка установки соединения с хранилищем информации!", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            #endregion
         }
 
         /// <summary>
