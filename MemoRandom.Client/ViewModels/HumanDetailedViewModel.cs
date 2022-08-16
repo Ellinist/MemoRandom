@@ -409,24 +409,21 @@ namespace MemoRandom.Client.ViewModels
         /// <param name="obj"></param>
         private void SetTargetImage(object obj)
         {
-            var Canv = obj as Canvas;
-            if (Canv != null)
-            {
-                var target = new RenderTargetBitmap((int)(Canv.RenderSize.Width), (int)(Canv.RenderSize.Height), 96, 96, PixelFormats.Pbgra32);
-                var brush = new VisualBrush(Canv);
+            if (obj is not Canvas Canv) return;
+            var target = new RenderTargetBitmap((int)(Canv.RenderSize.Width), (int)(Canv.RenderSize.Height), 96, 96, PixelFormats.Pbgra32);
+            var brush = new VisualBrush(Canv);
 
-                var visual = new DrawingVisual();
-                var drawingContext = visual.RenderOpen();
+            var visual = new DrawingVisual();
+            var drawingContext = visual.RenderOpen();
 
 
-                drawingContext.DrawRectangle(brush, null, new Rect(new Point(0, 0), new Point(Canv.RenderSize.Width, Canv.RenderSize.Height)));
+            drawingContext.DrawRectangle(brush, null, new Rect(new Point(0, 0), new Point(Canv.RenderSize.Width, Canv.RenderSize.Height)));
 
-                drawingContext.Close();
+            drawingContext.Close();
 
-                target.Render(visual);
+            target.Render(visual);
 
-                TargetImageSource = target;
-            }
+            TargetImageSource = target;
         }
 
         /// <summary>
@@ -454,25 +451,23 @@ namespace MemoRandom.Client.ViewModels
         public void PersonImage_MouseMove(object sender, MouseEventArgs e)
         {
             var obj = (sender as Image);
-            if(e.LeftButton == MouseButtonState.Pressed)
-            {
-                Point t = obj.PointToScreen(Mouse.GetPosition(obj));
+            if (e.LeftButton != MouseButtonState.Pressed) return;
+            Point t = obj.PointToScreen(Mouse.GetPosition(obj));
 
-                var currentX = t.X;
-                var currentY = t.Y;
+            var currentX = t.X;
+            var currentY = t.Y;
 
-                _deltaX = currentX - _startX;
-                _deltaY = currentY - _startY;
+            _deltaX = currentX - _startX;
+            _deltaY = currentY - _startY;
 
-                _shiftX += _deltaX;
-                _shiftY += _deltaY;
+            _shiftX += _deltaX;
+            _shiftY += _deltaY;
 
-                Left += _deltaX;
-                Top += _deltaY;
+            Left += _deltaX;
+            Top += _deltaY;
 
-                _startX = currentX;
-                _startY = currentY;
-            }
+            _startX = currentX;
+            _startY = currentY;
         }
 
         /// <summary>
