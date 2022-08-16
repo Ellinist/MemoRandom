@@ -676,10 +676,8 @@ namespace MemoRandom.Client.ViewModels
                 _shiftY = 0;
                 ScaleX  = 1;
                 ScaleY  = 1;
-                var w   = SourceImageSource.Width;
-                var h   = SourceImageSource.Height;
-                Left    = -(w - SourceWidth) / 2;
-                Top     = -(h - SourceHeight) / 2;
+                Left    = -(SourceImageSource.Width  - SourceWidth)  / 2;
+                Top     = -(SourceImageSource.Height - SourceHeight) / 2;
             }
             else
             {
