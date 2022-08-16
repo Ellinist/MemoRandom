@@ -3,7 +3,7 @@
 namespace MemoRandom.Models.Models
 {
     /// <summary>
-    /// Статический класс, содержащий в себе список людей ????????????????????????????
+    /// Статический класс, содержащий в себе список людей
     /// </summary>
     public static class Humans
     {

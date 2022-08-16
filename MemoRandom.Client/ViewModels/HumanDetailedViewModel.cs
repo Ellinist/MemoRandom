@@ -43,12 +43,10 @@ namespace MemoRandom.Client.ViewModels
         private string _humanComments;
         private int _daysLived;
         private double _fullYearsLived;
-        private ObservableCollection<Reason> _reasonsList;
-        private List<Reason> _plainReasonsList;
         private string _humanDeathReasonName;
         private bool _openComboState = false; // По умолчанию комбобокс свернут
-        private double _left = 0; // Левый верхний угол изображения на канве (координата X)
-        private double _top = 0;  // Левый верхний угол изображения на канве (координата Y)
+        private double _left   = 0; // Левый верхний угол изображения на канве (координата X)
+        private double _top    = 0; // Левый верхний угол изображения на канве (координата Y)
         private double _scaleX = 1; // Масштаб по оси X
         private double _scaleY = 1; // Масштаб по оси Y
 
@@ -61,7 +59,6 @@ namespace MemoRandom.Client.ViewModels
 
         private Canvas _canvas;
         private Window _window;
-        
         #endregion
 
         #region PROPS
@@ -265,10 +262,10 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         public ObservableCollection<Reason> ReasonsList
         {
-            get => _reasonsList;
+            get => Reasons.ReasonsCollection;
             set
             {
-                _reasonsList = value;
+                Reasons.ReasonsCollection = value;
                 RaisePropertyChanged(nameof(ReasonsList));
             }
         }
@@ -278,10 +275,10 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         public List<Reason> PlainReasonsList
         {
-            get => _plainReasonsList;
+            get => Reasons.PlainReasonsList;
             set
             {
-                _plainReasonsList = value;
+                Reasons.PlainReasonsList = value;
                 RaisePropertyChanged(nameof(PlainReasonsList));
             }
         }
@@ -378,23 +375,29 @@ namespace MemoRandom.Client.ViewModels
             }
         }
 
-        public Canvas Canv
+        /// <summary>
+        /// Холст, в котором расположено изображение
+        /// </summary>
+        public Canvas SourceCanvas
         {
             get => _canvas;
             set
             {
                 _canvas = value;
-                RaisePropertyChanged(nameof(Canv));
+                RaisePropertyChanged(nameof(SourceCanvas));
             }
         }
 
-        public Window DetailedWiew
+        /// <summary>
+        /// Текущее окно детальной информации по человеку
+        /// </summary>
+        public Window DetailedView
         {
             get => _window;
             set
             {
                 _window = value;
-                RaisePropertyChanged(nameof(DetailedWiew));
+                RaisePropertyChanged(nameof(DetailedView));
             }
         }
         #endregion
@@ -509,6 +512,9 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         public DelegateCommand ImageLoadCommand { get; private set; }
 
+        /// <summary>
+        /// Команда выбора узла с иерархическом дереве причин смерти
+        /// </summary>
         public DelegateCommand<object> SelectNodeCommand { get; private set; }
 
         public DelegateCommand<object> SetTargetImageCommand { get; private set; }
@@ -522,40 +528,42 @@ namespace MemoRandom.Client.ViewModels
         /// <param name="e"></param>
         public void DetailedView_Loaded(object sender, RoutedEventArgs e)
         {
-            DetailedWiew = sender as Window;
+            DetailedView = sender as Window;
 
             Human human = Humans.CurrentHuman;
 
             if (human != null)
             {
-                LastName = human.LastName;
-                FirstName = human.FirstName;
-                Patronymic = human.Patronymic;
-                BirthDate = human.BirthDate;
-                BirthCountry = human.BirthCountry;
-                BirthPlace = human.BirthPlace;
-                DeathDate = human.DeathDate;
-                DeathCountry = human.DeathCountry;
-                DeathPlace = human.DeathPlace;
-                HumanComments = human.HumanComments;
-                DeathReasonId = human.DeathReasonId;
+                LastName          = human.LastName;
+                FirstName         = human.FirstName;
+                Patronymic        = human.Patronymic;
+                BirthDate         = human.BirthDate;
+                BirthCountry      = human.BirthCountry;
+                BirthPlace        = human.BirthPlace;
+                DeathDate         = human.DeathDate;
+                DeathCountry      = human.DeathCountry;
+                DeathPlace        = human.DeathPlace;
+                HumanComments     = human.HumanComments;
+                DeathReasonId     = human.DeathReasonId;
                 TargetImageSource = (BitmapSource)_msSqlController.GetHumanImage(Humans.CurrentHuman); // Загружаем изображение
             }
             else
             {
-                LastName = "Введите фамилию";
-                FirstName = "Введите имя";
-                Patronymic = "Введите отчество";
-                BirthDate = DateTime.Now;
-                BirthCountry = "Введите страну рождения";
-                BirthPlace = "Введите место рождения";
-                DeathDate = DateTime.Now;
-                DeathCountry = "Введите страну смерти";
-                DeathPlace = "Введите место смерти";
+                TimeSpan ts = TimeSpan.FromDays(365 * 50);
+                LastName      = "Введите фамилию";
+                FirstName     = "Введите имя";
+                Patronymic    = "Введите отчество";
+                BirthDate     = DateTime.Now - ts;
+                BirthCountry  = "Введите страну рождения";
+                BirthPlace    = "Введите место рождения";
+                DeathDate     = DateTime.Now;
+                DeathCountry  = "Введите страну смерти";
+                DeathPlace    = "Введите место смерти";
                 HumanComments = "Введите краткое описание";
             }
-            ReasonsList = Reasons.ReasonsCollection;
+            ReasonsList      = Reasons.ReasonsCollection;
             PlainReasonsList = Reasons.PlainReasonsList;
+
             var t = PlainReasonsList.Find(x => x.ReasonId == DeathReasonId);
             if (t != null)
             {
@@ -573,52 +581,49 @@ namespace MemoRandom.Client.ViewModels
             var curHuman = Humans.CurrentHuman;
             if (curHuman != null) // Редактирование
             {
-                curHuman.LastName = LastName;
-                curHuman.FirstName = FirstName;
-                curHuman.Patronymic = Patronymic;
-                curHuman.BirthDate = BirthDate;
-                curHuman.BirthCountry = BirthCountry;
-                curHuman.BirthPlace = BirthPlace;
-                curHuman.DeathDate = DeathDate;
-                curHuman.DeathCountry = DeathCountry;
-                curHuman.DeathPlace = DeathPlace;
-                curHuman.ImageFile = TargetImageSource != null ? curHuman.HumanId.ToString() + ".jpg" : string.Empty;
-                curHuman.HumanComments = HumanComments;
-                curHuman.DeathReasonId = DeathReasonId;
-                curHuman.DaysLived = (DeathDate - BirthDate).Days; // Считаем число прожитых дней
+                curHuman.LastName       = LastName;
+                curHuman.FirstName      = FirstName;
+                curHuman.Patronymic     = Patronymic;
+                curHuman.BirthDate      = BirthDate;
+                curHuman.BirthCountry   = BirthCountry;
+                curHuman.BirthPlace     = BirthPlace;
+                curHuman.DeathDate      = DeathDate;
+                curHuman.DeathCountry   = DeathCountry;
+                curHuman.DeathPlace     = DeathPlace;
+                curHuman.ImageFile      = TargetImageSource != null ? curHuman.HumanId.ToString() + ".jpg" : string.Empty;
+                curHuman.HumanComments  = HumanComments;
+                curHuman.DeathReasonId  = DeathReasonId;
+                curHuman.DaysLived      = (DeathDate - BirthDate).Days; // Считаем число прожитых дней
                 curHuman.FullYearsLived = (float)((DeathDate - BirthDate).Days / 365.25D); // Считаем число полных прожитых лет
 
                 Humans.CurrentHuman = curHuman;
-                //_msSqlController.SetCurrentHuman(curHuman);
             }
             else // Добавление нового
             {
                 var newHumanId = Guid.NewGuid();
                 Human human = new()
                 {
-                    HumanId = newHumanId,
-                    LastName = LastName,
-                    FirstName = FirstName,
-                    Patronymic = Patronymic,
-                    BirthDate = BirthDate,
-                    BirthCountry = BirthCountry,
-                    BirthPlace = BirthPlace,
-                    DeathDate = DeathDate,
-                    DeathCountry = DeathCountry,
-                    DeathPlace = DeathPlace,
-                    ImageFile = TargetImageSource != null ? newHumanId.ToString() + ".jpg" : string.Empty,
-                    HumanComments = HumanComments,
-                    DeathReasonId = DeathReasonId,
-                    DaysLived = (DeathDate - BirthDate).Days, // Считаем число прожитых дней
+                    HumanId        = newHumanId,
+                    LastName       = LastName,
+                    FirstName      = FirstName,
+                    Patronymic     = Patronymic,
+                    BirthDate      = BirthDate,
+                    BirthCountry   = BirthCountry,
+                    BirthPlace     = BirthPlace,
+                    DeathDate      = DeathDate,
+                    DeathCountry   = DeathCountry,
+                    DeathPlace     = DeathPlace,
+                    ImageFile      = TargetImageSource != null ? newHumanId.ToString() + ".jpg" : string.Empty,
+                    HumanComments  = HumanComments,
+                    DeathReasonId  = DeathReasonId,
+                    DaysLived      = (DeathDate - BirthDate).Days, // Считаем число прожитых дней
                     FullYearsLived = (float)((DeathDate - BirthDate).Days / 365.25) // Считаем число полных прожитых лет
                 };
 
                 Humans.CurrentHuman = human;
-                //_msSqlController.SetCurrentHuman(human);
             }
 
             _msSqlController.UpdateHumans(Humans.CurrentHuman, BitmapSourceToBitmapImage(TargetImageSource));
-
             CloseAction(); // Закрываем окно
         }
 
@@ -669,16 +674,16 @@ namespace MemoRandom.Client.ViewModels
                 // Обнуляем сдвиг изображения и устанавливаем масштаб = без изменений
                 _shiftX = 0;
                 _shiftY = 0;
-                ScaleX = 1;
-                ScaleY = 1;
-                var w = SourceImageSource.Width;
-                var h = SourceImageSource.Height;
-                Left = -(w - SourceWidth) / 2;
-                Top = -(h - SourceHeight) / 2;
+                ScaleX  = 1;
+                ScaleY  = 1;
+                var w   = SourceImageSource.Width;
+                var h   = SourceImageSource.Height;
+                Left    = -(w - SourceWidth) / 2;
+                Top     = -(h - SourceHeight) / 2;
             }
             else
             {
-                MessageBox.Show("Not an image!", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Попытка впихнуть невпихуемое!", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
         #endregion
@@ -688,9 +693,9 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private void InitializeCommands()
         {
-            SaveHumanCommand  = new DelegateCommand(SaveHuman);
-            ImageLoadCommand  = new DelegateCommand(ImageLoad);
-            SelectNodeCommand = new DelegateCommand<object>(SelectNode);
+            SaveHumanCommand      = new DelegateCommand(SaveHuman);
+            ImageLoadCommand      = new DelegateCommand(ImageLoad);
+            SelectNodeCommand     = new DelegateCommand<object>(SelectNode);
             SetTargetImageCommand = new DelegateCommand<object>(SetTargetImage);
         }
 
