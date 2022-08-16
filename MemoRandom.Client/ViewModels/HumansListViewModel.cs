@@ -20,22 +20,20 @@ namespace MemoRandom.Client.ViewModels
     /// <summary>
     /// Модель представления основного окна со списком людей
     /// </summary>
-    public class HumansListViewModel : BindableBase
+    public class HumansListViewModel : BindableBase, IDisposable
     {
         #region PRIVATE FIELDS
         private string _humansViewTitle = "Начало";
-        //private List<Human> _humansList = new();
         private int _personIndex;
         private Human _selectedHuman;
         private BitmapSource _imageSource;
         private string _displayedYears = "";
-        private List<Reason> _plainReasonsList;
         private string _humanDeathReasonName;
         private readonly StringBuilder YearsText = new();
         private readonly ILogger _logger; // Экземпляр журнала
         private readonly IContainer _container; // Контейнер
         private readonly IEventAggregator _eventAggregator;
-        private readonly IHumansController _humansController;
+        private readonly IMsSqlController _msSqlController;
         #endregion
 
         #region PROPS
@@ -105,11 +103,11 @@ namespace MemoRandom.Client.ViewModels
                     _selectedHuman = value;
 
                     // При смене выбранного человека устанавливаем его текущим
-                    _humansController.SetCurrentHuman(value);
+                    Humans.CurrentHuman = value;
                     RaisePropertyChanged(nameof(SelectedHuman));
 
                     // Изменение изображения
-                    ImageSource = _humansController.GetHumanImage();
+                    ImageSource = _msSqlController.GetHumanImage(Humans.CurrentHuman);
                     RaisePropertyChanged(nameof(ImageSource));
 
                     // Изменение текста прожитых лет
@@ -157,10 +155,10 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         public List<Reason> PlainReasonsList
         {
-            get => _plainReasonsList;
+            get => Reasons.PlainReasonsList;
             set
             {
-                _plainReasonsList = value;
+                Reasons.PlainReasonsList = value;
                 RaisePropertyChanged(nameof(PlainReasonsList));
             }
         }
@@ -238,16 +236,17 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private void AddHuman()
         {
-            _humansController.SetCurrentHuman(null); // Новая запись - флаг
+            Humans.CurrentHuman = null;
+            //_msSqlController.SetCurrentHuman(null); // Новая запись - флаг
             _container.Resolve<HumanDetailedView>().ShowDialog(); // Открываем окно создания/редактирования
 
-            var currentHumanId = _humansController.GetCurrentHuman();
+            //var currentHumanId = _msSqlController.GetCurrentHuman();
             HumansList.Clear();
-            HumansList = _humansController.GetHumans();
+            HumansList = _msSqlController.GetHumans();
 
-            if (currentHumanId != null)
+            if (Humans.CurrentHuman != null)
             {
-                PersonIndex = HumansList.FindIndex(x => x.HumanId == currentHumanId.HumanId); // Прыжок на индекс добавленного человека
+                PersonIndex = HumansList.FindIndex(x => x.HumanId == Humans.CurrentHuman.HumanId); // Прыжок на индекс добавленного человека
                 RaisePropertyChanged(nameof(PersonIndex));
                 //SelectedHuman = _humansController.GetCurrentHuman();
 
@@ -266,11 +265,11 @@ namespace MemoRandom.Client.ViewModels
         {
             _container.Resolve<HumanDetailedView>().ShowDialog();
 
-            var currentHumanId = _humansController.GetCurrentHuman();
+            //var currentHumanId = _msSqlController.GetCurrentHuman();
             HumansList.Clear();
-            HumansList = _humansController.GetHumans();
+            HumansList = _msSqlController.GetHumans();
             
-            PersonIndex = HumansList.FindIndex(x => x.HumanId == currentHumanId.HumanId); // Прыжок на индекс редактируемого человека
+            PersonIndex = HumansList.FindIndex(x => x.HumanId == Humans.CurrentHuman.HumanId); // Прыжок на индекс редактируемого человека
             RaisePropertyChanged(nameof(PersonIndex));
 
             var currentReason = PlainReasonsList.FirstOrDefault(x => x.ReasonId == SelectedHuman.DeathReasonId);
@@ -289,10 +288,10 @@ namespace MemoRandom.Client.ViewModels
             var result = MessageBox.Show("Удалить выбранного человека?", "Удаление!", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if(result == MessageBoxResult.Yes)
             {
-                _humansController.DeleteHuman();
+                _msSqlController.DeleteHuman(Humans.CurrentHuman);
 
                 HumansList.Clear();
-                HumansList = _humansController.GetHumans();
+                HumansList = _msSqlController.GetHumans();
                 
                 if(HumansList.Count == 0)
                 {
@@ -320,28 +319,58 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void MetroWindow_Loaded(object sender, RoutedEventArgs e)
+        public void HumansListView_Loaded(object sender, RoutedEventArgs e)
         {
             Task.Factory.StartNew(() =>
             {
-                var result = _humansController.GetHumans();
-                Dispatcher.CurrentDispatcher.Invoke(() =>
+                var result = _msSqlController.GetHumans();
+                if(result != null)
                 {
-                    Humans.HumansList = result;
-                    RaisePropertyChanged(nameof(Humans.HumansList));
-                });
+                    Dispatcher.CurrentDispatcher.Invoke(() =>
+                    {
+                        Humans.HumansList = result;
+                        RaisePropertyChanged(nameof(HumansList));
+                    });
+                }
             });
-
-            PlainReasonsList = Reasons.PlainReasonsList;
         }
 
+        /// <summary>
+        /// Обработчик закрытия окна
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void HumansListView_Closed(object sender, System.EventArgs e)
+        {
+            Dispose();
+            (sender as Window).Close();
+        }
+
+        /// <summary>
+        /// Если буду чистить ненужные объекты
+        /// </summary>
+        public void Dispose()
+        {
+            
+        }
+
+
+
+
+
+
+
+
+
+
+
         #region CTOR
-        public HumansListViewModel(ILogger logger, IContainer container, IEventAggregator eventAggregator, IHumansController humansController)
+        public HumansListViewModel(ILogger logger, IContainer container, IEventAggregator eventAggregator, IMsSqlController msSqlController)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _container = container ?? throw new ArgumentNullException(nameof(container));
             _eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
-            _humansController = humansController ?? throw new ArgumentNullException(nameof(humansController));
+            _msSqlController = msSqlController ?? throw new ArgumentNullException(nameof(msSqlController));
 
             //Title = HeaderDefault;
             ////_humansFile = ConfigurationManager.AppSettings["HumansPath"];

@@ -9,12 +9,7 @@ using Prism.Commands;
 using Prism.Events;
 using System.Windows;
 using System.Windows.Threading;
-using MemoRandom.Data.Controllers;
-using MemoRandom.Data.Implementations;
 using MemoRandom.Data.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using MemoRandom.Data.Repositories;
-using MemoRandom.Models.Interfaces;
 using System.Collections.Generic;
 
 namespace MemoRandom.Client.ViewModels
@@ -25,8 +20,7 @@ namespace MemoRandom.Client.ViewModels
         private string _reasonsViewTitle = "Справочник причин смерти";
         private readonly ILogger _logger; // Экземпляр журнала
         private readonly IEventAggregator _eventAggregator;
-        private readonly IReasonsController _dbController;
-        private readonly IReasonsHelper _reasonsHelper;
+        private readonly IMsSqlController _dbController;
         private bool _cancelButtonEnabled = false; // Для кнопки отмены
         private bool _deleteButtonEnabled = false; // Для кнопки удаления
         private bool _changeSaveButtonEnabled = false; // Для кнопки изменения/сохранения
@@ -45,7 +39,7 @@ namespace MemoRandom.Client.ViewModels
         private string _reasonComment;
         private string _reasonDescription;
         private Reason _selectedReason;
-        private ObservableCollection<Reason> _reasonsList = new();
+        //private ObservableCollection<Reason> _reasonsList = new();
         #endregion
 
         #region PROPS
@@ -61,6 +55,7 @@ namespace MemoRandom.Client.ViewModels
                 RaisePropertyChanged();
             }
         }
+
         /// <summary>
         /// Свойство доступности кнопки отмены
         /// </summary>
@@ -73,6 +68,7 @@ namespace MemoRandom.Client.ViewModels
                 RaisePropertyChanged(nameof(CancelButtonEnabled));
             }
         }
+        
         /// <summary>
         /// Свойство доступности кнопки удаления
         /// </summary>
@@ -85,6 +81,7 @@ namespace MemoRandom.Client.ViewModels
                 RaisePropertyChanged(nameof(DeleteButtonEnabled));
             }
         }
+        
         /// <summary>
         /// Свойство доступности кнопки изменения/сохранения
         /// </summary>
@@ -97,6 +94,7 @@ namespace MemoRandom.Client.ViewModels
                 RaisePropertyChanged(nameof(ChangeSaveButtonEnabled));
             }
         }
+        
         /// <summary>
         /// Свойство доступности кнопки добавления/сохранения
         /// </summary>
@@ -109,6 +107,7 @@ namespace MemoRandom.Client.ViewModels
                 RaisePropertyChanged(nameof(AddSaveButtonEnabled));
             }
         }
+        
         /// <summary>
         /// Текст кнопки изменения/сохранения
         /// </summary>
@@ -121,6 +120,7 @@ namespace MemoRandom.Client.ViewModels
                 RaisePropertyChanged(nameof(SaveButtonText));
             }
         }
+        
         /// <summary>
         /// Текст кнопки добавления/сохранения
         /// </summary>
@@ -133,6 +133,7 @@ namespace MemoRandom.Client.ViewModels
                 RaisePropertyChanged(nameof(AddButtonText));
             }
         }
+        
         /// <summary>
         /// Свойство доступности полей для редактирования
         /// </summary>
@@ -145,6 +146,7 @@ namespace MemoRandom.Client.ViewModels
                 RaisePropertyChanged(nameof(FieldsEnabled));
             }
         }
+        
         /// <summary>
         /// Название причины смерти - является именем узла в иерархическом дереве
         /// </summary>
@@ -157,6 +159,7 @@ namespace MemoRandom.Client.ViewModels
                 RaisePropertyChanged(nameof(ReasonName));
             }
         }
+        
         /// <summary>
         /// Комментарий к причине смерти
         /// </summary>
@@ -170,6 +173,7 @@ namespace MemoRandom.Client.ViewModels
                 RaisePropertyChanged(nameof(ReasonComment));
             }
         }
+        
         /// <summary>
         /// Описание причины смерти
         /// </summary>
@@ -183,6 +187,7 @@ namespace MemoRandom.Client.ViewModels
                 RaisePropertyChanged(nameof(ReasonDescription));
             }
         }
+        
         /// <summary>
         /// Выбранный узел (причина смерти) в иерархическом дереве
         /// </summary>
@@ -196,19 +201,32 @@ namespace MemoRandom.Client.ViewModels
                 RaisePropertyChanged(nameof(SelectedReason));
             }
         }
+        
         /// <summary>
         /// Коллекция причин смерти - для древовидного отображения
         /// </summary>
         public ObservableCollection<Reason> ReasonsList
         {
-            get => _reasonsList;
+            get => Reasons.ReasonsCollection;
             set
             {
-                if (_reasonsList == value) return;
-                _reasonsList = value;
+                if (Reasons.ReasonsCollection == value) return;
+                Reasons.ReasonsCollection = value;
             }
         }
-        private List<Reason> PlainReasonsList { get; set; }
+
+        /// <summary>
+        /// Плоский список - нужен только для раоты с БД и со списком в окне редактирования людей
+        /// </summary>
+        private List<Reason> PlainReasonsList
+        {
+            get => Reasons.PlainReasonsList;
+            set
+            {
+                Reasons.PlainReasonsList = value;
+                RaisePropertyChanged(nameof(PlainReasonsList));
+            }
+        }
         #endregion
 
         #region COMMANDS
@@ -247,18 +265,6 @@ namespace MemoRandom.Client.ViewModels
         #endregion
 
         #region Блок отработки команд
-        /// <summary>
-        /// Загрузка окна справочника причин смерти
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        public void ReasonsDictionary_Loaded(object sender, System.Windows.RoutedEventArgs e)
-        {
-            ReasonsList = _reasonsHelper.GetReasonsHierarchicalCollection(); // Получаем иерархическую коллекцию
-            PlainReasonsList = _reasonsHelper.GetReasonsPlainList(); // Получаем плоский список
-            RaisePropertyChanged(nameof(ReasonsList));
-        }
-
         /// <summary>
         /// Команда добавления записи в справочник причин смерти
         /// </summary>
@@ -489,10 +495,6 @@ namespace MemoRandom.Client.ViewModels
         }
         #endregion
 
-
-
-
-
         /// <summary>
         /// Инициализация команд
         /// </summary>
@@ -506,6 +508,15 @@ namespace MemoRandom.Client.ViewModels
             ChangeCommand = new DelegateCommand(OnChangeCommand);
         }
 
+
+
+
+
+
+
+
+
+
         #region CTOR
         /// <summary>
         /// Конструктор
@@ -515,12 +526,11 @@ namespace MemoRandom.Client.ViewModels
         /// <param name="dbController"></param>
         /// <param name="reasonsHelper"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public ReasonsViewModel(ILogger logger, IEventAggregator eventAggregator, IReasonsController dbController, IReasonsHelper reasonsHelper)
+        public ReasonsViewModel(ILogger logger, IEventAggregator eventAggregator, IMsSqlController dbController)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
             _dbController = dbController ?? throw new ArgumentNullException(nameof(dbController));
-            _reasonsHelper = reasonsHelper ?? throw new ArgumentNullException(nameof(reasonsHelper));
 
             InitializeCommands();
         }

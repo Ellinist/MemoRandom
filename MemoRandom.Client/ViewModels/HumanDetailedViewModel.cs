@@ -22,7 +22,7 @@ namespace MemoRandom.Client.ViewModels
         public Action CloseAction { get; set; }
 
         #region PRIVATE FIELDS
-        private readonly IHumansController _humanController;
+        private readonly IMsSqlController _msSqlController;
 
         private const double SourceWidth = 450;
         private const double SourceHeight = 350;
@@ -524,7 +524,7 @@ namespace MemoRandom.Client.ViewModels
         {
             DetailedWiew = sender as Window;
 
-            Human human = _humanController.GetCurrentHuman();
+            Human human = Humans.CurrentHuman;
 
             if (human != null)
             {
@@ -539,7 +539,7 @@ namespace MemoRandom.Client.ViewModels
                 DeathPlace = human.DeathPlace;
                 HumanComments = human.HumanComments;
                 DeathReasonId = human.DeathReasonId;
-                TargetImageSource = (BitmapSource)_humanController.GetHumanImage(); // Загружаем изображение
+                TargetImageSource = (BitmapSource)_msSqlController.GetHumanImage(Humans.CurrentHuman); // Загружаем изображение
             }
             else
             {
@@ -570,7 +570,7 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private void SaveHuman()
         {
-            var curHuman = _humanController.GetCurrentHuman();
+            var curHuman = Humans.CurrentHuman;
             if (curHuman != null) // Редактирование
             {
                 curHuman.LastName = LastName;
@@ -588,7 +588,8 @@ namespace MemoRandom.Client.ViewModels
                 curHuman.DaysLived = (DeathDate - BirthDate).Days; // Считаем число прожитых дней
                 curHuman.FullYearsLived = (float)((DeathDate - BirthDate).Days / 365.25D); // Считаем число полных прожитых лет
 
-                _humanController.SetCurrentHuman(curHuman);
+                Humans.CurrentHuman = curHuman;
+                //_msSqlController.SetCurrentHuman(curHuman);
             }
             else // Добавление нового
             {
@@ -610,12 +611,13 @@ namespace MemoRandom.Client.ViewModels
                     DeathReasonId = DeathReasonId,
                     DaysLived = (DeathDate - BirthDate).Days, // Считаем число прожитых дней
                     FullYearsLived = (float)((DeathDate - BirthDate).Days / 365.25) // Считаем число полных прожитых лет
-            };
+                };
 
-                _humanController.SetCurrentHuman(human);
+                Humans.CurrentHuman = human;
+                //_msSqlController.SetCurrentHuman(human);
             }
 
-            _humanController.UpdateHumans(BitmapSourceToBitmapImage(TargetImageSource));
+            _msSqlController.UpdateHumans(Humans.CurrentHuman, BitmapSourceToBitmapImage(TargetImageSource));
 
             CloseAction(); // Закрываем окно
         }
@@ -693,9 +695,9 @@ namespace MemoRandom.Client.ViewModels
         }
 
         #region CTOR
-        public HumanDetailedViewModel(IHumansController humansController)
+        public HumanDetailedViewModel(IMsSqlController msSqlController)
         {
-            _humanController = humansController ?? throw new ArgumentNullException(nameof(humansController));
+            _msSqlController = msSqlController ?? throw new ArgumentNullException(nameof(msSqlController));
 
             InitializeCommands();
         }

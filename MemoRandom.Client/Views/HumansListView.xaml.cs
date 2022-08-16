@@ -10,16 +10,6 @@ namespace MemoRandom.Client.Views
     {
         private readonly HumansListViewModel _vm;
 
-        /// <summary>
-        /// Загрузка окна со списком людей
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void MetroWindow_Loaded(object sender, System.Windows.RoutedEventArgs e)
-        {
-            _vm.MetroWindow_Loaded(sender, e);
-        }
-
         #region CTOR
         /// <summary>
         /// Конструктор
@@ -32,6 +22,9 @@ namespace MemoRandom.Client.Views
             InitializeComponent();
 
             DataContext = vm;
+
+            this.Loaded += _vm.HumansListView_Loaded; // Событие открытия окна
+            this.Closed += _vm.HumansListView_Closed; // Событие закрытия окна
         }
         #endregion
     }

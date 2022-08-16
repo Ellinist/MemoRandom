@@ -11,8 +11,7 @@
                  ShowIconOnTitleBar="True"
                  Icon="pack://application:,,,/Resources/Icons/reasonsIcon.ico"
                  x:Name="ReasonsDictionary"
-                 Height="450" Width="800"
-                 Loaded="ReasonsDictionary_Loaded" >
+                 Height="450" Width="800">
 
     <mah:MetroWindow.Resources>
         <!--Стиль контрола TextBox-->

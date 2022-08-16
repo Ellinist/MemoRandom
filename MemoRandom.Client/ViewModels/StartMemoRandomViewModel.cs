@@ -1,20 +1,15 @@
 ﻿using NLog;
 using System;
 using DryIoc;
-using System.IO;
 using Prism.Mvvm;
 using System.Windows;
-using Prism.Commands;
 using System.Threading;
 using System.Configuration;
 using System.Threading.Tasks;
 using MemoRandom.Client.Views;
 using System.Windows.Threading;
-using Microsoft.Data.SqlClient;
 using MemoRandom.Data.Interfaces;
-using MemoRandom.Data.Repositories;
 using MemoRandom.Models.Models;
-using MemoRandom.Data.DbModels;
 using System.Collections.Generic;
 
 namespace MemoRandom.Client.ViewModels
@@ -33,7 +28,7 @@ namespace MemoRandom.Client.ViewModels
         private DateTime _currentDateTime = DateTime.Now;
         private readonly ILogger _logger; // Экземпляр журнала
         private readonly IContainer _container; // Контейнер
-        private readonly IReasonsController _reasonsController;
+        private readonly IMsSqlController _msSqlController;
         private bool _active = true; // Флаг активности текущего окна
         #endregion
 
@@ -187,29 +182,31 @@ namespace MemoRandom.Client.ViewModels
             string imagefilepath = ConfigurationManager.AppSettings[_imageFolderName]; // Имя папки с изображениями
             if(imagefilepath == null) return; // Если в файле конфигурации нет имени папки, то выходим (ничего не делаем)
 
-            // Проверяем, существует ли папка хранения БД - только для случая генерации БД
-            var dbBaseDirectory = AppDomain.CurrentDomain.BaseDirectory + dbfilepath;
-            if (!Directory.Exists(dbBaseDirectory))
-            {
-                Directory.CreateDirectory(dbBaseDirectory);
-            }
+            var res = _msSqlController.SetPaths(dbfilename, dbfilepath, imagefilepath, @"Kotarius\KotariusServer");
 
-            // Проверяем, существует ли папка хранения изображений
-            HumansRepository.ImageFolder = AppDomain.CurrentDomain.BaseDirectory + imagefilepath;
-            if (!Directory.Exists(HumansRepository.ImageFolder))
-            {
-                Directory.CreateDirectory(HumansRepository.ImageFolder);
-            }
+            //// Проверяем, существует ли папка хранения БД - только для случая генерации БД
+            //var dbBaseDirectory = AppDomain.CurrentDomain.BaseDirectory + dbfilepath;
+            //if (!Directory.Exists(dbBaseDirectory))
+            //{
+            //    Directory.CreateDirectory(dbBaseDirectory);
+            //}
 
-            string combinedPath = Path.Combine(dbBaseDirectory, dbfilename);
-            SqlConnectionStringBuilder connectionStringBuilder = new SqlConnectionStringBuilder
-            {
-                DataSource         = @"Kotarius\KotariusServer",
-                AttachDBFilename   = combinedPath,
-                InitialCatalog     = Path.GetFileNameWithoutExtension(combinedPath),
-                IntegratedSecurity = true
-            };
-            HumansRepository.DbConnectionString = connectionStringBuilder.ConnectionString;
+            //// Проверяем, существует ли папка хранения изображений
+            //HumansRepository.ImageFolder = AppDomain.CurrentDomain.BaseDirectory + imagefilepath;
+            //if (!Directory.Exists(HumansRepository.ImageFolder))
+            //{
+            //    Directory.CreateDirectory(HumansRepository.ImageFolder);
+            //}
+
+            //string combinedPath = Path.Combine(dbBaseDirectory, dbfilename);
+            //SqlConnectionStringBuilder connectionStringBuilder = new SqlConnectionStringBuilder
+            //{
+            //    DataSource         = @"Kotarius\KotariusServer",
+            //    AttachDBFilename   = combinedPath,
+            //    InitialCatalog     = Path.GetFileNameWithoutExtension(combinedPath),
+            //    IntegratedSecurity = true
+            //};
+            //HumansRepository.DbConnectionString = connectionStringBuilder.ConnectionString;
         }
 
         /// <summary>
@@ -220,7 +217,7 @@ namespace MemoRandom.Client.ViewModels
             List<Reason> reasonsResult = new();
             await Task.Run(() =>
             {
-                reasonsResult = _reasonsController.GetReasons();
+                reasonsResult = _msSqlController.GetReasons();
                 if (reasonsResult != null)
                 {
                     Reasons.PlainReasonsList = reasonsResult; // Заносим плоский список в статический класс
@@ -299,11 +296,11 @@ namespace MemoRandom.Client.ViewModels
         /// <param name="logger"></param>
         /// <param name="container"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public StartMemoRandomViewModel(ILogger logger, IContainer container, IReasonsController reasonsController)
+        public StartMemoRandomViewModel(ILogger logger, IContainer container, IMsSqlController msSqlController)
         {
-            _logger            = logger ?? throw new ArgumentNullException(nameof(logger));
-            _container         = container ?? throw new ArgumentNullException(nameof(container));
-            _reasonsController = reasonsController ?? throw new ArgumentNullException(nameof(reasonsController));
+            _logger          = logger ?? throw new ArgumentNullException(nameof(logger));
+            _container       = container ?? throw new ArgumentNullException(nameof(container));
+            _msSqlController = msSqlController ?? throw new ArgumentNullException(nameof(msSqlController));
         }
         #endregion
     }

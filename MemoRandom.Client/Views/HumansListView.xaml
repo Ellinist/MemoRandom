@@ -17,7 +17,7 @@
                  MinWidth="1600"
                  MinHeight="900"
                  WindowStartupLocation="CenterScreen"
-                 WindowState="Maximized" Loaded="MetroWindow_Loaded">
+                 WindowState="Maximized">
 
     <mah:MetroWindow.Resources>
         <FontFamily x:Key="SurnameFont">pack://application:,,,/Resources/Fonts/Treasury.ttf#TreasuryFlourishC</FontFamily>

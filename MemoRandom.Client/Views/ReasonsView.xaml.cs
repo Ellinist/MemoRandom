@@ -10,15 +10,6 @@ namespace MemoRandom.Client.Views
     {
         private readonly ReasonsViewModel _vm; // Модель представления справочника причин смерти
 
-        /// <summary>
-        /// Загрузка окна справочника причин смерти
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ReasonsDictionary_Loaded(object sender, System.Windows.RoutedEventArgs e)
-        {
-            _vm.ReasonsDictionary_Loaded(sender, e);
-        }
 
 
 

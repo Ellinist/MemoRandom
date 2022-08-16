@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace MemoRandom.Models.Models
 {
@@ -11,6 +7,14 @@ namespace MemoRandom.Models.Models
     /// </summary>
     public static class Humans
     {
+        /// <summary>
+        /// Статический класс, получаемый из внешнего хранилища
+        /// </summary>
         public static List<Human> HumansList { get; set; } = new();
+
+        /// <summary>
+        /// Текущий человек, с которым ведется работа
+        /// </summary>
+        public static Human CurrentHuman { get; set; }
     }
 }
