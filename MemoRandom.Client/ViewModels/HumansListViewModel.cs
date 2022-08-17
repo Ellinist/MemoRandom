@@ -15,6 +15,7 @@ using System.Windows.Threading;
 using System.Windows;
 using System.Text;
 using System.Collections.ObjectModel;
+using MemoRandom.Client.Enums;
 
 namespace MemoRandom.Client.ViewModels
 {
@@ -33,6 +34,8 @@ namespace MemoRandom.Client.ViewModels
         private string _displayedYears = "";
         private string _humanDeathReasonName;
         private readonly StringBuilder YearsText = new();
+        //private HumanColumns _sortedColumn;
+
         private readonly ILogger _logger; // Экземпляр журнала
         private readonly IContainer _container; // Контейнер
         private readonly IEventAggregator _eventAggregator;
@@ -239,6 +242,13 @@ namespace MemoRandom.Client.ViewModels
             StartAboutCommand = new DelegateCommand(OpenAboutView);
         }
 
+        private string _sortingColumn;
+
+        public void DgHumans_Sorting(object sender, System.Windows.Controls.DataGridSortingEventArgs e)
+        {
+            _sortingColumn = e.Column.Header.ToString();
+        }
+
         /// <summary>
         /// Запуск окна создания нового человека
         /// </summary>
@@ -272,11 +282,47 @@ namespace MemoRandom.Client.ViewModels
             var temp = PersonIndex;
             _container.Resolve<HumanDetailedView>().ShowDialog();
 
-            //SelectedHuman = Humans.CurrentHuman;
-            HumansList = Humans.HumansList;
-            PersonIndex = temp/*HumansList.IndexOf(Humans.CurrentHuman)*/;
+            //switch (_sortingColumn)
+            //{
+            //    case "Фамилия":
+            //        Humans.HumansList.OrderBy(x => x.LastName);
+            //        break;
+            //    case "Имя":
+            //        Humans.HumansList.OrderBy(x => x.FirstName);
+            //        break;
+            //    case "Отчество":
+            //        Humans.HumansList.OrderBy(x => x.Patronymic);
+            //        break;
+            //    case "Дата рождения":
+            //        Humans.HumansList.OrderBy(x => x.BirthDate);
+            //        break;
+            //    case "Родная страна":
+            //        Humans.HumansList.OrderBy(x => x.BirthCountry);
+            //        break;
+            //    case "Место рождения":
+            //        Humans.HumansList.OrderBy(x => x.BirthPlace);
+            //        break;
+            //    case "Дата смерти":
+            //        Humans.HumansList.OrderBy(x => x.DeathDate);
+            //        break;
+            //    case "Страна смерти":
+            //        Humans.HumansList.OrderBy(x => x.DeathCountry);
+            //        break;
+            //    case "Место смерти":
+            //        Humans.HumansList.OrderBy(x => x.DeathPlace);
+            //        break;
+            //    case "Дней":
+            //        Humans.HumansList.OrderBy(x => x.DaysLived);
+            //        break;
+            //    case "Лет":
+            //        Humans.HumansList.OrderBy(x => x.FullYearsLived);
+            //        break;
+            //}
+            
+            //HumansList = Humans.HumansList;
+            PersonIndex = temp;
 
-            RaisePropertyChanged(nameof(Humans.HumansList));
+            RaisePropertyChanged(nameof(HumansList));
             RaisePropertyChanged(nameof(PersonIndex));
 
             var currentReason = PlainReasonsList.FirstOrDefault(x => x.ReasonId == SelectedHuman.DeathReasonId);

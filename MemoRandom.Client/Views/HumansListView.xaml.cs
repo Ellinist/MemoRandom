@@ -25,6 +25,7 @@ namespace MemoRandom.Client.Views
 
             this.Loaded += _vm.HumansListView_Loaded; // Событие открытия окна
             this.Closed += _vm.HumansListView_Closed; // Событие закрытия окна
+            DgHumans.Sorting += _vm.DgHumans_Sorting; // Событие сортировки по столбцу
         }
         #endregion
     }
