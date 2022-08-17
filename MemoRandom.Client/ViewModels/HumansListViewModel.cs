@@ -243,8 +243,11 @@ namespace MemoRandom.Client.ViewModels
             StartAboutCommand = new DelegateCommand(OpenAboutView);
         }
 
-        private string _sortingColumn;
-
+        /// <summary>
+        /// Событие сортировки по заголовку столбца
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public void DgHumans_Sorting(object sender, System.Windows.Controls.DataGridSortingEventArgs e)
         {
             _sortDirection = e.Column.SortDirection.ToString();
@@ -257,7 +260,6 @@ namespace MemoRandom.Client.ViewModels
         private void AddHuman()
         {
             Humans.CurrentHuman = null;
-            //_previousIndex = PersonIndex;
             _container.Resolve<HumanDetailedView>().ShowDialog(); // Открываем окно создания/редактирования
             if (Humans.CurrentHuman != null)
             {
@@ -281,7 +283,6 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private void EditHumanData()
         {
-            //var temp = PersonIndex;
             _container.Resolve<HumanDetailedView>().ShowDialog();
 
             var id = Humans.CurrentHuman.HumanId;
