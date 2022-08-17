@@ -247,6 +247,8 @@ namespace MemoRandom.Client.ViewModels
         public void DgHumans_Sorting(object sender, System.Windows.Controls.DataGridSortingEventArgs e)
         {
             _sortingColumn = e.Column.Header.ToString();
+            var t1 = e.Column.SortDirection;
+            var t2 = e.Column.SortMemberPath;
         }
 
         /// <summary>
@@ -318,8 +320,14 @@ namespace MemoRandom.Client.ViewModels
             //        Humans.HumansList.OrderBy(x => x.FullYearsLived);
             //        break;
             //}
-            
+
             //HumansList = Humans.HumansList;
+
+            Humans.HumansList.OrderBy(s => s.LastName);
+            RaisePropertyChanged(nameof(Humans.HumansList));
+
+            HumansList = Humans.HumansList;
+
             PersonIndex = temp;
 
             RaisePropertyChanged(nameof(HumansList));
