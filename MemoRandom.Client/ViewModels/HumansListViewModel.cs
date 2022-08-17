@@ -34,7 +34,8 @@ namespace MemoRandom.Client.ViewModels
         private string _displayedYears = "";
         private string _humanDeathReasonName;
         private readonly StringBuilder YearsText = new();
-        //private HumanColumns _sortedColumn;
+        private string _sortMember;
+        private string _sortDirection;
 
         private readonly ILogger _logger; // Экземпляр журнала
         private readonly IContainer _container; // Контейнер
@@ -246,9 +247,8 @@ namespace MemoRandom.Client.ViewModels
 
         public void DgHumans_Sorting(object sender, System.Windows.Controls.DataGridSortingEventArgs e)
         {
-            _sortingColumn = e.Column.Header.ToString();
-            var t1 = e.Column.SortDirection;
-            var t2 = e.Column.SortMemberPath;
+            _sortDirection = e.Column.SortDirection.ToString();
+            _sortMember = e.Column.SortMemberPath.ToString();
         }
 
         /// <summary>
@@ -281,54 +281,71 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private void EditHumanData()
         {
-            var temp = PersonIndex;
+            //var temp = PersonIndex;
             _container.Resolve<HumanDetailedView>().ShowDialog();
 
-            //switch (_sortingColumn)
-            //{
-            //    case "Фамилия":
-            //        Humans.HumansList.OrderBy(x => x.LastName);
-            //        break;
-            //    case "Имя":
-            //        Humans.HumansList.OrderBy(x => x.FirstName);
-            //        break;
-            //    case "Отчество":
-            //        Humans.HumansList.OrderBy(x => x.Patronymic);
-            //        break;
-            //    case "Дата рождения":
-            //        Humans.HumansList.OrderBy(x => x.BirthDate);
-            //        break;
-            //    case "Родная страна":
-            //        Humans.HumansList.OrderBy(x => x.BirthCountry);
-            //        break;
-            //    case "Место рождения":
-            //        Humans.HumansList.OrderBy(x => x.BirthPlace);
-            //        break;
-            //    case "Дата смерти":
-            //        Humans.HumansList.OrderBy(x => x.DeathDate);
-            //        break;
-            //    case "Страна смерти":
-            //        Humans.HumansList.OrderBy(x => x.DeathCountry);
-            //        break;
-            //    case "Место смерти":
-            //        Humans.HumansList.OrderBy(x => x.DeathPlace);
-            //        break;
-            //    case "Дней":
-            //        Humans.HumansList.OrderBy(x => x.DaysLived);
-            //        break;
-            //    case "Лет":
-            //        Humans.HumansList.OrderBy(x => x.FullYearsLived);
-            //        break;
-            //}
+            var id = Humans.CurrentHuman.HumanId;
 
-            //HumansList = Humans.HumansList;
+            switch (_sortMember)
+            {
+                case "LastName":
+                    if (_sortDirection == "Ascending") Humans.HumansList.OrderBy(x => x.LastName);
+                    else Humans.HumansList.OrderByDescending(x => x.LastName);
+                    break;
+                case "FirstName":
+                    if (_sortDirection == "Ascending") Humans.HumansList.OrderBy(x => x.FirstName);
+                    else Humans.HumansList.OrderByDescending(x => x.FirstName);
+                    break;
+                case "Patronymic":
+                    if (_sortDirection == "Ascending") Humans.HumansList.OrderBy(x => x.Patronymic);
+                    else Humans.HumansList.OrderByDescending(x => x.Patronymic);
+                    break;
+                case "BirthDate":
+                    if (_sortDirection == "Ascending") Humans.HumansList.OrderBy(x => x.BirthDate);
+                    else Humans.HumansList.OrderByDescending(x => x.BirthDate);
+                    break;
+                case "BirthCountry":
+                    if (_sortDirection == "Ascending") Humans.HumansList.OrderBy(x => x.BirthCountry);
+                    else Humans.HumansList.OrderByDescending(x => x.BirthCountry);
+                    break;
+                case "BirthPlace":
+                    if (_sortDirection == "Ascending") Humans.HumansList.OrderBy(x => x.BirthPlace);
+                    else Humans.HumansList.OrderByDescending(x => x.BirthPlace);
+                    break;
+                case "DeathDate":
+                    if (_sortDirection == "Ascending") Humans.HumansList.OrderBy(x => x.DeathDate);
+                    else Humans.HumansList.OrderByDescending(x => x.DeathDate);
+                    break;
+                case "DeathCountry":
+                    if (_sortDirection == "Ascending") Humans.HumansList.OrderBy(x => x.DeathCountry);
+                    else Humans.HumansList.OrderByDescending(x => x.DeathCountry);
+                    break;
+                case "DeathPlace":
+                    if (_sortDirection == "Ascending") Humans.HumansList.OrderBy(x => x.DeathPlace);
+                    else Humans.HumansList.OrderByDescending(x => x.DeathPlace);
+                    break;
+                case "DaysLived":
+                    if (_sortDirection == "Ascending") Humans.HumansList.OrderBy(x => x.DaysLived);
+                    else Humans.HumansList.OrderByDescending(x => x.DaysLived);
+                    break;
+                case "FullYearsLived":
+                    if (_sortDirection == "Ascending") Humans.HumansList.OrderBy(x => x.FullYearsLived);
+                    else Humans.HumansList.OrderByDescending(x => x.FullYearsLived);
+                    break;
+            }
 
-            Humans.HumansList.OrderBy(s => s.LastName);
+            var interoperationList = Humans.HumansList.OrderBy(s => s.LastName).ToList();
+
+            Humans.HumansList.Clear();
+            foreach (var item in interoperationList)
+            {
+                Humans.HumansList.Add(item);
+            }
+
             RaisePropertyChanged(nameof(Humans.HumansList));
-
             HumansList = Humans.HumansList;
 
-            PersonIndex = temp;
+            PersonIndex = HumansList.IndexOf(Humans.CurrentHuman);
 
             RaisePropertyChanged(nameof(HumansList));
             RaisePropertyChanged(nameof(PersonIndex));
