@@ -116,7 +116,7 @@ namespace MemoRandom.Models.Models
             set
             {
                 _birthPlace = value;
-                RaisePropertyChanged(nameof(_birthPlace));
+                RaisePropertyChanged(nameof(BirthPlace));
             }
         }
 

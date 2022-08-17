@@ -9,6 +9,7 @@ using NLog;
 using Microsoft.Data.SqlClient;
 using System.IO;
 using System.Windows.Media.Imaging;
+using System.Collections.ObjectModel;
 
 namespace MemoRandom.Data.Implementations
 {
@@ -213,9 +214,9 @@ namespace MemoRandom.Data.Implementations
         /// Получение списка людей из внешнего хранилища
         /// </summary>
         /// <returns></returns>
-        public List<Human> GetHumans()
+        public ObservableCollection<Human> GetHumans()
         {
-            List<Human> humansList = new();
+            ObservableCollection<Human> humansList = new();
 
             using (MemoContext = new MemoRandomDbContext(DbConnectionString))
             {
@@ -270,8 +271,7 @@ namespace MemoRandom.Data.Implementations
                 }
                 catch (Exception ex)
                 {
-                    humansList = null;
-                    //HumansRepository.HumansList = null; // В случае неуспеха чтения обнуляем иерархическую коллекцию
+                    humansList = null; // В случае неуспеха чтения обнуляем список людей
                     _logger.Error($"Ошибка чтения файла по людям: {ex.HResult}");
                 }
             }

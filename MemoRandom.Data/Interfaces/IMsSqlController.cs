@@ -54,7 +54,7 @@ namespace MemoRandom.Data.Interfaces
         /// Получение списка людей из внешнего хранилища
         /// </summary>
         /// <returns></returns>
-        List<Human> GetHumans();
+        ObservableCollection<Human> GetHumans();
 
         /// <summary>
         /// Обновление (добавление или редактирование) списка людей

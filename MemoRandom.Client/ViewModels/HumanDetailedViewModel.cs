@@ -616,6 +616,7 @@ namespace MemoRandom.Client.ViewModels
                 };
 
                 Humans.CurrentHuman = human;
+                Humans.HumansList.Add(human);
             }
 
             _msSqlController.UpdateHumans(Humans.CurrentHuman, BitmapSourceToBitmapImage(TargetImageSource));

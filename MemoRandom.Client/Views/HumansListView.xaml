@@ -95,7 +95,7 @@
                                           CanUserAddRows="False"
                                           IsSynchronizedWithCurrentItem="True"
                                           AutoGenerateColumns="False"
-                                          ItemsSource="{Binding HumansList}"
+                                          ItemsSource="{Binding HumansList, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}"
                                           Margin="1"
                                           SelectedItem="{Binding Path=SelectedHuman}"
                                           SelectedIndex="{Binding Path=PersonIndex}">
