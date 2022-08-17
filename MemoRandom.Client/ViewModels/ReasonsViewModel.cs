@@ -339,7 +339,7 @@ namespace MemoRandom.Client.ViewModels
         /// <summary>
         /// Команда внесения в иерархическое дерево произведенных изменений
         /// </summary>
-        private void OnChangeCommand()
+        private async void OnChangeCommand()
         {
             if (_changeMode) // Если в режиме редактирования - завершение
             {
@@ -359,7 +359,7 @@ namespace MemoRandom.Client.ViewModels
                 DeleteButtonEnabled     = false; // После изменения записи кнопка удаления недоступна до выбора узла
                 CancelButtonEnabled     = false; // После изменения записи кнопка отмены недоступна до выбора узла
 
-                Task.Factory.StartNew(() =>
+                await Task.Run(() =>
                 {
                     var result = _dbController.UpdateReasonInList(SelectedReason);
                     Dispatcher.CurrentDispatcher.Invoke(() =>
@@ -413,7 +413,7 @@ namespace MemoRandom.Client.ViewModels
         /// Подумать, не вставить ли туда предупреждение об этом
         /// </summary>
         /// <param name="obj"></param>
-        private void OnDeleteNodeCommand(object obj)
+        private async void OnDeleteNodeCommand(object obj)
         {
             if (obj is not Reason selectedNode) return;
 
@@ -429,9 +429,13 @@ namespace MemoRandom.Client.ViewModels
             var currentReason = PlainReasonsList.FirstOrDefault(x => x.ReasonId == selectedNode.ReasonId);
             PlainReasonsList.Remove(currentReason);
 
-            Task.Factory.StartNew(() =>
+            await Task.Run(() =>
             {
-                _dbController.DeleteReasonInList(selectedNode);
+                var result = _dbController.DeleteReasonInList(selectedNode);
+                if (!result)
+                {
+                    MessageBox.Show("Не удалось удалить причину!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             });
 
             RaisePropertyChanged(nameof(ReasonsList));
