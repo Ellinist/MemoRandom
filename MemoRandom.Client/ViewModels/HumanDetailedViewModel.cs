@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -9,6 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using MemoRandom.Data.Interfaces;
 using MemoRandom.Models.Models;
+using NLog;
 using Prism.Commands;
 using Prism.Mvvm;
 
@@ -22,6 +24,7 @@ namespace MemoRandom.Client.ViewModels
         public Action CloseAction { get; set; }
 
         #region PRIVATE FIELDS
+        private readonly ILogger          _logger;
         private readonly IMsSqlController _msSqlController;
 
         private const double SourceWidth = 450;
@@ -58,7 +61,6 @@ namespace MemoRandom.Client.ViewModels
         private double _shiftY; // Сдвиг картинки по оси Y при ее перемещении
 
         private Canvas _canvas;
-        private Window _window;
         #endregion
 
         #region PROPS
@@ -387,19 +389,6 @@ namespace MemoRandom.Client.ViewModels
                 RaisePropertyChanged(nameof(SourceCanvas));
             }
         }
-
-        /// <summary>
-        /// Текущее окно детальной информации по человеку
-        /// </summary>
-        public Window DetailedView
-        {
-            get => _window;
-            set
-            {
-                _window = value;
-                RaisePropertyChanged(nameof(DetailedView));
-            }
-        }
         #endregion
 
         #region Блок работы с изображением
@@ -523,8 +512,6 @@ namespace MemoRandom.Client.ViewModels
         /// <param name="e"></param>
         public void DetailedView_Loaded(object sender, RoutedEventArgs e)
         {
-            DetailedView = sender as Window;
-
             Human human = Humans.CurrentHuman;
 
             if (human != null)
@@ -571,7 +558,7 @@ namespace MemoRandom.Client.ViewModels
         /// <summary>
         /// Сохранение данных по человеку
         /// </summary>
-        private void SaveHuman()
+        private async void SaveHuman()
         {
             var curHuman = Humans.CurrentHuman;
             if (curHuman != null) // Редактирование
@@ -619,8 +606,20 @@ namespace MemoRandom.Client.ViewModels
                 Humans.HumansList.Add(human);
             }
 
-            _msSqlController.UpdateHumans(Humans.CurrentHuman, BitmapSourceToBitmapImage(TargetImageSource));
-            CloseAction(); // Закрываем окно
+            bool result = true;
+            try
+            {
+                await Task.Run(() =>
+                {
+                    result = _msSqlController.UpdateHumans(Humans.CurrentHuman, BitmapSourceToBitmapImage(TargetImageSource));
+                });
+                if(result) CloseAction(); // Закрываем окно
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Не удалось выполнить сохранение! Код ошибки в журнале!", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+                _logger.Error($"Ошибка: {ex}");
+            }
         }
 
         /// <summary>
@@ -645,7 +644,11 @@ namespace MemoRandom.Client.ViewModels
             return myBitmapImage;
         }
 
-        private void SelectNode(object obj)
+        /// <summary>
+        /// Щелчок на узле причины смерти
+        /// </summary>
+        /// <param name="obj"></param>
+        private void ClickReasonNode(object obj)
         {
             SelectedReason = obj as Reason;
             if(SelectedReason != null)
@@ -661,7 +664,7 @@ namespace MemoRandom.Client.ViewModels
         /// <summary>
         /// Метод загрузки изображения из буфера обмена
         /// </summary>
-        private void ImageLoad()
+        private void ImageLoadFromClipboard()
         {
             if (Clipboard.ContainsImage())
             {
@@ -688,14 +691,21 @@ namespace MemoRandom.Client.ViewModels
         private void InitializeCommands()
         {
             SaveHumanCommand      = new DelegateCommand(SaveHuman);
-            ImageLoadCommand      = new DelegateCommand(ImageLoad);
-            SelectNodeCommand     = new DelegateCommand<object>(SelectNode);
+            ImageLoadCommand      = new DelegateCommand(ImageLoadFromClipboard);
+            SelectNodeCommand     = new DelegateCommand<object>(ClickReasonNode);
             SetTargetImageCommand = new DelegateCommand<object>(SetTargetImage);
         }
 
         #region CTOR
-        public HumanDetailedViewModel(IMsSqlController msSqlController)
+        /// <summary>
+        /// Конструктор
+        /// </summary>
+        /// <param name="logger"></param>
+        /// <param name="msSqlController"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        public HumanDetailedViewModel(ILogger logger, IMsSqlController msSqlController)
         {
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _msSqlController = msSqlController ?? throw new ArgumentNullException(nameof(msSqlController));
 
             InitializeCommands();
