@@ -335,7 +335,10 @@ namespace MemoRandom.Data.Implementations
 
                         MemoContext.SaveChanges();
 
-                        SaveImageToFile(human, humanImage); // Сохраняем изображение
+                        if(humanImage != null)
+                        {
+                            SaveImageToFile(human, humanImage); // Сохраняем изображение
+                        }
                     }
                     else // Добавление новой записи
                     {
