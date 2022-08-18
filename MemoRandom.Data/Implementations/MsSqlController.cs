@@ -265,9 +265,6 @@ namespace MemoRandom.Data.Implementations
                         };
                         humansList.Add(human);
                     }
-
-                    //HumansRepository.HumansList.Clear();
-                    //HumansRepository.HumansList = humansList;
                 }
                 catch (Exception ex)
                 {
@@ -275,10 +272,7 @@ namespace MemoRandom.Data.Implementations
                     _logger.Error($"Ошибка чтения файла по людям: {ex.HResult}");
                 }
             }
-
             return humansList;
-            //ReadHumansList(); // Формируем репозиторий
-            //return HumansRepository.HumansList; // Возвращаем список людей из репозитория
         }
 
         /// <summary>
@@ -292,12 +286,10 @@ namespace MemoRandom.Data.Implementations
         {
             if (currentHuman != null) // Существующая запись
             {
-                //TODO здесь вызов обновления записи
                 return UpdateHumanInList(currentHuman, humanImage);
             }
             else // Новая запись
             {
-                //TODO здесь добавление записи
                 return AddHumanToList(currentHuman, humanImage);
             }
         }
@@ -376,7 +368,6 @@ namespace MemoRandom.Data.Implementations
                     _logger.Error($"Ошибка записи в список людей: {ex.HResult}");
                 }
             }
-
             return successResult;
         }
 
@@ -421,8 +412,6 @@ namespace MemoRandom.Data.Implementations
                     _logger.Error($"Ошибка записи информации по человеку: {ex.HResult}");
                 }
             }
-
-            //HumansRepository.CurrentHuman = human;
             return successResult;
         }
 
@@ -473,7 +462,6 @@ namespace MemoRandom.Data.Implementations
             {
                 string combinedImagePath = Path.Combine(ImageFolder, currentHuman.ImageFile);
 
-                //BitmapImage image = new BitmapImage(new Uri(combinedImagePath));
                 using Stream stream = File.OpenRead(combinedImagePath);
                 BitmapImage image = new BitmapImage();
                 image.BeginInit();
