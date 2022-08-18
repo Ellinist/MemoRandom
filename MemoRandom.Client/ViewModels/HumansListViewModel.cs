@@ -318,8 +318,7 @@ namespace MemoRandom.Client.ViewModels
             var result = MessageBox.Show("Удалить выбранного человека?", "Удаление!", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if(result == MessageBoxResult.Yes)
             {
-                var formerIndex = _previousIndex; // Индекс записи, которая была выделена до удаляемой записи
-                var formerId = HumansList[formerIndex].HumanId;
+                var formerId = HumansList[_previousIndex].HumanId;
                 try
                 {
                     await Task.Run(() =>
@@ -333,7 +332,6 @@ namespace MemoRandom.Client.ViewModels
                     MessageBox.Show("Не удалось Удалить!\n Код ошибки в журнале", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
                     _logger.Error($"Ошибка: {ex}");
                 }
-                //PersonIndex = formerIndex;
                 PersonIndex = HumansList.IndexOf(HumansList.FirstOrDefault(x => x.HumanId == formerId));
                 RaisePropertyChanged(nameof(PersonIndex));
             }
