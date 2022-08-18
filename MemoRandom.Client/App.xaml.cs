@@ -14,7 +14,7 @@ namespace MemoRandom.Client
     /// </summary>
     public partial class App : PrismApplication
     {
-        private static ILogger? _logger;
+        private static ILogger _logger;
 
         /// <summary>
         /// Создание оболочки приложения

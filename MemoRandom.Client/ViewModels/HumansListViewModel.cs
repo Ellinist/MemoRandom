@@ -1,7 +1,7 @@
 ﻿using DryIoc;
 using NLog;
 using Prism.Commands;
-using Prism.Events;
+//using Prism.Events;
 using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
@@ -11,11 +11,9 @@ using MemoRandom.Client.Views;
 using MemoRandom.Models.Models;
 using MemoRandom.Data.Interfaces;
 using System.Windows.Media.Imaging;
-using System.Windows.Threading;
 using System.Windows;
 using System.Text;
 using System.Collections.ObjectModel;
-using MemoRandom.Client.Enums;
 
 namespace MemoRandom.Client.ViewModels
 {
@@ -26,7 +24,7 @@ namespace MemoRandom.Client.ViewModels
     {
         #region PRIVATE FIELDS
         private string _humansViewTitle = "Начало";
-        private ObservableCollection<Human> _humansList;
+        //private ObservableCollection<Human> _humansList;
         private int _personIndex;
         private int _previousIndex = 0; // Индекс предыдущего выбранного узла в списке
         private Human _selectedHuman;
@@ -39,7 +37,7 @@ namespace MemoRandom.Client.ViewModels
 
         private readonly ILogger _logger; // Экземпляр журнала
         private readonly IContainer _container; // Контейнер
-        private readonly IEventAggregator _eventAggregator;
+        //private readonly IEventAggregator _eventAggregator;
         private readonly IMsSqlController _msSqlController;
         #endregion
 
@@ -260,24 +258,21 @@ namespace MemoRandom.Client.ViewModels
         {
             Humans.CurrentHuman = null; // Для новой записи!
             _container.Resolve<HumanDetailedView>().ShowDialog(); // Открываем окно создания/редактирования
+
+            if (Humans.CurrentHuman == null) return;
             
-            if (Humans.CurrentHuman != null)
+            ResortHumansList(); // Сортировка по условию
+            SelectedHuman = Humans.CurrentHuman;
+            PersonIndex = HumansList.IndexOf(Humans.CurrentHuman);
+            RaisePropertyChanged(nameof(PersonIndex));
+
+            ImageSource = _msSqlController.GetHumanImage(Humans.CurrentHuman);
+            RaisePropertyChanged(nameof(ImageSource));
+
+            var currentReason = PlainReasonsList.FirstOrDefault(x => x.ReasonId == SelectedHuman.DeathReasonId);
+            if (currentReason != null)
             {
-                ResortHumansList(); // Сортировка по условию
-
-                SelectedHuman = Humans.CurrentHuman;
-
-                PersonIndex = HumansList.IndexOf(Humans.CurrentHuman);
-                RaisePropertyChanged(nameof(PersonIndex));
-
-                ImageSource = _msSqlController.GetHumanImage(Humans.CurrentHuman);
-                RaisePropertyChanged(nameof(ImageSource));
-
-                var currentReason = PlainReasonsList.FirstOrDefault(x => x.ReasonId == SelectedHuman.DeathReasonId);
-                if (currentReason != null)
-                {
-                    HumanDeathReasonName = currentReason.ReasonName;
-                }
+                HumanDeathReasonName = currentReason.ReasonName;
             }
         }
 
@@ -316,25 +311,24 @@ namespace MemoRandom.Client.ViewModels
         private async void DeleteHuman()
         {
             var result = MessageBox.Show("Удалить выбранного человека?", "Удаление!", MessageBoxButton.YesNo, MessageBoxImage.Question);
-            if(result == MessageBoxResult.Yes)
+            if (result != MessageBoxResult.Yes) return;
+            
+            var formerId = HumansList[_previousIndex].HumanId;
+            try
             {
-                var formerId = HumansList[_previousIndex].HumanId;
-                try
+                await Task.Run(() =>
                 {
-                    await Task.Run(() =>
-                    {
-                        _msSqlController.DeleteHuman(SelectedHuman); // Удаление во внешнем хранилище
-                    });
-                    HumansList.Remove(SelectedHuman); // Удаление в списке
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Не удалось Удалить!\n Код ошибки в журнале", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
-                    _logger.Error($"Ошибка: {ex}");
-                }
-                PersonIndex = HumansList.IndexOf(HumansList.FirstOrDefault(x => x.HumanId == formerId));
-                RaisePropertyChanged(nameof(PersonIndex));
+                    _msSqlController.DeleteHuman(SelectedHuman); // Удаление во внешнем хранилище
+                });
+                HumansList.Remove(SelectedHuman); // Удаление в списке
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Не удалось Удалить!\n Код ошибки в журнале", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+                _logger.Error($"Ошибка: {ex}");
+            }
+            PersonIndex = HumansList.IndexOf(HumansList.FirstOrDefault(x => x.HumanId == formerId));
+            RaisePropertyChanged(nameof(PersonIndex));
         }
 
         /// <summary>
@@ -353,48 +347,37 @@ namespace MemoRandom.Client.ViewModels
                 switch (_sortMember)
                 {
                     case "LastName":
-                        if (_sortDirection == "Ascending") result = Humans.HumansList.OrderBy(x => x.LastName).ToList();
-                        else result = Humans.HumansList.OrderByDescending(x => x.LastName).ToList();
+                        result = _sortDirection == "Ascending" ? Humans.HumansList.OrderBy(x => x.LastName).ToList() : Humans.HumansList.OrderByDescending(x => x.LastName).ToList();
                         break;
                     case "FirstName":
-                        if (_sortDirection == "Ascending") result = Humans.HumansList.OrderBy(x => x.FirstName).ToList();
-                        else result = Humans.HumansList.OrderByDescending(x => x.FirstName).ToList();
+                        result = _sortDirection == "Ascending" ? Humans.HumansList.OrderBy(x => x.FirstName).ToList() : Humans.HumansList.OrderByDescending(x => x.FirstName).ToList();
                         break;
                     case "Patronymic":
-                        if (_sortDirection == "Ascending") result = Humans.HumansList.OrderBy(x => x.Patronymic).ToList();
-                        else result = Humans.HumansList.OrderByDescending(x => x.Patronymic).ToList();
+                        result = _sortDirection == "Ascending" ? Humans.HumansList.OrderBy(x => x.Patronymic).ToList() : Humans.HumansList.OrderByDescending(x => x.Patronymic).ToList();
                         break;
                     case "BirthDate":
-                        if (_sortDirection == "Ascending") result = Humans.HumansList.OrderBy(x => x.BirthDate).ToList();
-                        else result = Humans.HumansList.OrderByDescending(x => x.BirthDate).ToList();
+                        result = _sortDirection == "Ascending" ? Humans.HumansList.OrderBy(x => x.BirthDate).ToList() : Humans.HumansList.OrderByDescending(x => x.BirthDate).ToList();
                         break;
                     case "BirthCountry":
-                        if (_sortDirection == "Ascending") result = Humans.HumansList.OrderBy(x => x.BirthCountry).ToList();
-                        else result = Humans.HumansList.OrderByDescending(x => x.BirthCountry).ToList();
+                        result = _sortDirection == "Ascending" ? Humans.HumansList.OrderBy(x => x.BirthCountry).ToList() : Humans.HumansList.OrderByDescending(x => x.BirthCountry).ToList();
                         break;
                     case "BirthPlace":
-                        if (_sortDirection == "Ascending") result = Humans.HumansList.OrderBy(x => x.BirthPlace).ToList();
-                        else result = Humans.HumansList.OrderByDescending(x => x.BirthPlace).ToList();
+                        result = _sortDirection == "Ascending" ? Humans.HumansList.OrderBy(x => x.BirthPlace).ToList() : Humans.HumansList.OrderByDescending(x => x.BirthPlace).ToList();
                         break;
                     case "DeathDate":
-                        if (_sortDirection == "Ascending") result = Humans.HumansList.OrderBy(x => x.DeathDate).ToList();
-                        else result = Humans.HumansList.OrderByDescending(x => x.DeathDate).ToList();
+                        result = _sortDirection == "Ascending" ? Humans.HumansList.OrderBy(x => x.DeathDate).ToList() : Humans.HumansList.OrderByDescending(x => x.DeathDate).ToList();
                         break;
                     case "DeathCountry":
-                        if (_sortDirection == "Ascending") result = Humans.HumansList.OrderBy(x => x.DeathCountry).ToList();
-                        else result = Humans.HumansList.OrderByDescending(x => x.DeathCountry).ToList();
+                        result = _sortDirection == "Ascending" ? Humans.HumansList.OrderBy(x => x.DeathCountry).ToList() : Humans.HumansList.OrderByDescending(x => x.DeathCountry).ToList();
                         break;
                     case "DeathPlace":
-                        if (_sortDirection == "Ascending") result = Humans.HumansList.OrderBy(x => x.DeathPlace).ToList();
-                        else result = Humans.HumansList.OrderByDescending(x => x.DeathPlace).ToList();
+                        result = _sortDirection == "Ascending" ? Humans.HumansList.OrderBy(x => x.DeathPlace).ToList() : Humans.HumansList.OrderByDescending(x => x.DeathPlace).ToList();
                         break;
                     case "DaysLived":
-                        if (_sortDirection == "Ascending") result = Humans.HumansList.OrderBy(x => x.DaysLived).ToList();
-                        else result = Humans.HumansList.OrderByDescending(x => x.DaysLived).ToList();
+                        result = _sortDirection == "Ascending" ? Humans.HumansList.OrderBy(x => x.DaysLived).ToList() : Humans.HumansList.OrderByDescending(x => x.DaysLived).ToList();
                         break;
                     case "FullYearsLived":
-                        if (_sortDirection == "Ascending") result = Humans.HumansList.OrderBy(x => x.FullYearsLived).ToList();
-                        else result = Humans.HumansList.OrderByDescending(x => x.FullYearsLived).ToList();
+                        result = _sortDirection == "Ascending" ? Humans.HumansList.OrderBy(x => x.FullYearsLived).ToList() : Humans.HumansList.OrderByDescending(x => x.FullYearsLived).ToList();
                         break;
                 }
             }
@@ -479,11 +462,11 @@ namespace MemoRandom.Client.ViewModels
         /// <param name="eventAggregator"></param>
         /// <param name="msSqlController"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public HumansListViewModel(ILogger logger, IContainer container, IEventAggregator eventAggregator, IMsSqlController msSqlController)
+        public HumansListViewModel(ILogger logger, IContainer container/*, IEventAggregator eventAggregator*/, IMsSqlController msSqlController)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _container = container ?? throw new ArgumentNullException(nameof(container));
-            _eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
+            //_eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
             _msSqlController = msSqlController ?? throw new ArgumentNullException(nameof(msSqlController));
 
             InitializeCommands();
