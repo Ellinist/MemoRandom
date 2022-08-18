@@ -61,6 +61,7 @@ namespace MemoRandom.Client.ViewModels
         private double _shiftY; // Сдвиг картинки по оси Y при ее перемещении
 
         private Canvas _canvas;
+        private Window _window;
         #endregion
 
         #region PROPS
@@ -389,6 +390,19 @@ namespace MemoRandom.Client.ViewModels
                 RaisePropertyChanged(nameof(SourceCanvas));
             }
         }
+
+        /// <summary>
+        /// Текущее окно детальной информации по человеку
+        /// </summary>
+        public Window DetailedView
+        {
+            get => _window;
+            set
+            {
+                _window = value;
+                RaisePropertyChanged(nameof(DetailedView));
+            }
+        }
         #endregion
 
         #region Блок работы с изображением
@@ -512,6 +526,7 @@ namespace MemoRandom.Client.ViewModels
         /// <param name="e"></param>
         public void DetailedView_Loaded(object sender, RoutedEventArgs e)
         {
+            DetailedView = sender as Window;
             Human human = Humans.CurrentHuman;
 
             if (human != null)
@@ -609,9 +624,10 @@ namespace MemoRandom.Client.ViewModels
             bool result = true;
             try
             {
+                var image = BitmapSourceToBitmapImage(TargetImageSource);
                 await Task.Run(() =>
                 {
-                    result = _msSqlController.UpdateHumans(Humans.CurrentHuman, BitmapSourceToBitmapImage(TargetImageSource));
+                    result = _msSqlController.UpdateHumans(Humans.CurrentHuman, image);
                 });
                 if(result) CloseAction(); // Закрываем окно
             }

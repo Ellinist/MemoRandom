@@ -300,6 +300,9 @@ namespace MemoRandom.Client.ViewModels
             RaisePropertyChanged(nameof(HumansList));
             RaisePropertyChanged(nameof(PersonIndex));
 
+            ImageSource = _msSqlController.GetHumanImage(Humans.CurrentHuman);
+            RaisePropertyChanged(nameof(ImageSource));
+
             var currentReason = PlainReasonsList.FirstOrDefault(x => x.ReasonId == SelectedHuman.DeathReasonId);
             if (currentReason != null)
             {
