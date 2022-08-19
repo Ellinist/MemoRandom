@@ -290,7 +290,7 @@ namespace MemoRandom.Client.ViewModels
             RaisePropertyChanged(nameof(Humans.HumansList));
             HumansList = Humans.HumansList;
 
-            PersonIndex = HumansList.IndexOf(Humans.CurrentHuman);
+            //PersonIndex = HumansList.IndexOf(Humans.CurrentHuman);
 
             RaisePropertyChanged(nameof(HumansList));
             RaisePropertyChanged(nameof(PersonIndex));
@@ -337,50 +337,14 @@ namespace MemoRandom.Client.ViewModels
         /// <returns></returns>
         private void ResortHumansList()
         {
+            if (_sortMember == null) return; // Если ручная сортировка на начата - выходим
+            
+            var param = _sortMember;
+            var propertyInfo = typeof(Human).GetProperty(param);
             List<Human> result = new();
-            if (_sortMember == null)
-            {
-                result = Humans.HumansList.OrderBy(x => x.DaysLived).ToList();
-            }
-            else
-            {
-                switch (_sortMember)
-                {
-                    case "LastName":
-                        result = _sortDirection == "Ascending" ? Humans.HumansList.OrderBy(x => x.LastName).ToList() : Humans.HumansList.OrderByDescending(x => x.LastName).ToList();
-                        break;
-                    case "FirstName":
-                        result = _sortDirection == "Ascending" ? Humans.HumansList.OrderBy(x => x.FirstName).ToList() : Humans.HumansList.OrderByDescending(x => x.FirstName).ToList();
-                        break;
-                    case "Patronymic":
-                        result = _sortDirection == "Ascending" ? Humans.HumansList.OrderBy(x => x.Patronymic).ToList() : Humans.HumansList.OrderByDescending(x => x.Patronymic).ToList();
-                        break;
-                    case "BirthDate":
-                        result = _sortDirection == "Ascending" ? Humans.HumansList.OrderBy(x => x.BirthDate).ToList() : Humans.HumansList.OrderByDescending(x => x.BirthDate).ToList();
-                        break;
-                    case "BirthCountry":
-                        result = _sortDirection == "Ascending" ? Humans.HumansList.OrderBy(x => x.BirthCountry).ToList() : Humans.HumansList.OrderByDescending(x => x.BirthCountry).ToList();
-                        break;
-                    case "BirthPlace":
-                        result = _sortDirection == "Ascending" ? Humans.HumansList.OrderBy(x => x.BirthPlace).ToList() : Humans.HumansList.OrderByDescending(x => x.BirthPlace).ToList();
-                        break;
-                    case "DeathDate":
-                        result = _sortDirection == "Ascending" ? Humans.HumansList.OrderBy(x => x.DeathDate).ToList() : Humans.HumansList.OrderByDescending(x => x.DeathDate).ToList();
-                        break;
-                    case "DeathCountry":
-                        result = _sortDirection == "Ascending" ? Humans.HumansList.OrderBy(x => x.DeathCountry).ToList() : Humans.HumansList.OrderByDescending(x => x.DeathCountry).ToList();
-                        break;
-                    case "DeathPlace":
-                        result = _sortDirection == "Ascending" ? Humans.HumansList.OrderBy(x => x.DeathPlace).ToList() : Humans.HumansList.OrderByDescending(x => x.DeathPlace).ToList();
-                        break;
-                    case "DaysLived":
-                        result = _sortDirection == "Ascending" ? Humans.HumansList.OrderBy(x => x.DaysLived).ToList() : Humans.HumansList.OrderByDescending(x => x.DaysLived).ToList();
-                        break;
-                    case "FullYearsLived":
-                        result = _sortDirection == "Ascending" ? Humans.HumansList.OrderBy(x => x.FullYearsLived).ToList() : Humans.HumansList.OrderByDescending(x => x.FullYearsLived).ToList();
-                        break;
-                }
-            }
+            // Создаем новую сущность, упорядоченную по столбцу сортировки
+            result = _sortDirection == "Descending" ? Humans.HumansList.OrderByDescending(x => propertyInfo.GetValue(x, null)).ToList() :
+                                                      Humans.HumansList.OrderBy(x => propertyInfo.GetValue(x, null)).ToList();
 
             Humans.HumansList.Clear();
             foreach (var item in result)
