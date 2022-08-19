@@ -24,7 +24,6 @@ namespace MemoRandom.Client.ViewModels
     {
         #region PRIVATE FIELDS
         private string _humansViewTitle = "Начало";
-        //private ObservableCollection<Human> _humansList;
         private int _personIndex;
         private int _previousIndex = 0; // Индекс предыдущего выбранного узла в списке
         private Human _selectedHuman;
@@ -37,7 +36,6 @@ namespace MemoRandom.Client.ViewModels
 
         private readonly ILogger _logger; // Экземпляр журнала
         private readonly IContainer _container; // Контейнер
-        //private readonly IEventAggregator _eventAggregator;
         private readonly IMsSqlController _msSqlController;
         #endregion
 
@@ -281,13 +279,10 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private void EditHumanData()
         {
-            _container.Resolve<HumanDetailedView>().ShowDialog();
-
-            var id = Humans.CurrentHuman.HumanId;
+            _container.Resolve<HumanDetailedView>().ShowDialog(); // Запуск окна создания и редактирования человека
 
             ResortHumansList(); // Сортировка по условию
 
-            RaisePropertyChanged(nameof(Humans.HumansList));
             HumansList = Humans.HumansList;
 
             PersonIndex = HumansList.IndexOf(Humans.CurrentHuman);
@@ -352,7 +347,6 @@ namespace MemoRandom.Client.ViewModels
                 Humans.HumansList.Add(item);
             }
         }
-
 
         /// <summary>
         /// Открытие окна "О программе"
@@ -426,11 +420,10 @@ namespace MemoRandom.Client.ViewModels
         /// <param name="eventAggregator"></param>
         /// <param name="msSqlController"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public HumansListViewModel(ILogger logger, IContainer container/*, IEventAggregator eventAggregator*/, IMsSqlController msSqlController)
+        public HumansListViewModel(ILogger logger, IContainer container, IMsSqlController msSqlController)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _container = container ?? throw new ArgumentNullException(nameof(container));
-            //_eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
             _msSqlController = msSqlController ?? throw new ArgumentNullException(nameof(msSqlController));
 
             InitializeCommands();
