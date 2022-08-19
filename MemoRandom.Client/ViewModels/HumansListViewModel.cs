@@ -290,7 +290,7 @@ namespace MemoRandom.Client.ViewModels
             RaisePropertyChanged(nameof(Humans.HumansList));
             HumansList = Humans.HumansList;
 
-            //PersonIndex = HumansList.IndexOf(Humans.CurrentHuman);
+            PersonIndex = HumansList.IndexOf(Humans.CurrentHuman);
 
             RaisePropertyChanged(nameof(HumansList));
             RaisePropertyChanged(nameof(PersonIndex));
@@ -343,8 +343,8 @@ namespace MemoRandom.Client.ViewModels
             var propertyInfo = typeof(Human).GetProperty(param);
             List<Human> result = new();
             // Создаем новую сущность, упорядоченную по столбцу сортировки
-            result = _sortDirection == "Descending" ? Humans.HumansList.OrderByDescending(x => propertyInfo.GetValue(x, null)).ToList() :
-                                                      Humans.HumansList.OrderBy(x => propertyInfo.GetValue(x, null)).ToList();
+            result = _sortDirection == "Descending" ? Humans.HumansList.OrderBy(x => propertyInfo.GetValue(x, null)).ToList() :
+                                                      Humans.HumansList.OrderByDescending(x => propertyInfo.GetValue(x, null)).ToList();
 
             Humans.HumansList.Clear();
             foreach (var item in result)
