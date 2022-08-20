@@ -603,7 +603,6 @@ namespace MemoRandom.Client.ViewModels
                 };
 
                 Humans.CurrentHuman = human;
-                Humans.HumansList.Add(human);
             }
 
             bool result = true;

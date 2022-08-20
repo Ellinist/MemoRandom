@@ -9,10 +9,10 @@ namespace MemoRandom.Models.Models
     /// </summary>
     public static class Humans
     {
-        /// <summary>
-        /// Статический класс, получаемый из внешнего хранилища
-        /// </summary>
-        public static ObservableCollection<Human> HumansList { get; set; } = new();
+        ///// <summary>
+        ///// Статический класс, получаемый из внешнего хранилища
+        ///// </summary>
+        //public static ObservableCollection<Human> HumansList { get; set; } = new();
 
         /// <summary>
         /// Текущий человек, с которым ведется работа

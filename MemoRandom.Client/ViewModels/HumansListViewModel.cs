@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows;
 using System.Text;
 using System.Collections.ObjectModel;
+using System.Globalization;
 
 namespace MemoRandom.Client.ViewModels
 {
@@ -24,6 +25,7 @@ namespace MemoRandom.Client.ViewModels
     {
         #region PRIVATE FIELDS
         private string _humansViewTitle = "Начало";
+        private ObservableCollection<Human> _humansList;
         private int _personIndex;
         private int _previousIndex = 0; // Индекс предыдущего выбранного узла в списке
         private Human _selectedHuman;
@@ -37,6 +39,8 @@ namespace MemoRandom.Client.ViewModels
         private readonly ILogger _logger; // Экземпляр журнала
         private readonly IContainer _container; // Контейнер
         private readonly IMsSqlController _msSqlController;
+
+        private CultureInfo cultureInfo = new CultureInfo("ru-RU");
         #endregion
 
         #region PROPS
@@ -58,10 +62,10 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         public ObservableCollection<Human> HumansList
         {
-            get => Humans.HumansList;
+            get => _humansList;
             set
             {
-                Humans.HumansList = value;
+                _humansList = value;
                 RaisePropertyChanged(nameof(HumansList));
             }
         }
@@ -246,7 +250,10 @@ namespace MemoRandom.Client.ViewModels
         public void DgHumans_Sorting(object sender, System.Windows.Controls.DataGridSortingEventArgs e)
         {
             _sortDirection = e.Column.SortDirection.ToString();
-            _sortMember = e.Column.SortMemberPath.ToString();
+            _sortMember = e.Column.SortMemberPath;
+
+            SortHumansList();
+            RaisePropertyChanged(nameof(HumansList));
         }
 
         /// <summary>
@@ -259,7 +266,9 @@ namespace MemoRandom.Client.ViewModels
 
             if (Humans.CurrentHuman == null) return;
             
-            ResortHumansList(); // Сортировка по условию
+            HumansList.Add(Humans.CurrentHuman);
+            SortHumansList(); // Сортировка по условию
+            
             SelectedHuman = Humans.CurrentHuman;
             PersonIndex = HumansList.IndexOf(Humans.CurrentHuman);
             RaisePropertyChanged(nameof(PersonIndex));
@@ -280,14 +289,10 @@ namespace MemoRandom.Client.ViewModels
         private void EditHumanData()
         {
             _container.Resolve<HumanDetailedView>().ShowDialog(); // Запуск окна создания и редактирования человека
-
-            ResortHumansList(); // Сортировка по условию
-
-            HumansList = Humans.HumansList;
+            
+            SortHumansList(); // Сортировка по условию
 
             PersonIndex = HumansList.IndexOf(Humans.CurrentHuman);
-
-            RaisePropertyChanged(nameof(HumansList));
             RaisePropertyChanged(nameof(PersonIndex));
 
             ImageSource = _msSqlController.GetHumanImage(Humans.CurrentHuman);
@@ -330,22 +335,29 @@ namespace MemoRandom.Client.ViewModels
         /// Сортировка по условию упорядочивания при щелчке на столбце таблицы
         /// </summary>
         /// <returns></returns>
-        private void ResortHumansList()
+        private void SortHumansList()
         {
-            if (_sortMember == null) return; // Если ручная сортировка на начата - выходим
-            
-            var param = _sortMember;
-            var propertyInfo = typeof(Human).GetProperty(param);
-            List<Human> result = new();
-            // Создаем новую сущность, упорядоченную по столбцу сортировки
-            result = _sortDirection == "Descending" ? Humans.HumansList.OrderBy(x => propertyInfo.GetValue(x, null)).ToList() :
-                                                      Humans.HumansList.OrderByDescending(x => propertyInfo.GetValue(x, null)).ToList();
+            List<Human> result;
+            if (_sortMember == null)
+            {
+                result = HumansList.OrderBy(x => x.DaysLived).ToList();
+            }
+            else
+            {
+                var param = _sortMember;
+                var propertyInfo = typeof(Human).GetProperty(param);
+                // Создаем новую сущность, упорядоченную по столбцу сортировки
+                result = (_sortDirection == null || _sortDirection == "Ascending") ?
+                    HumansList.OrderByDescending(x => propertyInfo.GetValue(x, null)).ToList() :
+                    HumansList.OrderBy(x => propertyInfo.GetValue(x, null)).ToList();
+            }
 
-            Humans.HumansList.Clear();
+            HumansList.Clear();
             foreach (var item in result)
             {
-                Humans.HumansList.Add(item);
+                HumansList.Add(item);
             }
+            RaisePropertyChanged(nameof(HumansList));
         }
 
         /// <summary>
@@ -417,7 +429,6 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         /// <param name="logger"></param>
         /// <param name="container"></param>
-        /// <param name="eventAggregator"></param>
         /// <param name="msSqlController"></param>
         /// <exception cref="ArgumentNullException"></exception>
         public HumansListViewModel(ILogger logger, IContainer container, IMsSqlController msSqlController)
