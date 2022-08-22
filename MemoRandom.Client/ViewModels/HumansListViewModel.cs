@@ -26,6 +26,7 @@ namespace MemoRandom.Client.ViewModels
         #region PRIVATE FIELDS
         private string _humansViewTitle = "Начало";
         private ObservableCollection<Human> _humansList;
+        private List<LifePeriodType> _categoriesList;
         private int _personIndex;
         private int _previousIndex = 0; // Индекс предыдущего выбранного узла в списке
         private Human _selectedHuman;
@@ -35,6 +36,9 @@ namespace MemoRandom.Client.ViewModels
         private readonly StringBuilder YearsText = new();
         private string _sortMember;
         private string _sortDirection;
+        private string _categoryName;
+        private int _periodFrom;
+        private int _periodTo;
 
         private readonly ILogger _logger; // Экземпляр журнала
         private readonly IContainer _container; // Контейнер
@@ -171,6 +175,46 @@ namespace MemoRandom.Client.ViewModels
             {
                 Reasons.PlainReasonsList = value;
                 RaisePropertyChanged(nameof(PlainReasonsList));
+            }
+        }
+
+        public List<LifePeriodType> CategoriesList
+        {
+            get => _categoriesList;
+            set
+            {
+                _categoriesList = value;
+                RaisePropertyChanged(nameof(CategoriesList));
+            }
+        }
+
+        public string CategoryName
+        {
+            get => _categoryName;
+            set
+            {
+                _categoryName = value;
+                RaisePropertyChanged(nameof(CategoryName));
+            }
+        }
+
+        public int PeriodFrom
+        {
+            get => _periodFrom;
+            set
+            {
+                _periodFrom = value;
+                RaisePropertyChanged(nameof(PeriodFrom));
+            }
+        }
+
+        public int PeriodTo
+        {
+            get => _periodTo;
+            set
+            {
+                _periodTo = value;
+                RaisePropertyChanged(nameof(PeriodTo));
             }
         }
         #endregion

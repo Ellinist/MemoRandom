@@ -440,10 +440,14 @@
                         <DataGrid Grid.Row="0" Grid.Column="0"
                                   x:Name="DgCategories"
                                   CanUserAddRows="True"
+                                  CanUserDeleteRows="True"
+                                  
+                                  ItemsSource="{Binding CategoriesList}"
+                                  GridLinesVisibility="All"
                                   AutoGenerateColumns="False">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Категория"
-                                                    Binding="{Binding PeriodType}">
+                                                    Binding="{Binding CategoryName}">
                                     
                                 </DataGridTextColumn>
                                 <DataGridTextColumn Header="От"

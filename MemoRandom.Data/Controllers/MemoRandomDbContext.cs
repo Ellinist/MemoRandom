@@ -18,6 +18,11 @@ namespace MemoRandom.Data.Controllers
         /// </summary>
         public DbSet<DbHuman> DbHumans { get; set; }
 
+        /// <summary>
+        /// Набор категорий возрастных периодов
+        /// </summary>
+        public DbSet<DbCategory> DbCategories { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
             if (!builder.IsConfigured)
