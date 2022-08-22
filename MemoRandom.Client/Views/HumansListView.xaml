@@ -466,7 +466,7 @@
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <Button x:Name="EnterCategory" Content="+"
-                                                    Command="{Binding EnterCategoryCommand}"/>
+                                                    Click="EnterCategory_Click"/>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>

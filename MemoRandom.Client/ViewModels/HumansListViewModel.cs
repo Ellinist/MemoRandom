@@ -274,7 +274,7 @@ namespace MemoRandom.Client.ViewModels
         
         public DelegateCommand AddNewHumanCommand { get; private set; }
 
-        public DelegateCommand EnterCategoryCommand { get; private set; }
+        //public DelegateCommand EnterCategoryCommand { get; private set; }
         #endregion
 
         /// <summary>
@@ -286,7 +286,7 @@ namespace MemoRandom.Client.ViewModels
             EditHumanDataCommand = new DelegateCommand(EditHumanData);
             DeleteHumanCommand = new DelegateCommand(DeleteHuman);
             StartAboutCommand = new DelegateCommand(OpenAboutView);
-            EnterCategoryCommand = new DelegateCommand(EnterCategory);
+            //EnterCategoryCommand = new DelegateCommand(EnterCategory);
         }
 
         public void EnterCategory()
