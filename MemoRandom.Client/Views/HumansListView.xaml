@@ -465,7 +465,8 @@
                                                         Width="100" MinWidth="100">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <Button Content="+"/>
+                                            <Button x:Name="EnterCategory" Content="+"
+                                                    Command="{Binding EnterCategoryCommand}"/>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>

@@ -273,6 +273,8 @@ namespace MemoRandom.Client.ViewModels
         public DelegateCommand StartAboutCommand { get; private set; }
         
         public DelegateCommand AddNewHumanCommand { get; private set; }
+
+        public DelegateCommand EnterCategoryCommand { get; private set; }
         #endregion
 
         /// <summary>
@@ -284,6 +286,23 @@ namespace MemoRandom.Client.ViewModels
             EditHumanDataCommand = new DelegateCommand(EditHumanData);
             DeleteHumanCommand = new DelegateCommand(DeleteHuman);
             StartAboutCommand = new DelegateCommand(OpenAboutView);
+            EnterCategoryCommand = new DelegateCommand(EnterCategory);
+        }
+
+        public void EnterCategory()
+        {
+            var a1 = CategoryName;
+            var a2 = PeriodFrom;
+            var a3 = PeriodTo;
+
+            LifePeriodType cat = new()
+            {
+                CategoryId = new Guid(),
+                CategoryName = a1,
+                StartAge = a2,
+                StopAge = a3
+            };
+            CategoriesList.Add(cat);
         }
 
         /// <summary>
