@@ -446,16 +446,19 @@
                                   AutoGenerateColumns="False">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Категория"
+                                                    x:Name="CategoryName"
                                                     Width="300" MinWidth="300"
                                                     Binding="{Binding CategoryName}">
                                     
                                 </DataGridTextColumn>
                                 <DataGridTextColumn Header="От"
+                                                    x:Name="PeriodFrom"
                                                     Width="60" MinWidth="60"
                                                     Binding="{Binding PeriodFrom}">
                                     
                                 </DataGridTextColumn>
                                 <DataGridTextColumn Header="До"
+                                                    x:Name="PeriodTo"
                                                     Width="60" MinWidth="60"
                                                     Binding="{Binding PeriodTo}">
                                     
