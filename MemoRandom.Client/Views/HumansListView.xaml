@@ -441,23 +441,34 @@
                                   x:Name="DgCategories"
                                   CanUserAddRows="True"
                                   CanUserDeleteRows="True"
-                                  
                                   ItemsSource="{Binding CategoriesList}"
                                   GridLinesVisibility="All"
                                   AutoGenerateColumns="False">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Категория"
+                                                    Width="300" MinWidth="300"
                                                     Binding="{Binding CategoryName}">
                                     
                                 </DataGridTextColumn>
                                 <DataGridTextColumn Header="От"
+                                                    Width="60" MinWidth="60"
                                                     Binding="{Binding PeriodFrom}">
                                     
                                 </DataGridTextColumn>
                                 <DataGridTextColumn Header="До"
+                                                    Width="60" MinWidth="60"
                                                     Binding="{Binding PeriodTo}">
                                     
                                 </DataGridTextColumn>
+
+                                <DataGridTemplateColumn Header="Занести"
+                                                        Width="100" MinWidth="100">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button Content="+"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
                             </DataGrid.Columns>
                         </DataGrid>
                     </Grid>

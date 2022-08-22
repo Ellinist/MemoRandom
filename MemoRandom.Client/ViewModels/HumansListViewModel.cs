@@ -26,7 +26,7 @@ namespace MemoRandom.Client.ViewModels
         #region PRIVATE FIELDS
         private string _humansViewTitle = "Начало";
         private ObservableCollection<Human> _humansList;
-        private List<LifePeriodType> _categoriesList;
+        private List<LifePeriodType> _categoriesList = new();
         private int _personIndex;
         private int _previousIndex = 0; // Индекс предыдущего выбранного узла в списке
         private Human _selectedHuman;

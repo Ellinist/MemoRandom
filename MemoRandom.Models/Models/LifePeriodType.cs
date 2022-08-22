@@ -11,10 +11,12 @@ namespace MemoRandom.Models.Models
     /// </summary>
     public class LifePeriodType
     {
+        public Guid CategoryId { get; set; }
+
         /// <summary>
         /// Название периода жизни
         /// </summary>
-        public string TypeName { get; set; }
+        public string CategoryName { get; set; }
 
         /// <summary>
         /// Стартовый возраст (в годах), с которого начинается период
