@@ -44,14 +44,5 @@ namespace MemoRandom.Client.Views
             DgHumans.SelectionChanged += DgHumans_SelectionChanged;
         }
         #endregion
-
-        private void EnterCategory_Click(object sender, System.Windows.RoutedEventArgs e)
-        {
-            //var w = DgCategories.Columns[0];
-            //var t = CategoryName;
-            //var tt = PeriodFrom;
-            //var ttt = PeriodTo;
-            _vm.EnterCategory();
-        }
     }
 }

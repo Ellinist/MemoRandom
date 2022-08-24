@@ -26,7 +26,6 @@ namespace MemoRandom.Client.ViewModels
         #region PRIVATE FIELDS
         private string _humansViewTitle = "Начало";
         private ObservableCollection<Human> _humansList;
-        private List<LifePeriodType> _categoriesList = new();
         private int _personIndex;
         private int _previousIndex = 0; // Индекс предыдущего выбранного узла в списке
         private Human _selectedHuman;
@@ -36,9 +35,6 @@ namespace MemoRandom.Client.ViewModels
         private readonly StringBuilder YearsText = new();
         private string _sortMember;
         private string _sortDirection;
-        private string _categoryName;
-        private int _periodFrom;
-        private int _periodTo;
 
         private readonly ILogger _logger; // Экземпляр журнала
         private readonly IContainer _container; // Контейнер
@@ -177,46 +173,6 @@ namespace MemoRandom.Client.ViewModels
                 RaisePropertyChanged(nameof(PlainReasonsList));
             }
         }
-
-        public List<LifePeriodType> CategoriesList
-        {
-            get => _categoriesList;
-            set
-            {
-                _categoriesList = value;
-                RaisePropertyChanged(nameof(CategoriesList));
-            }
-        }
-
-        public string CategoryName
-        {
-            get => _categoryName;
-            set
-            {
-                _categoryName = value;
-                RaisePropertyChanged(nameof(CategoryName));
-            }
-        }
-
-        public int PeriodFrom
-        {
-            get => _periodFrom;
-            set
-            {
-                _periodFrom = value;
-                RaisePropertyChanged(nameof(PeriodFrom));
-            }
-        }
-
-        public int PeriodTo
-        {
-            get => _periodTo;
-            set
-            {
-                _periodTo = value;
-                RaisePropertyChanged(nameof(PeriodTo));
-            }
-        }
         #endregion
 
         #region Частные методы
@@ -273,8 +229,6 @@ namespace MemoRandom.Client.ViewModels
         public DelegateCommand StartAboutCommand { get; private set; }
         
         public DelegateCommand AddNewHumanCommand { get; private set; }
-
-        //public DelegateCommand EnterCategoryCommand { get; private set; }
         #endregion
 
         /// <summary>
@@ -286,23 +240,6 @@ namespace MemoRandom.Client.ViewModels
             EditHumanDataCommand = new DelegateCommand(EditHumanData);
             DeleteHumanCommand = new DelegateCommand(DeleteHuman);
             StartAboutCommand = new DelegateCommand(OpenAboutView);
-            //EnterCategoryCommand = new DelegateCommand(EnterCategory);
-        }
-
-        public void EnterCategory()
-        {
-            var a1 = CategoryName;
-            var a2 = PeriodFrom;
-            var a3 = PeriodTo;
-
-            LifePeriodType cat = new()
-            {
-                CategoryId = new Guid(),
-                CategoryName = a1,
-                StartAge = a2,
-                StopAge = a3
-            };
-            CategoriesList.Add(cat);
         }
 
         /// <summary>

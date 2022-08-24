@@ -13,8 +13,48 @@
         </Grid.ColumnDefinitions>
 
         <DataGrid Grid.Column="0"
-                  x:Name="DgCategories">
-            
+                  x:Name="DgCategories"
+                  CanUserAddRows="False"
+                  CanUserDeleteRows="False"
+                  GridLinesVisibility="All"
+                  AutoGenerateColumns="False"
+                  ItemsSource="{Binding CategoriesList}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Категория"
+                                    x:Name="CategoryName"
+                                    Width="300" MinWidth="300"
+                                    Binding="{Binding CategoryName}">
+
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="От"
+                                    x:Name="PeriodFrom"
+                                    Width="60" MinWidth="60"
+                                    Binding="{Binding PeriodFrom}">
+
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="До"
+                                    x:Name="PeriodTo"
+                                    Width="60" MinWidth="60"
+                                    Binding="{Binding PeriodTo}">
+
+                </DataGridTextColumn>
+            </DataGrid.Columns>
         </DataGrid>
+
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <StackPanel Grid.Row="0">
+                
+            </StackPanel>
+
+            <Button Grid.Row="1">
+                
+            </Button>
+        </Grid>
+        
     </Grid>
 </Window>
