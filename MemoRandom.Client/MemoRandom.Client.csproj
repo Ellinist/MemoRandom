@@ -12,6 +12,7 @@
     <None Remove="Resources\Fonts\Casanova.ttf" />
     <None Remove="Resources\Fonts\DeutschGothic.ttf" />
     <None Remove="Resources\Fonts\GothicCyr.ttf" />
+    <None Remove="Resources\Fonts\mistral.ttf" />
     <None Remove="Resources\Fonts\MoulinRouge.ttf" />
     <None Remove="Resources\Fonts\Treasury.ttf" />
     <None Remove="Resources\Fonts\Vezitsa.ttf" />
@@ -58,6 +59,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\Fonts\GothicCyr.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Fonts\mistral.ttf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\Fonts\Treasury.ttf">

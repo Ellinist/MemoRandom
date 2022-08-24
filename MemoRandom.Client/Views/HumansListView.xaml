@@ -21,6 +21,7 @@
         <FontFamily x:Key="NamePatronymicFont">pack://application:,,,/Resources/Fonts/DeutschGothic.ttf#Deutsch Gothic</FontFamily>
         <FontFamily x:Key="TestFont">pack://application:,,,/Resources/Fonts/Vezitsa.ttf#Vezitsa</FontFamily>
         <FontFamily x:Key="TestFont2">pack://application:,,,/Resources/Fonts/GothicCyr.ttf#True Gothic Cyr</FontFamily>
+        <FontFamily x:Key="MistralFont">pack://application:,,,/Resources/Fonts/mistral.ttf#Mistral</FontFamily>
     </mah:MetroWindow.Resources>
 
     <Grid>
@@ -141,7 +142,7 @@
                             <Grid Grid.Column="1">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="350"/>
-                                    <RowDefinition Height="76"/>
+                                    <RowDefinition Height="126"/>
                                     <RowDefinition/>
                                 </Grid.RowDefinitions>
 
@@ -159,16 +160,16 @@
                                 </Border>
 
                                 <!--Зона выбранного человека и основных его характеристик-->
-                                <StackPanel Grid.Column="1" Grid.Row="1"
-                                        DataContext="{Binding ElementName=DgHumans, Path=SelectedValue}"
-                                        Margin="5, 5, 5, 5">
+                                <StackPanel Grid.Row="1"
+                                            DataContext="{Binding ElementName=DgHumans, Path=SelectedValue}"
+                                            Margin="5, 5, 5, 5">
 
                                     <!--Фамилия выбранного человека-->
                                     <Label Content="{Binding Path=LastName}"
-                                       Height="36"
+                                       Height="60"
                                        HorizontalAlignment="Center"
-                                       FontSize="30"
-                                       FontFamily="{StaticResource TestFont2}"
+                                       FontSize="50"
+                                       FontFamily="{StaticResource MistralFont}"
                                        
                                        Padding="0"
                                        Foreground="DarkBlue"/>
@@ -179,16 +180,16 @@
                                         <!--Имя выбранного человека-->
                                         <Label Content="{Binding Path=FirstName}"
                                                Foreground="DarkBlue"
-                                               FontSize="24"
-                                               FontFamily="{StaticResource TestFont2}"
+                                               FontSize="42"
+                                               FontFamily="{StaticResource MistralFont}"
                                                FontStyle="Italic"
                                                Padding="0,0,5,0"/>
 
                                         <!--Отчество выбранного человека-->
                                         <Label Content="{Binding Path=Patronymic}"
                                                Foreground="DarkBlue"
-                                               FontSize="24"
-                                               FontFamily="{StaticResource TestFont2}"
+                                               FontSize="42"
+                                               FontFamily="{StaticResource MistralFont}"
                                                FontStyle="Italic"
                                                Padding="5,0,0,0"/>
                                     </StackPanel>
@@ -200,9 +201,9 @@
                                     <Label DockPanel.Dock="Top"
                                            Content="{Binding Path=DisplayedYears}"
                                            HorizontalAlignment="Center"
-                                           FontSize="22"
+                                           FontSize="34"
                                            Foreground="Crimson"
-                                           FontFamily="{StaticResource TestFont2}"
+                                           FontFamily="{StaticResource MistralFont}"
                                            Padding="0"/>
                                 </DockPanel>
                             </Grid>
