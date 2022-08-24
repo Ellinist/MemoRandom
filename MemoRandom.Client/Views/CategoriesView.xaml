@@ -44,16 +44,31 @@
         <Grid Grid.Column="1">
             <Grid.RowDefinitions>
                 <RowDefinition/>
-                <RowDefinition/>
+                <RowDefinition Height="60" MinHeight="60" MaxHeight="60"/>
             </Grid.RowDefinitions>
 
             <StackPanel Grid.Row="0">
                 
             </StackPanel>
 
-            <Button Grid.Row="1">
-                
-            </Button>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.Column="0"
+                        Margin="10, 2, 5, 2"
+                        Content="Сохранить">
+
+                </Button>
+
+                <Button Grid.Column="1"
+                        Margin="5, 2, 10, 2"
+                        Content="Удалить">
+                    
+                </Button>
+            </Grid>
         </Grid>
         
     </Grid>
