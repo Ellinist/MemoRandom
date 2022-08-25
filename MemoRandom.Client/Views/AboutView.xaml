@@ -18,6 +18,10 @@
             <i:InvokeCommandAction Command="{Binding OpenAboutWindowCommand}"
                                    CommandParameter="{Binding ElementName=About}"/>
         </i:EventTrigger>
+
+        <i:EventTrigger EventName="MouseDown">
+            <i:InvokeCommandAction Command="{Binding CloseAboutViewCommand}"/>
+        </i:EventTrigger>
     </i:Interaction.Triggers>
     
     <Window.Resources>
@@ -58,7 +62,13 @@
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
                        FontFamily="{StaticResource NameFont}"
-                       FontSize="44"/>
+                       FontSize="44">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="MouseDown">
+                        <i:InvokeCommandAction Command="{Binding CloseAboutViewCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </TextBlock>
 
             <TextBlock Grid.Row="1"
                        Text="Memo-Random"
@@ -66,21 +76,39 @@
                        VerticalAlignment="Center"
                        FontFamily="{StaticResource MainFont}"
                        FontSize="56"
-                       FontWeight="Bold"/>
+                       FontWeight="Bold">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="MouseDown">
+                        <i:InvokeCommandAction Command="{Binding CloseAboutViewCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </TextBlock>
 
             <TextBlock Grid.Row="2"
                        Text="Ellinist Software Studio © 2019-2022"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
                        FontFamily="Times New Roman"
-                       FontSize="22"/>
+                       FontSize="22">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="MouseDown">
+                        <i:InvokeCommandAction Command="{Binding CloseAboutViewCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </TextBlock>
 
             <TextBlock Grid.Row="3"
-                       Text="Build # 0.0.0.1"
+                       Text="{Binding ProgramVersion}"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
                        FontFamily="Times New Roman"
-                       FontSize="22"/>
+                       FontSize="22">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="MouseDown">
+                        <i:InvokeCommandAction Command="{Binding CloseAboutViewCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </TextBlock>
         </Grid>
     </Grid>
 </Window>

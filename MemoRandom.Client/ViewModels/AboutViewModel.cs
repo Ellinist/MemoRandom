@@ -1,5 +1,7 @@
 ﻿using Prism.Commands;
 using Prism.Mvvm;
+using System.Diagnostics;
+using System.Reflection;
 using System.Windows;
 
 namespace MemoRandom.Client.ViewModels
@@ -10,6 +12,17 @@ namespace MemoRandom.Client.ViewModels
     public class AboutViewModel : BindableBase
     {
         private Window _view; // Окно
+        private string _programVersion;
+        
+        public string ProgramVersion
+        {
+            get => _programVersion;
+            set
+            {
+                _programVersion = value;
+                RaisePropertyChanged(nameof(ProgramVersion));
+            }
+        }
 
         #region COMMANDS
         public DelegateCommand<object> OpenAboutWindowCommand { get; private set; }
@@ -28,6 +41,10 @@ namespace MemoRandom.Client.ViewModels
             {
                 _view = parameter as Window;
             }
+
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
+            ProgramVersion = "Build " + Assembly.GetExecutingAssembly().GetName().Version.ToString();
         }
 
         /// <summary>
