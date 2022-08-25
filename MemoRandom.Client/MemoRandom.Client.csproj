@@ -1,10 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
-    <!--<Nullable>enable</Nullable>-->
-    <UseWPF>true</UseWPF>
+	  <Deterministic>False</Deterministic>
+      <OutputType>WinExe</OutputType>
+      <TargetFramework>net6.0-windows</TargetFramework>
+      <!--<Nullable>enable</Nullable>-->
+      <UseWPF>true</UseWPF>
+	  <AssemblyVersion>1.0.*</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>

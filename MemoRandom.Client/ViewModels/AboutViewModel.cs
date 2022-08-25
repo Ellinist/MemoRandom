@@ -42,9 +42,10 @@ namespace MemoRandom.Client.ViewModels
                 _view = parameter as Window;
             }
 
-            Assembly assembly = Assembly.GetExecutingAssembly();
-            FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
+            //Assembly assembly = Assembly.GetExecutingAssembly();
+            //FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
             ProgramVersion = "Build " + Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            RaisePropertyChanged(nameof(ProgramVersion));
         }
 
         /// <summary>
