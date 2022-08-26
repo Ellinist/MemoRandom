@@ -229,6 +229,8 @@ namespace MemoRandom.Client.ViewModels
         public DelegateCommand StartAboutCommand { get; private set; }
         
         public DelegateCommand AddNewHumanCommand { get; private set; }
+
+        public DelegateCommand CategoriesCommand { get; private set; }
         #endregion
 
         /// <summary>
@@ -240,6 +242,13 @@ namespace MemoRandom.Client.ViewModels
             EditHumanDataCommand = new DelegateCommand(EditHumanData);
             DeleteHumanCommand = new DelegateCommand(DeleteHuman);
             StartAboutCommand = new DelegateCommand(OpenAboutView);
+            CategoriesCommand = new DelegateCommand(CategoriesOpen);
+        }
+
+        private void CategoriesOpen()
+        {
+            CategoriesView cv = new();
+            cv.Show();
         }
 
         /// <summary>
