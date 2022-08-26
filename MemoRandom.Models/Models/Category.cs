@@ -9,7 +9,7 @@ namespace MemoRandom.Models.Models
     /// <summary>
     /// Класс жизненного периода
     /// </summary>
-    public class LifePeriodType
+    public class Category
     {
         public Guid CategoryId { get; set; }
 

@@ -76,5 +76,11 @@ namespace MemoRandom.Data.Interfaces
         /// <returns></returns>
         BitmapImage GetHumanImage(Human currentHuman);
         #endregion
+
+        #region Блок работы с категориями
+        List<Category> GetCategories();
+
+        bool AddCategoryToList(Category category);
+        #endregion
     }
 }

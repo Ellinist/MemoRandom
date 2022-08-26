@@ -11,9 +11,15 @@ namespace MemoRandom.Data.DbModels
     {
         [Key]
         [Required]
-        public Guid CategoryId { get; set; }
+        public Guid DbCategoryId { get; set; }
+
+        [Required]
         public string DbCategoryName { get; set; }
+
+        [Required]
         public int DbPeriodFrom { get; set; }
+
+        [Required]
         public int DbPeriodTo { get; set; }
     }
 }

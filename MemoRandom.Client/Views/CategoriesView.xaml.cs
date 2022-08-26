@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MemoRandom.Client.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +20,12 @@ namespace MemoRandom.Client.Views
     /// </summary>
     public partial class CategoriesView : Window
     {
-        public CategoriesView()
+        public CategoriesView(CategoriesViewModel vm)
         {
             InitializeComponent();
+
+            this.Loaded += vm.CategoriesView_Loaded;
+            DataContext = vm;
         }
     }
 }

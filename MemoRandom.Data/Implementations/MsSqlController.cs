@@ -564,6 +564,69 @@ namespace MemoRandom.Data.Implementations
         }
         #endregion
 
+        #region Блок работы с категориями
+        public List<Category> GetCategories()
+        {
+            List<Category> categories = new();
+            using (MemoContext = new MemoRandomDbContext(DbConnectionString))
+            {
+                try
+                {
+                    List<DbCategory> categoriesList = MemoContext.DbCategories.ToList(); // Читаем контекст базы данных
+                    foreach (var category in categoriesList)
+                    {
+                        Category cat = new()
+                        {
+                            CategoryId = category.DbCategoryId,
+                            CategoryName = category.DbCategoryName,
+                            StartAge = category.DbPeriodFrom,
+                            StopAge = category.DbPeriodTo
+                        };
+                        categories.Add(cat);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    categories = null; // В случае неуспеха чтения обнуляем иерархическую коллекцию
+                    _logger.Error($"Ошибка чтения категорий: {ex.HResult}");
+                }
+            }
+
+            return categories;
+        }
+
+        /// <summary>
+        /// Добавление категории в хранилище
+        /// </summary>
+        /// <param name="category"></param>
+        /// <returns></returns>
+        public bool AddCategoryToList(Category category)
+        {
+            var success = true;
+
+            using (MemoContext = new MemoRandomDbContext(DbConnectionString))
+            {
+                // Создаем новую запись
+                DbCategory dbCategory = new DbCategory()
+                {
+                    DbCategoryId = category.CategoryId,
+                    DbCategoryName = category.CategoryName,
+                    DbPeriodFrom = category.StartAge,
+                    DbPeriodTo = category.StopAge
+                };
+
+                MemoContext.DbCategories.Add(dbCategory);
+                MemoContext.SaveChanges();
+            }
+
+            return success;
+        }
+        #endregion
+
+
+
+
+
 
 
 

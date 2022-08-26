@@ -247,8 +247,7 @@ namespace MemoRandom.Client.ViewModels
 
         private void CategoriesOpen()
         {
-            CategoriesView cv = new();
-            cv.Show();
+            _container.Resolve<CategoriesView>().ShowDialog();
         }
 
         /// <summary>

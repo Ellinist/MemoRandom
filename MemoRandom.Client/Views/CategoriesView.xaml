@@ -45,7 +45,7 @@
                 <DataGridTextColumn Header="От"
                                     x:Name="PeriodFrom"
                                     Width="60" MinWidth="60"
-                                    Binding="{Binding PeriodFrom}">
+                                    Binding="{Binding StartAge}">
 
                 </DataGridTextColumn>
                 
@@ -53,16 +53,20 @@
                 <DataGridTextColumn Header="До"
                                     x:Name="PeriodTo"
                                     Width="60" MinWidth="60"
-                                    Binding="{Binding PeriodTo}">
+                                    Binding="{Binding StopAge}">
 
                 </DataGridTextColumn>
 
                 <!--Цвет выделения записей данной категори-->
                 <DataGridTextColumn Header="Цвет"
+                                    
                                     x:Name="PeriodColor"
-                                    Width="60" MinWidth="60"
-                                    Binding="{Binding PeriodColor}">
-
+                                    Width="60" MinWidth="60">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Setter Property="Background" Value="Aquamarine"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
             </DataGrid.Columns>
         </DataGrid>
@@ -147,7 +151,8 @@
 
                 <Button Grid.Column="0"
                         Margin="10, 2, 5, 2"
-                        Content="Сохранить">
+                        Content="Сохранить"
+                        Command="{Binding AddCategoryCommand}">
 
                 </Button>
 
