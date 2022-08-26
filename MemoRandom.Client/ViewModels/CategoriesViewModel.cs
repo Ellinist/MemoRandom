@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
 
 namespace MemoRandom.Client.ViewModels
 {
@@ -23,6 +24,7 @@ namespace MemoRandom.Client.ViewModels
         private string _categoryName;
         private int _periodFrom;
         private int _periodTo;
+        private Color _colorFill;
         #endregion
 
         #region PROPS
@@ -75,6 +77,16 @@ namespace MemoRandom.Client.ViewModels
             {
                 _periodTo = value;
                 RaisePropertyChanged(nameof(PeriodTo));
+            }
+        }
+
+        public Color ColorFill
+        {
+            get => _colorFill;
+            set
+            {
+                _colorFill = value;
+                RaisePropertyChanged(nameof(ColorFill));
             }
         }
         #endregion

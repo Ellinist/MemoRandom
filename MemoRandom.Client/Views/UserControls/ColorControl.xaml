@@ -9,7 +9,7 @@
 
 
     <Grid>
-        <ComboBox Name="cmbColors"            >
+        <ComboBox Name="cmbColors">
             <ComboBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
