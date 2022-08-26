@@ -97,7 +97,7 @@ namespace MemoRandom.Client.ViewModels
             // Проверять, чтобы конец не был меньше или равен началу - уведомление
             // Проверять, чтобы не было пересечения с другими категориями - уведомление
 
-            Category cat = new Category()
+            Category cat = new()
             {
                 CategoryId = Guid.NewGuid(),
                 CategoryName = CategoryName,
