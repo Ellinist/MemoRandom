@@ -59,12 +59,12 @@
 
                 <!--Цвет выделения записей данной категори-->
                 <DataGridTextColumn Header="Цвет"
-                                    
+                                    Binding="{Binding CategoryColor}"
                                     x:Name="PeriodColor"
                                     Width="60" MinWidth="60">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="{x:Type TextBlock}">
-                            <Setter Property="Background" Value="{Binding CategoryColor}"/>
+                            <Setter Property="Background" Value="{Binding ElementName=DgCategories, Path=CategoryColor}"/>
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
