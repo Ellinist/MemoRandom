@@ -25,6 +25,8 @@ namespace MemoRandom.Client.Views
             InitializeComponent();
 
             this.Loaded += vm.CategoriesView_Loaded;
+
+            CategoriesCombo.ItemsSource = typeof(Colors).GetProperties();
             DataContext = vm;
         }
     }

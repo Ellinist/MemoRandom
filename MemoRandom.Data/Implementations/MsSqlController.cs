@@ -575,12 +575,14 @@ namespace MemoRandom.Data.Implementations
                     List<DbCategory> categoriesList = MemoContext.DbCategories.ToList(); // Читаем контекст базы данных
                     foreach (var category in categoriesList)
                     {
+                        //var x = System.Windows.Media.Color.FromArgb(category.DbColorA, category.DbColorR, category.DbColorG, category.DbColorB);
                         Category cat = new()
                         {
                             CategoryId = category.DbCategoryId,
                             CategoryName = category.DbCategoryName,
                             StartAge = category.DbPeriodFrom,
-                            StopAge = category.DbPeriodTo
+                            StopAge = category.DbPeriodTo,
+                            CategoryColor = System.Windows.Media.Color.FromArgb(category.DbColorA, category.DbColorR, category.DbColorG, category.DbColorB)
                         };
                         categories.Add(cat);
                     }
@@ -612,7 +614,11 @@ namespace MemoRandom.Data.Implementations
                     DbCategoryId = category.CategoryId,
                     DbCategoryName = category.CategoryName,
                     DbPeriodFrom = category.StartAge,
-                    DbPeriodTo = category.StopAge
+                    DbPeriodTo = category.StopAge,
+                    DbColorA = category.CategoryColor.A,
+                    DbColorR = category.CategoryColor.R,
+                    DbColorG = category.CategoryColor.G,
+                    DbColorB = category.CategoryColor.B,
                 };
 
                 MemoContext.DbCategories.Add(dbCategory);

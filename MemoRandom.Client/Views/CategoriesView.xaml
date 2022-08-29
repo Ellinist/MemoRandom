@@ -64,7 +64,7 @@
                                     Width="60" MinWidth="60">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="{x:Type TextBlock}">
-                            <Setter Property="Background" Value="Aquamarine"/>
+                            <Setter Property="Background" Value="{Binding CategoryColor}"/>
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
@@ -135,7 +135,20 @@
                                Style="{StaticResource TextBlockFontSize}"
                                HorizontalAlignment="Right"
                                Text="Цвет:"/>
-                    <cols:ColorControl Grid.Column="1"/>
+                    <!--<cols:ColorControl Grid.Column="1" SelectedColor="{Binding SelectedColor}"/>-->
+
+                    <ComboBox Grid.Column="1"
+                              x:Name="CategoriesCombo"
+                              SelectedItem="{Binding SelectedComboColor}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Rectangle Fill="{Binding Name}" Width="100" Height="24" Margin="2, 2, 5, 2"/>
+                                    <TextBlock Text="{Binding Name}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
                     <!--<TextBox Grid.Column="1"
                              Text="{Binding CategoryColor}"
                              Style="{StaticResource TextBoxFontSize}"/>-->

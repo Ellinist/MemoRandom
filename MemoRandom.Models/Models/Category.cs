@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace MemoRandom.Models.Models
 {
@@ -27,5 +28,7 @@ namespace MemoRandom.Models.Models
         /// Стоповый возраст (в годах), которым заканчивается период
         /// </summary>
         public int StopAge { get; set; }
+
+        public Color CategoryColor { get; set; }
     }
 }

@@ -21,5 +21,10 @@ namespace MemoRandom.Data.DbModels
 
         [Required]
         public int DbPeriodTo { get; set; }
+
+        public byte DbColorA { get; set; }
+        public byte DbColorR { get; set; }
+        public byte DbColorG { get; set; }
+        public byte DbColorB { get; set; }
     }
 }

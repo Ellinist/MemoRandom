@@ -5,6 +5,7 @@ using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -20,11 +21,11 @@ namespace MemoRandom.Client.ViewModels
         #region PRIVATE FIELDS
         private readonly IMsSqlController _msSqlController;
 
-        private List<Category> _categoriesList = new();
+        private List<Category> _categoriesList;
         private string _categoryName;
         private int _periodFrom;
         private int _periodTo;
-        private Color _colorFill;
+        private object _selectedComboColor;
         #endregion
 
         #region PROPS
@@ -80,15 +81,19 @@ namespace MemoRandom.Client.ViewModels
             }
         }
 
-        public Color ColorFill
+        public object SelectedComboColor
         {
-            get => _colorFill;
+            get => _selectedComboColor;
             set
             {
-                _colorFill = value;
-                RaisePropertyChanged(nameof(ColorFill));
+                _selectedComboColor = value;
+                var selectedItem = (PropertyInfo)value;
+                SelectedColor = (Color)selectedItem.GetValue(null, null);
+                RaisePropertyChanged(nameof(SelectedComboColor));
             }
         }
+
+        private Color SelectedColor { get; set; }
         #endregion
 
         #region COMMANDS
@@ -114,7 +119,8 @@ namespace MemoRandom.Client.ViewModels
                 CategoryId = Guid.NewGuid(),
                 CategoryName = CategoryName,
                 StartAge = PeriodFrom,
-                StopAge = PeriodTo
+                StopAge = PeriodTo,
+                CategoryColor = SelectedColor
             };
 
             CategoriesList.Add(cat);
@@ -126,7 +132,12 @@ namespace MemoRandom.Client.ViewModels
         public void CategoriesView_Loaded(object sender, RoutedEventArgs e)
         {
             // Вынести в метод на момент загрузки окна
-            CategoriesList = _msSqlController.GetCategories();
+            var categoriesRead = _msSqlController.GetCategories();
+            if(categoriesRead != null)
+            {
+                CategoriesList = _msSqlController.GetCategories();
+            }
+            
             RaisePropertyChanged(nameof(CategoriesList));
         }
 
@@ -145,6 +156,8 @@ namespace MemoRandom.Client.ViewModels
         public CategoriesViewModel(IMsSqlController msSqlController)
         {
             _msSqlController = msSqlController ?? throw new ArgumentNullException(nameof(msSqlController));
+
+            CategoriesList = new();
 
             InitCommands();
         }
