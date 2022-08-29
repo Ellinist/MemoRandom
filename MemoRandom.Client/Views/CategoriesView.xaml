@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:conv="clr-namespace:MemoRandom.Client.Converters"
         xmlns:cols="clr-namespace:MemoRandom.Client.Views.UserControls"
         xmlns:local="clr-namespace:MemoRandom.Client.Views"
         mc:Ignorable="d"
@@ -16,6 +17,8 @@
             <Style TargetType="TextBox" x:Key="TextBoxFontSize">
                 <Setter Property="FontSize" Value="20"/>
             </Style>
+
+            <conv:CellColorConverter x:Key="CellColorConverter"/>
         </ResourceDictionary>
     </Window.Resources>
     
@@ -59,12 +62,12 @@
 
                 <!--Цвет выделения записей данной категори-->
                 <DataGridTextColumn Header="Цвет"
-                                    Binding="{Binding CategoryColor}"
+                                    
                                     x:Name="PeriodColor"
                                     Width="60" MinWidth="60">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="{x:Type TextBlock}">
-                            <Setter Property="Background" Value="{Binding PeriodColor}"/>
+                            <Setter Property="Background" Value="{Binding Converter={StaticResource CellColorConverter}}"/>
                             <!--<Style.Triggers>
                                 <Trigger Property="">
                                     <Setter Property="Background" Value="{Binding CategoryColor}"/>
