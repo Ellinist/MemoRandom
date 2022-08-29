@@ -64,9 +64,19 @@
                                     Width="60" MinWidth="60">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="{x:Type TextBlock}">
-                            <Setter Property="Background" Value="{Binding ElementName=DgCategories, Path=CategoryColor}"/>
+                            <Setter Property="Background" Value="{Binding PeriodColor}"/>
+                            <!--<Style.Triggers>
+                                <Trigger Property="">
+                                    <Setter Property="Background" Value="{Binding CategoryColor}"/>
+                                </Trigger>
+                            </Style.Triggers>-->
                         </Style>
                     </DataGridTextColumn.ElementStyle>
+                    <!--<DataGridTextColumn.ElementStyle>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Setter Property="Background" Value="{Binding ElementName=DgCategories, Path=CategoryColor}"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>-->
                 </DataGridTextColumn>
             </DataGrid.Columns>
         </DataGrid>
