@@ -67,7 +67,8 @@
                                     Width="60" MinWidth="60">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="{x:Type TextBlock}">
-                            <Setter Property="Background" Value="{Binding Converter={StaticResource CellColorConverter}}"/>
+                            <!--<Setter Property="Background" Value="{Binding Converter={StaticResource CellColorConverter}}"/>-->
+                            <Setter Property="Background" Value="Red"/>
                             <!--<Style.Triggers>
                                 <Trigger Property="">
                                     <Setter Property="Background" Value="{Binding CategoryColor}"/>
