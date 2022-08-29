@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MemoRandom.Models.Models;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -14,7 +15,13 @@ namespace MemoRandom.Client.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return Colors.Red;
+            var val = value as Category;
+            if (val == null) return "White";
+            
+            return val.CategoryColor.ToString();
+            
+
+            //return Colors.Red.ToString();
             //if (value is DataGridCell)
             //{
             //    string text = (value as DataGridCell).Content.ToString();
