@@ -6,6 +6,7 @@
                  xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
                  xmlns:uc="clr-namespace:MemoRandom.Client.Views.UserControls"
                  xmlns:fa="http://schemas.fontawesome.io/icons/"
+                 xmlns:conv="clr-namespace:MemoRandom.Client.Converters"
                  mc:Ignorable="d"
                  ShowIconOnTitleBar="True"
                  Icon="pack://application:,,,/Resources/Icons/mainWindowIcon.ico"
@@ -22,6 +23,8 @@
         <FontFamily x:Key="TestFont">pack://application:,,,/Resources/Fonts/Vezitsa.ttf#Vezitsa</FontFamily>
         <FontFamily x:Key="TestFont2">pack://application:,,,/Resources/Fonts/GothicCyr.ttf#True Gothic Cyr</FontFamily>
         <FontFamily x:Key="MistralFont">pack://application:,,,/Resources/Fonts/mistral.ttf#Mistral</FontFamily>
+
+        <conv:RowColorConverter x:Key="RowColorConverter"/>
     </mah:MetroWindow.Resources>
 
     <Grid>
@@ -98,6 +101,19 @@
                                           Margin="1"
                                           SelectedItem="{Binding Path=SelectedHuman}"
                                           SelectedIndex="{Binding Path=PersonIndex}">
+
+                                    <!--<DataGrid.ItemContainerStyle>
+                                        <Style TargetType="DataGridRow">
+                                            <Setter Property="Background" Value="{Binding Converter={StaticResource RowColorConverter}}"/>
+                                        </Style>
+
+                                    </DataGrid.ItemContainerStyle>-->
+
+                                    <DataGrid.Resources>
+                                        <Style TargetType="DataGridRow" x:Key="rowColor">
+                                            <Setter Property="Background" Value="{Binding Converter={StaticResource RowColorConverter}}"/>
+                                        </Style>
+                                    </DataGrid.Resources>
                                     
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="Фамилия"

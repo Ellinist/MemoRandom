@@ -140,7 +140,6 @@
                                Style="{StaticResource TextBlockFontSize}"
                                HorizontalAlignment="Right"
                                Text="Цвет:"/>
-                    <!--<cols:ColorControl Grid.Column="1" SelectedColor="{Binding SelectedColor}"/>-->
 
                     <ComboBox Grid.Column="1"
                               x:Name="CategoriesCombo"
@@ -156,9 +155,6 @@
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
                     </ComboBox>
-                    <!--<TextBox Grid.Column="1"
-                             Text="{Binding CategoryColor}"
-                             Style="{StaticResource TextBoxFontSize}"/>-->
                 </Grid>
             </StackPanel>
 
