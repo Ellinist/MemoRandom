@@ -385,6 +385,8 @@ namespace MemoRandom.Client.ViewModels
         {
             try
             {
+                Categories.AgeCategories = _msSqlController.GetCategories();
+
                 ObservableCollection<Human> result = new(); // Результирующая коллекция людей
                 await Task.Run(() =>
                 {

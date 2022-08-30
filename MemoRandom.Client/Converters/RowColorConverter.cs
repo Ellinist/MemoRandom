@@ -18,11 +18,16 @@ namespace MemoRandom.Client.Converters
 
             if(currentHuman != null)
             {
-                if (currentHuman.FullYearsLived > 40) return Colors.Brown.ToString();
-                else return Colors.Green.ToString();
+                var o = Categories.AgeCategories.FirstOrDefault(x => x.StartAge <= currentHuman.FullYearsLived &&
+                                                                     x.StopAge + 1 > currentHuman.FullYearsLived);
+
+                if (o == null) return Colors.White.ToString();
+                return o.CategoryColor.ToString();
+                //if (currentHuman.FullYearsLived > 40) return Colors.Brown.ToString();
+                //else return Colors.Green.ToString();
             }
 
-            return Colors.Goldenrod.ToString();
+            return Colors.White.ToString();
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
