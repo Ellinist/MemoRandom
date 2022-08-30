@@ -572,7 +572,7 @@ namespace MemoRandom.Data.Implementations
             {
                 try
                 {
-                    List<DbCategory> categoriesList = MemoContext.DbCategories.ToList(); // Читаем контекст базы данных
+                    List<DbCategory> categoriesList = MemoContext.DbCategories.OrderBy(x => x.DbPeriodFrom).ToList(); // Читаем контекст базы данных
                     foreach (var category in categoriesList)
                     {
                         //var x = System.Windows.Media.Color.FromArgb(category.DbColorA, category.DbColorR, category.DbColorG, category.DbColorB);

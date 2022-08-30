@@ -21,10 +21,13 @@ namespace MemoRandom.Client.ViewModels
         #region PRIVATE FIELDS
         private readonly IMsSqlController _msSqlController;
 
+        private IEnumerable<PropertyInfo> _colorsList;
         private List<Category> _categoriesList;
         private string _categoryName;
         private int _periodFrom;
         private int _periodTo;
+        private int _selectedComboIndex;
+        private Category _selectedCategory;
         private object _selectedComboColor;
         #endregion
 
@@ -81,6 +84,58 @@ namespace MemoRandom.Client.ViewModels
             }
         }
 
+        /// <summary>
+        /// Выбранная в таблице категория
+        /// </summary>
+        public Category SelectedCategory
+        {
+            get => _selectedCategory;
+            set
+            {
+                _selectedCategory = value;
+
+                CategoryName = SelectedCategory.CategoryName;
+                PeriodFrom = SelectedCategory.StartAge;
+                PeriodTo = SelectedCategory.StopAge;
+                // Устанавливаем индекс списка выбора цвета на позицию выбранного в таблице цвета
+                SelectedComboIndex = typeof(Colors).GetProperties()
+                                                   .Select(p => p.GetValue(null)).ToList()
+                                                   .FindIndex(x => (Color)x == _selectedCategory.CategoryColor);
+
+                RaisePropertyChanged(nameof(SelectedCategory));
+            }
+        }
+
+        /// <summary>
+        /// Список цветов
+        /// </summary>
+        public IEnumerable<PropertyInfo> ColorsList
+        {
+            get => _colorsList;
+            set
+            {
+                _colorsList = value;
+                RaisePropertyChanged(nameof(ColorsList));
+            }
+        }
+
+        
+        /// <summary>
+        /// Индекс цвета в списке выбора
+        /// </summary>
+        public int SelectedComboIndex
+        {
+            get => _selectedComboIndex;
+            set
+            {
+                _selectedComboIndex = value;
+                RaisePropertyChanged(nameof(SelectedComboIndex));
+            }
+        }
+
+        /// <summary>
+        /// Выбранный в списке цвет
+        /// </summary>
         public object SelectedComboColor
         {
             get => _selectedComboColor;
@@ -89,10 +144,14 @@ namespace MemoRandom.Client.ViewModels
                 _selectedComboColor = value;
                 var selectedItem = (PropertyInfo)value;
                 SelectedColor = (Color)selectedItem.GetValue(null, null);
+
                 RaisePropertyChanged(nameof(SelectedComboColor));
             }
         }
 
+        /// <summary>
+        /// Выбранный цвет
+        /// </summary>
         private Color SelectedColor { get; set; }
         #endregion
 
@@ -108,6 +167,9 @@ namespace MemoRandom.Client.ViewModels
         public DelegateCommand DeleteCategoryCommand { get; private set; }
         #endregion
 
+        /// <summary>
+        /// Добавление категории
+        /// </summary>
         private void AddCategory()
         {
             //TODO Здесь проверка на валидность начала и конца срока действия категории
@@ -129,6 +191,11 @@ namespace MemoRandom.Client.ViewModels
             _msSqlController.AddCategoryToList(cat);
         }
 
+        /// <summary>
+        /// Обработчик загрузки окна категорий
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public void CategoriesView_Loaded(object sender, RoutedEventArgs e)
         {
             // Вынести в метод на момент загрузки окна
@@ -137,10 +204,23 @@ namespace MemoRandom.Client.ViewModels
             {
                 CategoriesList = _msSqlController.GetCategories();
             }
-            
+
+            SelectedCategory = CategoriesList[0];
+
+            CategoryName = SelectedCategory.CategoryName;
+            PeriodFrom = SelectedCategory.StartAge;
+            PeriodTo = SelectedCategory.StopAge;
+            // Устанавливаем индекс списка выбора цвета на позицию выбранного в таблице цвета
+            SelectedComboIndex = typeof(Colors).GetProperties()
+                                               .Select(p => p.GetValue(null)).ToList()
+                                               .FindIndex(x => (Color)x == SelectedCategory.CategoryColor);
+
             RaisePropertyChanged(nameof(CategoriesList));
         }
 
+        /// <summary>
+        /// Инициализация команд
+        /// </summary>
         private void InitCommands()
         {
             AddCategoryCommand = new DelegateCommand(AddCategory);
@@ -153,13 +233,22 @@ namespace MemoRandom.Client.ViewModels
 
 
 
+        #region CTOR
+        /// <summary>
+        /// Конструктор
+        /// </summary>
+        /// <param name="msSqlController"></param>
+        /// <exception cref="ArgumentNullException"></exception>
         public CategoriesViewModel(IMsSqlController msSqlController)
         {
             _msSqlController = msSqlController ?? throw new ArgumentNullException(nameof(msSqlController));
 
-            CategoriesList = new();
+            CategoriesList = new(); // Создаем список категорий
+
+            ColorsList = typeof(Colors).GetProperties(); // Получаем список свойств с цветами
 
             InitCommands();
         }
+        #endregion
     }
 }
