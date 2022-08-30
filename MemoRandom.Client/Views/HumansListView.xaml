@@ -102,6 +102,12 @@
                                           SelectedItem="{Binding Path=SelectedHuman}"
                                           SelectedIndex="{Binding Path=PersonIndex}">
 
+                                    <DataGrid.RowStyle>
+                                        <Style TargetType="DataGridRow">
+                                            <Setter Property="Background" Value="{Binding Converter={StaticResource RowColorConverter}}"/>
+                                        </Style>
+                                    </DataGrid.RowStyle>
+                                    
                                     <!--<DataGrid.ItemContainerStyle>
                                         <Style TargetType="DataGridRow">
                                             <Setter Property="Background" Value="{Binding Converter={StaticResource RowColorConverter}}"/>
@@ -109,11 +115,11 @@
 
                                     </DataGrid.ItemContainerStyle>-->
 
-                                    <DataGrid.Resources>
+                                    <!--<DataGrid.Resources>
                                         <Style TargetType="DataGridRow" x:Key="rowColor">
                                             <Setter Property="Background" Value="{Binding Converter={StaticResource RowColorConverter}}"/>
                                         </Style>
-                                    </DataGrid.Resources>
+                                    </DataGrid.Resources>-->
                                     
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="Фамилия"

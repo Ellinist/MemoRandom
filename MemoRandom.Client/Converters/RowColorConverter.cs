@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MemoRandom.Models.Models;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -13,8 +14,15 @@ namespace MemoRandom.Client.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            Color color = Colors.Aquamarine;
-            return color.ToString();
+            var currentHuman = value as Human;
+
+            if(currentHuman != null)
+            {
+                if (currentHuman.FullYearsLived > 40) return Colors.Brown.ToString();
+                else return Colors.Green.ToString();
+            }
+
+            return Colors.Goldenrod.ToString();
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
