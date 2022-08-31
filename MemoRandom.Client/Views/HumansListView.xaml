@@ -104,7 +104,15 @@
 
                                     <DataGrid.RowStyle>
                                         <Style TargetType="DataGridRow">
+                                            <!--<Setter Property="Foreground" Value="DarkBlue"/>-->
                                             <Setter Property="Background" Value="{Binding Converter={StaticResource RowColorConverter}}"/>
+
+                                            <Style.Triggers>
+                                                <Trigger Property="IsSelected" Value="True">
+                                                    <!--<Setter Property="Foreground" Value="Black"></Setter>-->
+                                                    <Setter Property="Background" Value="Black"></Setter>
+                                                </Trigger>
+                                            </Style.Triggers>
                                         </Style>
                                     </DataGrid.RowStyle>
                                     
