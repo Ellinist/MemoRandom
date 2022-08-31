@@ -320,7 +320,9 @@ namespace MemoRandom.Client.ViewModels
         {
             var result = MessageBox.Show("Удалить выбранного человека?", "Удаление!", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result != MessageBoxResult.Yes) return;
-            
+
+            if (_previousIndex == -1) _previousIndex = 0; // Пока так - но надо умнее сделать
+
             var formerId = HumansList[_previousIndex].HumanId;
             try
             {

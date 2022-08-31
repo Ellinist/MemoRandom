@@ -174,7 +174,8 @@
 
                 <Button Grid.Column="1"
                         Margin="5, 2, 10, 2"
-                        Content="Удалить">
+                        Content="Удалить"
+                        Command="{Binding DeleteCategoryCommand}">
                     
                 </Button>
             </Grid>

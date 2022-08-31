@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 
 namespace MemoRandom.Models.Models
 {
     public static class Categories
     {
-        public static List<Category> AgeCategories { get; set; }
+        public static ObservableCollection<Category> AgeCategories { get; set; }
     }
 }

@@ -565,9 +565,13 @@ namespace MemoRandom.Data.Implementations
         #endregion
 
         #region Блок работы с категориями
-        public List<Category> GetCategories()
+        /// <summary>
+        /// Получение списка категорий из внешнего хранилища
+        /// </summary>
+        /// <returns></returns>
+        public ObservableCollection<Category> GetCategories()
         {
-            List<Category> categories = new();
+            ObservableCollection<Category> categories = new();
             using (MemoContext = new MemoRandomDbContext(DbConnectionString))
             {
                 try
@@ -608,23 +612,63 @@ namespace MemoRandom.Data.Implementations
 
             using (MemoContext = new MemoRandomDbContext(DbConnectionString))
             {
-                // Создаем новую запись
-                DbCategory dbCategory = new DbCategory()
+                try
                 {
-                    DbCategoryId = category.CategoryId,
-                    DbCategoryName = category.CategoryName,
-                    DbPeriodFrom = category.StartAge,
-                    DbPeriodTo = category.StopAge,
-                    DbColorA = category.CategoryColor.A,
-                    DbColorR = category.CategoryColor.R,
-                    DbColorG = category.CategoryColor.G,
-                    DbColorB = category.CategoryColor.B,
-                };
 
-                MemoContext.DbCategories.Add(dbCategory);
-                MemoContext.SaveChanges();
+                    // Создаем новую запись
+                    DbCategory dbCategory = new DbCategory()
+                    {
+                        DbCategoryId   = category.CategoryId,
+                        DbCategoryName = category.CategoryName,
+                        DbPeriodFrom   = category.StartAge,
+                        DbPeriodTo     = category.StopAge,
+                        DbColorA       = category.CategoryColor.A,
+                        DbColorR       = category.CategoryColor.R,
+                        DbColorG       = category.CategoryColor.G,
+                        DbColorB       = category.CategoryColor.B,
+                    };
+
+                    MemoContext.DbCategories.Add(dbCategory);
+                    MemoContext.SaveChanges();
+
+                }
+                catch (Exception ex)
+                {
+                    success = false;
+                    _logger.Error($"Ошибка добавления категории: {ex.HResult}");
+                }
             }
+            return success;
+        }
 
+        /// <summary>
+        /// Удаление категории
+        /// </summary>
+        /// <param name="category"></param>
+        /// <returns></returns>
+        public bool DeleteCategoryFromList(Category category)
+        {
+            var success = true;
+
+            using (MemoContext = new MemoRandomDbContext(DbConnectionString))
+            {
+                try
+                {
+                    var deletedCategory = MemoContext.DbCategories.FirstOrDefault(x => x.DbCategoryId == category.CategoryId);
+
+                    if (deletedCategory != null)
+                    {
+                        MemoContext.Remove(deletedCategory);
+                        MemoContext.SaveChanges();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    success = false;
+                    _logger.Error($"Ошибка удаления категории: {ex.HResult}");
+                }
+            }
+                
             return success;
         }
         #endregion

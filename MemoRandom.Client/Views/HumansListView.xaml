@@ -108,19 +108,6 @@
                                         </Style>
                                     </DataGrid.RowStyle>
                                     
-                                    <!--<DataGrid.ItemContainerStyle>
-                                        <Style TargetType="DataGridRow">
-                                            <Setter Property="Background" Value="{Binding Converter={StaticResource RowColorConverter}}"/>
-                                        </Style>
-
-                                    </DataGrid.ItemContainerStyle>-->
-
-                                    <!--<DataGrid.Resources>
-                                        <Style TargetType="DataGridRow" x:Key="rowColor">
-                                            <Setter Property="Background" Value="{Binding Converter={StaticResource RowColorConverter}}"/>
-                                        </Style>
-                                    </DataGrid.Resources>-->
-                                    
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="Фамилия"
                                                             IsReadOnly="True"

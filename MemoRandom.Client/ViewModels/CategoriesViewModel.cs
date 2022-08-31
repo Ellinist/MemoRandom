@@ -4,6 +4,7 @@ using Prism.Commands;
 using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -22,7 +23,7 @@ namespace MemoRandom.Client.ViewModels
         private readonly IMsSqlController _msSqlController;
 
         private IEnumerable<PropertyInfo> _colorsList;
-        private List<Category> _categoriesList;
+        private ObservableCollection<Category> _categoriesList;
         private string _categoryName;
         private int _periodFrom;
         private int _periodTo;
@@ -35,7 +36,7 @@ namespace MemoRandom.Client.ViewModels
         /// <summary>
         /// Список используемых категорий
         /// </summary>
-        public List<Category> CategoriesList
+        public ObservableCollection<Category> CategoriesList
         {
             get => _categoriesList;
             set
@@ -92,6 +93,7 @@ namespace MemoRandom.Client.ViewModels
             get => _selectedCategory;
             set
             {
+                if (value == null) return;
                 _selectedCategory = value;
 
                 CategoryName = SelectedCategory.CategoryName;
@@ -192,6 +194,22 @@ namespace MemoRandom.Client.ViewModels
         }
 
         /// <summary>
+        /// Удаление выбранной категории
+        /// </summary>
+        private void DeleteCategory()
+        {
+            if (SelectedCategory == null) return; // Здесь можно еще уведомление дать
+
+            if (!_msSqlController.DeleteCategoryFromList(SelectedCategory))
+            {
+                MessageBox.Show("Не получилось удалить выбранную категорию!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+
+            CategoriesList.Remove(SelectedCategory);
+            RaisePropertyChanged(nameof(CategoriesList));
+        }
+
+        /// <summary>
         /// Обработчик загрузки окна категорий
         /// </summary>
         /// <param name="sender"></param>
@@ -224,6 +242,7 @@ namespace MemoRandom.Client.ViewModels
         private void InitCommands()
         {
             AddCategoryCommand = new DelegateCommand(AddCategory);
+            DeleteCategoryCommand = new DelegateCommand(DeleteCategory);
         }
 
 
