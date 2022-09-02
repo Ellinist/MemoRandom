@@ -177,20 +177,35 @@ namespace MemoRandom.Client.ViewModels
             //TODO Здесь проверка на валидность начала и конца срока действия категории
             // Проверять, чтобы конец не был меньше или равен началу - уведомление
             // Проверять, чтобы не было пересечения с другими категориями - уведомление
+            var start = CategoriesList.FirstOrDefault(x => PeriodFrom >= x.StartAge &&
+                                                           PeriodFrom <= x.StopAge);
 
-            Category cat = new()
+            if(start == null)
             {
-                CategoryId = Guid.NewGuid(),
-                CategoryName = CategoryName,
-                StartAge = PeriodFrom,
-                StopAge = PeriodTo,
-                CategoryColor = SelectedColor
-            };
+                var stop = CategoriesList.FirstOrDefault(x => PeriodTo <= x.StopAge &&
+                                                              PeriodTo >= x.StartAge);
 
-            CategoriesList.Add(cat);
-            RaisePropertyChanged(nameof(CategoriesList));
+                if (stop == null)
+                {
+                    Category cat = new()
+                    {
+                        CategoryId = Guid.NewGuid(),
+                        CategoryName = CategoryName,
+                        StartAge = PeriodFrom,
+                        StopAge = PeriodTo,
+                        CategoryColor = SelectedColor
+                    };
 
-            _msSqlController.AddCategoryToList(cat);
+                    CategoriesList.Add(cat);
+                    RaisePropertyChanged(nameof(CategoriesList));
+
+                    _msSqlController.AddCategoryToList(cat);
+
+                    return;
+                }
+            }
+
+            MessageBox.Show("Пересечение временных диапазонов!", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         /// <summary>
