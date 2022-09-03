@@ -78,14 +78,25 @@ namespace MemoRandom.Data.Interfaces
         #endregion
 
         #region Блок работы с категориями
+        /// <summary>
+        /// Получение списка категорий из внешнего хранилища
+        /// </summary>
+        /// <returns></returns>
         ObservableCollection<Category> GetCategories();
 
+        ///// <summary>
+        ///// Добавление категории во внешнее хранилище
+        ///// </summary>
+        ///// <param name="category"></param>
+        ///// <returns></returns>
+        //bool AddCategoryToList(Category category);
+
         /// <summary>
-        /// Добавление категории во внешнее хранилище
+        /// Обновление категории во внешнем хранилище
         /// </summary>
         /// <param name="category"></param>
         /// <returns></returns>
-        bool AddCategoryToList(Category category);
+        bool UpdateCategoryToList(Category category);
 
         /// <summary>
         /// Удаление категории из внешнего хранилища

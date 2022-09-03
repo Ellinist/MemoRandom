@@ -10,6 +10,7 @@ using Microsoft.Data.SqlClient;
 using System.IO;
 using System.Windows.Media.Imaging;
 using System.Collections.ObjectModel;
+using System.Security.Cryptography;
 
 namespace MemoRandom.Data.Implementations
 {
@@ -27,6 +28,9 @@ namespace MemoRandom.Data.Implementations
         /// </summary>
         public static string ImageFolder { get; set; }
 
+        /// <summary>
+        /// Контекст базы данных
+        /// </summary>
         public static MemoRandomDbContext MemoContext { get; set; }
 
         /// <summary>
@@ -601,12 +605,46 @@ namespace MemoRandom.Data.Implementations
             return categories;
         }
 
-        /// <summary>
-        /// Добавление категории в хранилище
-        /// </summary>
-        /// <param name="category"></param>
-        /// <returns></returns>
-        public bool AddCategoryToList(Category category)
+        ///// <summary>
+        ///// Добавление категории в хранилище
+        ///// </summary>
+        ///// <param name="category"></param>
+        ///// <returns></returns>
+        //public bool AddCategoryToList(Category category)
+        //{
+        //    var success = true;
+
+        //    using (MemoContext = new MemoRandomDbContext(DbConnectionString))
+        //    {
+        //        try
+        //        {
+        //            // Создаем новую запись
+        //            DbCategory dbCategory = new DbCategory()
+        //            {
+        //                DbCategoryId   = category.CategoryId,
+        //                DbCategoryName = category.CategoryName,
+        //                DbPeriodFrom   = category.StartAge,
+        //                DbPeriodTo     = category.StopAge,
+        //                DbColorA       = category.CategoryColor.A,
+        //                DbColorR       = category.CategoryColor.R,
+        //                DbColorG       = category.CategoryColor.G,
+        //                DbColorB       = category.CategoryColor.B,
+        //            };
+
+        //            MemoContext.DbCategories.Add(dbCategory);
+        //            MemoContext.SaveChanges();
+
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            success = false;
+        //            _logger.Error($"Ошибка добавления категории: {ex.HResult}");
+        //        }
+        //    }
+        //    return success;
+        //}
+
+        public bool UpdateCategoryToList(Category category)
         {
             var success = true;
 
@@ -614,23 +652,38 @@ namespace MemoRandom.Data.Implementations
             {
                 try
                 {
-
-                    // Создаем новую запись
-                    DbCategory dbCategory = new DbCategory()
+                    var updatedCategory = MemoContext.DbCategories.FirstOrDefault(x => x.DbCategoryId == category.CategoryId);
+                    if (updatedCategory != null) // Корректировка информации
                     {
-                        DbCategoryId   = category.CategoryId,
-                        DbCategoryName = category.CategoryName,
-                        DbPeriodFrom   = category.StartAge,
-                        DbPeriodTo     = category.StopAge,
-                        DbColorA       = category.CategoryColor.A,
-                        DbColorR       = category.CategoryColor.R,
-                        DbColorG       = category.CategoryColor.G,
-                        DbColorB       = category.CategoryColor.B,
+                        updatedCategory.DbCategoryId   = category.CategoryId;
+                        updatedCategory.DbCategoryName = category.CategoryName;
+                        updatedCategory.DbPeriodFrom   = category.StartAge;
+                        updatedCategory.DbPeriodTo     = category.StopAge;
+                        updatedCategory.DbColorA       = category.CategoryColor.A;
+                        updatedCategory.DbColorR       = category.CategoryColor.R;
+                        updatedCategory.DbColorG       = category.CategoryColor.G;
+                        updatedCategory.DbColorB       = category.CategoryColor.B;
+
+                        MemoContext.SaveChanges();
+                    }
+                    else // Добавление новой записи в таблицу категорий
+                    {
+                        DbCategory record = new()
+                        {
+                            DbCategoryId = category.CategoryId,
+                            DbCategoryName = category.CategoryName,
+                            DbPeriodFrom = category.StartAge,
+                            DbPeriodTo = category.StopAge,
+                            DbColorA = category.CategoryColor.A,
+                            DbColorR = category.CategoryColor.R,
+                            DbColorG = category.CategoryColor.G,
+                            DbColorB = category.CategoryColor.B
+
+                        };
+
+                        MemoContext.DbCategories.Add(record);
+                        MemoContext.SaveChanges();
                     };
-
-                    MemoContext.DbCategories.Add(dbCategory);
-                    MemoContext.SaveChanges();
-
                 }
                 catch (Exception ex)
                 {

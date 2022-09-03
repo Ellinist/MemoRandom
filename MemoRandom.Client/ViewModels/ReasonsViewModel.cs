@@ -355,7 +355,7 @@ namespace MemoRandom.Client.ViewModels
                 SaveButtonText          = CHANGE_BUTTON;
                 _changeMode             = false; // Флаг, что не в режиме редактирования
                 AddSaveButtonEnabled    = true;  // При выходе из режима редактирования кнопка добавления становится доступной
-                ChangeSaveButtonEnabled = false; // После изменения записи кнопка изменения недоступна до выбора узла
+                ChangeSaveButtonEnabled = true;  
                 DeleteButtonEnabled     = false; // После изменения записи кнопка удаления недоступна до выбора узла
                 CancelButtonEnabled     = false; // После изменения записи кнопка отмены недоступна до выбора узла
 

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 
@@ -20,8 +21,11 @@ namespace MemoRandom.Client.ViewModels
         #region PRIVATE FIELDS
         private readonly IMsSqlController _msSqlController;
 
+        private string _categoriesTitle = "Возрастные категории";
         private IEnumerable<PropertyInfo> _colorsList;
-        private ObservableCollection<Category> _categoriesList;
+        private ObservableCollection<Category> _categoriesCollection;
+        private int _selectedIndex;
+        private Guid _categoryId;
         private string _categoryName;
         private int _periodFrom;
         private int _periodTo;
@@ -32,15 +36,54 @@ namespace MemoRandom.Client.ViewModels
 
         #region PROPS
         /// <summary>
-        /// Список используемых категорий
+        /// Заголовок окна категорий
         /// </summary>
-        public ObservableCollection<Category> CategoriesList
+        public string CategoriesTitle
         {
-            get => _categoriesList;
+            get => _categoriesTitle;
             set
             {
-                _categoriesList = value;
-                RaisePropertyChanged(nameof(CategoriesList));
+                _categoriesTitle = value;
+                RaisePropertyChanged(nameof(CategoriesTitle));
+            }
+        }
+
+        /// <summary>
+        /// Список используемых категорий
+        /// </summary>
+        public ObservableCollection<Category> CategoriesCollection
+        {
+            get => _categoriesCollection;
+            set
+            {
+                _categoriesCollection = value;
+                RaisePropertyChanged(nameof(CategoriesCollection));
+            }
+        }
+
+        /// <summary>
+        /// Индекс в списке категорий
+        /// </summary>
+        public int SelectedIndex
+        {
+            get => _selectedIndex;
+            set
+            {
+                _selectedIndex = value;
+                RaisePropertyChanged(nameof(SelectedIndex));
+            }
+        }
+
+        /// <summary>
+        /// Идентификатор категории
+        /// </summary>
+        public Guid CategoryId
+        {
+            get => _categoryId;
+            set
+            {
+                _categoryId = value;
+                RaisePropertyChanged(nameof(CategoryId));
             }
         }
 
@@ -94,6 +137,7 @@ namespace MemoRandom.Client.ViewModels
                 if (value == null) return;
                 _selectedCategory = value;
 
+                CategoryId = SelectedCategory.CategoryId;
                 CategoryName = SelectedCategory.CategoryName;
                 PeriodFrom = SelectedCategory.StartAge;
                 PeriodTo = SelectedCategory.StopAge;
@@ -119,7 +163,6 @@ namespace MemoRandom.Client.ViewModels
             }
         }
 
-        
         /// <summary>
         /// Индекс цвета в списке выбора
         /// </summary>
@@ -177,69 +220,106 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private void NewCategory()
         {
-            CategoryName = "";
+            CategoryId = Guid.NewGuid();
+            CategoryName = "Введите название!";
             PeriodFrom = 0;
             PeriodTo = 0;
-
-            Category cat = new()
-            {
-                CategoryId = Guid.NewGuid(),
-            };
         }
 
         /// <summary>
         /// Сохранение категории
         /// </summary>
-        private void SaveCategory()
+        private async void SaveCategory()
         {
-            //TODO Здесь проверка на валидность начала и конца срока действия категории
-            // Проверять, чтобы конец не был меньше или равен началу - уведомление
-            // Проверять, чтобы не было пересечения с другими категориями - уведомление
-            var start = CategoriesList.FirstOrDefault(x => PeriodFrom >= x.StartAge &&
-                                                           PeriodFrom <= x.StopAge);
-
-            if(start == null)
+            if (SelectedCategory != null) // Существующая запись категории
             {
-                var stop = CategoriesList.FirstOrDefault(x => PeriodTo <= x.StopAge &&
-                                                              PeriodTo >= x.StartAge);
+                SelectedCategory.CategoryName = CategoryName;
+                SelectedCategory.StartAge = PeriodFrom;
+                SelectedCategory.StopAge = PeriodTo;
+                SelectedCategory.CategoryColor = SelectedColor;
 
-                if (stop == null)
+                await Task.Run(() =>
+                {
+                    var result = _msSqlController.UpdateCategoryToList(SelectedCategory);
+                    if (!result)
+                    {
+                        MessageBox.Show("Не удалось обновить категорию", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+
+                    CategoriesCollection.Clear();
+                    CategoriesCollection = Categories.GetCategories();
+                    RaisePropertyChanged(nameof(CategoriesCollection));
+                    SelectedIndex = CategoriesCollection.IndexOf(SelectedCategory);
+                });
+            }
+            else // Создание новой категории
+            {
+                await Task.Run(() =>
                 {
                     Category cat = new()
                     {
-                        CategoryId = Guid.NewGuid(),
+                        CategoryId = CategoryId,
                         CategoryName = CategoryName,
                         StartAge = PeriodFrom,
                         StopAge = PeriodTo,
                         CategoryColor = SelectedColor
                     };
 
-                    CategoriesList.Add(cat);
-                    RaisePropertyChanged(nameof(CategoriesList));
+                    var result = _msSqlController.UpdateCategoryToList(cat);
+                    if (!result)
+                    {
+                        MessageBox.Show("Не удалось добавить категорию", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
 
-                    _msSqlController.AddCategoryToList(cat);
-
-                    return;
-                }
+                    Categories.AgeCategories.Add(cat);
+                    CategoriesCollection.Clear();
+                    CategoriesCollection = Categories.GetCategories();
+                    RaisePropertyChanged(nameof(CategoriesCollection));
+                    SelectedIndex = CategoriesCollection.IndexOf(cat);
+                });
             }
 
-            MessageBox.Show("Пересечение временных диапазонов!", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+            return;
+
+            ////TODO Здесь проверка на валидность начала и конца срока действия категории
+            //// Проверять, чтобы конец не был меньше или равен началу - уведомление
+            //// Проверять, чтобы не было пересечения с другими категориями - уведомление
+            //var start = CategoriesCollection.FirstOrDefault(x => PeriodFrom >= x.StartAge &&
+            //                                               PeriodFrom <= x.StopAge);
+
+            //if(start == null)
+            //{
+            //    var stop = CategoriesCollection.FirstOrDefault(x => PeriodTo <= x.StopAge &&
+            //                                                  PeriodTo >= x.StartAge);
+
+            //    if (stop == null)
+            //    {
+            //    }
+            //}
+
+            //MessageBox.Show("Пересечение временных диапазонов!", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         /// <summary>
         /// Удаление выбранной категории
         /// </summary>
-        private void DeleteCategory()
+        private async void DeleteCategory()
         {
             if (SelectedCategory == null) return; // Здесь можно еще уведомление дать
 
-            if (!_msSqlController.DeleteCategoryFromList(SelectedCategory))
+            if (!await Task.Run(() => _msSqlController.DeleteCategoryFromList(SelectedCategory)))
             {
                 MessageBox.Show("Не получилось удалить выбранную категорию!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
             }
 
-            CategoriesList.Remove(SelectedCategory);
-            RaisePropertyChanged(nameof(CategoriesList));
+            Categories.AgeCategories.Remove(SelectedCategory);
+            CategoriesCollection.Clear();
+            CategoriesCollection = Categories.AgeCategories;
+            RaisePropertyChanged(nameof(CategoriesCollection));
+            SelectedIndex = 0;
         }
 
         /// <summary>
@@ -249,14 +329,10 @@ namespace MemoRandom.Client.ViewModels
         /// <param name="e"></param>
         public void CategoriesView_Loaded(object sender, RoutedEventArgs e)
         {
-            // Вынести в метод на момент загрузки окна
-            var categoriesRead = _msSqlController.GetCategories();
-            if(categoriesRead != null)
-            {
-                CategoriesList = _msSqlController.GetCategories();
-            }
+            CategoriesCollection = Categories.GetCategories();
 
-            SelectedCategory = CategoriesList[0];
+            SelectedIndex = 0;
+            //SelectedCategory = CategoriesCollection[0];
 
             CategoryName = SelectedCategory.CategoryName;
             PeriodFrom = SelectedCategory.StartAge;
@@ -266,7 +342,7 @@ namespace MemoRandom.Client.ViewModels
                                                .Select(p => p.GetValue(null)).ToList()
                                                .FindIndex(x => (Color)x == SelectedCategory.CategoryColor);
 
-            RaisePropertyChanged(nameof(CategoriesList));
+            RaisePropertyChanged(nameof(CategoriesCollection));
         }
 
         /// <summary>
@@ -296,7 +372,7 @@ namespace MemoRandom.Client.ViewModels
         {
             _msSqlController = msSqlController ?? throw new ArgumentNullException(nameof(msSqlController));
 
-            CategoriesList = new(); // Создаем список категорий
+            CategoriesCollection = new(); // Создаем список категорий
 
             ColorsList = typeof(Colors).GetProperties(); // Получаем список свойств с цветами
 

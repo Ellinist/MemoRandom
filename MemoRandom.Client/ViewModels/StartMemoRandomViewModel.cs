@@ -11,9 +11,13 @@ using System.Windows.Threading;
 using MemoRandom.Data.Interfaces;
 using MemoRandom.Models.Models;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace MemoRandom.Client.ViewModels
 {
+    /// <summary>
+    /// Класс модели представления стартового окна
+    /// </summary>
     public class StartMemoRandomViewModel : BindableBase
     {
         public Action ButtonsVisibility { get; set; } // Действие видимости кнопок
@@ -148,8 +152,10 @@ namespace MemoRandom.Client.ViewModels
         {
             if (sender is Window)
             {
-                SetInitialPaths();   // Начальная инициализация БД (или любой другой фигни) и путей
-                GetInitialReasons(); // Получаем справочник причин смерти
+                SetInitialPaths();     // Начальная инициализация БД (или любой другой фигни) и путей
+                //GetInitialReasons();   // Получаем справочник причин смерти
+                //GetHumansCategories(); // Чтение возрастных категорий
+                ReadStartData();
 
                 (sender as Window).Closing += StartMemoRandomViewModel_Closing; // Подписываемся на событие закрытия окна
                 SetCurrentDateTime(); // Вызываем метод отображения текущего времени
@@ -197,24 +203,68 @@ namespace MemoRandom.Client.ViewModels
             #endregion
         }
 
+        ///// <summary>
+        ///// Чтение справочника причин смерти
+        ///// </summary>
+        //private async void GetInitialReasons()
+        //{
+        //    await Task.Run(() =>
+        //    {
+        //        List<Reason> reasonsResult = _msSqlController.GetReasons();
+        //        if (reasonsResult != null)
+        //        {
+        //            Reasons.PlainReasonsList = reasonsResult; // Заносим плоский список в статический класс
+        //            FormObservableCollection(Reasons.PlainReasonsList, null); // Формируем иерархическую коллекцию
+        //        }
+        //        else
+        //        {
+        //            MessageBox.Show("Чтение справочника причин смерти не удалось!", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+        //        }
+        //    });
+        //}
+
+        ///// <summary>
+        ///// Чтение коллекции возрастных категорий
+        ///// </summary>
+        //private async void GetHumansCategories()
+        //{
+        //    await Task.Run(() =>
+        //    {
+        //        ObservableCollection<Category> categoriesResult = _msSqlController.GetCategories();
+        //        if (categoriesResult != null)
+        //        {
+        //            Categories.AgeCategories = categoriesResult;
+        //        }
+        //        else
+        //        {
+        //            MessageBox.Show("Чтение возрастных категорий не удалось!", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+        //        }
+        //    });
+        //}
+
         /// <summary>
-        /// Чтение справочника причин смерти
+        /// Чтение справочника причин смерти и справочника возрастных категорий
         /// </summary>
-        private async void GetInitialReasons()
+        private async void ReadStartData()
         {
-            List<Reason> reasonsResult = new();
             await Task.Run(() =>
             {
-                reasonsResult = _msSqlController.GetReasons();
-                if (reasonsResult != null)
+                List<Reason> reasonsResult = _msSqlController.GetReasons();
+                ObservableCollection<Category> categoriesResult = _msSqlController.GetCategories();
+                if (reasonsResult != null && categoriesResult != null)
                 {
                     Reasons.PlainReasonsList = reasonsResult; // Заносим плоский список в статический класс
                     FormObservableCollection(Reasons.PlainReasonsList, null); // Формируем иерархическую коллекцию
-                    ButtonsVisibility(); // Чтение справоника выполнено - кнопки делаем видимыми
+                    Categories.AgeCategories = categoriesResult; // Задаем статический список категорий
+                    ButtonsVisibility();   // Чтение данных выполнено - кнопки делаем видимыми
+                }
+                else if(reasonsResult == null)
+                {
+                    MessageBox.Show("Чтение справочника причин смерти не удалось!", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
                 else
                 {
-                    MessageBox.Show("Чтение справочника причин смерти не удалось!", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Чтение возрастных категорий не удалось!", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             });
         }
