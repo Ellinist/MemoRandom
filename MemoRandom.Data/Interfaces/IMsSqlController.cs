@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using MemoRandom.Models.Models;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Media.Imaging;
-using MemoRandom.Models.Models;
 
 namespace MemoRandom.Data.Interfaces
 {
@@ -83,13 +83,6 @@ namespace MemoRandom.Data.Interfaces
         /// </summary>
         /// <returns></returns>
         ObservableCollection<Category> GetCategories();
-
-        ///// <summary>
-        ///// Добавление категории во внешнее хранилище
-        ///// </summary>
-        ///// <param name="category"></param>
-        ///// <returns></returns>
-        //bool AddCategoryToList(Category category);
 
         /// <summary>
         /// Обновление категории во внешнем хранилище
