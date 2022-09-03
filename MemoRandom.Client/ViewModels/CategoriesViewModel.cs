@@ -240,7 +240,7 @@ namespace MemoRandom.Client.ViewModels
 
                 await Task.Run(() =>
                 {
-                    var result = _msSqlController.UpdateCategoryToList(SelectedCategory);
+                    var result = _msSqlController.UpdateCategories(SelectedCategory);
                     if (!result)
                     {
                         MessageBox.Show("Не удалось обновить категорию", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -266,7 +266,7 @@ namespace MemoRandom.Client.ViewModels
                         CategoryColor = SelectedColor
                     };
 
-                    var result = _msSqlController.UpdateCategoryToList(cat);
+                    var result = _msSqlController.UpdateCategories(cat);
                     if (!result)
                     {
                         MessageBox.Show("Не удалось добавить категорию", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -309,7 +309,7 @@ namespace MemoRandom.Client.ViewModels
         {
             if (SelectedCategory == null) return; // Здесь можно еще уведомление дать
 
-            if (!await Task.Run(() => _msSqlController.DeleteCategoryFromList(SelectedCategory)))
+            if (!await Task.Run(() => _msSqlController.DeleteCategory(SelectedCategory)))
             {
                 MessageBox.Show("Не получилось удалить выбранную категорию!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;

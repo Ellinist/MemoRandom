@@ -280,34 +280,12 @@ namespace MemoRandom.Data.Implementations
         }
 
         /// <summary>
-        /// Сохранение человека во внешнем хранилище
-        /// Если человек уже есть, то обновление записи
-        /// Если человек новый, то добавление записи
-        /// </summary>
-        /// <param name="currentHuman"></param>
-        /// <param name="humanImage"></param>
-        /// <returns></returns>
-        public bool UpdateHumans(Human currentHuman, BitmapImage humanImage)
-        {
-            return UpdateHumanInList(currentHuman, humanImage);
-
-            //if (currentHuman != null) // Существующая запись
-            //{
-            //    return UpdateHumanInList(currentHuman, humanImage);
-            //}
-            //else // Новая запись
-            //{
-            //    return AddHumanToList(currentHuman, humanImage);
-            //}
-        }
-
-        /// <summary>
         /// Обновление сущности человека в общем списке
         /// </summary>
         /// <param name="human"></param>
         /// <param name="humanImage"></param>
         /// <returns></returns>
-        public bool UpdateHumanInList(Human human, BitmapImage humanImage)
+        public bool UpdateHumans(Human human, BitmapImage humanImage)
         {
             bool successResult = true;
 
@@ -378,51 +356,6 @@ namespace MemoRandom.Data.Implementations
             }
             return successResult;
         }
-
-        ///// <summary>
-        ///// Добавление сущности человека в общий список
-        ///// </summary>
-        ///// <param name="human"></param>
-        ///// <param name="humanImage"></param>
-        ///// <returns></returns>
-        //public bool AddHumanToList(Human human, BitmapImage humanImage)
-        //{
-        //    bool successResult = true;
-
-        //    using (MemoContext = new MemoRandomDbContext(DbConnectionString))
-        //    {
-        //        try
-        //        {
-        //            // Создаем новую запись
-        //            DbHuman record = new DbHuman()
-        //            {
-        //                DbHumanId       = human.HumanId,
-        //                DbLastName      = human.LastName,
-        //                DbFirstName     = human.FirstName,
-        //                DbPatronymic    = human.Patronymic,
-        //                DbBirthDate     = human.BirthDate,
-        //                DbBirthCountry  = human.BirthCountry,
-        //                DbBirthPlace    = human.BirthPlace,
-        //                DbDeathDate     = human.DeathDate,
-        //                DbDeathCountry  = human.DeathCountry,
-        //                DbDeathPlace    = human.DeathPlace,
-        //                DbImageFile     = human.ImageFile,
-        //                DbDeathReasonId = human.DeathReasonId,
-        //                DbHumanComments = human.HumanComments
-        //            };
-        //            MemoContext.DbHumans.Add(record);
-        //            MemoContext.SaveChanges();
-
-        //            SaveImageToFile(human, humanImage); // Сохраняем изображение
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            successResult = false;
-        //            _logger.Error($"Ошибка записи информации по человеку: {ex.HResult}");
-        //        }
-        //    }
-        //    return successResult;
-        //}
 
         /// <summary>
         /// Удаление человека из внешнего хранилища
@@ -615,7 +548,7 @@ namespace MemoRandom.Data.Implementations
         /// </summary>
         /// <param name="category"></param>
         /// <returns></returns>
-        public bool UpdateCategoryToList(Category category)
+        public bool UpdateCategories(Category category)
         {
             var success = true;
 
@@ -670,7 +603,7 @@ namespace MemoRandom.Data.Implementations
         /// </summary>
         /// <param name="category"></param>
         /// <returns></returns>
-        public bool DeleteCategoryFromList(Category category)
+        public bool DeleteCategory(Category category)
         {
             var success = true;
 

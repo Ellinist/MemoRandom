@@ -89,14 +89,14 @@ namespace MemoRandom.Data.Interfaces
         /// </summary>
         /// <param name="category"></param>
         /// <returns></returns>
-        bool UpdateCategoryToList(Category category);
+        bool UpdateCategories(Category category);
 
         /// <summary>
         /// Удаление категории из внешнего хранилища
         /// </summary>
         /// <param name="category"></param>
         /// <returns></returns>
-        bool DeleteCategoryFromList(Category category);
+        bool DeleteCategory(Category category);
         #endregion
     }
 }
