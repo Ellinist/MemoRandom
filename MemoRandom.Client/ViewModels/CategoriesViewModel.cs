@@ -7,8 +7,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 
@@ -159,9 +157,14 @@ namespace MemoRandom.Client.ViewModels
 
         #region COMMANDS
         /// <summary>
-        /// Команда добавления категории
+        /// Команда добавления новой категории
         /// </summary>
-        public DelegateCommand AddCategoryCommand { get; private set; } 
+        public DelegateCommand NewCategoryCommand { get; private set; }
+
+        /// <summary>
+        /// Команда сохранения категории
+        /// </summary>
+        public DelegateCommand SaveCategoryCommand { get; private set; } 
 
         /// <summary>
         /// Команда удаления категории
@@ -170,9 +173,24 @@ namespace MemoRandom.Client.ViewModels
         #endregion
 
         /// <summary>
-        /// Добавление категории
+        /// Создание новой категории
         /// </summary>
-        private void AddCategory()
+        private void NewCategory()
+        {
+            CategoryName = "";
+            PeriodFrom = 0;
+            PeriodTo = 0;
+
+            Category cat = new()
+            {
+                CategoryId = Guid.NewGuid(),
+            };
+        }
+
+        /// <summary>
+        /// Сохранение категории
+        /// </summary>
+        private void SaveCategory()
         {
             //TODO Здесь проверка на валидность начала и конца срока действия категории
             // Проверять, чтобы конец не был меньше или равен началу - уведомление
@@ -256,7 +274,8 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private void InitCommands()
         {
-            AddCategoryCommand = new DelegateCommand(AddCategory);
+            NewCategoryCommand = new DelegateCommand(NewCategory);
+            SaveCategoryCommand = new DelegateCommand(SaveCategory);
             DeleteCategoryCommand = new DelegateCommand(DeleteCategory);
         }
 

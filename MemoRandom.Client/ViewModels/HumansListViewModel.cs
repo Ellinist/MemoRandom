@@ -238,13 +238,16 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private void InitializeCommands()
         {
-            AddHumanCommand = new DelegateCommand(AddHuman);
+            AddHumanCommand      = new DelegateCommand(AddHuman);
             EditHumanDataCommand = new DelegateCommand(EditHumanData);
-            DeleteHumanCommand = new DelegateCommand(DeleteHuman);
-            StartAboutCommand = new DelegateCommand(OpenAboutView);
-            CategoriesCommand = new DelegateCommand(CategoriesOpen);
+            DeleteHumanCommand   = new DelegateCommand(DeleteHuman);
+            StartAboutCommand    = new DelegateCommand(OpenAboutView);
+            CategoriesCommand    = new DelegateCommand(CategoriesOpen);
         }
 
+        /// <summary>
+        /// Вызов окна редактирования категорий
+        /// </summary>
         private void CategoriesOpen()
         {
             _container.Resolve<CategoriesView>().ShowDialog();

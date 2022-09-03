@@ -1,34 +1,46 @@
-﻿<Window x:Class="MemoRandom.Client.Views.CategoriesView"
+﻿<mah:MetroWindow x:Class="MemoRandom.Client.Views.CategoriesView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:conv="clr-namespace:MemoRandom.Client.Converters"
-        xmlns:cols="clr-namespace:MemoRandom.Client.Views.UserControls"
         xmlns:local="clr-namespace:MemoRandom.Client.Views"
         mc:Ignorable="d"
-        Title="CategoriesView" Height="450" Width="800">
+        Title="HumanCategoriesView"
+        Height="450" MinHeight="450" MaxHeight="450"
+        Width="1000" MinWidth="1000" MaxWidth="1000">
 
-    <Window.Resources>
+    <mah:MetroWindow.Resources>
         <ResourceDictionary>
             <Style TargetType="TextBlock" x:Key="TextBlockFontSize">
                 <Setter Property="FontSize" Value="20"/>
             </Style>
+
             <Style TargetType="TextBox" x:Key="TextBoxFontSize">
                 <Setter Property="FontSize" Value="20"/>
             </Style>
 
+            <Style TargetType="DataGridCellsPresenter">
+                <Setter Property="FontSize" Value="16"></Setter>
+            </Style>
+
+            <Style TargetType="DataGridColumnHeadersPresenter">
+                <Setter Property="FontSize" Value="16"></Setter>
+            </Style>
+
             <conv:CellColorConverter x:Key="CellColorConverter"/>
         </ResourceDictionary>
-    </Window.Resources>
-    
+    </mah:MetroWindow.Resources>
+
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="0.8*"/>
+            <ColumnDefinition Width="1.27*"/>
         </Grid.ColumnDefinitions>
 
         <DataGrid Grid.Column="0"
+                  Style="{StaticResource MahApps.Styles.DataGrid}"
                   x:Name="DgCategories"
                   CanUserAddRows="False"
                   CanUserDeleteRows="False"
@@ -37,6 +49,7 @@
                   ItemsSource="{Binding CategoriesList}"
                   SelectedItem="{Binding SelectedCategory}">
             <DataGrid.Columns>
+                
                 <!--Название категории-->
                 <DataGridTextColumn Header="Категория"
                                     x:Name="CategoryName"
@@ -60,11 +73,11 @@
                                     Binding="{Binding StopAge}">
 
                 </DataGridTextColumn>
-
-                <!--Цвет выделения записей данной категори-->
+                
+                <!--Цвет выделения записей данной категории-->
                 <DataGridTextColumn Header="Цвет"
                                     x:Name="PeriodColor"
-                                    Width="60" MinWidth="60">
+                                    Width="64" MinWidth="64">
 
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="{x:Type TextBlock}">
@@ -157,29 +170,42 @@
                     </ComboBox>
                 </Grid>
             </StackPanel>
-
-            <!--Кнопки сохранения и удаления-->
+            
+            <!--Кнопки добавления, сохранения и удаления-->
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
+                    <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
 
+                <!--Кнопка добавления новой категории-->
                 <Button Grid.Column="0"
+                        Style="{StaticResource MahApps.Styles.Button}"
+                        FontSize="18"
                         Margin="10, 2, 5, 2"
-                        Content="Сохранить"
-                        Command="{Binding AddCategoryCommand}">
-
+                        Content="Добавить"
+                        Command="{Binding NewCategoryCommand}">
                 </Button>
 
+                <!--Кнопка сохранения новой или отредактированной категории-->
                 <Button Grid.Column="1"
+                        Style="{StaticResource MahApps.Styles.Button}"
+                        FontSize="18"
+                        Margin="10, 2, 5, 2"
+                        Content="Сохранить"
+                        Command="{Binding SaveCategoryCommand}">
+                </Button>
+
+                <!--Кнопка удаления выбранной категории-->
+                <Button Grid.Column="2"
+                        Style="{StaticResource MahApps.Styles.Button}"
+                        FontSize="18"
                         Margin="5, 2, 10, 2"
                         Content="Удалить"
                         Command="{Binding DeleteCategoryCommand}">
-                    
                 </Button>
             </Grid>
         </Grid>
-        
     </Grid>
-</Window>
+</mah:MetroWindow>
