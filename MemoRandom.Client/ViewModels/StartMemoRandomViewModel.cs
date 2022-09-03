@@ -1,17 +1,17 @@
-﻿using NLog;
-using System;
-using DryIoc;
-using Prism.Mvvm;
-using System.Windows;
-using System.Threading;
-using System.Configuration;
-using System.Threading.Tasks;
+﻿using DryIoc;
 using MemoRandom.Client.Views;
-using System.Windows.Threading;
 using MemoRandom.Data.Interfaces;
 using MemoRandom.Models.Models;
+using NLog;
+using Prism.Mvvm;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Configuration;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Threading;
 
 namespace MemoRandom.Client.ViewModels
 {

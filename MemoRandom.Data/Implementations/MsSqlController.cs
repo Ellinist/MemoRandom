@@ -655,7 +655,7 @@ namespace MemoRandom.Data.Implementations
                     var updatedCategory = MemoContext.DbCategories.FirstOrDefault(x => x.DbCategoryId == category.CategoryId);
                     if (updatedCategory != null) // Корректировка информации
                     {
-                        updatedCategory.DbCategoryId   = category.CategoryId;
+                        updatedCategory.DbCategoryId = category.CategoryId;
                         updatedCategory.DbCategoryName = category.CategoryName;
                         updatedCategory.DbPeriodFrom   = category.StartAge;
                         updatedCategory.DbPeriodTo     = category.StopAge;
