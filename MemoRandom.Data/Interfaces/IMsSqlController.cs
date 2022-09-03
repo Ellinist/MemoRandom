@@ -59,20 +59,22 @@ namespace MemoRandom.Data.Interfaces
         /// <summary>
         /// Обновление (добавление или редактирование) списка людей
         /// </summary>
-        /// <param name="human"></param>
+        /// <param name="currentHuman"></param>
+        /// <param name="humanImage"></param>
         /// <returns></returns>
         bool UpdateHumans(Human currentHuman, BitmapImage humanImage);
 
         /// <summary>
         /// Удаление человека из списка
         /// </summary>
-        /// <param name="human"></param>
+        /// <param name="currentHuman"></param>
         /// <returns></returns>
         bool DeleteHuman(Human currentHuman);
 
         /// <summary>
         /// Получение изображения человека
         /// </summary>
+        /// <param name="currentHuman"></param>
         /// <returns></returns>
         BitmapImage GetHumanImage(Human currentHuman);
         #endregion

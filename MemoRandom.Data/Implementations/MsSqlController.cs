@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using MemoRandom.Models.Models;
-using MemoRandom.Data.Controllers;
+﻿using MemoRandom.Data.Controllers;
 using MemoRandom.Data.DbModels;
 using MemoRandom.Data.Interfaces;
-using NLog;
+using MemoRandom.Models.Models;
 using Microsoft.Data.SqlClient;
-using System.IO;
-using System.Windows.Media.Imaging;
+using NLog;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Security.Cryptography;
+using System.IO;
+using System.Linq;
+using System.Windows.Media.Imaging;
 
 namespace MemoRandom.Data.Implementations
 {
@@ -90,7 +89,6 @@ namespace MemoRandom.Data.Implementations
         /// <summary>
         /// Получение справочника причин смерти
         /// </summary>
-        /// <param name="file"></param>
         /// <returns></returns>
         public List<Reason> GetReasons()
         {
@@ -422,6 +420,7 @@ namespace MemoRandom.Data.Implementations
         /// Сохранение изображения в файл
         /// </summary>
         /// <param name="human"></param>
+        /// <param name="humanImage"></param>
         private void SaveImageToFile(Human human, BitmapImage humanImage)
         {
             string combinedImagePath = Path.Combine(ImageFolder, human.ImageFile);
@@ -521,7 +520,6 @@ namespace MemoRandom.Data.Implementations
                     List<DbCategory> categoriesList = MemoContext.DbCategories.OrderBy(x => x.DbPeriodFrom).ToList(); // Читаем контекст базы данных
                     foreach (var category in categoriesList)
                     {
-                        //var x = System.Windows.Media.Color.FromArgb(category.DbColorA, category.DbColorR, category.DbColorG, category.DbColorB);
                         Category cat = new()
                         {
                             CategoryId = category.DbCategoryId,
