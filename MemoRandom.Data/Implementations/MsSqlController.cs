@@ -270,7 +270,7 @@ namespace MemoRandom.Data.Implementations
                 }
                 catch (Exception ex)
                 {
-                    humansList = null; // В случае неуспеха чтения обнуляем список людей
+                    humansList = null; // В случае ошибки чтения обнуляем список людей
                     _logger.Error($"Ошибка чтения файла по людям: {ex.HResult}");
                 }
             }
@@ -355,7 +355,6 @@ namespace MemoRandom.Data.Implementations
             return successResult;
         }
 
-
         /// <summary>
         /// Удаление человека из внешнего хранилища
         /// </summary>
@@ -402,22 +401,18 @@ namespace MemoRandom.Data.Implementations
         public BitmapImage GetHumanImage(Human currentHuman)
         {
             // Читаем файл изображения, если выбранный человек существует и у него есть изображение
-            if (currentHuman != null && currentHuman.ImageFile != string.Empty)
-            {
-                string combinedImagePath = Path.Combine(ImageFolder, currentHuman.ImageFile);
+            if (currentHuman == null || currentHuman.ImageFile == string.Empty) return null;
+            
+            string combinedImagePath = Path.Combine(ImageFolder, currentHuman.ImageFile);
+            using Stream stream = File.OpenRead(combinedImagePath);
+            BitmapImage image = new BitmapImage();
+            image.BeginInit();
+            image.CacheOption = BitmapCacheOption.OnLoad;
+            image.StreamSource = stream;
+            image.EndInit();
+            stream.Close();
 
-                using Stream stream = File.OpenRead(combinedImagePath);
-                BitmapImage image = new BitmapImage();
-                image.BeginInit();
-                image.CacheOption = BitmapCacheOption.OnLoad;
-                image.StreamSource = stream;
-                image.EndInit();
-                stream.Close();
-
-                return image;
-            }
-
-            return null;
+            return image;
         }
 
         /// <summary>
@@ -425,7 +420,7 @@ namespace MemoRandom.Data.Implementations
         /// </summary>
         /// <param name="human"></param>
         /// <param name="humanImage"></param>
-        private void SaveImageToFile(Human human, BitmapSource humanImage)
+        private static void SaveImageToFile(Human human, BitmapSource humanImage)
         {
             string combinedImagePath = Path.Combine(ImageFolder, human.ImageFile);
 
@@ -471,7 +466,7 @@ namespace MemoRandom.Data.Implementations
         /// </summary>
         /// <param name="reasons"></param>
         /// <returns></returns>
-        private List<Reason> FormPlainReasonsList(List<DbReason> reasons)
+        private static List<Reason> FormPlainReasonsList(List<DbReason> reasons)
         {
             List<Reason> plainReasonsList = new();
 
@@ -494,17 +489,15 @@ namespace MemoRandom.Data.Implementations
         /// <summary>
         /// Рекурсивный метод удаления дочерних узлов для удаляемой причины смерти
         /// </summary>
-        private void DeletingDaughters(Reason reason, MemoRandomDbContext context)
+        private static void DeletingDaughters(Reason reason, MemoRandomDbContext context)
         {
             var deletedReason = context.DbReasons.FirstOrDefault(x => x.DbReasonId == reason.ReasonId);
-            if (deletedReason != null)
+            if (deletedReason == null) return;
+            
+            context.Remove(deletedReason);
+            foreach (var child in reason.ReasonChildren) // Если есть дочерние узлы, то выполняем удаление и по ним
             {
-                context.Remove(deletedReason);
-
-                foreach (var child in reason.ReasonChildren) // Если есть дочерние узлы, то выполняем удаление и по ним
-                {
-                    DeletingDaughters(child, context);
-                }
+                DeletingDaughters(child, context);
             }
         }
         #endregion
@@ -521,7 +514,7 @@ namespace MemoRandom.Data.Implementations
             {
                 try
                 {
-                    List<DbCategory> categoriesList = MemoContext.DbCategories.OrderBy(x => x.DbPeriodFrom).ToList(); // Читаем контекст базы данных
+                    var categoriesList = MemoContext.DbCategories.OrderBy(x => x.DbPeriodFrom).ToList(); // Читаем контекст базы данных
                     foreach (var category in categoriesList)
                     {
                         Category cat = new()

@@ -150,14 +150,12 @@ namespace MemoRandom.Client.ViewModels
         /// <param name="e"></param>
         public void StartView_Loaded(object sender, RoutedEventArgs e)
         {
-            if (sender is Window)
+            if (sender is Window window)
             {
-                SetInitialPaths();     // Начальная инициализация БД (или любой другой фигни) и путей
-                //GetInitialReasons();   // Получаем справочник причин смерти
-                //GetHumansCategories(); // Чтение возрастных категорий
+                SetInitialPaths(); // Начальная инициализация БД (или любой другой фигни) и путей
                 ReadStartData();
 
-                (sender as Window).Closing += StartMemoRandomViewModel_Closing; // Подписываемся на событие закрытия окна
+                window.Closing += StartMemoRandomViewModel_Closing; // Подписываемся на событие закрытия окна
                 SetCurrentDateTime(); // Вызываем метод отображения текущего времени
             }
         }
@@ -203,45 +201,6 @@ namespace MemoRandom.Client.ViewModels
             #endregion
         }
 
-        ///// <summary>
-        ///// Чтение справочника причин смерти
-        ///// </summary>
-        //private async void GetInitialReasons()
-        //{
-        //    await Task.Run(() =>
-        //    {
-        //        List<Reason> reasonsResult = _msSqlController.GetReasons();
-        //        if (reasonsResult != null)
-        //        {
-        //            Reasons.PlainReasonsList = reasonsResult; // Заносим плоский список в статический класс
-        //            FormObservableCollection(Reasons.PlainReasonsList, null); // Формируем иерархическую коллекцию
-        //        }
-        //        else
-        //        {
-        //            MessageBox.Show("Чтение справочника причин смерти не удалось!", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
-        //        }
-        //    });
-        //}
-
-        ///// <summary>
-        ///// Чтение коллекции возрастных категорий
-        ///// </summary>
-        //private async void GetHumansCategories()
-        //{
-        //    await Task.Run(() =>
-        //    {
-        //        ObservableCollection<Category> categoriesResult = _msSqlController.GetCategories();
-        //        if (categoriesResult != null)
-        //        {
-        //            Categories.AgeCategories = categoriesResult;
-        //        }
-        //        else
-        //        {
-        //            MessageBox.Show("Чтение возрастных категорий не удалось!", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
-        //        }
-        //    });
-        //}
-
         /// <summary>
         /// Чтение справочника причин смерти и справочника возрастных категорий
         /// </summary>
@@ -249,8 +208,8 @@ namespace MemoRandom.Client.ViewModels
         {
             await Task.Run(() =>
             {
-                List<Reason> reasonsResult = _msSqlController.GetReasons();
-                ObservableCollection<Category> categoriesResult = _msSqlController.GetCategories();
+                var reasonsResult = _msSqlController.GetReasons();
+                var categoriesResult = _msSqlController.GetCategories();
                 if (reasonsResult != null && categoriesResult != null)
                 {
                     Reasons.PlainReasonsList = reasonsResult; // Заносим плоский список в статический класс
@@ -274,24 +233,24 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         /// <param name="reasons">Плоский список</param>
         /// <param name="headReason">Головной элемент (экземпляр класса)</param>
-        private void FormObservableCollection(List<Reason> reasons, Reason headReason)
+        private static void FormObservableCollection(List<Reason> reasons, Reason headReason)
         {
-            for (int i = 0; i < reasons.Count; i++)
+            foreach (var reason in reasons)
             {
-                if (reasons[i].ReasonParentId == Guid.Empty) // Случай корневых узлов
+                if (reason.ReasonParentId == Guid.Empty) // Случай корневых узлов
                 {
                     Reason rsn = new()
                     {
-                        ReasonParentId    = reasons[i].ReasonParentId,
-                        ReasonId          = reasons[i].ReasonId,
-                        ReasonName        = reasons[i].ReasonName,
-                        ReasonComment     = reasons[i].ReasonComment,
-                        ReasonDescription = reasons[i].ReasonDescription
+                        ReasonParentId    = reason.ReasonParentId,
+                        ReasonId          = reason.ReasonId,
+                        ReasonName        = reason.ReasonName,
+                        ReasonComment     = reason.ReasonComment,
+                        ReasonDescription = reason.ReasonDescription
                     };
                     Reasons.ReasonsCollection.Add(rsn);
 
                     // Проверка на наличие дочерних узлов
-                    List<Reason> daughters = Reasons.PlainReasonsList.FindAll(x => x.ReasonParentId == rsn.ReasonId);
+                    var daughters = Reasons.PlainReasonsList.FindAll(x => x.ReasonParentId == rsn.ReasonId);
                     if (daughters.Count != 0) // Если дочерние узлы найдены
                     {
                         FormObservableCollection(daughters, rsn); // Вызываем рекурсивно
@@ -301,17 +260,17 @@ namespace MemoRandom.Client.ViewModels
                 {
                     Reason rsn = new()
                     {
-                        ReasonId          = reasons[i].ReasonId,
-                        ReasonName        = reasons[i].ReasonName,
-                        ReasonComment     = reasons[i].ReasonComment,
-                        ReasonDescription = reasons[i].ReasonDescription,
+                        ReasonId          = reason.ReasonId,
+                        ReasonName        = reason.ReasonName,
+                        ReasonComment     = reason.ReasonComment,
+                        ReasonDescription = reason.ReasonDescription,
                         ReasonParentId    = headReason.ReasonId,
                         ReasonParent      = headReason
                     };
                     headReason.ReasonChildren.Add(rsn);
 
                     // Проверка на наличие дочерних узлов
-                    List<Reason> daughters = Reasons.PlainReasonsList.FindAll(x => x.ReasonParentId == rsn.ReasonId);
+                    var daughters = Reasons.PlainReasonsList.FindAll(x => x.ReasonParentId == rsn.ReasonId);
                     if (daughters.Count != 0) // Если дочерние узлы найдены
                     {
                         FormObservableCollection(daughters, rsn); // Вызываем рекурсивно

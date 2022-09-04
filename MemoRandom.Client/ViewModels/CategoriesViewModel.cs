@@ -233,10 +233,12 @@ namespace MemoRandom.Client.ViewModels
         {
             if (SelectedCategory != null) // Существующая запись категории
             {
-                SelectedCategory.CategoryName = CategoryName;
-                SelectedCategory.StartAge = PeriodFrom;
-                SelectedCategory.StopAge = PeriodTo;
+                #region Обновление выбранной категории
+                SelectedCategory.CategoryName  = CategoryName;
+                SelectedCategory.StartAge      = PeriodFrom;
+                SelectedCategory.StopAge       = PeriodTo;
                 SelectedCategory.CategoryColor = SelectedColor;
+                #endregion
 
                 await Task.Run(() =>
                 {

@@ -2,8 +2,14 @@
 
 namespace MemoRandom.Models.Models
 {
+    /// <summary>
+    /// Статический класс коллекции категорий
+    /// </summary>
     public static class Categories
     {
+        /// <summary>
+        /// Коллекция категорий (статическая)
+        /// </summary>
         public static ObservableCollection<Category> AgeCategories { get; set; }
 
         /// <summary>
@@ -12,7 +18,7 @@ namespace MemoRandom.Models.Models
         /// <returns></returns>
         public static ObservableCollection<Category> GetCategories()
         {
-            ObservableCollection<Category> categories = new ObservableCollection<Category>();
+            var categories = new ObservableCollection<Category>();
             foreach (var item in AgeCategories)
             {
                 categories.Add(item);
