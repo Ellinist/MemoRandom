@@ -355,9 +355,11 @@ namespace MemoRandom.Data.Implementations
             return successResult;
         }
 
+
         /// <summary>
         /// Удаление человека из внешнего хранилища
         /// </summary>
+        /// <param name="currentHuman"></param>
         /// <returns></returns>
         public bool DeleteHuman(Human currentHuman)
         {
@@ -395,10 +397,12 @@ namespace MemoRandom.Data.Implementations
         /// <summary>
         /// Получение изображения выбранного человека
         /// </summary>
+        /// <param name="currentHuman"></param>
+        /// <returns></returns>
         public BitmapImage GetHumanImage(Human currentHuman)
         {
             // Читаем файл изображения, если выбранный человек существует и у него есть изображение
-            if (currentHuman != null && currentHuman.ImageFile != String.Empty)
+            if (currentHuman != null && currentHuman.ImageFile != string.Empty)
             {
                 string combinedImagePath = Path.Combine(ImageFolder, currentHuman.ImageFile);
 
@@ -421,7 +425,7 @@ namespace MemoRandom.Data.Implementations
         /// </summary>
         /// <param name="human"></param>
         /// <param name="humanImage"></param>
-        private void SaveImageToFile(Human human, BitmapImage humanImage)
+        private void SaveImageToFile(Human human, BitmapSource humanImage)
         {
             string combinedImagePath = Path.Combine(ImageFolder, human.ImageFile);
 
@@ -533,7 +537,7 @@ namespace MemoRandom.Data.Implementations
                 }
                 catch (Exception ex)
                 {
-                    categories = null; // В случае неуспеха чтения обнуляем иерархическую коллекцию
+                    categories = null; // В случае ошибки чтения обнуляем иерархическую коллекцию
                     _logger.Error($"Ошибка чтения категорий: {ex.HResult}");
                 }
             }
@@ -555,6 +559,7 @@ namespace MemoRandom.Data.Implementations
                 try
                 {
                     var updatedCategory = MemoContext.DbCategories.FirstOrDefault(x => x.DbCategoryId == category.CategoryId);
+                    
                     if (updatedCategory != null) // Корректировка информации
                     {
                         updatedCategory.DbCategoryId = category.CategoryId;
