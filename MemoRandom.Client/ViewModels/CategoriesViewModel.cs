@@ -10,6 +10,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
+using System.Windows.Threading;
 
 namespace MemoRandom.Client.ViewModels
 {
@@ -215,11 +216,14 @@ namespace MemoRandom.Client.ViewModels
         public DelegateCommand DeleteCategoryCommand { get; private set; }
         #endregion
 
+        private bool newFlag = false;
+
         /// <summary>
         /// Создание новой категории
         /// </summary>
         private void NewCategory()
         {
+            newFlag = true;
             CategoryId = Guid.NewGuid();
             CategoryName = "Введите название!";
             PeriodFrom = 0;
@@ -231,7 +235,7 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private async void SaveCategory()
         {
-            if (SelectedCategory != null) // Существующая запись категории
+            if (!newFlag) // Существующая запись категории
             {
                 #region Обновление выбранной категории
                 SelectedCategory.CategoryName  = CategoryName;
@@ -248,12 +252,12 @@ namespace MemoRandom.Client.ViewModels
                         MessageBox.Show("Не удалось обновить категорию", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
                         return;
                     }
-
-                    CategoriesCollection.Clear();
-                    CategoriesCollection = Categories.GetCategories();
-                    RaisePropertyChanged(nameof(CategoriesCollection));
-                    SelectedIndex = CategoriesCollection.IndexOf(SelectedCategory);
                 });
+
+                //CategoriesCollection?.Clear();
+                //CategoriesCollection = Categories.GetCategories();
+                //RaisePropertyChanged(nameof(CategoriesCollection));
+                SelectedIndex = CategoriesCollection.IndexOf(SelectedCategory);
             }
             else // Создание новой категории
             {
@@ -276,12 +280,15 @@ namespace MemoRandom.Client.ViewModels
                     }
 
                     Categories.AgeCategories.Add(cat);
-                    CategoriesCollection.Clear();
-                    CategoriesCollection = Categories.GetCategories();
-                    RaisePropertyChanged(nameof(CategoriesCollection));
                     SelectedIndex = CategoriesCollection.IndexOf(cat);
                 });
             }
+
+            CategoriesCollection?.Clear();
+            CategoriesCollection = Categories.GetCategories();
+            RaisePropertyChanged(nameof(CategoriesCollection));
+
+            newFlag = false;
 
             return;
 

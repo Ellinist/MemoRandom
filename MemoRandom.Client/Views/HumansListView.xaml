@@ -104,31 +104,33 @@
 
                                     <DataGrid.RowStyle>
                                         <Style TargetType="DataGridRow">
-                                            <!--<Setter Property="Foreground" Value="DarkBlue"/>-->
                                             <Setter Property="Background" Value="{Binding Converter={StaticResource RowColorConverter}}"/>
-                                            <Setter Property="Foreground" Value="Black"/>
                                             <Setter Property="FontSize" Value="16"/>
+                                            <Setter Property="FontWeight" Value="Bold"/>
 
                                             <Style.Triggers>
-                                                <Trigger Property="IsSelected" Value="True">
-                                                    <!--<Setter Property="Foreground" Value="Black"></Setter>-->
-                                                    <Setter Property="Background" Value="White"></Setter>
-                                                </Trigger>
-
                                                 <Trigger Property="IsMouseOver" Value="True">
                                                     <Setter Property="Background" Value="Blue"/>
-                                                    <Setter Property="Foreground" Value="Black"/>
-                                                    <Setter Property="FontWeight" Value="Bold"/>
                                                 </Trigger>
 
-                                                <Trigger Property="IsSelected" Value="True">
-                                                    <Setter Property="Background" Value="Yellow"/>
-                                                    <Setter Property="Foreground" Value="Black"/>
-                                                    <Setter Property="FontWeight" Value="Bold"/>
-                                                </Trigger>
+                                                <!--<Trigger Property="IsSelected" Value="True">
+                                                    <Setter Property="Foreground" Value="Blue"/>
+                                                </Trigger>-->
                                             </Style.Triggers>
                                         </Style>
                                     </DataGrid.RowStyle>
+
+                                    <DataGrid.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="Foreground" Value="Black"/>
+
+                                            <Style.Triggers>
+                                                <Trigger Property="IsSelected" Value="True">
+                                                    <Setter Property="Background" Value="Blue"/>
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </DataGrid.CellStyle>
                                     
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="Фамилия"
