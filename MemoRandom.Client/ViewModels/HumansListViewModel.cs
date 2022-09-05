@@ -1,7 +1,6 @@
 ﻿using DryIoc;
 using NLog;
 using Prism.Commands;
-//using Prism.Events;
 using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
@@ -251,6 +250,9 @@ namespace MemoRandom.Client.ViewModels
         private void CategoriesOpen()
         {
             _container.Resolve<CategoriesView>().ShowDialog();
+            //HumansList.Clear();
+            HumansList = Humans.GetHumansCollection();
+            RaisePropertyChanged(nameof(HumansList));
         }
 
         /// <summary>
@@ -397,6 +399,7 @@ namespace MemoRandom.Client.ViewModels
                 {
                     result = _msSqlController.GetHumans(); // Получаем из внешнего источника
 
+                    Humans.HumansList = result;
                     HumansList = result;
                 });
 
