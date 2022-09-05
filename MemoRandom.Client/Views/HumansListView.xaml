@@ -110,12 +110,8 @@
 
                                             <Style.Triggers>
                                                 <Trigger Property="IsMouseOver" Value="True">
-                                                    <Setter Property="Background" Value="Blue"/>
+                                                    <Setter Property="Background" Value="LightBlue"/>
                                                 </Trigger>
-
-                                                <!--<Trigger Property="IsSelected" Value="True">
-                                                    <Setter Property="Foreground" Value="Blue"/>
-                                                </Trigger>-->
                                             </Style.Triggers>
                                         </Style>
                                     </DataGrid.RowStyle>
@@ -126,7 +122,7 @@
 
                                             <Style.Triggers>
                                                 <Trigger Property="IsSelected" Value="True">
-                                                    <Setter Property="Background" Value="Blue"/>
+                                                    <Setter Property="Background" Value="LightBlue"/>
                                                 </Trigger>
                                             </Style.Triggers>
                                         </Style>

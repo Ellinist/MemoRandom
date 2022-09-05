@@ -1,4 +1,6 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace MemoRandom.Models.Models
 {
@@ -25,6 +27,20 @@ namespace MemoRandom.Models.Models
             }
 
             return categories;
+        }
+
+        /// <summary>
+        /// Сортировка по возрастанию стартового возраста
+        /// </summary>
+        public static void RearrangeCollection()
+        {
+            List<Category> rearrangeCollection = new();
+            rearrangeCollection = AgeCategories.OrderBy(x => x.StartAge).ToList();
+            AgeCategories.Clear();
+            foreach (var item in rearrangeCollection)
+            {
+                AgeCategories.Add(item);
+            }
         }
     }
 }

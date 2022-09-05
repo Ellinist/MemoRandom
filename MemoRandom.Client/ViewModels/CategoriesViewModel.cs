@@ -235,7 +235,6 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private async void SaveCategory()
         {
-            int workingIndex = 0;
             if (!newFlag) // Существующая запись категории
             {
                 #region Обновление выбранной категории
@@ -255,37 +254,40 @@ namespace MemoRandom.Client.ViewModels
                     }
                 });
 
-                workingIndex = CategoriesCollection.IndexOf(SelectedCategory);
+                CategoriesCollection?.Clear();
+                Categories.RearrangeCollection();
+                CategoriesCollection = Categories.GetCategories();
+                RaisePropertyChanged(nameof(CategoriesCollection));
+                SelectedIndex = CategoriesCollection.IndexOf(SelectedCategory);
             }
             else // Создание новой категории
             {
+                Category cat = new()
+                {
+                    CategoryId = CategoryId,
+                    CategoryName = CategoryName,
+                    StartAge = PeriodFrom,
+                    StopAge = PeriodTo,
+                    CategoryColor = SelectedColor
+                };
+
                 await Task.Run(() =>
                 {
-                    Category cat = new()
-                    {
-                        CategoryId = CategoryId,
-                        CategoryName = CategoryName,
-                        StartAge = PeriodFrom,
-                        StopAge = PeriodTo,
-                        CategoryColor = SelectedColor
-                    };
-
                     var result = _msSqlController.UpdateCategories(cat);
                     if (!result)
                     {
                         MessageBox.Show("Не удалось добавить категорию", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
                         return;
                     }
-
-                    Categories.AgeCategories.Add(cat);
-                    workingIndex = CategoriesCollection.IndexOf(cat);
                 });
-            }
 
-            CategoriesCollection?.Clear();
-            CategoriesCollection = Categories.GetCategories();
-            RaisePropertyChanged(nameof(CategoriesCollection));
-            SelectedIndex = workingIndex;
+                CategoriesCollection?.Clear();
+                Categories.AgeCategories.Add(cat);
+                Categories.RearrangeCollection();
+                CategoriesCollection = Categories.GetCategories();
+                RaisePropertyChanged(nameof(CategoriesCollection));
+                SelectedIndex = CategoriesCollection.IndexOf(cat);
+            }
 
             newFlag = false;
 
@@ -325,7 +327,7 @@ namespace MemoRandom.Client.ViewModels
 
             Categories.AgeCategories.Remove(SelectedCategory);
             CategoriesCollection.Clear();
-            CategoriesCollection = Categories.AgeCategories;
+            CategoriesCollection = Categories.GetCategories();
             RaisePropertyChanged(nameof(CategoriesCollection));
             SelectedIndex = 0;
         }
@@ -340,11 +342,11 @@ namespace MemoRandom.Client.ViewModels
             CategoriesCollection = Categories.GetCategories();
 
             SelectedIndex = 0;
-            //SelectedCategory = CategoriesCollection[0];
 
             CategoryName = SelectedCategory.CategoryName;
-            PeriodFrom = SelectedCategory.StartAge;
-            PeriodTo = SelectedCategory.StopAge;
+            PeriodFrom   = SelectedCategory.StartAge;
+            PeriodTo     = SelectedCategory.StopAge;
+
             // Устанавливаем индекс списка выбора цвета на позицию выбранного в таблице цвета
             SelectedComboIndex = typeof(Colors).GetProperties()
                                                .Select(p => p.GetValue(null)).ToList()
