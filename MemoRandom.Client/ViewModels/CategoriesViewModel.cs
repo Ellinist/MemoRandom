@@ -235,6 +235,7 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private async void SaveCategory()
         {
+            int workingIndex = 0;
             if (!newFlag) // Существующая запись категории
             {
                 #region Обновление выбранной категории
@@ -254,10 +255,7 @@ namespace MemoRandom.Client.ViewModels
                     }
                 });
 
-                //CategoriesCollection?.Clear();
-                //CategoriesCollection = Categories.GetCategories();
-                //RaisePropertyChanged(nameof(CategoriesCollection));
-                SelectedIndex = CategoriesCollection.IndexOf(SelectedCategory);
+                workingIndex = CategoriesCollection.IndexOf(SelectedCategory);
             }
             else // Создание новой категории
             {
@@ -280,13 +278,14 @@ namespace MemoRandom.Client.ViewModels
                     }
 
                     Categories.AgeCategories.Add(cat);
-                    SelectedIndex = CategoriesCollection.IndexOf(cat);
+                    workingIndex = CategoriesCollection.IndexOf(cat);
                 });
             }
 
             CategoriesCollection?.Clear();
             CategoriesCollection = Categories.GetCategories();
             RaisePropertyChanged(nameof(CategoriesCollection));
+            SelectedIndex = workingIndex;
 
             newFlag = false;
 
