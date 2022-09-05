@@ -106,11 +106,25 @@
                                         <Style TargetType="DataGridRow">
                                             <!--<Setter Property="Foreground" Value="DarkBlue"/>-->
                                             <Setter Property="Background" Value="{Binding Converter={StaticResource RowColorConverter}}"/>
+                                            <Setter Property="Foreground" Value="Black"/>
+                                            <Setter Property="FontSize" Value="16"/>
 
                                             <Style.Triggers>
                                                 <Trigger Property="IsSelected" Value="True">
                                                     <!--<Setter Property="Foreground" Value="Black"></Setter>-->
-                                                    <Setter Property="Background" Value="Black"></Setter>
+                                                    <Setter Property="Background" Value="White"></Setter>
+                                                </Trigger>
+
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Background" Value="Blue"/>
+                                                    <Setter Property="Foreground" Value="Black"/>
+                                                    <Setter Property="FontWeight" Value="Bold"/>
+                                                </Trigger>
+
+                                                <Trigger Property="IsSelected" Value="True">
+                                                    <Setter Property="Background" Value="Yellow"/>
+                                                    <Setter Property="Foreground" Value="Black"/>
+                                                    <Setter Property="FontWeight" Value="Bold"/>
                                                 </Trigger>
                                             </Style.Triggers>
                                         </Style>
