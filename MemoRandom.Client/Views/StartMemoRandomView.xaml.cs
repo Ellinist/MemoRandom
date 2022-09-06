@@ -1,4 +1,5 @@
 ﻿using MemoRandom.Client.ViewModels;
+using System;
 using System.Windows;
 
 namespace MemoRandom.Client.Views
@@ -65,7 +66,7 @@ namespace MemoRandom.Client.Views
             if (vm.ButtonsVisibility == null)
             {
                 // Делегат установки видимости кнопок после чтения справочника причин смерти
-                vm.ButtonsVisibility = new System.Action(() =>
+                vm.ButtonsVisibility = new Action(() =>
                 {
                     Dispatcher.Invoke(() =>
                     {

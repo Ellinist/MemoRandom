@@ -465,7 +465,7 @@ namespace MemoRandom.Client.ViewModels
             if (CategoriesViewModel.ChangeCategory == null)
             {
                 // Делегат обновления списка людей при изменении категорий
-                CategoriesViewModel.ChangeCategory = new System.Action(() =>
+                CategoriesViewModel.ChangeCategory = new Action(() =>
                 {
                     //TODO Здесь думать, чтобы не обращаться к БД многократно
                     HumansCollection = Humans.GetHumans();
