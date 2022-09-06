@@ -464,7 +464,7 @@ namespace MemoRandom.Client.ViewModels
 
             if (CategoriesViewModel.ChangeCategory == null)
             {
-                // Делегат установки видимости кнопок после чтения справочника причин смерти
+                // Делегат обновления списка людей при изменении категорий
                 CategoriesViewModel.ChangeCategory = new System.Action(() =>
                 {
                     //TODO Здесь думать, чтобы не обращаться к БД многократно
