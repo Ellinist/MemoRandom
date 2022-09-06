@@ -202,57 +202,6 @@ namespace MemoRandom.Client.ViewModels
             
             DisplayedYears = YearsText.ToString();
         }
-        #endregion
-
-        #region Commands
-        /// <summary>
-        /// Команда добавления человека
-        /// </summary>
-        public DelegateCommand AddHumanCommand { get; private set; }
-
-        /// <summary>
-        /// Команда редактирования данных по выбранному человеку
-        /// </summary>
-        public DelegateCommand EditHumanDataCommand { get; private set; }
-        
-        /// <summary>
-        /// Команда удаления выбранного человека
-        /// </summary>
-        public DelegateCommand DeleteHumanCommand { get; private set; }
-        
-        public DelegateCommand SettingsMenuCommand { get; private set; }
-        
-        public DelegateCommand HumansListMenuCommand { get; private set; }
-        
-        public DelegateCommand StartMenuCommand { get; private set; }
-        
-        public DelegateCommand StartAboutCommand { get; private set; }
-        
-        public DelegateCommand AddNewHumanCommand { get; private set; }
-
-        public DelegateCommand CategoriesCommand { get; private set; }
-        #endregion
-
-        /// <summary>
-        /// Инициализация команд
-        /// </summary>
-        private void InitializeCommands()
-        {
-            AddHumanCommand      = new DelegateCommand(AddHuman);
-            EditHumanDataCommand = new DelegateCommand(EditHumanData);
-            DeleteHumanCommand   = new DelegateCommand(DeleteHuman);
-            StartAboutCommand    = new DelegateCommand(OpenAboutView);
-            CategoriesCommand    = new DelegateCommand(CategoriesOpen);
-        }
-
-        /// <summary>
-        /// Вызов окна редактирования категорий
-        /// </summary>
-        private void CategoriesOpen()
-        {
-            _container.Resolve<CategoriesView>().ShowDialog();
-            RaisePropertyChanged(nameof(HumansCollection));
-        }
 
         /// <summary>
         /// Событие сортировки по заголовку столбца
@@ -269,6 +218,35 @@ namespace MemoRandom.Client.ViewModels
         }
 
         /// <summary>
+        /// Сортировка по условию упорядочивания при щелчке на столбце таблицы
+        /// </summary>
+        /// <returns></returns>
+        private void SortHumansCollection()
+        {
+            List<Human> result;
+            if (_sortMember == null)
+            {
+                result = HumansCollection.OrderBy(x => x.DaysLived).ToList();
+            }
+            else
+            {
+                var param = _sortMember;
+                var propertyInfo = typeof(Human).GetProperty(param);
+                // Создаем новую сущность, упорядоченную по столбцу сортировки
+                result = (_sortDirection == null || _sortDirection == "Ascending") ?
+                          HumansCollection.OrderByDescending(x => propertyInfo.GetValue(x, null)).ToList() :
+                          HumansCollection.OrderBy(x => propertyInfo.GetValue(x, null)).ToList();
+            }
+
+            HumansCollection.Clear();
+            foreach (var item in result)
+            {
+                HumansCollection.Add(item);
+            }
+            RaisePropertyChanged(nameof(HumansCollection));
+        }
+
+        /// <summary>
         /// Запуск окна создания нового человека
         /// </summary>
         private void AddHuman()
@@ -277,7 +255,7 @@ namespace MemoRandom.Client.ViewModels
             _container.Resolve<HumanDetailedView>().ShowDialog(); // Открываем окно создания/редактирования
 
             if (Humans.CurrentHuman == null) return;
-            
+
             Humans.HumansList.Add(Humans.CurrentHuman); // Добавляем человека в список местного хранилища
             SortHumansCollection(); // Сортировка по условию
             HumansCollection.Clear();
@@ -352,33 +330,55 @@ namespace MemoRandom.Client.ViewModels
             PersonIndex = HumansCollection.IndexOf(HumansCollection.FirstOrDefault(x => x.HumanId == formerId));
             RaisePropertyChanged(nameof(PersonIndex));
         }
+        #endregion
+
+        #region Commands
+        /// <summary>
+        /// Команда добавления человека
+        /// </summary>
+        public DelegateCommand AddHumanCommand { get; private set; }
 
         /// <summary>
-        /// Сортировка по условию упорядочивания при щелчке на столбце таблицы
+        /// Команда редактирования данных по выбранному человеку
         /// </summary>
-        /// <returns></returns>
-        private void SortHumansCollection()
-        {
-            List<Human> result;
-            if (_sortMember == null)
-            {
-                result = HumansCollection.OrderBy(x => x.DaysLived).ToList();
-            }
-            else
-            {
-                var param = _sortMember;
-                var propertyInfo = typeof(Human).GetProperty(param);
-                // Создаем новую сущность, упорядоченную по столбцу сортировки
-                result = (_sortDirection == null || _sortDirection == "Ascending") ?
-                          HumansCollection.OrderByDescending(x => propertyInfo.GetValue(x, null)).ToList() :
-                          HumansCollection.OrderBy(x => propertyInfo.GetValue(x, null)).ToList();
-            }
+        public DelegateCommand EditHumanDataCommand { get; private set; }
+        
+        /// <summary>
+        /// Команда удаления выбранного человека
+        /// </summary>
+        public DelegateCommand DeleteHumanCommand { get; private set; }
+        
+        public DelegateCommand SettingsMenuCommand { get; private set; }
+        
+        public DelegateCommand HumansListMenuCommand { get; private set; }
+        
+        public DelegateCommand StartMenuCommand { get; private set; }
+        
+        public DelegateCommand StartAboutCommand { get; private set; }
+        
+        public DelegateCommand AddNewHumanCommand { get; private set; }
 
-            HumansCollection.Clear();
-            foreach (var item in result)
-            {
-                HumansCollection.Add(item);
-            }
+        public DelegateCommand CategoriesCommand { get; private set; }
+        #endregion
+
+        /// <summary>
+        /// Инициализация команд
+        /// </summary>
+        private void InitializeCommands()
+        {
+            AddHumanCommand      = new DelegateCommand(AddHuman);
+            EditHumanDataCommand = new DelegateCommand(EditHumanData);
+            DeleteHumanCommand   = new DelegateCommand(DeleteHuman);
+            StartAboutCommand    = new DelegateCommand(OpenAboutView);
+            CategoriesCommand    = new DelegateCommand(CategoriesOpen);
+        }
+
+        /// <summary>
+        /// Вызов окна редактирования категорий
+        /// </summary>
+        private void CategoriesOpen()
+        {
+            _container.Resolve<CategoriesView>().ShowDialog();
             RaisePropertyChanged(nameof(HumansCollection));
         }
 
