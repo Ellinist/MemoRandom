@@ -18,16 +18,5 @@ namespace MemoRandom.Models.Models
         /// Текущий человек, с которым ведется работа
         /// </summary>
         public static Human CurrentHuman { get; set; }
-
-        public static ObservableCollection<Human> GetHumansCollection()
-        {
-            ObservableCollection<Human> humans = new ObservableCollection<Human>();
-            foreach (var item in HumansList)
-            {
-                humans.Add(item);
-            }
-
-            return humans;
-        }
     }
 }

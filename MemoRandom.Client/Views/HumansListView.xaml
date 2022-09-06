@@ -140,7 +140,7 @@
                                                             Binding="{Binding Path=Patronymic}"/>
                                         <DataGridTextColumn Header="Дата рождения"
                                                             IsReadOnly="True"
-                                                            Width="120"
+                                                            Width="150"
                                                             Binding="{Binding Path=BirthDate, StringFormat='dd MMMM yyyy',ConverterCulture='ru-RU', Mode=OneWay}"/>
                                         <DataGridTextColumn Header="Родная страна"
                                                             IsReadOnly="True"
@@ -150,7 +150,7 @@
                                                             Binding="{Binding Path=BirthPlace}"/>
                                         <DataGridTextColumn Header="Дата смерти"
                                                             IsReadOnly="True"
-                                                            Width="120"
+                                                            Width="150"
                                                             Binding="{Binding Path=DeathDate, StringFormat='dd MMMM yyyy',ConverterCulture='ru-RU', Mode=OneWay}"/>
                                         <DataGridTextColumn Header="Страна смерти"
                                                             IsReadOnly="True"
@@ -160,9 +160,11 @@
                                                             Binding="{Binding Path=DeathPlace}"/>
                                         <DataGridTextColumn Header="Дней"
                                                             IsReadOnly="True"
+                                                            Width="64"
                                                             Binding="{Binding Path=DaysLived}"/>
                                         <DataGridTextColumn Header="Лет"
                                                             IsReadOnly="True"
+                                                            Width="100"
                                                             Binding="{Binding Path=FullYearsLived}"/>
                                     </DataGrid.Columns>
                                 </DataGrid>

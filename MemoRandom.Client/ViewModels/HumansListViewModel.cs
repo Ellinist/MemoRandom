@@ -251,7 +251,7 @@ namespace MemoRandom.Client.ViewModels
         {
             _container.Resolve<CategoriesView>().ShowDialog();
             //HumansList.Clear();
-            HumansList = Humans.GetHumansCollection();
+            //HumansList = Humans.GetHumansCollection();
             RaisePropertyChanged(nameof(HumansList));
         }
 
