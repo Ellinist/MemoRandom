@@ -19,6 +19,8 @@ namespace MemoRandom.Client.ViewModels
     /// </summary>
     public class CategoriesViewModel : BindableBase
     {
+        public static Action ChangeCategory { get; set; }
+
         #region PRIVATE FIELDS
         private readonly IMsSqlController _msSqlController;
 
@@ -290,6 +292,8 @@ namespace MemoRandom.Client.ViewModels
             }
 
             newFlag = false;
+
+            ChangeCategory.Invoke();
 
             return;
 

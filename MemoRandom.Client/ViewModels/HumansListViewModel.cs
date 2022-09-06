@@ -14,6 +14,7 @@ using System.Windows;
 using System.Text;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.Windows.Threading;
 
 namespace MemoRandom.Client.ViewModels
 {
@@ -59,13 +60,13 @@ namespace MemoRandom.Client.ViewModels
         /// <summary>
         /// Отображаемый список людей
         /// </summary>
-        public ObservableCollection<Human> HumansList
+        public ObservableCollection<Human> HumansCollection
         {
             get => _humansList;
             set
             {
                 _humansList = value;
-                RaisePropertyChanged(nameof(HumansList));
+                RaisePropertyChanged(nameof(HumansCollection));
             }
         }
 
@@ -104,7 +105,7 @@ namespace MemoRandom.Client.ViewModels
             get => _selectedHuman;
             set
             {
-                if(HumansList != null && HumansList.Count > 0 && value != null)
+                if(HumansCollection != null && HumansCollection.Count > 0 && value != null)
                 {
                     _selectedHuman = value;
 
@@ -250,9 +251,7 @@ namespace MemoRandom.Client.ViewModels
         private void CategoriesOpen()
         {
             _container.Resolve<CategoriesView>().ShowDialog();
-            //HumansList.Clear();
-            //HumansList = Humans.GetHumansCollection();
-            RaisePropertyChanged(nameof(HumansList));
+            RaisePropertyChanged(nameof(HumansCollection));
         }
 
         /// <summary>
@@ -265,8 +264,8 @@ namespace MemoRandom.Client.ViewModels
             _sortDirection = e.Column.SortDirection.ToString();
             _sortMember = e.Column.SortMemberPath;
 
-            SortHumansList();
-            RaisePropertyChanged(nameof(HumansList));
+            SortHumansCollection();
+            RaisePropertyChanged(nameof(HumansCollection));
         }
 
         /// <summary>
@@ -279,11 +278,13 @@ namespace MemoRandom.Client.ViewModels
 
             if (Humans.CurrentHuman == null) return;
             
-            HumansList.Add(Humans.CurrentHuman);
-            SortHumansList(); // Сортировка по условию
-            
+            Humans.HumansList.Add(Humans.CurrentHuman); // Добавляем человека в список местного хранилища
+            SortHumansCollection(); // Сортировка по условию
+            HumansCollection.Clear();
+            HumansCollection = Humans.GetHumans();
+
             SelectedHuman = Humans.CurrentHuman;
-            PersonIndex = HumansList.IndexOf(Humans.CurrentHuman);
+            PersonIndex = HumansCollection.IndexOf(Humans.CurrentHuman);
             RaisePropertyChanged(nameof(PersonIndex));
 
             ImageSource = _msSqlController.GetHumanImage(Humans.CurrentHuman);
@@ -302,10 +303,13 @@ namespace MemoRandom.Client.ViewModels
         private void EditHumanData()
         {
             _container.Resolve<HumanDetailedView>().ShowDialog(); // Запуск окна создания и редактирования человека
-            
-            SortHumansList(); // Сортировка по условию
 
-            PersonIndex = HumansList.IndexOf(Humans.CurrentHuman);
+            Humans.UpdateHuman(SelectedHuman); // Обновляем человека в списке местного хранилища
+            HumansCollection.Clear();
+            HumansCollection = Humans.GetHumans();
+            SortHumansCollection(); // Сортировка по условию
+
+            PersonIndex = HumansCollection.IndexOf(Humans.CurrentHuman);
             RaisePropertyChanged(nameof(PersonIndex));
 
             ImageSource = _msSqlController.GetHumanImage(Humans.CurrentHuman);
@@ -328,21 +332,24 @@ namespace MemoRandom.Client.ViewModels
 
             if (_previousIndex == -1) _previousIndex = 0; // Пока так - но надо умнее сделать
 
-            var formerId = HumansList[_previousIndex].HumanId;
+            var formerId = HumansCollection[_previousIndex].HumanId;
             try
             {
                 await Task.Run(() =>
                 {
                     _msSqlController.DeleteHuman(SelectedHuman); // Удаление во внешнем хранилище
                 });
-                HumansList.Remove(SelectedHuman); // Удаление в списке
+
+                Humans.HumansList.Remove(SelectedHuman); // Удаление в списке
+                HumansCollection.Clear();
+                HumansCollection = Humans.GetHumans();
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Не удалось Удалить!\n Код ошибки в журнале", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
                 _logger.Error($"Ошибка: {ex}");
             }
-            PersonIndex = HumansList.IndexOf(HumansList.FirstOrDefault(x => x.HumanId == formerId));
+            PersonIndex = HumansCollection.IndexOf(HumansCollection.FirstOrDefault(x => x.HumanId == formerId));
             RaisePropertyChanged(nameof(PersonIndex));
         }
 
@@ -350,12 +357,12 @@ namespace MemoRandom.Client.ViewModels
         /// Сортировка по условию упорядочивания при щелчке на столбце таблицы
         /// </summary>
         /// <returns></returns>
-        private void SortHumansList()
+        private void SortHumansCollection()
         {
             List<Human> result;
             if (_sortMember == null)
             {
-                result = HumansList.OrderBy(x => x.DaysLived).ToList();
+                result = HumansCollection.OrderBy(x => x.DaysLived).ToList();
             }
             else
             {
@@ -363,16 +370,16 @@ namespace MemoRandom.Client.ViewModels
                 var propertyInfo = typeof(Human).GetProperty(param);
                 // Создаем новую сущность, упорядоченную по столбцу сортировки
                 result = (_sortDirection == null || _sortDirection == "Ascending") ?
-                    HumansList.OrderByDescending(x => propertyInfo.GetValue(x, null)).ToList() :
-                    HumansList.OrderBy(x => propertyInfo.GetValue(x, null)).ToList();
+                          HumansCollection.OrderByDescending(x => propertyInfo.GetValue(x, null)).ToList() :
+                          HumansCollection.OrderBy(x => propertyInfo.GetValue(x, null)).ToList();
             }
 
-            HumansList.Clear();
+            HumansCollection.Clear();
             foreach (var item in result)
             {
-                HumansList.Add(item);
+                HumansCollection.Add(item);
             }
-            RaisePropertyChanged(nameof(HumansList));
+            RaisePropertyChanged(nameof(HumansCollection));
         }
 
         /// <summary>
@@ -392,18 +399,16 @@ namespace MemoRandom.Client.ViewModels
         {
             try
             {
-                Categories.AgeCategories = _msSqlController.GetCategories();
-
                 ObservableCollection<Human> result = new(); // Результирующая коллекция людей
                 await Task.Run(() =>
                 {
                     result = _msSqlController.GetHumans(); // Получаем из внешнего источника
 
-                    Humans.HumansList = result;
-                    HumansList = result;
+                    Humans.HumansList = result; // Заносим результат в местное хранилище
+                    HumansCollection = Humans.GetHumans(); // Вятыгиваем клон результата
                 });
 
-                RaisePropertyChanged(nameof(HumansList));
+                RaisePropertyChanged(nameof(HumansCollection));
             }
             catch (Exception ex)
             {
@@ -456,6 +461,18 @@ namespace MemoRandom.Client.ViewModels
             _msSqlController = msSqlController ?? throw new ArgumentNullException(nameof(msSqlController));
 
             InitializeCommands();
+
+            if (CategoriesViewModel.ChangeCategory == null)
+            {
+                // Делегат установки видимости кнопок после чтения справочника причин смерти
+                CategoriesViewModel.ChangeCategory = new System.Action(() =>
+                {
+                    //TODO Здесь думать, чтобы не обращаться к БД многократно
+                    HumansCollection = Humans.GetHumans();
+                    SortHumansCollection();
+                    RaisePropertyChanged(nameof(HumansCollection));
+                });
+            }
         }
         #endregion
     }
