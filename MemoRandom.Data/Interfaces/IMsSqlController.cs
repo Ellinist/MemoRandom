@@ -1,4 +1,5 @@
-﻿using MemoRandom.Models.Models;
+﻿using MemoRandom.Data.DbModels;
+using MemoRandom.Models.Models;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Media.Imaging;
@@ -49,6 +50,28 @@ namespace MemoRandom.Data.Interfaces
         bool DeleteReasonInList(Reason reason);
         #endregion
 
+        #region Блок работы с категориями
+        /// <summary>
+        /// Получение списка категорий из внешнего хранилища
+        /// </summary>
+        /// <returns></returns>
+        ObservableCollection<Category> GetCategories();
+
+        /// <summary>
+        /// Обновление категории во внешнем хранилище
+        /// </summary>
+        /// <param name="category"></param>
+        /// <returns></returns>
+        bool UpdateCategories(Category category);
+
+        /// <summary>
+        /// Удаление категории из внешнего хранилища
+        /// </summary>
+        /// <param name="category"></param>
+        /// <returns></returns>
+        bool DeleteCategory(Category category);
+        #endregion
+
         #region Блок работы с людьми
         /// <summary>
         /// Получение списка людей из внешнего хранилища
@@ -79,26 +102,12 @@ namespace MemoRandom.Data.Interfaces
         BitmapImage GetHumanImage(Human currentHuman);
         #endregion
 
-        #region Блок работы с категориями
-        /// <summary>
-        /// Получение списка категорий из внешнего хранилища
-        /// </summary>
-        /// <returns></returns>
-        ObservableCollection<Category> GetCategories();
+        #region Блок работы с людьми для сравнения
+        List<ComparedHuman> GetComparedHumans();
 
-        /// <summary>
-        /// Обновление категории во внешнем хранилище
-        /// </summary>
-        /// <param name="category"></param>
-        /// <returns></returns>
-        bool UpdateCategories(Category category);
+        bool AddComparedHuman(ComparedHuman comparedHuman);
 
-        /// <summary>
-        /// Удаление категории из внешнего хранилища
-        /// </summary>
-        /// <param name="category"></param>
-        /// <returns></returns>
-        bool DeleteCategory(Category category);
+        bool DeleteComparedHuman(ComparedHuman comparedHuman);
         #endregion
     }
 }

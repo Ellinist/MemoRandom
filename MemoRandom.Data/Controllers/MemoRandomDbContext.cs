@@ -23,6 +23,11 @@ namespace MemoRandom.Data.Controllers
         /// </summary>
         public DbSet<DbCategory> DbCategories { get; set; }
 
+        /// <summary>
+        /// Набор людей для сравнения
+        /// </summary>
+        public DbSet<DbComparedHuman> DbComparedHumans { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
             if (!builder.IsConfigured)

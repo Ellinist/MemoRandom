@@ -5,8 +5,15 @@ using System.Windows.Media.Imaging;
 
 namespace MemoRandom.Data.DbModels
 {
+    /// <summary>
+    /// Класс человека
+    /// </summary>
+    [Serializable]
     public class DbHuman
     {
+        /// <summary>
+        /// Идентификатор человека
+        /// </summary>
         [Key]
         [Required]
         public Guid DbHumanId { get; set; }

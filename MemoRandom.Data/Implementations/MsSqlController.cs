@@ -211,6 +211,130 @@ namespace MemoRandom.Data.Implementations
         }
         #endregion
 
+        #region Блок работы с категориями
+        /// <summary>
+        /// Получение списка категорий из внешнего хранилища
+        /// </summary>
+        /// <returns></returns>
+        public ObservableCollection<Category> GetCategories()
+        {
+            ObservableCollection<Category> categories = new();
+            using (MemoContext = new MemoRandomDbContext(DbConnectionString))
+            {
+                try
+                {
+                    var categoriesList = MemoContext.DbCategories.OrderBy(x => x.DbPeriodFrom).ToList(); // Читаем контекст базы данных
+                    foreach (var category in categoriesList)
+                    {
+                        Category cat = new()
+                        {
+                            CategoryId = category.DbCategoryId,
+                            CategoryName = category.DbCategoryName,
+                            StartAge = category.DbPeriodFrom,
+                            StopAge = category.DbPeriodTo,
+                            CategoryColor = System.Windows.Media.Color.FromArgb(category.DbColorA, category.DbColorR, category.DbColorG, category.DbColorB)
+                        };
+                        categories.Add(cat);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    categories = null; // В случае ошибки чтения обнуляем иерархическую коллекцию
+                    _logger.Error($"Ошибка чтения категорий: {ex.HResult}");
+                }
+            }
+
+            return categories;
+        }
+
+        /// <summary>
+        /// Обновление (добавление или редактирование) категорий
+        /// </summary>
+        /// <param name="category"></param>
+        /// <returns></returns>
+        public bool UpdateCategories(Category category)
+        {
+            var success = true;
+
+            using (MemoContext = new MemoRandomDbContext(DbConnectionString))
+            {
+                try
+                {
+                    var updatedCategory = MemoContext.DbCategories.FirstOrDefault(x => x.DbCategoryId == category.CategoryId);
+
+                    if (updatedCategory != null) // Корректировка информации
+                    {
+                        updatedCategory.DbCategoryId = category.CategoryId;
+                        updatedCategory.DbCategoryName = category.CategoryName;
+                        updatedCategory.DbPeriodFrom = category.StartAge;
+                        updatedCategory.DbPeriodTo = category.StopAge;
+                        updatedCategory.DbColorA = category.CategoryColor.A;
+                        updatedCategory.DbColorR = category.CategoryColor.R;
+                        updatedCategory.DbColorG = category.CategoryColor.G;
+                        updatedCategory.DbColorB = category.CategoryColor.B;
+
+                        MemoContext.SaveChanges();
+                    }
+                    else // Добавление новой записи в таблицу категорий
+                    {
+                        DbCategory record = new()
+                        {
+                            DbCategoryId = category.CategoryId,
+                            DbCategoryName = category.CategoryName,
+                            DbPeriodFrom = category.StartAge,
+                            DbPeriodTo = category.StopAge,
+                            DbColorA = category.CategoryColor.A,
+                            DbColorR = category.CategoryColor.R,
+                            DbColorG = category.CategoryColor.G,
+                            DbColorB = category.CategoryColor.B
+
+                        };
+
+                        MemoContext.DbCategories.Add(record);
+                        MemoContext.SaveChanges();
+                    };
+                }
+                catch (Exception ex)
+                {
+                    success = false;
+                    _logger.Error($"Ошибка обновления категории: {ex.HResult}");
+                }
+            }
+            return success;
+        }
+
+        /// <summary>
+        /// Удаление категории
+        /// </summary>
+        /// <param name="category"></param>
+        /// <returns></returns>
+        public bool DeleteCategory(Category category)
+        {
+            var success = true;
+
+            using (MemoContext = new MemoRandomDbContext(DbConnectionString))
+            {
+                try
+                {
+                    var deletedCategory = MemoContext.DbCategories.FirstOrDefault(x => x.DbCategoryId == category.CategoryId);
+
+                    if (deletedCategory != null)
+                    {
+                        MemoContext.Remove(deletedCategory);
+                        MemoContext.SaveChanges();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    success = false;
+                    _logger.Error($"Ошибка удаления категории: {ex.HResult}");
+                }
+            }
+
+            return success;
+        }
+        #endregion
+
         #region <Блок работы с людьми
         /// <summary>
         /// Получение списка людей из внешнего хранилища
@@ -460,6 +584,37 @@ namespace MemoRandom.Data.Implementations
         }
         #endregion
 
+        #region Блок работы с людьми для сравнения
+        /// <summary>
+        /// Получение списка людей для сравнения
+        /// </summary>
+        /// <returns></returns>
+        public List<ComparedHuman> GetComparedHumans()
+        {
+            return null;
+        }
+
+        /// <summary>
+        /// Добавление человека для сравнения во внешнее хранилище
+        /// </summary>
+        /// <param name="comparedHuman"></param>
+        /// <returns></returns>
+        public bool AddComparedHuman(ComparedHuman comparedHuman)
+        {
+            return true;
+        }
+
+        /// <summary>
+        /// Удаление человека для сравнения из внешнего хранилища
+        /// </summary>
+        /// <param name="comparedHuman"></param>
+        /// <returns></returns>
+        public bool DeleteComparedHuman(ComparedHuman comparedHuman)
+        {
+            return true;
+        }
+        #endregion
+
         #region Auxiliary methods
         /// <summary>
         /// Формирование плоского списка справочника причин смерти
@@ -502,129 +657,6 @@ namespace MemoRandom.Data.Implementations
         }
         #endregion
 
-        #region Блок работы с категориями
-        /// <summary>
-        /// Получение списка категорий из внешнего хранилища
-        /// </summary>
-        /// <returns></returns>
-        public ObservableCollection<Category> GetCategories()
-        {
-            ObservableCollection<Category> categories = new();
-            using (MemoContext = new MemoRandomDbContext(DbConnectionString))
-            {
-                try
-                {
-                    var categoriesList = MemoContext.DbCategories.OrderBy(x => x.DbPeriodFrom).ToList(); // Читаем контекст базы данных
-                    foreach (var category in categoriesList)
-                    {
-                        Category cat = new()
-                        {
-                            CategoryId = category.DbCategoryId,
-                            CategoryName = category.DbCategoryName,
-                            StartAge = category.DbPeriodFrom,
-                            StopAge = category.DbPeriodTo,
-                            CategoryColor = System.Windows.Media.Color.FromArgb(category.DbColorA, category.DbColorR, category.DbColorG, category.DbColorB)
-                        };
-                        categories.Add(cat);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    categories = null; // В случае ошибки чтения обнуляем иерархическую коллекцию
-                    _logger.Error($"Ошибка чтения категорий: {ex.HResult}");
-                }
-            }
-
-            return categories;
-        }
-
-        /// <summary>
-        /// Обновление (добавление или редактирование) категорий
-        /// </summary>
-        /// <param name="category"></param>
-        /// <returns></returns>
-        public bool UpdateCategories(Category category)
-        {
-            var success = true;
-
-            using (MemoContext = new MemoRandomDbContext(DbConnectionString))
-            {
-                try
-                {
-                    var updatedCategory = MemoContext.DbCategories.FirstOrDefault(x => x.DbCategoryId == category.CategoryId);
-                    
-                    if (updatedCategory != null) // Корректировка информации
-                    {
-                        updatedCategory.DbCategoryId = category.CategoryId;
-                        updatedCategory.DbCategoryName = category.CategoryName;
-                        updatedCategory.DbPeriodFrom   = category.StartAge;
-                        updatedCategory.DbPeriodTo     = category.StopAge;
-                        updatedCategory.DbColorA       = category.CategoryColor.A;
-                        updatedCategory.DbColorR       = category.CategoryColor.R;
-                        updatedCategory.DbColorG       = category.CategoryColor.G;
-                        updatedCategory.DbColorB       = category.CategoryColor.B;
-
-                        MemoContext.SaveChanges();
-                    }
-                    else // Добавление новой записи в таблицу категорий
-                    {
-                        DbCategory record = new()
-                        {
-                            DbCategoryId = category.CategoryId,
-                            DbCategoryName = category.CategoryName,
-                            DbPeriodFrom = category.StartAge,
-                            DbPeriodTo = category.StopAge,
-                            DbColorA = category.CategoryColor.A,
-                            DbColorR = category.CategoryColor.R,
-                            DbColorG = category.CategoryColor.G,
-                            DbColorB = category.CategoryColor.B
-
-                        };
-
-                        MemoContext.DbCategories.Add(record);
-                        MemoContext.SaveChanges();
-                    };
-                }
-                catch (Exception ex)
-                {
-                    success = false;
-                    _logger.Error($"Ошибка обновления категории: {ex.HResult}");
-                }
-            }
-            return success;
-        }
-
-        /// <summary>
-        /// Удаление категории
-        /// </summary>
-        /// <param name="category"></param>
-        /// <returns></returns>
-        public bool DeleteCategory(Category category)
-        {
-            var success = true;
-
-            using (MemoContext = new MemoRandomDbContext(DbConnectionString))
-            {
-                try
-                {
-                    var deletedCategory = MemoContext.DbCategories.FirstOrDefault(x => x.DbCategoryId == category.CategoryId);
-
-                    if (deletedCategory != null)
-                    {
-                        MemoContext.Remove(deletedCategory);
-                        MemoContext.SaveChanges();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    success = false;
-                    _logger.Error($"Ошибка удаления категории: {ex.HResult}");
-                }
-            }
-                
-            return success;
-        }
-        #endregion
 
 
 
