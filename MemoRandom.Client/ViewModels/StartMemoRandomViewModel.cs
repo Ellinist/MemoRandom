@@ -6,7 +6,6 @@ using NLog;
 using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Threading;
 using System.Threading.Tasks;
@@ -41,7 +40,6 @@ namespace MemoRandom.Client.ViewModels
         private readonly ILogger _logger; // Экземпляр журнала
         private readonly IContainer _container; // Контейнер
         private readonly IMsSqlController _msSqlController;
-        private bool _active = true; // Флаг активности текущего окна
         #endregion
 
         #region PROPS
@@ -160,8 +158,6 @@ namespace MemoRandom.Client.ViewModels
             }
         }
         #endregion
-
-        
 
         /// <summary>
         /// Установка текущей даты времени с шагом в одну секунду
