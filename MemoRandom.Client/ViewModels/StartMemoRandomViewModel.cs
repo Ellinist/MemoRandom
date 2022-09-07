@@ -18,11 +18,14 @@ namespace MemoRandom.Client.ViewModels
     /// <summary>
     /// Класс модели представления стартового окна
     /// </summary>
-    public class StartMemoRandomViewModel : BindableBase
+    public class StartMemoRandomViewModel : BindableBase, IDisposable
     {
         public Action ButtonsVisibility { get; set; } // Действие видимости кнопок
 
         #region PRIVATE FIELDS
+        private CancellationTokenSource cancelTokenSource;
+        private CancellationToken token;
+
         private static string _storageFileName;   // Название файла хранения информации (БД или Xml)
         private static string _storageFilePath;   // Имя папки, где хранится информация
         private static string _storageImagesPath; // Имя папки, где хранятся изображения
@@ -104,12 +107,9 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void HumansButton_Click(object sender, RoutedEventArgs e)
+        public void HumansButton_Open(object sender, RoutedEventArgs e)
         {
-            _active = false;
             _container.Resolve<HumansListView>().ShowDialog();
-            _active = true;
-            SetCurrentDateTime(); // Какой ужас - надо как-то по-другому делать!
         }
 
         /// <summary>
@@ -117,12 +117,9 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void ReasonsButton_Click(object sender, RoutedEventArgs e)
+        public void ReasonsButton_Open(object sender, RoutedEventArgs e)
         {
-            _active = false;
             _container.Resolve<ReasonsView>().ShowDialog();
-            _active = true;
-            SetCurrentDateTime(); // Какой ужас - надо как-то по-другому делать!
         }
 
         /// <summary>
@@ -135,11 +132,12 @@ namespace MemoRandom.Client.ViewModels
             var result = MessageBox.Show("Выйти из программы?", "Выход из программы!", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)
             {
-                e.Cancel = false; // Окно не закрываем - отмена действия
+                Dispose();
+                e.Cancel = false; // Окно закрываем
             }
             else
             {
-                e.Cancel = true; // Окно закрывается
+                e.Cancel = true; // Окно не закрывается - отмена действия
             }
         }
 
@@ -156,10 +154,14 @@ namespace MemoRandom.Client.ViewModels
                 ReadStartData();
 
                 window.Closing += StartMemoRandomViewModel_Closing; // Подписываемся на событие закрытия окна
+                cancelTokenSource = new CancellationTokenSource();
+                token = cancelTokenSource.Token;
                 SetCurrentDateTime(); // Вызываем метод отображения текущего времени
             }
         }
         #endregion
+
+        
 
         /// <summary>
         /// Установка текущей даты времени с шагом в одну секунду
@@ -168,7 +170,7 @@ namespace MemoRandom.Client.ViewModels
         {
             Task.Factory.StartNew(() =>
             {
-                while (_active)
+                while (!token.IsCancellationRequested)
                 {
                     Thread.Sleep(1000);
                     Dispatcher.CurrentDispatcher.Invoke(() =>
@@ -279,7 +281,14 @@ namespace MemoRandom.Client.ViewModels
             }
         }
 
-
+        /// <summary>
+        /// Освобождение ресурсов
+        /// </summary>
+        public void Dispose()
+        {
+            cancelTokenSource?.Cancel();
+            cancelTokenSource.Dispose();
+        }
 
 
 

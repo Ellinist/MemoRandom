@@ -21,26 +21,26 @@ namespace MemoRandom.Client.Views
             _vm.StartView_Loaded(sender, e);
         }
 
-        /// <summary>
-        /// Нажатие на кнопку вызова справочника причин смерти
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        /// <exception cref="System.NotImplementedException"></exception>
-        private void ReasonsButton_Click1(object sender, RoutedEventArgs e)
-        {
-            _vm.ReasonsButton_Click(sender, e);
-        }
+        ///// <summary>
+        ///// Нажатие на кнопку вызова справочника причин смерти
+        ///// </summary>
+        ///// <param name="sender"></param>
+        ///// <param name="e"></param>
+        ///// <exception cref="System.NotImplementedException"></exception>
+        //private void ReasonsButton_Click1(object sender, RoutedEventArgs e)
+        //{
+        //    _vm.ReasonsButton_Click(sender, e);
+        //}
 
-        /// <summary>
-        /// Нажатие на кнопку вызова основного окна работы
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void HumansButton_Click(object sender, RoutedEventArgs e)
-        {
-            _vm.HumansButton_Click(sender, e);
-        }
+        ///// <summary>
+        ///// Нажатие на кнопку вызова основного окна работы
+        ///// </summary>
+        ///// <param name="sender"></param>
+        ///// <param name="e"></param>
+        //private void HumansButton_Click(object sender, RoutedEventArgs e)
+        //{
+        //    _vm.HumansButton_Click(sender, e);
+        //}
 
 
 
@@ -60,8 +60,8 @@ namespace MemoRandom.Client.Views
             DataContext = vm;
 
             this.Loaded         += StartMemoRandomView_Loaded; // Загрузка стартового окна
-            ReasonsButton.Click += ReasonsButton_Click1; // Вызов окна справочника причин смерти
-            HumansButton.Click  += HumansButton_Click; // Вызов основного окна работы
+            ReasonsButton.Click += _vm.ReasonsButton_Open; // Вызов окна справочника причин смерти
+            HumansButton.Click  += _vm.HumansButton_Open; // Вызов основного окна работы
 
             if (vm.ButtonsVisibility == null)
             {
