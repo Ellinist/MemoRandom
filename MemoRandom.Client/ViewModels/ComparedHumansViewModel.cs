@@ -30,5 +30,26 @@ namespace MemoRandom.Client.ViewModels
             }
         }
         #endregion
+
+        #region COMMANDS
+
+        #endregion
+
+
+
+
+
+
+
+
+        #region CTOR
+        /// <summary>
+        /// Конструктор
+        /// </summary>
+        public ComparedHumansViewModel()
+        {
+
+        }
+        #endregion
     }
 }
