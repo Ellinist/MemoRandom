@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MahApps.Metro.Controls;
+using MemoRandom.Client.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,11 +19,12 @@ namespace MemoRandom.Client.Views
     /// <summary>
     /// Логика взаимодействия для ComparedHumansView.xaml
     /// </summary>
-    public partial class ComparedHumansView : Window
+    public partial class ComparedHumansView : MetroWindow
     {
-        public ComparedHumansView()
+        public ComparedHumansView(ComparedHumansViewModel vm)
         {
             InitializeComponent();
+            DataContext = vm;
         }
     }
 }
