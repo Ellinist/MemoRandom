@@ -13,7 +13,7 @@
                 <MenuItem Header="Справочник" Command="{Binding SettingsMenuCommand}"/>
                 <MenuItem Header="Аналитика">
                     <MenuItem Header="Категории" Command="{Binding CategoriesCommand}"/>
-                    <MenuItem Header="Дополнительно"/>
+                    <MenuItem Header="Дополнительно" Command="{Binding ComparedHumansOpenCommand}"/>
                 </MenuItem>
                 <MenuItem Header="О программе" Command="{Binding StartAboutCommand}"/>
             </Menu>

@@ -347,7 +347,12 @@ namespace MemoRandom.Client.ViewModels
         /// Команда удаления выбранного человека
         /// </summary>
         public DelegateCommand DeleteHumanCommand { get; private set; }
-        
+
+        /// <summary>
+        /// Команда вызова окна создания людей для сравнения
+        /// </summary>
+        public DelegateCommand ComparedHumansOpenCommand { get; private set; }
+
         public DelegateCommand SettingsMenuCommand { get; private set; }
         
         public DelegateCommand HumansListMenuCommand { get; private set; }
@@ -371,6 +376,7 @@ namespace MemoRandom.Client.ViewModels
             DeleteHumanCommand   = new DelegateCommand(DeleteHuman);
             StartAboutCommand    = new DelegateCommand(OpenAboutView);
             CategoriesCommand    = new DelegateCommand(CategoriesOpen);
+            ComparedHumansOpenCommand = new DelegateCommand(ComparedHumansOpen);
         }
 
         /// <summary>
@@ -379,7 +385,11 @@ namespace MemoRandom.Client.ViewModels
         private void CategoriesOpen()
         {
             _container.Resolve<CategoriesView>().ShowDialog();
-            RaisePropertyChanged(nameof(HumansCollection));
+        }
+
+        private void ComparedHumansOpen()
+        {
+            _container.Resolve<ComparedHumansView>().ShowDialog();
         }
 
         /// <summary>
