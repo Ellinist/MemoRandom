@@ -213,7 +213,7 @@ namespace MemoRandom.Client.ViewModels
                     Reasons.PlainReasonsList = reasonsResult; // Заносим плоский список в статический класс
                     FormObservableCollection(Reasons.PlainReasonsList, null); // Формируем иерархическую коллекцию
                     Categories.AgeCategories = categoriesResult; // Задаем статический список категорий
-                    ButtonsVisibility();   // Чтение данных выполнено - кнопки делаем видимыми
+                    ButtonsVisibility.Invoke();   // Чтение данных выполнено - кнопки делаем видимыми
                 }
                 else if(reasonsResult == null)
                 {
