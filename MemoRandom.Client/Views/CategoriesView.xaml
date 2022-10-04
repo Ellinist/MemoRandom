@@ -11,6 +11,7 @@
                  Height="450" MinHeight="450" MaxHeight="450"
                  Width="1000" MinWidth="1000" MaxWidth="1000">
 
+    <!--Ресурсы окна-->
     <mah:MetroWindow.Resources>
         <ResourceDictionary>
             <Style TargetType="TextBlock" x:Key="TextBlockFontSize">
