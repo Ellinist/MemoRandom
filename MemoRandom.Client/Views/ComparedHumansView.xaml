@@ -7,6 +7,27 @@
         xmlns:local="clr-namespace:MemoRandom.Client.Views"
         mc:Ignorable="d"
         Title="{Binding ComparedHumansTitle}" Height="450" Width="800">
+
+    <mah:MetroWindow.Resources>
+        <ResourceDictionary>
+            <Style TargetType="TextBlock" x:Key="TextBlockFontSize">
+                <Setter Property="FontSize" Value="20"/>
+            </Style>
+
+            <Style TargetType="TextBox" x:Key="TextBoxFontSize">
+                <Setter Property="FontSize" Value="20"/>
+            </Style>
+
+            <Style TargetType="DataGridCellsPresenter">
+                <Setter Property="FontSize" Value="16"></Setter>
+            </Style>
+
+            <Style TargetType="DataGridColumnHeadersPresenter">
+                <Setter Property="FontSize" Value="16"></Setter>
+            </Style>
+        </ResourceDictionary>
+    </mah:MetroWindow.Resources>
+    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
@@ -48,12 +69,19 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
+                    <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
 
                 <Button Grid.Column="0"
-                        Content="Занести"/>
+                        Style="{StaticResource MahApps.Styles.Button}"
+                        Content="Добавить"/>
 
                 <Button Grid.Column="1"
+                        Style="{StaticResource MahApps.Styles.Button}"
+                        Content="Сохранить"/>
+                
+                <Button Grid.Column="2"
+                        Style="{StaticResource MahApps.Styles.Button}"
                         Content="Удалить"/>
             </Grid>
         </Grid>
