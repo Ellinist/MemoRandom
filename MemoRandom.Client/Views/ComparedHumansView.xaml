@@ -105,7 +105,8 @@
                 <!--Кнопка добавления нового человека для сравнения-->
                 <Button Grid.Column="0"
                         Style="{StaticResource MahApps.Styles.Button}"
-                        Content="Добавить"/>
+                        Content="Добавить"
+                        Command="{Binding NewComparedHumanCommand}"/>
 
                 <!--Кнопка сохранения добавленного человека-->
                 <Button Grid.Column="1"
