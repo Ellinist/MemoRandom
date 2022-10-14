@@ -43,7 +43,7 @@
                   GridLinesVisibility="All"
                   AutoGenerateColumns="False"
                   ItemsSource="{Binding ComparedHumansList}"
-                  SelectedIndex="{Binding SelectedHumanIndex}"
+                  SelectedIndex="{Binding SelectedIndex}"
                   SelectedItem="{Binding SelectedHuman}">
 
             <!--ФИО человека для сравнения-->
