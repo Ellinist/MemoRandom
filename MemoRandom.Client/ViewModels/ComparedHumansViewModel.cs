@@ -96,16 +96,25 @@ namespace MemoRandom.Client.ViewModels
         public DelegateCommand DeleteComparedHumanCommand { get; private set; }
         #endregion
 
+        /// <summary>
+        /// Команда добавления нового человека для сравнения
+        /// </summary>
         private void NewComparedHuman()
         {
 
         }
 
+        /// <summary>
+        /// Команда сохранения человека для сравнения во внешнем хранилище
+        /// </summary>
         private void SaveComparedHuman()
         {
 
         }
 
+        /// <summary>
+        /// Команда удаления выбранного человека для сравнения
+        /// </summary>
         private void DeleteComparedHuman()
         {
 
