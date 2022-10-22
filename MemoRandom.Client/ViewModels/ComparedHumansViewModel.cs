@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace MemoRandom.Client.ViewModels
 {
@@ -21,6 +22,9 @@ namespace MemoRandom.Client.ViewModels
 
         private string _comparedHumansTitle = "Люди для сравнения";
         private BindingList<ComparedHuman> _comparedHumansList;
+        private Guid _comparedHumanId;
+        private string _humanFullName;
+        private DateTime _humanBirthDate;
         private int _selectedIndex;
         private ComparedHuman _selectedHuman;
         #endregion
@@ -77,6 +81,42 @@ namespace MemoRandom.Client.ViewModels
                 RaisePropertyChanged(nameof(SelectedHuman));
             }
         }
+
+        /// <summary>
+        /// Идентификатор человека длч сравнения
+        /// </summary>
+        public Guid ComparedHumanId
+        {
+            get => _comparedHumanId;
+            set
+            {
+                _comparedHumanId = value;
+                RaisePropertyChanged(nameof(ComparedHumanId));
+            }
+        }
+
+        /// <summary>
+        /// Полное имя человека для сравнения
+        /// </summary>
+        public string HumanFullName
+        {
+            get => _humanFullName;
+            set
+            {
+                _humanFullName = value;
+                RaisePropertyChanged(nameof(HumanFullName));
+            }
+        }
+
+        public DateTime HumanBirthDate
+        {
+            get => _humanBirthDate;
+            set
+            {
+                _humanBirthDate = value;
+                RaisePropertyChanged(nameof(HumanBirthDate));
+            }
+        }
         #endregion
 
         #region COMMANDS
@@ -96,20 +136,51 @@ namespace MemoRandom.Client.ViewModels
         public DelegateCommand DeleteComparedHumanCommand { get; private set; }
         #endregion
 
+        private bool newFlag = false;
+
         /// <summary>
         /// Команда добавления нового человека для сравнения
         /// </summary>
         private void NewComparedHuman()
         {
-
+            newFlag = true;
+            ComparedHumanId = Guid.NewGuid();
+            HumanFullName = "Введите полное имя";
         }
 
         /// <summary>
         /// Команда сохранения человека для сравнения во внешнем хранилище
         /// </summary>
-        private void SaveComparedHuman()
+        private async void SaveComparedHuman()
         {
+            if (!newFlag) // Существующая запись человка дял сравнения
+            {
+                #region Обновление выбранного для сравнения человека
 
+                #endregion
+            }
+            else // Создание новой записи человека для сравнения
+            {
+                ComparedHuman compHuman = new()
+                {
+                    ComparedHumanId = ComparedHumanId,
+                    ComparedHumanFullName = HumanFullName,
+                    ComparedHumanBirthDate = HumanBirthDate
+                };
+
+                await Task.Run(() =>
+                {
+                    var result = _msSqlController.UpdateComparedHuman(compHuman);
+                    if (!result)
+                    {
+                        MessageBox.Show("Не удалось добавить человека для сравнения!", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+                });
+
+                ComparedHumansList.Clear();
+                //ComparedHumansList = 
+            }
         }
 
         /// <summary>

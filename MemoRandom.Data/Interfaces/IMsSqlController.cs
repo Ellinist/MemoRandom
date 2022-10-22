@@ -105,7 +105,7 @@ namespace MemoRandom.Data.Interfaces
         #region Блок работы с людьми для сравнения
         List<ComparedHuman> GetComparedHumans();
 
-        bool AddComparedHuman(ComparedHuman comparedHuman);
+        bool UpdateComparedHuman(ComparedHuman comparedHuman);
 
         bool DeleteComparedHuman(ComparedHuman comparedHuman);
         #endregion

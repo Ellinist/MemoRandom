@@ -599,8 +599,22 @@ namespace MemoRandom.Data.Implementations
         /// </summary>
         /// <param name="comparedHuman"></param>
         /// <returns></returns>
-        public bool AddComparedHuman(ComparedHuman comparedHuman)
+        public bool UpdateComparedHuman(ComparedHuman comparedHuman)
         {
+            var success = true;
+
+            using (MemoContext = new MemoRandomDbContext(DbConnectionString))
+            {
+                try
+                {
+
+                }
+                catch (Exception ex)
+                {
+
+                }
+            }
+
             return true;
         }
 
