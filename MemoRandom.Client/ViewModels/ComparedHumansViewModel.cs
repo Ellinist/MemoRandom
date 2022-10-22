@@ -52,7 +52,7 @@ namespace MemoRandom.Client.ViewModels
             set
             {
                 _comparedHumansList = value;
-                //RaisePropertyChanged(nameof(ComparedHumansList));
+                RaisePropertyChanged(nameof(ComparedHumansList));
             }
         }
 
@@ -201,7 +201,7 @@ namespace MemoRandom.Client.ViewModels
             ComparedHumans.ComparedHumansList = _msSqlController.GetComparedHumans();
             ComparedHumansList = ComparedHumans.GetComparedHumans();
 
-            //RaisePropertyChanged(nameof(ComparedHumansList));
+            RaisePropertyChanged(nameof(ComparedHumansList));
         }
 
         private void InitCommands()
