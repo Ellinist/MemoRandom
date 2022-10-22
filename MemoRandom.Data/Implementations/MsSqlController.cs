@@ -7,6 +7,7 @@ using NLog;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Windows.Media.Imaging;
@@ -264,14 +265,14 @@ namespace MemoRandom.Data.Implementations
 
                     if (updatedCategory != null) // Корректировка информации
                     {
-                        updatedCategory.DbCategoryId = category.CategoryId;
+                        updatedCategory.DbCategoryId   = category.CategoryId;
                         updatedCategory.DbCategoryName = category.CategoryName;
-                        updatedCategory.DbPeriodFrom = category.StartAge;
-                        updatedCategory.DbPeriodTo = category.StopAge;
-                        updatedCategory.DbColorA = category.CategoryColor.A;
-                        updatedCategory.DbColorR = category.CategoryColor.R;
-                        updatedCategory.DbColorG = category.CategoryColor.G;
-                        updatedCategory.DbColorB = category.CategoryColor.B;
+                        updatedCategory.DbPeriodFrom   = category.StartAge;
+                        updatedCategory.DbPeriodTo     = category.StopAge;
+                        updatedCategory.DbColorA       = category.CategoryColor.A;
+                        updatedCategory.DbColorR       = category.CategoryColor.R;
+                        updatedCategory.DbColorG       = category.CategoryColor.G;
+                        updatedCategory.DbColorB       = category.CategoryColor.B;
 
                         MemoContext.SaveChanges();
                     }
@@ -279,14 +280,14 @@ namespace MemoRandom.Data.Implementations
                     {
                         DbCategory record = new()
                         {
-                            DbCategoryId = category.CategoryId,
+                            DbCategoryId   = category.CategoryId,
                             DbCategoryName = category.CategoryName,
-                            DbPeriodFrom = category.StartAge,
-                            DbPeriodTo = category.StopAge,
-                            DbColorA = category.CategoryColor.A,
-                            DbColorR = category.CategoryColor.R,
-                            DbColorG = category.CategoryColor.G,
-                            DbColorB = category.CategoryColor.B
+                            DbPeriodFrom   = category.StartAge,
+                            DbPeriodTo     = category.StopAge,
+                            DbColorA       = category.CategoryColor.A,
+                            DbColorR       = category.CategoryColor.R,
+                            DbColorG       = category.CategoryColor.G,
+                            DbColorB       = category.CategoryColor.B
 
                         };
 
@@ -589,9 +590,33 @@ namespace MemoRandom.Data.Implementations
         /// Получение списка людей для сравнения
         /// </summary>
         /// <returns></returns>
-        public List<ComparedHuman> GetComparedHumans()
+        public BindingList<ComparedHuman> GetComparedHumans()
         {
-            return null;
+            BindingList<ComparedHuman> comparedHumans = new();
+            using (MemoContext = new MemoRandomDbContext(DbConnectionString))
+            {
+                try
+                {
+                    var comparedHumansList = MemoContext.DbComparedHumans.ToList(); // Читаем контекст базы данных
+                    foreach (var human in comparedHumansList)
+                    {
+                        ComparedHuman ch = new()
+                        {
+                            ComparedHumanId = human.DbComparedHumanId,
+                            ComparedHumanFullName = human.DbComparedHumanFullName,
+                            ComparedHumanBirthDate = human.DbComparedHumanBirthDate
+                        };
+                        comparedHumans.Add(ch);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    comparedHumans = null; // В случае ошибки чтения обнуляем связанный список
+                    _logger.Error($"Ошибка чтения людей для сравнения: {ex.HResult}");
+                }
+            }
+
+            return comparedHumans;
         }
 
         /// <summary>
@@ -607,11 +632,29 @@ namespace MemoRandom.Data.Implementations
             {
                 try
                 {
+                    var updatedComparedHuman = MemoContext.DbComparedHumans.FirstOrDefault(x => x.DbComparedHumanId == comparedHuman.ComparedHumanId);
+                    
+                    if(updatedComparedHuman != null) // Корректировка информации
+                    {
 
+                    }
+                    else // Добавление новой записи в таблицу людей для сравнения
+                    {
+                        DbComparedHuman record = new()
+                        {
+                            DbComparedHumanId        = comparedHuman.ComparedHumanId,
+                            DbComparedHumanFullName  = comparedHuman.ComparedHumanFullName,
+                            DbComparedHumanBirthDate = comparedHuman.ComparedHumanBirthDate
+                        };
+
+                        MemoContext.DbComparedHumans.Add(record);
+                        MemoContext.SaveChanges();
+                    }
                 }
                 catch (Exception ex)
                 {
-
+                    success = false;
+                    _logger.Error($"Ошибка обновления людей для сравнения: {ex.HResult}");
                 }
             }
 

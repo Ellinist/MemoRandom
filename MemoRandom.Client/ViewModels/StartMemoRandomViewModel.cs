@@ -206,13 +206,15 @@ namespace MemoRandom.Client.ViewModels
         {
             await Task.Run(() =>
             {
-                var reasonsResult = _msSqlController.GetReasons();
-                var categoriesResult = _msSqlController.GetCategories();
-                if (reasonsResult != null && categoriesResult != null)
+                var reasonsResult        = _msSqlController.GetReasons();
+                var categoriesResult     = _msSqlController.GetCategories();
+                //var comparedHumansResult = _msSqlController.GetComparedHumans();
+                if (reasonsResult != null && categoriesResult != null/* && comparedHumansResult != null*/)
                 {
                     Reasons.PlainReasonsList = reasonsResult; // Заносим плоский список в статический класс
                     FormObservableCollection(Reasons.PlainReasonsList, null); // Формируем иерархическую коллекцию
                     Categories.AgeCategories = categoriesResult; // Задаем статический список категорий
+                    //ComparedHumans.ComparedHumansList = comparedHumansResult; // Задаем список людей для сравнения
                     ButtonsVisibility.Invoke();   // Чтение данных выполнено - кнопки делаем видимыми
                 }
                 else if(reasonsResult == null)

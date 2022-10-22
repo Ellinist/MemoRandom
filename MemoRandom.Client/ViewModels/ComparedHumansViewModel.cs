@@ -191,6 +191,19 @@ namespace MemoRandom.Client.ViewModels
 
         }
 
+        /// <summary>
+        /// Обработчик загрузки окна работы с людьми для сравнения
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void ComparedHumansView_Loaded(object sender, RoutedEventArgs e)
+        {
+            ComparedHumans.ComparedHumansList = _msSqlController.GetComparedHumans();
+            ComparedHumansList = ComparedHumans.GetComparedHumans();
+
+            RaisePropertyChanged(nameof(ComparedHumansList));
+        }
+
         private void InitCommands()
         {
             NewComparedHumanCommand = new DelegateCommand(NewComparedHuman);
@@ -210,6 +223,8 @@ namespace MemoRandom.Client.ViewModels
         public ComparedHumansViewModel(IMsSqlController msSqlController)
         {
             _msSqlController = msSqlController ?? throw new ArgumentNullException(nameof(msSqlController));
+
+            ComparedHumansList = new();
 
             InitCommands();
         }

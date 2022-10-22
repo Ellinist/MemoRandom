@@ -148,7 +148,8 @@
                 <!--Кнопка сохранения добавленного человека-->
                 <Button Grid.Column="1"
                         Style="{StaticResource MahApps.Styles.Button}"
-                        Content="Сохранить"/>
+                        Content="Сохранить"
+                        Command="{Binding SaveComparedHumanCommand}"/>
                 
                 <!--Кнопка удаления выбранного человека-->
                 <Button Grid.Column="2"
