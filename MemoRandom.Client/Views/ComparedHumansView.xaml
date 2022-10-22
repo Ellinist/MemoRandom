@@ -45,23 +45,23 @@
                   ItemsSource="{Binding ComparedHumansList}"
                   SelectedIndex="{Binding SelectedIndex}"
                   SelectedItem="{Binding SelectedHuman}">
-
-            <!--ФИО человека для сравнения-->
-            <DataGridTextColumn Header="ФИО"
+            <DataGrid.Columns>
+                <!--ФИО человека для сравнения-->
+                <DataGridTextColumn Header="ФИО"
                                 x:Name="HumanFullName"
                                 Width="200" MinWidth="200"
                                 Binding="{Binding ComparedHumanFullName}">
 
-            </DataGridTextColumn>
+                </DataGridTextColumn>
 
-            <!--Дата рождения человека для сравнения-->
-            <DataGridTextColumn Header="Дата рождения"
+                <!--Дата рождения человека для сравнения-->
+                <DataGridTextColumn Header="Дата рождения"
                                 x:Name="HumanBirthDate"
                                 Width="60" MinWidth="60"
                                 Binding="{Binding ComparedHumanBirthDate}">
 
-            </DataGridTextColumn>
-            
+                </DataGridTextColumn>
+            </DataGrid.Columns>
         </DataGrid>
         <!--<ListView Grid.Column="0"
                   x:Name="ComparedHumans"

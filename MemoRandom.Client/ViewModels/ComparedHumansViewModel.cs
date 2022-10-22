@@ -224,7 +224,7 @@ namespace MemoRandom.Client.ViewModels
         {
             _msSqlController = msSqlController ?? throw new ArgumentNullException(nameof(msSqlController));
 
-            //ComparedHumansList = new();
+            ComparedHumansList = new();
             //ComparedHumansList = _msSqlController.GetComparedHumans();
 
             InitCommands();
