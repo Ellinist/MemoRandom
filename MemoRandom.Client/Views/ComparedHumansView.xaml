@@ -130,13 +130,15 @@
                                Style="{StaticResource TextBlockFontSize}"
                                HorizontalAlignment="Right"
                                Text="Дата:"/>
-                    <DatePicker Grid.Column="1"
-                                VerticalAlignment="Center"
-                                Padding="0"
-                                FontSize="20"
-                                FontWeight="Normal"
-                                SelectedDateFormat="Long"
-                                SelectedDate="{Binding ComparedHumanBirthDate, ConverterCulture=ru-RU}"/>
+                    <mah:DateTimePicker Grid.Column="1"
+                                        VerticalAlignment="Center"
+                                        Padding="0"
+                                        FontSize="20"
+                                        FontWeight="Normal"
+                                        SelectedDateFormat="Long"
+                                        SelectedTimeFormat="Short"
+                                        Culture="ru-RU"
+                                        SelectedDateTime="{Binding ComparedHumanBirthDate}"/>
                 </Grid>
             </StackPanel>
 

@@ -110,6 +110,9 @@ namespace MemoRandom.Client.ViewModels
             }
         }
 
+        /// <summary>
+        /// Дата рождения человека для сравнения
+        /// </summary>
         public DateTime ComparedHumanBirthDate
         {
             get => _comparedHumanBirthDate;
@@ -148,6 +151,7 @@ namespace MemoRandom.Client.ViewModels
             newFlag = true;
             ComparedHumanId = Guid.NewGuid();
             ComparedHumanFullName = "Введите полное имя";
+            ComparedHumanBirthDate = DateTime.Now.AddYears(-50);
         }
 
         /// <summary>
@@ -158,8 +162,19 @@ namespace MemoRandom.Client.ViewModels
             if (!newFlag) // Существующая запись человка дял сравнения
             {
                 #region Обновление выбранного для сравнения человека
-
+                SelectedHuman.ComparedHumanFullName = ComparedHumanFullName;
+                SelectedHuman.ComparedHumanBirthDate = ComparedHumanBirthDate;
                 #endregion
+
+                await Task.Run(() =>
+                {
+                    var result = _msSqlController.UpdateComparedHuman(SelectedHuman);
+                    if (!result)
+                    {
+                        MessageBox.Show("Не удалось обновить человека для сравнения", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+                });
             }
             else // Создание новой записи человека для сравнения
             {
@@ -181,9 +196,13 @@ namespace MemoRandom.Client.ViewModels
                 });
 
                 ComparedHumansCollection.Clear();
+                ComparedHumans.ComparedHumansList.Add(compHuman);
                 ComparedHumansCollection = ComparedHumans.GetComparedHumans();
                 RaisePropertyChanged(nameof(ComparedHumansCollection));
+                SelectedIndex = ComparedHumansCollection.IndexOf(compHuman);
             }
+
+            newFlag = false;
         }
 
         /// <summary>
@@ -195,7 +214,14 @@ namespace MemoRandom.Client.ViewModels
             if (!result)
             {
                 MessageBox.Show("Не удалось удалить человека для сравнения!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
             }
+
+            ComparedHumans.ComparedHumansList.Remove(SelectedHuman);
+            ComparedHumansCollection.Clear();
+            ComparedHumansCollection = ComparedHumans.GetComparedHumans();
+            RaisePropertyChanged(nameof(ComparedHumansCollection));
+            SelectedIndex = 0;
         }
 
         /// <summary>

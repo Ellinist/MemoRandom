@@ -636,7 +636,10 @@ namespace MemoRandom.Data.Implementations
                     
                     if(updatedComparedHuman != null) // Корректировка информации
                     {
+                        updatedComparedHuman.DbComparedHumanFullName = comparedHuman.ComparedHumanFullName;
+                        updatedComparedHuman.DbComparedHumanBirthDate = comparedHuman.ComparedHumanBirthDate;
 
+                        MemoContext.SaveChanges();
                     }
                     else // Добавление новой записи в таблицу людей для сравнения
                     {
@@ -658,7 +661,7 @@ namespace MemoRandom.Data.Implementations
                 }
             }
 
-            return true;
+            return success;
         }
 
         /// <summary>
