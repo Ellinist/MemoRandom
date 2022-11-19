@@ -3,17 +3,17 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MemoRandom.Data.DbModels
 {
-    [Serializable]
     /// <summary>
     /// Класс человека для сравнения для внешнего хранилища
     /// </summary>
+    [Serializable]
     public class DbComparedHuman
     {
-        [Key]
-        [Required]
         /// <summary>
         /// Идентификатор человека для сравнения
         /// </summary>
+        [Key]
+        [Required]
         public Guid DbComparedHumanId { get; set; }
         
         /// <summary>
