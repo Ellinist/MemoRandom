@@ -233,6 +233,7 @@ namespace MemoRandom.Client.ViewModels
         {
             ComparedHumans.ComparedHumansList = _msSqlController.GetComparedHumans();
             ComparedHumansCollection = ComparedHumans.GetComparedHumans();
+            SelectedIndex = 0;
 
             RaisePropertyChanged(nameof(ComparedHumansCollection));
         }

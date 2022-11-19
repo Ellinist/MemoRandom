@@ -27,6 +27,12 @@ namespace MemoRandom.Client.Views
             
             DataContext = vm;
             this.Loaded += vm.ComparedHumansView_Loaded;
+            DgComparedHumans.SelectionChanged += DgComparedHumans_SelectionChanged;
+        }
+
+        private void DgComparedHumans_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            DgComparedHumans.Focus();
         }
     }
 }
