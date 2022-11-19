@@ -590,9 +590,9 @@ namespace MemoRandom.Data.Implementations
         /// Получение списка людей для сравнения
         /// </summary>
         /// <returns></returns>
-        public BindingList<ComparedHuman> GetComparedHumans()
+        public ObservableCollection<ComparedHuman> GetComparedHumans()
         {
-            BindingList<ComparedHuman> comparedHumans = new();
+            ObservableCollection<ComparedHuman> comparedHumans = new();
             using (MemoContext = new MemoRandomDbContext(DbConnectionString))
             {
                 try
@@ -668,7 +668,27 @@ namespace MemoRandom.Data.Implementations
         /// <returns></returns>
         public bool DeleteComparedHuman(ComparedHuman comparedHuman)
         {
-            return true;
+            bool successResult = true;
+
+            using (MemoContext = new MemoRandomDbContext(DbConnectionString))
+            {
+                try
+                {
+                    var deletedHuman = MemoContext.DbComparedHumans.FirstOrDefault(x => x.DbComparedHumanId == comparedHuman.ComparedHumanId);
+                    if (deletedHuman != null)
+                    {
+                        MemoContext.Remove(deletedHuman);
+                        MemoContext.SaveChanges();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    successResult = false;
+                    _logger.Error($"Ошибка удаления человека для сравнения: {ex.HResult}");
+                }
+            }
+
+            return successResult;
         }
         #endregion
 

@@ -3,10 +3,7 @@ using MemoRandom.Models.Models;
 using Prism.Commands;
 using Prism.Mvvm;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -21,10 +18,10 @@ namespace MemoRandom.Client.ViewModels
         private readonly IMsSqlController _msSqlController;
 
         private string _comparedHumansTitle = "Люди для сравнения";
-        private BindingList<ComparedHuman> _comparedHumansList;
+        private ObservableCollection<ComparedHuman> _comparedHumansCollection;
         private Guid _comparedHumanId;
-        private string _humanFullName;
-        private DateTime _humanBirthDate;
+        private string _comparedHumanFullName;
+        private DateTime _comparedHumanBirthDate;
         private int _selectedIndex;
         private ComparedHuman _selectedHuman;
         #endregion
@@ -46,13 +43,13 @@ namespace MemoRandom.Client.ViewModels
         /// <summary>
         /// Связный список людей для сравнения
         /// </summary>
-        public BindingList<ComparedHuman> ComparedHumansList
+        public ObservableCollection<ComparedHuman> ComparedHumansCollection
         {
-            get => _comparedHumansList;
+            get => _comparedHumansCollection;
             set
             {
-                _comparedHumansList = value;
-                RaisePropertyChanged(nameof(ComparedHumansList));
+                _comparedHumansCollection = value;
+                RaisePropertyChanged(nameof(ComparedHumansCollection));
             }
         }
 
@@ -77,7 +74,12 @@ namespace MemoRandom.Client.ViewModels
             get => _selectedHuman;
             set
             {
+                if (value == null) return;
                 _selectedHuman = value;
+
+                ComparedHumanId = SelectedHuman.ComparedHumanId;
+                ComparedHumanFullName = SelectedHuman.ComparedHumanFullName;
+                ComparedHumanBirthDate = SelectedHuman.ComparedHumanBirthDate;
                 RaisePropertyChanged(nameof(SelectedHuman));
             }
         }
@@ -98,23 +100,23 @@ namespace MemoRandom.Client.ViewModels
         /// <summary>
         /// Полное имя человека для сравнения
         /// </summary>
-        public string HumanFullName
+        public string ComparedHumanFullName
         {
-            get => _humanFullName;
+            get => _comparedHumanFullName;
             set
             {
-                _humanFullName = value;
-                RaisePropertyChanged(nameof(HumanFullName));
+                _comparedHumanFullName = value;
+                RaisePropertyChanged(nameof(ComparedHumanFullName));
             }
         }
 
-        public DateTime HumanBirthDate
+        public DateTime ComparedHumanBirthDate
         {
-            get => _humanBirthDate;
+            get => _comparedHumanBirthDate;
             set
             {
-                _humanBirthDate = value;
-                RaisePropertyChanged(nameof(HumanBirthDate));
+                _comparedHumanBirthDate = value;
+                RaisePropertyChanged(nameof(ComparedHumanBirthDate));
             }
         }
         #endregion
@@ -145,7 +147,7 @@ namespace MemoRandom.Client.ViewModels
         {
             newFlag = true;
             ComparedHumanId = Guid.NewGuid();
-            HumanFullName = "Введите полное имя";
+            ComparedHumanFullName = "Введите полное имя";
         }
 
         /// <summary>
@@ -164,8 +166,8 @@ namespace MemoRandom.Client.ViewModels
                 ComparedHuman compHuman = new()
                 {
                     ComparedHumanId = ComparedHumanId,
-                    ComparedHumanFullName = HumanFullName,
-                    ComparedHumanBirthDate = HumanBirthDate
+                    ComparedHumanFullName = ComparedHumanFullName,
+                    ComparedHumanBirthDate = ComparedHumanBirthDate
                 };
 
                 await Task.Run(() =>
@@ -178,8 +180,9 @@ namespace MemoRandom.Client.ViewModels
                     }
                 });
 
-                ComparedHumansList.Clear();
-                //ComparedHumansList = 
+                ComparedHumansCollection.Clear();
+                ComparedHumansCollection = ComparedHumans.GetComparedHumans();
+                RaisePropertyChanged(nameof(ComparedHumansCollection));
             }
         }
 
@@ -188,7 +191,11 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private void DeleteComparedHuman()
         {
-
+            var result = _msSqlController.DeleteComparedHuman(SelectedHuman);
+            if (!result)
+            {
+                MessageBox.Show("Не удалось удалить человека для сравнения!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         /// <summary>
@@ -199,9 +206,9 @@ namespace MemoRandom.Client.ViewModels
         public void ComparedHumansView_Loaded(object sender, RoutedEventArgs e)
         {
             ComparedHumans.ComparedHumansList = _msSqlController.GetComparedHumans();
-            ComparedHumansList = ComparedHumans.GetComparedHumans();
+            ComparedHumansCollection = ComparedHumans.GetComparedHumans();
 
-            RaisePropertyChanged(nameof(ComparedHumansList));
+            RaisePropertyChanged(nameof(ComparedHumansCollection));
         }
 
         private void InitCommands()
@@ -224,7 +231,7 @@ namespace MemoRandom.Client.ViewModels
         {
             _msSqlController = msSqlController ?? throw new ArgumentNullException(nameof(msSqlController));
 
-            ComparedHumansList = new();
+            ComparedHumansCollection = new();
             //ComparedHumansList = _msSqlController.GetComparedHumans();
 
             InitCommands();

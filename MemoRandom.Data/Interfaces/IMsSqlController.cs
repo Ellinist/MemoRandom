@@ -1,8 +1,6 @@
-﻿using MemoRandom.Data.DbModels;
-using MemoRandom.Models.Models;
+﻿using MemoRandom.Models.Models;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Windows.Media.Imaging;
 
 namespace MemoRandom.Data.Interfaces
@@ -104,7 +102,7 @@ namespace MemoRandom.Data.Interfaces
         #endregion
 
         #region Блок работы с людьми для сравнения
-        BindingList<ComparedHuman> GetComparedHumans();
+        ObservableCollection<ComparedHuman> GetComparedHumans();
 
         bool UpdateComparedHuman(ComparedHuman comparedHuman);
 

@@ -24,8 +24,9 @@ namespace MemoRandom.Client.Views
         public ComparedHumansView(ComparedHumansViewModel vm)
         {
             InitializeComponent();
-            this.Loaded += vm.ComparedHumansView_Loaded;
+            
             DataContext = vm;
+            this.Loaded += vm.ComparedHumansView_Loaded;
         }
     }
 }

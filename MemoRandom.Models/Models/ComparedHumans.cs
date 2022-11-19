@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 
 namespace MemoRandom.Models.Models
 {
@@ -12,15 +7,15 @@ namespace MemoRandom.Models.Models
         /// <summary>
         /// Список людей для сравнения (статический)
         /// </summary>
-        public static BindingList<ComparedHuman> ComparedHumansList { get; set; }
+        public static ObservableCollection<ComparedHuman> ComparedHumansList { get; set; }
 
         /// <summary>
         /// Получение клонированного списка людей для сравнения
         /// </summary>
         /// <returns></returns>
-        public static BindingList<ComparedHuman> GetComparedHumans()
+        public static ObservableCollection<ComparedHuman> GetComparedHumans()
         {
-            var comparedHumans = new BindingList<ComparedHuman>();
+            var comparedHumans = new ObservableCollection<ComparedHuman>();
             foreach (var item in ComparedHumansList)
             {
                 comparedHumans.Add(item);
