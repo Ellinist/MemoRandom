@@ -32,7 +32,7 @@ namespace MemoRandom.Client.ViewModels
         private BitmapSource _imageSource;
         private string _displayedYears = "";
         private string _humanDeathReasonName;
-        private readonly StringBuilder YearsText = new();
+        private readonly StringBuilder _yearsText = new();
         private string _sortMember;
         private string _sortDirection;
 
@@ -183,24 +183,24 @@ namespace MemoRandom.Client.ViewModels
         private void SetFullYearsText(Human selectedHuman)
         {
             int years = (int)Math.Floor(selectedHuman.FullYearsLived); // Считаем число полных лет
-            YearsText.Clear();
+            _yearsText.Clear();
             int t1, t2;
             t1 = years % 10;
             t2 = years % 100;
             if (t1 == 1 && t2 != 11)
             {
-                YearsText.Append("(" + years + " полный год)");
+                _yearsText.Append("(" + years + " полный год)");
             }
             else if(t1 >= 2 && t1 <= 4 && (t2 < 10 || t2 >= 20))
             {
-                YearsText.Append("(" + years + " полных года)");
+                _yearsText.Append("(" + years + " полных года)");
             }
             else
             {
-                YearsText.Append("(" + years + " полных лет)");
+                _yearsText.Append("(" + years + " полных лет)");
             }
             
-            DisplayedYears = YearsText.ToString();
+            DisplayedYears = _yearsText.ToString();
         }
 
         /// <summary>
@@ -387,6 +387,9 @@ namespace MemoRandom.Client.ViewModels
             _container.Resolve<CategoriesView>().ShowDialog();
         }
 
+        /// <summary>
+        /// Вызов окна редактирования людей для сравнения
+        /// </summary>
         private void ComparedHumansOpen()
         {
             _container.Resolve<ComparedHumansView>().ShowDialog();
@@ -415,7 +418,7 @@ namespace MemoRandom.Client.ViewModels
                     result = _msSqlController.GetHumans(); // Получаем из внешнего источника
 
                     Humans.HumansList = result; // Заносим результат в местное хранилище
-                    HumansCollection = Humans.GetHumans(); // Вятыгиваем клон результата
+                    HumansCollection = Humans.GetHumans(); // Вятягиваем клон результата
                 });
 
                 RaisePropertyChanged(nameof(HumansCollection));

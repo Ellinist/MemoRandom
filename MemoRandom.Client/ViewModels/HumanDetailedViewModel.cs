@@ -422,9 +422,7 @@ namespace MemoRandom.Client.ViewModels
         /// <param name="e"></param>
         public void PersonImage_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            var obj = (sender as Image);
-            
-            if (obj != null)
+            if (sender is Image obj)
             {
                 Point t2 = obj.PointToScreen(Mouse.GetPosition(obj));
                 _startX = t2.X;

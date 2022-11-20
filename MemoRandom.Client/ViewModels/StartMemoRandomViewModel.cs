@@ -294,11 +294,13 @@ namespace MemoRandom.Client.ViewModels
 
 
         #region CTOR
+
         /// <summary>
         /// Конструктор
         /// </summary>
         /// <param name="logger"></param>
         /// <param name="container"></param>
+        /// <param name="msSqlController"></param>
         /// <exception cref="ArgumentNullException"></exception>
         public StartMemoRandomViewModel(ILogger logger, IContainer container, IMsSqlController msSqlController)
         {

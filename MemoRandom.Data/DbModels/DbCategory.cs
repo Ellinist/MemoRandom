@@ -6,6 +6,7 @@ namespace MemoRandom.Data.DbModels
     /// <summary>
     /// Класс категории человеческого возраста
     /// </summary>
+    [Serializable]
     public class DbCategory
     {
         /// <summary>
