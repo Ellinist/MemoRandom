@@ -6,6 +6,8 @@ using NLog;
 using MemoRandom.Client.Views;
 using MemoRandom.Data.Interfaces;
 using MemoRandom.Data.Implementations;
+using AutoMapper;
+using MemoRandom.Client.Common.Mappers;
 
 namespace MemoRandom.Client
 {
@@ -35,6 +37,11 @@ namespace MemoRandom.Client
             _logger = LogManager.GetCurrentClassLogger();
             containerRegistry.RegisterInstance<ILogger>(_logger);
             containerRegistry.RegisterInstance<IEventAggregator>(new EventAggregator());
+
+            containerRegistry.RegisterInstance<IMapper>(new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new MemoRandomMappingProfile());
+            }).CreateMapper());
 
 
             #region Контроллеры работы с внешними хранилищами информации
