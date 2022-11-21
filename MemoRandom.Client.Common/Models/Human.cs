@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using Prism.Mvvm;
 
 namespace MemoRandom.Client.Common.Models
 {

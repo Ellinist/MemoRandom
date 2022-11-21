@@ -117,12 +117,15 @@
                                Style="{StaticResource FontCharacteristics}"
                                Text="Дата рождения:"
                                HorizontalAlignment="Right"/>
-                        <DatePicker Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2"
-                                FontSize="17"
-                                FontWeight="Bold"
-                                VerticalAlignment="Center"
-                                SelectedDate="{Binding BirthDate}"/>
-
+                        <mah:DateTimePicker Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2"
+                                            FontSize="17"
+                                            FontWeight="Bold"
+                                            SelectedDateFormat="Long"
+                                            SelectedTimeFormat="Short"
+                                            Culture="ru-RU"
+                                            VerticalAlignment="Center"
+                                            SelectedDateTime="{Binding BirthDate}"/>
+                        
                         <!--Страна рождения-->
                         <TextBlock Grid.Row="4" Grid.Column="0"
                                Margin="0"
@@ -158,12 +161,15 @@
                                Style="{StaticResource FontCharacteristics}"
                                Text="Дата смерти:"
                                HorizontalAlignment="Right"/>
-                        <DatePicker Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2"
-                                FontSize="17"
-                                FontWeight="Bold"
-                                VerticalAlignment="Center"
-                                SelectedDate="{Binding DeathDate}"/>
-
+                        <mah:DateTimePicker Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2"
+                                            FontSize="17"
+                                            FontWeight="Bold"
+                                            SelectedDateFormat="Long"
+                                            SelectedTimeFormat="Short"
+                                            Culture="ru-RU"
+                                            VerticalAlignment="Center"
+                                            SelectedDateTime="{Binding DeathDate}"/>
+                        
                         <!--Страна смерти-->
                         <TextBlock Grid.Row="7" Grid.Column="0"
                                Margin="0"
