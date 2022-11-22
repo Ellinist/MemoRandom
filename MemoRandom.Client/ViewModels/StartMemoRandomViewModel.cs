@@ -1,4 +1,5 @@
 ﻿using DryIoc;
+using MemoRandom.Client.Common.Implementations;
 using MemoRandom.Client.Common.Interfaces;
 using MemoRandom.Client.Views;
 using MemoRandom.Data.Interfaces;
@@ -252,10 +253,10 @@ namespace MemoRandom.Client.ViewModels
                         ReasonComment     = reason.ReasonComment,
                         ReasonDescription = reason.ReasonDescription
                     };
-                    Reasons.ReasonsCollection.Add(rsn);
+                    CommonDataController.ReasonsCollection.Add(rsn);
 
                     // Проверка на наличие дочерних узлов
-                    var daughters = Reasons.PlainReasonsList.FindAll(x => x.ReasonParentId == rsn.ReasonId);
+                    var daughters = CommonDataController.PlainReasonsList.FindAll(x => x.ReasonParentId == rsn.ReasonId);
                     if (daughters.Count != 0) // Если дочерние узлы найдены
                     {
                         FormObservableCollection(daughters, rsn); // Вызываем рекурсивно
@@ -275,7 +276,7 @@ namespace MemoRandom.Client.ViewModels
                     headReason.ReasonChildren.Add(rsn);
 
                     // Проверка на наличие дочерних узлов
-                    var daughters = Reasons.PlainReasonsList.FindAll(x => x.ReasonParentId == rsn.ReasonId);
+                    var daughters = CommonDataController.PlainReasonsList.FindAll(x => x.ReasonParentId == rsn.ReasonId);
                     if (daughters.Count != 0) // Если дочерние узлы найдены
                     {
                         FormObservableCollection(daughters, rsn); // Вызываем рекурсивно

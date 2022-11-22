@@ -265,10 +265,10 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         public ObservableCollection<Reason> ReasonsList
         {
-            get => Reasons.ReasonsCollection;
+            get => CommonDataController.ReasonsCollection;
             set
             {
-                Reasons.ReasonsCollection = value;
+                CommonDataController.ReasonsCollection = value;
                 RaisePropertyChanged(nameof(ReasonsList));
             }
         }
@@ -278,10 +278,10 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         public List<Reason> PlainReasonsList
         {
-            get => Reasons.PlainReasonsList;
+            get => CommonDataController.PlainReasonsList;
             set
             {
-                Reasons.PlainReasonsList = value;
+                CommonDataController.PlainReasonsList = value;
                 RaisePropertyChanged(nameof(PlainReasonsList));
             }
         }
