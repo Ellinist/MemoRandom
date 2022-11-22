@@ -121,16 +121,5 @@ namespace MemoRandom.Models.Models
                 RaisePropertyChanged(nameof(IsSelected));
             }
         }
-
-
-        #region CTOR
-        ///// <summary>
-        ///// Конструктор
-        ///// </summary>
-        //public Reason()
-        //{
-        //    ReasonChildren = new ObservableCollection<Reason>();
-        //}
-        #endregion
     }
 }

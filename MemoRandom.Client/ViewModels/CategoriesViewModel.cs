@@ -256,7 +256,7 @@ namespace MemoRandom.Client.ViewModels
                     }
                 });
 
-                CategoriesCollection?.Clear();
+                //CategoriesCollection?.Clear();
                 CommonDataController.RearrangeCollection();
                 //CategoriesCollection = Categories.GetCategories();
                 RaisePropertyChanged(nameof(CategoriesCollection));
