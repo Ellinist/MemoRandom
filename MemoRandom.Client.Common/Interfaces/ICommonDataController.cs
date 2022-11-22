@@ -16,18 +16,20 @@ namespace MemoRandom.Client.Common.Interfaces
         /// <returns></returns>
         bool ReadDataFromRepository();
 
-        /// <summary>
-        /// Получение иерархической коллекции причин смерти
-        /// </summary>
-        /// <returns></returns>
-        ObservableCollection<Reason> GetReasonsCollection();
+        void UpdateData();
 
-        /// <summary>
-        /// Получение плоского списка причин смерти
-        /// </summary>
-        /// <returns></returns>
-        List<Reason> GetReasonsList();
+        ///// <summary>
+        ///// Получение иерархической коллекции причин смерти
+        ///// </summary>
+        ///// <returns></returns>
+        //ObservableCollection<Reason> GetReasonsCollection();
 
-        void AddReasonToPlainList(Reason reason);
+        ///// <summary>
+        ///// Получение плоского списка причин смерти
+        ///// </summary>
+        ///// <returns></returns>
+        //List<Reason> GetReasonsList();
+
+        //void AddReasonToPlainList(Reason reason);
     }
 }

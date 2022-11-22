@@ -12,6 +12,7 @@ using System.Windows.Threading;
 using MemoRandom.Data.Interfaces;
 using System.Collections.Generic;
 using MemoRandom.Client.Common.Interfaces;
+using MemoRandom.Client.Common.Implementations;
 
 namespace MemoRandom.Client.ViewModels
 {
@@ -36,8 +37,8 @@ namespace MemoRandom.Client.ViewModels
         private string _saveButtonText            = CHANGE_BUTTON;
         private string _addButtonText             = ADD_BUTTON;
 
-        private ObservableCollection<Reason> _reasonsCollection;
-        private List<Reason> _reasonsList;
+        //private ObservableCollection<Reason> _reasonsCollection;
+        //private List<Reason> _reasonsList;
         private string _reasonName;
         private string _reasonComment;
         private string _reasonDescription;
@@ -207,17 +208,14 @@ namespace MemoRandom.Client.ViewModels
         /// <summary>
         /// Коллекция причин смерти - для древовидного отображения
         /// </summary>
-        public ObservableCollection<Reason> ReasonsList
+        public ObservableCollection<Reason> ReasonsCollection
         {
-            //get => Reasons.ReasonsCollection;
-            get => _reasonsCollection;
+            get => CommonDataController.ReasonsCollection;
             set
             {
-                //if (Reasons.ReasonsCollection == value) return;
-                //Reasons.ReasonsCollection = value;
-                if (_reasonsCollection == value) return;
-                _reasonsCollection = value;
-                RaisePropertyChanged();
+                if (CommonDataController.ReasonsCollection == value) return;
+                CommonDataController.ReasonsCollection = value;
+                RaisePropertyChanged(nameof(ReasonsCollection));
             }
         }
 
@@ -227,11 +225,11 @@ namespace MemoRandom.Client.ViewModels
         private List<Reason> PlainReasonsList
         {
             //get => Reasons.PlainReasonsList;
-            get => _reasonsList;
+            get => CommonDataController.PlainReasonsList;
             set
             {
                 //Reasons.PlainReasonsList = value;
-                _reasonsList = value;
+                CommonDataController.PlainReasonsList = value;
                 RaisePropertyChanged(nameof(PlainReasonsList));
             }
         }
@@ -316,12 +314,12 @@ namespace MemoRandom.Client.ViewModels
                 {
                     rsn.ReasonParentId = Guid.Empty;
                     SelectedReason     = rsn;
-                    ReasonsList.Add(rsn); // Если узел не выбран, то создаем в корне
+                    ReasonsCollection.Add(rsn); // Если узел не выбран, то создаем в корне
                     PlainReasonsList.Add(rsn);
                 }
 
-                RaisePropertyChanged(nameof(ReasonsList));
-
+                _commonDataController.UpdateData();
+                
                 await Task.Run(() =>
                 {
                     var result = _dbController.AddReasonToList(rsn); // Записываем изменение во внешнее хранилище
@@ -344,9 +342,13 @@ namespace MemoRandom.Client.ViewModels
                     });
                 });
 
+                //_commonDataController.AddReasonToPlainList(rsn);
+                //ReasonsList.Clear();
+                //ReasonsList = _commonDataController.GetReasonsCollection();
+                RaisePropertyChanged();
                 //PlainReasonsList = _commonDataController.GetReasonsList();
                 //ReasonsList = _commonDataController.GetReasonsCollection();
-                RaisePropertyChanged(nameof(ReasonsList));
+                RaisePropertyChanged(nameof(ReasonsCollection));
             }
         }
 
@@ -385,7 +387,7 @@ namespace MemoRandom.Client.ViewModels
                     });
                 });
 
-                RaisePropertyChanged(nameof(ReasonsList));
+                RaisePropertyChanged(nameof(ReasonsCollection));
             }
             else // Вход в режим редактирования
             {
@@ -437,7 +439,7 @@ namespace MemoRandom.Client.ViewModels
             }
             else
             {
-                ReasonsList.Remove(selectedNode);
+                ReasonsCollection.Remove(selectedNode);
             }
 
             var currentReason = PlainReasonsList.FirstOrDefault(x => x.ReasonId == selectedNode.ReasonId);
@@ -452,7 +454,7 @@ namespace MemoRandom.Client.ViewModels
                 }
             });
 
-            RaisePropertyChanged(nameof(ReasonsList));
+            RaisePropertyChanged(nameof(ReasonsCollection));
 
             SelectedReason.IsSelected = false;
             SetEmptyFields(); // Очищаем поля окна
@@ -531,8 +533,8 @@ namespace MemoRandom.Client.ViewModels
         /// <param name="e"></param>
         public void ReasonsView_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
-            PlainReasonsList = _commonDataController.GetReasonsList();
-            ReasonsList = _commonDataController.GetReasonsCollection();
+            //PlainReasonsList = CommonDataController.PlainReasonsList;
+            //ReasonsCollection = CommonDataController.ReasonsCollection;
             //RaisePropertyChanged();
         }
 

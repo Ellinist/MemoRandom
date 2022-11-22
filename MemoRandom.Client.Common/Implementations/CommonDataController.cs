@@ -23,12 +23,12 @@ namespace MemoRandom.Client.Common.Implementations
         /// <summary>
         /// Иерархическая коллекция причин смерти
         /// </summary>
-        public ObservableCollection<Reason> ReasonsCollection { get; set; } = new();
+        public static ObservableCollection<Reason> ReasonsCollection { get; set; } = new();
 
         /// <summary>
         /// Плоский список причин смерти для отображения
         /// </summary>
-        public List<Reason> PlainReasonsList { get; set; } = new();
+        public static List<Reason> PlainReasonsList { get; set; } = new();
         #endregion
 
         #region IMPLEMENTATION
@@ -40,8 +40,6 @@ namespace MemoRandom.Client.Common.Implementations
         {
             bool successResult = true;
 
-            //var ttt = _msSqlController.GetReasons();
-            //var t = ConvertFromDbSet(_msSqlController.GetReasons());
             PlainReasonsList = ConvertFromDbSet(_msSqlController.GetReasons());
 
             FormObservableCollection(PlainReasonsList, null);
@@ -49,28 +47,50 @@ namespace MemoRandom.Client.Common.Implementations
             return successResult;
         }
 
-        /// <summary>
-        /// Получение иерархической коллекции причин смерти
-        /// </summary>
-        /// <returns></returns>
-        public ObservableCollection<Reason> GetReasonsCollection()
+        public void UpdateData()
         {
-            return ReasonsCollection;
+            ReasonsCollection.Clear();
+            FormObservableCollection(PlainReasonsList, null);
         }
 
-        /// <summary>
-        /// Получение плоского списка причин смерти
-        /// </summary>
-        /// <returns></returns>
-        public List<Reason> GetReasonsList()
-        {
-            return PlainReasonsList;
-        }
+        ///// <summary>
+        ///// Получение иерархической коллекции причин смерти
+        ///// </summary>
+        ///// <returns></returns>
+        //public ObservableCollection<Reason> GetReasonsCollection()
+        //{
+        //    ObservableCollection<Reason> resultCollection = new();
+        //    foreach (var reason in ReasonsCollection)
+        //    {
+        //        Reason rsn = new()
+        //        {
+        //            ReasonId = reason.ReasonId,
+        //            ReasonName = reason.ReasonName,
+        //            ReasonComment = reason.ReasonComment,
+        //            ReasonDescription = reason.ReasonDescription,
+        //            ReasonParentId = reason.ReasonParentId,
+        //            ReasonParent = reason.ReasonParent,
+        //            ReasonChildren = reason.ReasonChildren
+        //        };
+        //        resultCollection.Add(rsn);
+        //    }
+        //    return resultCollection;
+        //}
 
-        public void AddReasonToPlainList(Reason reason)
-        {
-            PlainReasonsList.Add(reason);
-        }
+        ///// <summary>
+        ///// Получение плоского списка причин смерти
+        ///// </summary>
+        ///// <returns></returns>
+        //public List<Reason> GetReasonsList()
+        //{
+        //    return PlainReasonsList;
+        //}
+
+        //public void AddReasonToPlainList(Reason reason)
+        //{
+        //    PlainReasonsList.Add(reason);
+        //    FormObservableCollection(PlainReasonsList, null);
+        //}
         #endregion
 
         private List<Reason> ConvertFromDbSet(List<DbReason> dbList)

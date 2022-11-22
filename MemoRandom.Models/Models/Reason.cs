@@ -17,6 +17,8 @@ namespace MemoRandom.Models.Models
         private string _reasonDescription;
         private ObservableCollection<Reason> _reasonChildren = new();
         private bool _isSelected;
+
+        private Reason _reasonParent;
         #endregion
 
         /// <summary>
@@ -79,7 +81,15 @@ namespace MemoRandom.Models.Models
         /// <summary>
         /// Навигационное свойство - родительская причина
         /// </summary>
-        public virtual Reason ReasonParent { get; set; }
+        public virtual Reason ReasonParent
+        {
+            get => _reasonParent;
+            set
+            {
+                _reasonParent = value;
+                RaisePropertyChanged();
+            }
+        }
 
         /// <summary>
         /// Идентификатор родительской причины

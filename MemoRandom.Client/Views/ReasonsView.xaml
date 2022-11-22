@@ -58,7 +58,7 @@
                               VerticalScrollBarVisibility="Auto">
                     <TreeView x:Name="ReasonsTree"
                               Style="{StaticResource MahApps.Styles.TreeView}"
-                              ItemsSource="{Binding ReasonsList, Mode=TwoWay, NotifyOnSourceUpdated=True}">
+                              ItemsSource="{Binding ReasonsCollection, Mode=TwoWay, NotifyOnSourceUpdated=True}">
                         <TreeView.Resources>
                             <HierarchicalDataTemplate DataType="{x:Type models:Reason}" ItemsSource="{Binding ReasonChildren}">
                                 <TextBlock Text="{Binding Path=ReasonName}"/>
