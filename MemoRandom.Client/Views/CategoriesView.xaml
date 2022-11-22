@@ -42,7 +42,7 @@
                 <Setter Property="Background" Value="BlanchedAlmond"/>
             </Style>
 
-            <conv:RowColorConverter x:Key="RowColorConverter2"/>
+            <conv:RowColorConverter2 x:Key="RowColorConverter2"/>
         </ResourceDictionary>
     </mah:MetroWindow.Resources>
 
