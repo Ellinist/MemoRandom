@@ -15,6 +15,7 @@ using System.Text;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Windows.Threading;
+using MemoRandom.Client.Common.Implementations;
 
 namespace MemoRandom.Client.ViewModels
 {
@@ -166,10 +167,10 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         public List<Reason> PlainReasonsList
         {
-            get => Reasons.PlainReasonsList;
+            get => CommonDataController.PlainReasonsList;
             set
             {
-                Reasons.PlainReasonsList = value;
+                CommonDataController.PlainReasonsList = value;
                 RaisePropertyChanged(nameof(PlainReasonsList));
             }
         }

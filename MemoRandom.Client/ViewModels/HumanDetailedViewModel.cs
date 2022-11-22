@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using MemoRandom.Client.Common.Implementations;
 using MemoRandom.Data.Interfaces;
 using MemoRandom.Models.Models;
 using NLog;
@@ -541,8 +542,8 @@ namespace MemoRandom.Client.ViewModels
                 DeathPlace    = "Введите место смерти";
                 HumanComments = "Введите краткое описание";
             }
-            ReasonsList      = Reasons.ReasonsCollection;
-            PlainReasonsList = Reasons.PlainReasonsList;
+            ReasonsList      = CommonDataController.ReasonsCollection;
+            PlainReasonsList = CommonDataController.PlainReasonsList;
 
             var t = PlainReasonsList.Find(x => x.ReasonId == DeathReasonId);
             if (t != null)
