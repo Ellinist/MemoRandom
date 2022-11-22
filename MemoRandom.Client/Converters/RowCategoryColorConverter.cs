@@ -11,7 +11,7 @@ using System.Windows.Media;
 
 namespace MemoRandom.Client.Converters
 {
-    public class RowColorConverter2 : IValueConverter
+    public class RowCategoryColorConverter : IValueConverter
     {
         /// <summary>
         /// Прмяая конвертация

@@ -11,10 +11,10 @@ namespace MemoRandom.Client.Converters
     /// <summary>
     /// Конвертер для отображения строк соответствующим цветом
     /// </summary>
-    public class RowColorConverter : IValueConverter
+    public class RowHumansColorConverter : IValueConverter
     {
         /// <summary>
-        /// Прмяая конвертация
+        /// Прямая конвертация
         /// </summary>
         /// <param name="value"></param>
         /// <param name="targetType"></param>

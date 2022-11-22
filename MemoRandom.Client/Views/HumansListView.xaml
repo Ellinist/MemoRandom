@@ -24,7 +24,7 @@
         <FontFamily x:Key="TestFont2">pack://application:,,,/Resources/Fonts/GothicCyr.ttf#True Gothic Cyr</FontFamily>
         <FontFamily x:Key="MistralFont">pack://application:,,,/Resources/Fonts/mistral.ttf#Mistral</FontFamily>
 
-        <conv:RowColorConverter x:Key="RowColorConverter"/>
+        <conv:RowHumansColorConverter x:Key="RowColorConverter"/>
     </mah:MetroWindow.Resources>
 
     <Grid>
