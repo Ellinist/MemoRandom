@@ -11,6 +11,7 @@ using System.Windows;
 using System.Windows.Threading;
 using MemoRandom.Data.Interfaces;
 using System.Collections.Generic;
+using MemoRandom.Client.Common.Interfaces;
 
 namespace MemoRandom.Client.ViewModels
 {
@@ -21,6 +22,7 @@ namespace MemoRandom.Client.ViewModels
         private readonly ILogger _logger; // Экземпляр журнала
         private readonly IEventAggregator _eventAggregator;
         private readonly IMsSqlController _dbController;
+        private readonly ICommonDataController _commonDataController;
         private bool     _cancelButtonEnabled     = false; // Для кнопки отмены
         private bool     _deleteButtonEnabled     = false; // Для кнопки удаления
         private bool     _changeSaveButtonEnabled = false; // Для кнопки изменения/сохранения
@@ -34,6 +36,8 @@ namespace MemoRandom.Client.ViewModels
         private string _saveButtonText            = CHANGE_BUTTON;
         private string _addButtonText             = ADD_BUTTON;
 
+        private ObservableCollection<Reason> _reasonsCollection;
+        private List<Reason> _reasonsList;
         private string _reasonName;
         private string _reasonComment;
         private string _reasonDescription;
@@ -205,11 +209,15 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         public ObservableCollection<Reason> ReasonsList
         {
-            get => Reasons.ReasonsCollection;
+            //get => Reasons.ReasonsCollection;
+            get => _reasonsCollection;
             set
             {
-                if (Reasons.ReasonsCollection == value) return;
-                Reasons.ReasonsCollection = value;
+                //if (Reasons.ReasonsCollection == value) return;
+                //Reasons.ReasonsCollection = value;
+                if (_reasonsCollection == value) return;
+                _reasonsCollection = value;
+                RaisePropertyChanged();
             }
         }
 
@@ -218,10 +226,12 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private List<Reason> PlainReasonsList
         {
-            get => Reasons.PlainReasonsList;
+            //get => Reasons.PlainReasonsList;
+            get => _reasonsList;
             set
             {
-                Reasons.PlainReasonsList = value;
+                //Reasons.PlainReasonsList = value;
+                _reasonsList = value;
                 RaisePropertyChanged(nameof(PlainReasonsList));
             }
         }
@@ -310,6 +320,8 @@ namespace MemoRandom.Client.ViewModels
                     PlainReasonsList.Add(rsn);
                 }
 
+                RaisePropertyChanged(nameof(ReasonsList));
+
                 await Task.Run(() =>
                 {
                     var result = _dbController.AddReasonToList(rsn); // Записываем изменение во внешнее хранилище
@@ -332,6 +344,8 @@ namespace MemoRandom.Client.ViewModels
                     });
                 });
 
+                //PlainReasonsList = _commonDataController.GetReasonsList();
+                //ReasonsList = _commonDataController.GetReasonsCollection();
                 RaisePropertyChanged(nameof(ReasonsList));
             }
         }
@@ -510,7 +524,17 @@ namespace MemoRandom.Client.ViewModels
             ChangeCommand     = new DelegateCommand(OnChangeCommand);
         }
 
-
+        /// <summary>
+        /// Загрузка окна справочника причин смерти
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void ReasonsView_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        {
+            PlainReasonsList = _commonDataController.GetReasonsList();
+            ReasonsList = _commonDataController.GetReasonsCollection();
+            //RaisePropertyChanged();
+        }
 
 
 
@@ -528,11 +552,13 @@ namespace MemoRandom.Client.ViewModels
         /// <param name="dbController"></param>
         /// <param name="reasonsHelper"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public ReasonsViewModel(ILogger logger, IEventAggregator eventAggregator, IMsSqlController dbController)
+        public ReasonsViewModel(ILogger logger, IEventAggregator eventAggregator, IMsSqlController dbController,
+                                ICommonDataController commonDataController)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
             _dbController = dbController ?? throw new ArgumentNullException(nameof(dbController));
+            _commonDataController = commonDataController ?? throw new ArgumentNullException(nameof(commonDataController));
 
             InitializeCommands();
         }

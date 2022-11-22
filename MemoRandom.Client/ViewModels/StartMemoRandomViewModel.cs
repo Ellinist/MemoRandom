@@ -1,4 +1,5 @@
 ﻿using DryIoc;
+using MemoRandom.Client.Common.Interfaces;
 using MemoRandom.Client.Views;
 using MemoRandom.Data.Interfaces;
 using MemoRandom.Models.Models;
@@ -40,6 +41,7 @@ namespace MemoRandom.Client.ViewModels
         private readonly ILogger _logger; // Экземпляр журнала
         private readonly IContainer _container; // Контейнер
         private readonly IMsSqlController _msSqlController;
+        private readonly ICommonDataController _commonDataController;
         #endregion
 
         #region PROPS
@@ -206,21 +208,24 @@ namespace MemoRandom.Client.ViewModels
         {
             await Task.Run(() =>
             {
-                var reasonsResult        = _msSqlController.GetReasons();
+                //var reasonsResult        = _msSqlController.GetReasons();
                 var categoriesResult     = _msSqlController.GetCategories();
                 //var comparedHumansResult = _msSqlController.GetComparedHumans();
-                if (reasonsResult != null && categoriesResult != null/* && comparedHumansResult != null*/)
+                if (/*reasonsResult != null &&*/ categoriesResult != null/* && comparedHumansResult != null*/)
                 {
-                    Reasons.PlainReasonsList = reasonsResult; // Заносим плоский список в статический класс
-                    FormObservableCollection(Reasons.PlainReasonsList, null); // Формируем иерархическую коллекцию
+                    //Reasons.PlainReasonsList = reasonsResult; // Заносим плоский список в статический класс
+                    //FormObservableCollection(Reasons.PlainReasonsList, null); // Формируем иерархическую коллекцию
                     Categories.AgeCategories = categoriesResult; // Задаем статический список категорий
+
+                    _commonDataController.ReadDataFromRepository();
+
                     //ComparedHumans.ComparedHumansList = comparedHumansResult; // Задаем список людей для сравнения
                     ButtonsVisibility.Invoke();   // Чтение данных выполнено - кнопки делаем видимыми
                 }
-                else if(reasonsResult == null)
-                {
-                    MessageBox.Show("Чтение справочника причин смерти не удалось!", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
+                //else if(reasonsResult == null)
+                //{
+                //    MessageBox.Show("Чтение справочника причин смерти не удалось!", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+                //}
                 else
                 {
                     MessageBox.Show("Чтение возрастных категорий не удалось!", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -302,11 +307,13 @@ namespace MemoRandom.Client.ViewModels
         /// <param name="container"></param>
         /// <param name="msSqlController"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public StartMemoRandomViewModel(ILogger logger, IContainer container, IMsSqlController msSqlController)
+        public StartMemoRandomViewModel(ILogger logger, IContainer container, IMsSqlController msSqlController,
+                                        ICommonDataController commonDataController)
         {
             _logger          = logger ?? throw new ArgumentNullException(nameof(logger));
             _container       = container ?? throw new ArgumentNullException(nameof(container));
             _msSqlController = msSqlController ?? throw new ArgumentNullException(nameof(msSqlController));
+            _commonDataController = commonDataController ?? throw new ArgumentNullException(nameof(commonDataController));
         }
         #endregion
     }

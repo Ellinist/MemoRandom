@@ -8,6 +8,8 @@ using MemoRandom.Data.Interfaces;
 using MemoRandom.Data.Implementations;
 using AutoMapper;
 using MemoRandom.Client.Common.Mappers;
+using MemoRandom.Client.Common.Interfaces;
+using MemoRandom.Client.Common.Implementations;
 
 namespace MemoRandom.Client
 {
@@ -43,6 +45,7 @@ namespace MemoRandom.Client
                 cfg.AddProfile(new MemoRandomMappingProfile());
             }).CreateMapper());
 
+            containerRegistry.RegisterSingleton<ICommonDataController, CommonDataController>();
 
             #region Контроллеры работы с внешними хранилищами информации
             // Регистрация интерфейса работы с базой данных MS SQL SERVER

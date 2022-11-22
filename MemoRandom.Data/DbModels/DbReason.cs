@@ -10,28 +10,28 @@ namespace MemoRandom.Data.DbModels
         /// </summary>
         [Key]
         [Required]
-        public Guid DbReasonId { get; set; }
+        public Guid ReasonId { get; set; }
         
         /// <summary>
         /// Название причины смерти - лучше сокращенно
         /// </summary>
-        public string DbReasonName { get; set; }
+        public string ReasonName { get; set; }
         
         /// <summary>
         /// Краткое описание причины смерти (комментарий)
         /// </summary>
-        public string DbReasonComment { get; set; }
+        public string ReasonComment { get; set; }
         
         /// <summary>
         /// Подробное описание причины смерти
         /// </summary>
-        public string DbReasonDescription { get; set; }
+        public string ReasonDescription { get; set; }
 
         /// <summary>
         /// Идентификтор родительской причины (узла)
         /// </summary>
         [Required]
-        public Guid DbReasonParentId { get; set; }
+        public Guid ReasonParentId { get; set; }
 
 
 

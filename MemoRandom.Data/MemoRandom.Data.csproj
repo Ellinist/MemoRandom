@@ -18,11 +18,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MemoRandom.Models\MemoRandom.Models.csproj" />
+    <Folder Include="DtoModels\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DtoModels\" />
+    <ProjectReference Include="..\MemoRandom.Models\MemoRandom.Models.csproj" />
   </ItemGroup>
 
 </Project>

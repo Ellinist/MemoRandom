@@ -7,7 +7,6 @@ using NLog;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Windows.Media.Imaging;
@@ -87,19 +86,39 @@ namespace MemoRandom.Data.Implementations
         #endregion
 
         #region Блок справочника причин смерти
-        /// <summary>
-        /// Получение справочника причин смерти
-        /// </summary>
-        /// <returns></returns>
-        public List<Reason> GetReasons()
+        ///// <summary>
+        ///// Получение справочника причин смерти
+        ///// </summary>
+        ///// <returns></returns>
+        //public List<Reason> GetReasons()
+        //{
+        //    List<Reason> reasons = new();
+        //    using (MemoContext = new MemoRandomDbContext(DbConnectionString))
+        //    {
+        //        try
+        //        {
+        //            PlainReasonsList = MemoContext.DbReasons.ToList(); // Читаем контекст базы данных
+        //            reasons = FormPlainReasonsList(PlainReasonsList);
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            reasons = null; // В случае неуспеха чтения обнуляем иерархическую коллекцию
+        //            _logger.Error($"Ошибка чтения файла настроек: {ex.HResult}");
+        //        }
+        //    }
+
+        //    return reasons;
+        //}
+
+        public List<DbReason> GetReasons()
         {
-            List<Reason> reasons = new();
+            List<DbReason> reasons = new();
             using (MemoContext = new MemoRandomDbContext(DbConnectionString))
             {
                 try
                 {
-                    PlainReasonsList = MemoContext.DbReasons.ToList(); // Читаем контекст базы данных
-                    reasons = FormPlainReasonsList(PlainReasonsList);
+                    reasons = MemoContext.DbReasons.ToList(); // Читаем контекст базы данных
+                    //reasons = FormPlainReasonsList(PlainReasonsList);
                 }
                 catch (Exception ex)
                 {
@@ -126,11 +145,11 @@ namespace MemoRandom.Data.Implementations
                 {
                     DbReason record = new DbReason()
                     {
-                        DbReasonId          = reason.ReasonId,
-                        DbReasonName        = reason.ReasonName,
-                        DbReasonComment     = reason.ReasonComment,
-                        DbReasonDescription = reason.ReasonDescription,
-                        DbReasonParentId    = reason.ReasonParentId
+                        ReasonId          = reason.ReasonId,
+                        ReasonName        = reason.ReasonName,
+                        ReasonComment     = reason.ReasonComment,
+                        ReasonDescription = reason.ReasonDescription,
+                        ReasonParentId    = reason.ReasonParentId
                     };
                     MemoContext.DbReasons.Add(record);
                     MemoContext.SaveChanges();
@@ -158,13 +177,13 @@ namespace MemoRandom.Data.Implementations
             {
                 try
                 {
-                    var updatedReason = MemoContext.DbReasons.FirstOrDefault(x => x.DbReasonId == reason.ReasonId);
+                    var updatedReason = MemoContext.DbReasons.FirstOrDefault(x => x.ReasonId == reason.ReasonId);
                     if (updatedReason != null)
                     {
-                        updatedReason.DbReasonName        = reason.ReasonName;
-                        updatedReason.DbReasonComment     = reason.ReasonComment;
-                        updatedReason.DbReasonDescription = reason.ReasonDescription;
-                        updatedReason.DbReasonParentId    = reason.ReasonParentId;
+                        updatedReason.ReasonName        = reason.ReasonName;
+                        updatedReason.ReasonComment     = reason.ReasonComment;
+                        updatedReason.ReasonDescription = reason.ReasonDescription;
+                        updatedReason.ReasonParentId    = reason.ReasonParentId;
 
                         MemoContext.SaveChanges();
                     }
@@ -709,11 +728,11 @@ namespace MemoRandom.Data.Implementations
             {
                 Reason rsn = new()
                 {
-                    ReasonId = reason.DbReasonId,
-                    ReasonName = reason.DbReasonName,
-                    ReasonComment = reason.DbReasonComment,
-                    ReasonDescription = reason.DbReasonDescription,
-                    ReasonParentId = reason.DbReasonParentId
+                    ReasonId = reason.ReasonId,
+                    ReasonName = reason.ReasonName,
+                    ReasonComment = reason.ReasonComment,
+                    ReasonDescription = reason.ReasonDescription,
+                    ReasonParentId = reason.ReasonParentId
                 };
                 plainReasonsList.Add(rsn);
             }
@@ -726,7 +745,7 @@ namespace MemoRandom.Data.Implementations
         /// </summary>
         private static void DeletingDaughters(Reason reason, MemoRandomDbContext context)
         {
-            var deletedReason = context.DbReasons.FirstOrDefault(x => x.DbReasonId == reason.ReasonId);
+            var deletedReason = context.DbReasons.FirstOrDefault(x => x.ReasonId == reason.ReasonId);
             if (deletedReason == null) return;
             
             context.Remove(deletedReason);
