@@ -16,7 +16,7 @@ namespace MemoRandom.Client.Common.Interfaces
         /// <returns></returns>
         bool ReadDataFromRepository();
 
-        void UpdateData();
+        void UpdateHierarchicalReasonsData();
 
         ///// <summary>
         ///// Получение иерархической коллекции причин смерти

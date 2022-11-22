@@ -29,6 +29,11 @@ namespace MemoRandom.Client.Common.Implementations
         /// Плоский список причин смерти для отображения
         /// </summary>
         public static List<Reason> PlainReasonsList { get; set; } = new();
+
+        /// <summary>
+        /// Коллекция категорий (статическая)
+        /// </summary>
+        public static ObservableCollection<Category> AgeCategories { get; set; }
         #endregion
 
         #region IMPLEMENTATION
@@ -41,56 +46,21 @@ namespace MemoRandom.Client.Common.Implementations
             bool successResult = true;
 
             PlainReasonsList = ConvertFromDbSet(_msSqlController.GetReasons());
-
             FormObservableCollection(PlainReasonsList, null);
+
+            AgeCategories = _msSqlController.GetCategories();
 
             return successResult;
         }
 
-        public void UpdateData()
+        /// <summary>
+        /// Обновление иерархической коллекции причин смерти
+        /// </summary>
+        public void UpdateHierarchicalReasonsData()
         {
             ReasonsCollection.Clear();
             FormObservableCollection(PlainReasonsList, null);
         }
-
-        ///// <summary>
-        ///// Получение иерархической коллекции причин смерти
-        ///// </summary>
-        ///// <returns></returns>
-        //public ObservableCollection<Reason> GetReasonsCollection()
-        //{
-        //    ObservableCollection<Reason> resultCollection = new();
-        //    foreach (var reason in ReasonsCollection)
-        //    {
-        //        Reason rsn = new()
-        //        {
-        //            ReasonId = reason.ReasonId,
-        //            ReasonName = reason.ReasonName,
-        //            ReasonComment = reason.ReasonComment,
-        //            ReasonDescription = reason.ReasonDescription,
-        //            ReasonParentId = reason.ReasonParentId,
-        //            ReasonParent = reason.ReasonParent,
-        //            ReasonChildren = reason.ReasonChildren
-        //        };
-        //        resultCollection.Add(rsn);
-        //    }
-        //    return resultCollection;
-        //}
-
-        ///// <summary>
-        ///// Получение плоского списка причин смерти
-        ///// </summary>
-        ///// <returns></returns>
-        //public List<Reason> GetReasonsList()
-        //{
-        //    return PlainReasonsList;
-        //}
-
-        //public void AddReasonToPlainList(Reason reason)
-        //{
-        //    PlainReasonsList.Add(reason);
-        //    FormObservableCollection(PlainReasonsList, null);
-        //}
         #endregion
 
         private List<Reason> ConvertFromDbSet(List<DbReason> dbList)
@@ -164,7 +134,19 @@ namespace MemoRandom.Client.Common.Implementations
             }
         }
 
-
+        /// <summary>
+        /// Сортировка по возрастанию стартового возраста
+        /// </summary>
+        public static void RearrangeCollection()
+        {
+            List<Category> rearrangeCollection = new();
+            rearrangeCollection = AgeCategories.OrderBy(x => x.StartAge).ToList();
+            AgeCategories.Clear();
+            foreach (var item in rearrangeCollection)
+            {
+                AgeCategories.Add(item);
+            }
+        }
 
 
 

@@ -1,4 +1,5 @@
-﻿using MemoRandom.Models.Models;
+﻿using MemoRandom.Client.Common.Implementations;
+using MemoRandom.Models.Models;
 using System;
 using System.Globalization;
 using System.Linq;
@@ -26,8 +27,8 @@ namespace MemoRandom.Client.Converters
 
             if(currentHuman != null)
             {
-                var o = Categories.AgeCategories.FirstOrDefault(x => x.StartAge <= currentHuman.FullYearsLived &&
-                                                                     x.StopAge + 1 > currentHuman.FullYearsLived);
+                var o = CommonDataController.AgeCategories.FirstOrDefault(x => x.StartAge <= currentHuman.FullYearsLived &&
+                                                                          x.StopAge + 1 > currentHuman.FullYearsLived);
 
                 if (o == null) return Colors.White.ToString(); // Если цвет не задан, то белый
                 return o.CategoryColor.ToString();

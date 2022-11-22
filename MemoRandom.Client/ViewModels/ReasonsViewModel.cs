@@ -318,7 +318,7 @@ namespace MemoRandom.Client.ViewModels
                     PlainReasonsList.Add(rsn);
                 }
 
-                _commonDataController.UpdateData();
+                _commonDataController.UpdateHierarchicalReasonsData();
                 
                 await Task.Run(() =>
                 {

@@ -1,4 +1,5 @@
-﻿using MemoRandom.Data.Interfaces;
+﻿using MemoRandom.Client.Common.Implementations;
+using MemoRandom.Data.Interfaces;
 using MemoRandom.Models.Models;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -256,8 +257,8 @@ namespace MemoRandom.Client.ViewModels
                 });
 
                 CategoriesCollection?.Clear();
-                Categories.RearrangeCollection();
-                CategoriesCollection = Categories.GetCategories();
+                CommonDataController.RearrangeCollection();
+                //CategoriesCollection = Categories.GetCategories();
                 RaisePropertyChanged(nameof(CategoriesCollection));
                 SelectedIndex = CategoriesCollection.IndexOf(SelectedCategory);
             }
@@ -283,9 +284,9 @@ namespace MemoRandom.Client.ViewModels
                 });
 
                 CategoriesCollection?.Clear();
-                Categories.AgeCategories.Add(cat);
-                Categories.RearrangeCollection();
-                CategoriesCollection = Categories.GetCategories();
+                CommonDataController.AgeCategories.Add(cat);
+                CommonDataController.RearrangeCollection();
+                //CategoriesCollection = Categories.GetCategories();
                 RaisePropertyChanged(nameof(CategoriesCollection));
                 SelectedIndex = CategoriesCollection.IndexOf(cat);
             }
@@ -328,9 +329,9 @@ namespace MemoRandom.Client.ViewModels
                 return;
             }
 
-            Categories.AgeCategories.Remove(SelectedCategory);
-            CategoriesCollection.Clear();
-            CategoriesCollection = Categories.GetCategories();
+            CommonDataController.AgeCategories.Remove(SelectedCategory);
+            //CategoriesCollection.Clear();
+            //CategoriesCollection = Categories.GetCategories();
             RaisePropertyChanged(nameof(CategoriesCollection));
             SelectedIndex = 0;
         }
@@ -342,7 +343,7 @@ namespace MemoRandom.Client.ViewModels
         /// <param name="e"></param>
         public void CategoriesView_Loaded(object sender, RoutedEventArgs e)
         {
-            CategoriesCollection = Categories.GetCategories();
+            CategoriesCollection = CommonDataController.AgeCategories;
 
             SelectedIndex = 0;
 
