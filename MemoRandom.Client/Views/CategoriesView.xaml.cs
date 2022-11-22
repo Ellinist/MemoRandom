@@ -8,6 +8,17 @@ namespace MemoRandom.Client.Views
     /// </summary>
     public partial class CategoriesView : MetroWindow
     {
+        private void DgCategories_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            DgCategories.Focus();
+        }
+
+
+
+
+
+
+        #region CTOR
         public CategoriesView(CategoriesViewModel vm)
         {
             InitializeComponent();
@@ -16,10 +27,6 @@ namespace MemoRandom.Client.Views
             this.Loaded += vm.CategoriesView_Loaded;
             DgCategories.SelectionChanged += DgCategories_SelectionChanged;
         }
-
-        private void DgCategories_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        {
-            DgCategories.Focus();
-        }
+        #endregion
     }
 }

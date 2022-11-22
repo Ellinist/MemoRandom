@@ -21,4 +21,8 @@
     <ProjectReference Include="..\MemoRandom.Models\MemoRandom.Models.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="DtoModels\" />
+  </ItemGroup>
+
 </Project>
