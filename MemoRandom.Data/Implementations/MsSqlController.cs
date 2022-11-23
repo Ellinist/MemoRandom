@@ -621,9 +621,9 @@ namespace MemoRandom.Data.Implementations
                     {
                         ComparedHuman ch = new()
                         {
-                            ComparedHumanId = human.DbComparedHumanId,
-                            ComparedHumanFullName = human.DbComparedHumanFullName,
-                            ComparedHumanBirthDate = human.DbComparedHumanBirthDate
+                            ComparedHumanId = human.ComparedHumanId,
+                            ComparedHumanFullName = human.ComparedHumanFullName,
+                            ComparedHumanBirthDate = human.ComparedHumanBirthDate
                         };
                         comparedHumans.Add(ch);
                     }
@@ -651,12 +651,12 @@ namespace MemoRandom.Data.Implementations
             {
                 try
                 {
-                    var updatedComparedHuman = MemoContext.DbComparedHumans.FirstOrDefault(x => x.DbComparedHumanId == comparedHuman.ComparedHumanId);
+                    var updatedComparedHuman = MemoContext.DbComparedHumans.FirstOrDefault(x => x.ComparedHumanId == comparedHuman.ComparedHumanId);
                     
                     if(updatedComparedHuman != null) // Корректировка информации
                     {
-                        updatedComparedHuman.DbComparedHumanFullName = comparedHuman.ComparedHumanFullName;
-                        updatedComparedHuman.DbComparedHumanBirthDate = comparedHuman.ComparedHumanBirthDate;
+                        updatedComparedHuman.ComparedHumanFullName = comparedHuman.ComparedHumanFullName;
+                        updatedComparedHuman.ComparedHumanBirthDate = comparedHuman.ComparedHumanBirthDate;
 
                         MemoContext.SaveChanges();
                     }
@@ -664,9 +664,9 @@ namespace MemoRandom.Data.Implementations
                     {
                         DbComparedHuman record = new()
                         {
-                            DbComparedHumanId        = comparedHuman.ComparedHumanId,
-                            DbComparedHumanFullName  = comparedHuman.ComparedHumanFullName,
-                            DbComparedHumanBirthDate = comparedHuman.ComparedHumanBirthDate
+                            ComparedHumanId        = comparedHuman.ComparedHumanId,
+                            ComparedHumanFullName  = comparedHuman.ComparedHumanFullName,
+                            ComparedHumanBirthDate = comparedHuman.ComparedHumanBirthDate
                         };
 
                         MemoContext.DbComparedHumans.Add(record);
@@ -696,7 +696,7 @@ namespace MemoRandom.Data.Implementations
             {
                 try
                 {
-                    var deletedHuman = MemoContext.DbComparedHumans.FirstOrDefault(x => x.DbComparedHumanId == comparedHuman.ComparedHumanId);
+                    var deletedHuman = MemoContext.DbComparedHumans.FirstOrDefault(x => x.ComparedHumanId == comparedHuman.ComparedHumanId);
                     if (deletedHuman != null)
                     {
                         MemoContext.Remove(deletedHuman);

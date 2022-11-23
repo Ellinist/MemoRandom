@@ -14,18 +14,18 @@ namespace MemoRandom.Data.DbModels
         /// </summary>
         [Key]
         [Required]
-        public Guid DbComparedHumanId { get; set; }
+        public Guid ComparedHumanId { get; set; }
         
         /// <summary>
         /// Полное название человека для сравнения
         /// </summary>
         [Required]
-        public string DbComparedHumanFullName { get; set; }
+        public string ComparedHumanFullName { get; set; }
 
         /// <summary>
         /// Дата рождения
         /// </summary>
         [Required]
-        public DateTime DbComparedHumanBirthDate { get; set; }
+        public DateTime ComparedHumanBirthDate { get; set; }
     }
 }
