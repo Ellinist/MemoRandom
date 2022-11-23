@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using AutoMapper;
 using MemoRandom.Data.DbModels;
 using MemoRandom.Models.Models;
+using MemoRandom.Client.Common.Models;
+using System.Windows.Media;
 
 namespace MemoRandom.Client.Common.Implementations
 {
@@ -66,11 +68,11 @@ namespace MemoRandom.Client.Common.Implementations
             #endregion
 
             #region Чтение списка категорий
-            AgeCategories = _msSqlController.GetCategories();
+            AgeCategories = ConvertCategoriesFromDbSet(_msSqlController.GetCategories());
             #endregion
 
             #region Чтение списка людей для сравнения
-            ComparedHumansCollection = _msSqlController.GetComparedHumans();
+            ComparedHumansCollection = ConvertComparedHumansFromDbSet(_msSqlController.GetComparedHumans());
             #endregion
 
             #region Чтение списка людей
@@ -108,6 +110,42 @@ namespace MemoRandom.Client.Common.Implementations
             }
 
             return reasons;
+        }
+
+        private ObservableCollection<Category> ConvertCategoriesFromDbSet(List<DbCategory> categoriesList)
+        {
+            ObservableCollection<Category> categories = new();
+            foreach (var cat in categoriesList)
+            {
+                Category category = new()
+                {
+                    CategoryId = cat.CategoryId,
+                    CategoryName = cat.CategoryName,
+                    StartAge = cat.PeriodFrom,
+                    StopAge = cat.PeriodTo,
+                    CategoryColor = Color.FromArgb(cat.ColorA, cat.ColorR, cat.ColorG, cat.ColorB)
+                };
+                categories.Add(category);
+            }
+
+            return categories;
+        }
+
+        private ObservableCollection<ComparedHuman> ConvertComparedHumansFromDbSet(List<DbComparedHuman> humans)
+        {
+            ObservableCollection<ComparedHuman> comparedHumans = new();
+            foreach (var item in humans)
+            {
+                ComparedHuman human = new()
+                {
+                    ComparedHumanId = item.ComparedHumanId,
+                    ComparedHumanFullName = item.ComparedHumanFullName,
+                    ComparedHumanBirthDate = item.ComparedHumanBirthDate
+                };
+                comparedHumans.Add(human);
+            }
+
+            return comparedHumans;
         }
 
         /// <summary>

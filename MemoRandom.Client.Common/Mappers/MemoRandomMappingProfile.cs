@@ -8,7 +8,7 @@ namespace MemoRandom.Client.Common.Mappers
     {
         public MemoRandomMappingProfile()
         {
-            CreateMap<DbReason, Reason>().ReverseMap();
+            //CreateMap<DbReason, Reason>().ReverseMap();
                 //.ForMember(x => x.ReasonId, x => x.MapFrom(cfg => cfg.DbReasonId))
                 //.ForMember(x => x.ReasonName, x => x.MapFrom(cfg => cfg.DbReasonName))
                 //.ForMember(x => x.ReasonComment, x => x.MapFrom(cfg => cfg.DbReasonComment))

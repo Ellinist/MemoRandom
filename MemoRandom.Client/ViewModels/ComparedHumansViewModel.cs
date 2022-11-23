@@ -1,4 +1,6 @@
 ﻿using MemoRandom.Client.Common.Implementations;
+using MemoRandom.Client.Common.Models;
+using MemoRandom.Data.DbModels;
 using MemoRandom.Data.Interfaces;
 using MemoRandom.Models.Models;
 using Prism.Commands;
@@ -169,7 +171,14 @@ namespace MemoRandom.Client.ViewModels
 
                 await Task.Run(() =>
                 {
-                    var result = _msSqlController.UpdateComparedHuman(SelectedHuman);
+                    DbComparedHuman savingHuman = new()
+                    {
+                        ComparedHumanId = SelectedHuman.ComparedHumanId,
+                        ComparedHumanFullName = SelectedHuman.ComparedHumanFullName,
+                        ComparedHumanBirthDate = SelectedHuman.ComparedHumanBirthDate
+                    };
+
+                    var result = _msSqlController.UpdateComparedHuman(savingHuman);
                     if (!result)
                     {
                         MessageBox.Show("Не удалось обновить человека для сравнения", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -188,7 +197,14 @@ namespace MemoRandom.Client.ViewModels
 
                 await Task.Run(() =>
                 {
-                    var result = _msSqlController.UpdateComparedHuman(compHuman);
+                    DbComparedHuman dbCompHuman = new()
+                    {
+                        ComparedHumanId = compHuman.ComparedHumanId,
+                        ComparedHumanFullName = compHuman.ComparedHumanFullName,
+                        ComparedHumanBirthDate = compHuman.ComparedHumanBirthDate
+                    };
+
+                    var result = _msSqlController.UpdateComparedHuman(dbCompHuman);
                     if (!result)
                     {
                         MessageBox.Show("Не удалось добавить человека для сравнения!", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -211,7 +227,7 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private void DeleteComparedHuman()
         {
-            var result = _msSqlController.DeleteComparedHuman(SelectedHuman);
+            var result = _msSqlController.DeleteComparedHuman(SelectedHuman.ComparedHumanId);
             if (!result)
             {
                 MessageBox.Show("Не удалось удалить человека для сравнения!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);

@@ -13,6 +13,9 @@ using MemoRandom.Data.Interfaces;
 using System.Collections.Generic;
 using MemoRandom.Client.Common.Interfaces;
 using MemoRandom.Client.Common.Implementations;
+using MemoRandom.Data.Controllers;
+using MemoRandom.Data.DbModels;
+using MemoRandom.Client.Common.Models;
 
 namespace MemoRandom.Client.ViewModels
 {
@@ -322,13 +325,22 @@ namespace MemoRandom.Client.ViewModels
                 
                 await Task.Run(() =>
                 {
-                    var result = _dbController.AddReasonToList(rsn); // Записываем изменение во внешнее хранилище
+                    DbReason addedReason = new()
+                    {
+                        ReasonId = rsn.ReasonId,
+                        ReasonName = rsn.ReasonName,
+                        ReasonComment = rsn.ReasonComment,
+                        ReasonDescription = rsn.ReasonDescription,
+                        ReasonParentId = rsn.ReasonParentId
+                    };
+
+                    _dbController.AddReasonToList(addedReason); // Записываем изменение во внешнее хранилище
                     Dispatcher.CurrentDispatcher.Invoke(() =>
                     {
-                        if (!result)
-                        {
-                            MessageBox.Show("Не удалось сохранить причину", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
-                        }
+                        //if (!result)
+                        //{
+                        //    MessageBox.Show("Не удалось сохранить причину", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+                        //}
 
                         FieldsEnabled           = false; // Делаем поля недоступными - пока не выберем узел и не выберем команду
                         CancelButtonEnabled     = false; // После добавления новой записи кнопка отмены недоступна
@@ -377,7 +389,16 @@ namespace MemoRandom.Client.ViewModels
 
                 await Task.Run(() =>
                 {
-                    var result = _dbController.UpdateReasonInList(SelectedReason);
+                    DbReason changedReason = new()
+                    {
+                        ReasonId = SelectedReason.ReasonId,
+                        ReasonName = SelectedReason.ReasonName,
+                        ReasonComment = SelectedReason.ReasonComment,
+                        ReasonDescription = SelectedReason.ReasonDescription,
+                        ReasonParentId = SelectedReason.ReasonParentId
+                    };
+
+                    var result = _dbController.UpdateReasonInList(changedReason);
                     Dispatcher.CurrentDispatcher.Invoke(() =>
                     {
                         if (!result)
@@ -447,7 +468,9 @@ namespace MemoRandom.Client.ViewModels
 
             await Task.Run(() =>
             {
-                var result = _dbController.DeleteReasonInList(selectedNode);
+                var res = DeletingDaughters(selectedNode);
+
+                var result = _dbController.DeleteReasonInList(res);
                 if (!result)
                 {
                     MessageBox.Show("Не удалось удалить причину!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -512,6 +535,22 @@ namespace MemoRandom.Client.ViewModels
             ReasonDescription = string.Empty;
         }
         #endregion
+
+        /// <summary>
+        /// Рекурсивный метод удаления дочерних узлов для удаляемой причины смерти
+        /// </summary>
+        private static List<Guid> DeletingDaughters(Reason reason)
+        {
+            List<Guid> result = new List<Guid>();
+            result.Add(reason.ReasonId);
+
+            foreach (var child in reason.ReasonChildren) // Если есть дочерние узлы, то выполняем удаление и по ним
+            {
+                DeletingDaughters(child);
+            }
+
+            return result;
+        }
 
         /// <summary>
         /// Инициализация команд

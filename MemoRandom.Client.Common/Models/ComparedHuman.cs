@@ -2,7 +2,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace MemoRandom.Models.Models
+namespace MemoRandom.Client.Common.Models
 {
     /// <summary>
     /// Класс людей для сравнения

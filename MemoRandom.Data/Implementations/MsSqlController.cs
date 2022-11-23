@@ -86,30 +86,6 @@ namespace MemoRandom.Data.Implementations
         #endregion
 
         #region Блок справочника причин смерти
-        ///// <summary>
-        ///// Получение справочника причин смерти
-        ///// </summary>
-        ///// <returns></returns>
-        //public List<Reason> GetReasons()
-        //{
-        //    List<Reason> reasons = new();
-        //    using (MemoContext = new MemoRandomDbContext(DbConnectionString))
-        //    {
-        //        try
-        //        {
-        //            PlainReasonsList = MemoContext.DbReasons.ToList(); // Читаем контекст базы данных
-        //            reasons = FormPlainReasonsList(PlainReasonsList);
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            reasons = null; // В случае неуспеха чтения обнуляем иерархическую коллекцию
-        //            _logger.Error($"Ошибка чтения файла настроек: {ex.HResult}");
-        //        }
-        //    }
-
-        //    return reasons;
-        //}
-
         public List<DbReason> GetReasons()
         {
             List<DbReason> reasons = new();
@@ -118,7 +94,6 @@ namespace MemoRandom.Data.Implementations
                 try
                 {
                     reasons = MemoContext.DbReasons.ToList(); // Читаем контекст базы данных
-                    //reasons = FormPlainReasonsList(PlainReasonsList);
                 }
                 catch (Exception ex)
                 {
@@ -135,7 +110,7 @@ namespace MemoRandom.Data.Implementations
         /// </summary>
         /// <param name="reason"></param>
         /// <returns></returns>
-        public bool AddReasonToList(Reason reason)
+        public bool AddReasonToList(DbReason reason)
         {
             bool successResult = true;
 
@@ -143,15 +118,15 @@ namespace MemoRandom.Data.Implementations
             {
                 try
                 {
-                    DbReason record = new DbReason()
-                    {
-                        ReasonId          = reason.ReasonId,
-                        ReasonName        = reason.ReasonName,
-                        ReasonComment     = reason.ReasonComment,
-                        ReasonDescription = reason.ReasonDescription,
-                        ReasonParentId    = reason.ReasonParentId
-                    };
-                    MemoContext.DbReasons.Add(record);
+                    //DbReason record = new DbReason()
+                    //{
+                    //    ReasonId          = reason.ReasonId,
+                    //    ReasonName        = reason.ReasonName,
+                    //    ReasonComment     = reason.ReasonComment,
+                    //    ReasonDescription = reason.ReasonDescription,
+                    //    ReasonParentId    = reason.ReasonParentId
+                    //};
+                    MemoContext.DbReasons.Add(reason);
                     MemoContext.SaveChanges();
                 }
                 catch (Exception ex)
@@ -169,7 +144,7 @@ namespace MemoRandom.Data.Implementations
         /// </summary>
         /// <param name="reason"></param>
         /// <returns></returns>
-        public bool UpdateReasonInList(Reason reason)
+        public bool UpdateReasonInList(DbReason reason)
         {
             bool successResult = true;
 
@@ -207,7 +182,7 @@ namespace MemoRandom.Data.Implementations
         /// </summary>
         /// <param name="reason"></param>
         /// <returns></returns>
-        public bool DeleteReasonInList(Reason reason)
+        public bool DeleteReasonInList(List<Guid> deletedList)
         {
             bool successResult = true;
 
@@ -216,14 +191,18 @@ namespace MemoRandom.Data.Implementations
                 try
                 {
                     //TODO Здесь как-то проверить, привязана ли причина к тому или иному человеку
-                    DeletingDaughters(reason, MemoContext);
-
-                    MemoContext.SaveChanges();
+                    foreach(var item in deletedList) // Бежим по списку идентификаторов
+                    {
+                        var record = MemoContext.DbReasons.FirstOrDefault(x => x.ReasonId == item);
+                        MemoContext.Remove(record); // Удаляем запись с таким ID
+                    }
+                    
+                    MemoContext.SaveChanges(); // Сохраняем изменения
                 }
                 catch (Exception ex)
                 {
                     successResult = false;
-                    _logger.Error($"Ошибка записи файла справочника: {ex.HResult}");
+                    _logger.Error($"Ошибка удаления в файле справочника: {ex.HResult}");
                 }
             }
 
@@ -236,26 +215,14 @@ namespace MemoRandom.Data.Implementations
         /// Получение списка категорий из внешнего хранилища
         /// </summary>
         /// <returns></returns>
-        public ObservableCollection<Category> GetCategories()
+        public List<DbCategory> GetCategories()
         {
-            ObservableCollection<Category> categories = new();
+            List<DbCategory> categories = new();
             using (MemoContext = new MemoRandomDbContext(DbConnectionString))
             {
                 try
                 {
-                    var categoriesList = MemoContext.DbCategories.OrderBy(x => x.PeriodFrom).ToList(); // Читаем контекст базы данных
-                    foreach (var category in categoriesList)
-                    {
-                        Category cat = new()
-                        {
-                            CategoryId = category.CategoryId,
-                            CategoryName = category.CategoryName,
-                            StartAge = category.PeriodFrom,
-                            StopAge = category.PeriodTo,
-                            CategoryColor = System.Windows.Media.Color.FromArgb(category.ColorA, category.ColorR, category.ColorG, category.ColorB)
-                        };
-                        categories.Add(cat);
-                    }
+                    categories = MemoContext.DbCategories.OrderBy(x => x.PeriodFrom).ToList(); // Читаем контекст базы данных
                 }
                 catch (Exception ex)
                 {
@@ -272,7 +239,7 @@ namespace MemoRandom.Data.Implementations
         /// </summary>
         /// <param name="category"></param>
         /// <returns></returns>
-        public bool UpdateCategories(Category category)
+        public bool UpdateCategories(DbCategory category)
         {
             var success = true;
 
@@ -286,12 +253,12 @@ namespace MemoRandom.Data.Implementations
                     {
                         updatedCategory.CategoryId   = category.CategoryId;
                         updatedCategory.CategoryName = category.CategoryName;
-                        updatedCategory.PeriodFrom   = category.StartAge;
-                        updatedCategory.PeriodTo     = category.StopAge;
-                        updatedCategory.ColorA       = category.CategoryColor.A;
-                        updatedCategory.ColorR       = category.CategoryColor.R;
-                        updatedCategory.ColorG       = category.CategoryColor.G;
-                        updatedCategory.ColorB       = category.CategoryColor.B;
+                        updatedCategory.PeriodFrom   = category.PeriodFrom;
+                        updatedCategory.PeriodTo     = category.PeriodTo;
+                        updatedCategory.ColorA       = category.ColorA;
+                        updatedCategory.ColorR       = category.ColorR;
+                        updatedCategory.ColorG       = category.ColorG;
+                        updatedCategory.ColorB       = category.ColorB;
 
                         MemoContext.SaveChanges();
                     }
@@ -301,12 +268,12 @@ namespace MemoRandom.Data.Implementations
                         {
                             CategoryId   = category.CategoryId,
                             CategoryName = category.CategoryName,
-                            PeriodFrom   = category.StartAge,
-                            PeriodTo     = category.StopAge,
-                            ColorA       = category.CategoryColor.A,
-                            ColorR       = category.CategoryColor.R,
-                            ColorG       = category.CategoryColor.G,
-                            ColorB       = category.CategoryColor.B
+                            PeriodFrom   = category.PeriodFrom,
+                            PeriodTo     = category.PeriodTo,
+                            ColorA       = category.ColorA,
+                            ColorR       = category.ColorR,
+                            ColorG       = category.ColorG,
+                            ColorB       = category.ColorB
 
                         };
 
@@ -328,7 +295,7 @@ namespace MemoRandom.Data.Implementations
         /// </summary>
         /// <param name="category"></param>
         /// <returns></returns>
-        public bool DeleteCategory(Category category)
+        public bool DeleteCategory(Guid categoryId)
         {
             var success = true;
 
@@ -336,7 +303,7 @@ namespace MemoRandom.Data.Implementations
             {
                 try
                 {
-                    var deletedCategory = MemoContext.DbCategories.FirstOrDefault(x => x.CategoryId == category.CategoryId);
+                    var deletedCategory = MemoContext.DbCategories.FirstOrDefault(x => x.CategoryId == categoryId);
 
                     if (deletedCategory != null)
                     {
@@ -609,24 +576,14 @@ namespace MemoRandom.Data.Implementations
         /// Получение списка людей для сравнения
         /// </summary>
         /// <returns></returns>
-        public ObservableCollection<ComparedHuman> GetComparedHumans()
+        public List<DbComparedHuman> GetComparedHumans()
         {
-            ObservableCollection<ComparedHuman> comparedHumans = new();
+            List<DbComparedHuman> comparedHumans = new();
             using (MemoContext = new MemoRandomDbContext(DbConnectionString))
             {
                 try
                 {
-                    var comparedHumansList = MemoContext.DbComparedHumans.ToList(); // Читаем контекст базы данных
-                    foreach (var human in comparedHumansList)
-                    {
-                        ComparedHuman ch = new()
-                        {
-                            ComparedHumanId = human.ComparedHumanId,
-                            ComparedHumanFullName = human.ComparedHumanFullName,
-                            ComparedHumanBirthDate = human.ComparedHumanBirthDate
-                        };
-                        comparedHumans.Add(ch);
-                    }
+                    comparedHumans = MemoContext.DbComparedHumans.ToList(); // Читаем контекст базы данных
                 }
                 catch (Exception ex)
                 {
@@ -643,7 +600,7 @@ namespace MemoRandom.Data.Implementations
         /// </summary>
         /// <param name="comparedHuman"></param>
         /// <returns></returns>
-        public bool UpdateComparedHuman(ComparedHuman comparedHuman)
+        public bool UpdateComparedHuman(DbComparedHuman comparedHuman)
         {
             var success = true;
 
@@ -688,7 +645,7 @@ namespace MemoRandom.Data.Implementations
         /// </summary>
         /// <param name="comparedHuman"></param>
         /// <returns></returns>
-        public bool DeleteComparedHuman(ComparedHuman comparedHuman)
+        public bool DeleteComparedHuman(Guid compHumanId)
         {
             bool successResult = true;
 
@@ -696,7 +653,7 @@ namespace MemoRandom.Data.Implementations
             {
                 try
                 {
-                    var deletedHuman = MemoContext.DbComparedHumans.FirstOrDefault(x => x.ComparedHumanId == comparedHuman.ComparedHumanId);
+                    var deletedHuman = MemoContext.DbComparedHumans.FirstOrDefault(x => x.ComparedHumanId == compHumanId);
                     if (deletedHuman != null)
                     {
                         MemoContext.Remove(deletedHuman);
@@ -715,45 +672,47 @@ namespace MemoRandom.Data.Implementations
         #endregion
 
         #region Auxiliary methods
-        /// <summary>
-        /// Формирование плоского списка справочника причин смерти
-        /// </summary>
-        /// <param name="reasons"></param>
-        /// <returns></returns>
-        private static List<Reason> FormPlainReasonsList(List<DbReason> reasons)
-        {
-            List<Reason> plainReasonsList = new();
+        ///// <summary>
+        ///// Формирование плоского списка справочника причин смерти
+        ///// </summary>
+        ///// <param name="reasons"></param>
+        ///// <returns></returns>
+        //private static List<Reason> FormPlainReasonsList(List<DbReason> reasons)
+        //{
+        //    List<Reason> plainReasonsList = new();
 
-            foreach (var reason in reasons)
-            {
-                Reason rsn = new()
-                {
-                    ReasonId = reason.ReasonId,
-                    ReasonName = reason.ReasonName,
-                    ReasonComment = reason.ReasonComment,
-                    ReasonDescription = reason.ReasonDescription,
-                    ReasonParentId = reason.ReasonParentId
-                };
-                plainReasonsList.Add(rsn);
-            }
+        //    foreach (var reason in reasons)
+        //    {
+        //        Reason rsn = new()
+        //        {
+        //            ReasonId = reason.ReasonId,
+        //            ReasonName = reason.ReasonName,
+        //            ReasonComment = reason.ReasonComment,
+        //            ReasonDescription = reason.ReasonDescription,
+        //            ReasonParentId = reason.ReasonParentId
+        //        };
+        //        plainReasonsList.Add(rsn);
+        //    }
 
-            return plainReasonsList;
-        }
+        //    return plainReasonsList;
+        //}
 
-        /// <summary>
-        /// Рекурсивный метод удаления дочерних узлов для удаляемой причины смерти
-        /// </summary>
-        private static void DeletingDaughters(Reason reason, MemoRandomDbContext context)
-        {
-            var deletedReason = context.DbReasons.FirstOrDefault(x => x.ReasonId == reason.ReasonId);
-            if (deletedReason == null) return;
-            
-            context.Remove(deletedReason);
-            foreach (var child in reason.ReasonChildren) // Если есть дочерние узлы, то выполняем удаление и по ним
-            {
-                DeletingDaughters(child, context);
-            }
-        }
+        ///// <summary>
+        ///// Рекурсивный метод удаления дочерних узлов для удаляемой причины смерти
+        ///// </summary>
+        //private static void DeletingDaughters(DbReason reason, MemoRandomDbContext context)
+        //{
+        //    var deletedReason = context.DbReasons.FirstOrDefault(x => x.ReasonId == reason.ReasonId);
+        //    if (deletedReason == null) return;
+
+        //    context.Remove(deletedReason);
+
+
+        //    foreach (var child in reason.ReasonChildren) // Если есть дочерние узлы, то выполняем удаление и по ним
+        //    {
+        //        DeletingDaughters(child, context);
+        //    }
+        //}
         #endregion
 
 

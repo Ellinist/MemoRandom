@@ -9,6 +9,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using MemoRandom.Client.Common.Implementations;
+using MemoRandom.Client.Common.Models;
 using MemoRandom.Data.Interfaces;
 using MemoRandom.Models.Models;
 using NLog;

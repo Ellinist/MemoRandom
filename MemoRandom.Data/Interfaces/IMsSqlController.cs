@@ -1,5 +1,6 @@
 ﻿using MemoRandom.Data.DbModels;
 using MemoRandom.Models.Models;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Media.Imaging;
@@ -35,21 +36,21 @@ namespace MemoRandom.Data.Interfaces
         /// </summary>
         /// <param name="reason"></param>
         /// <returns></returns>
-        bool AddReasonToList(Reason reason);
+        bool AddReasonToList(DbReason reason);
 
         /// <summary>
         /// Обновление измененных данных причины смерти
         /// </summary>
         /// <param name="reason"></param>
         /// <returns></returns>
-        bool UpdateReasonInList(Reason reason);
+        bool UpdateReasonInList(DbReason reason);
 
         /// <summary>
         /// Удаление выбранной причины смерти и всех ее дочек
         /// </summary>
         /// <param name="reason"></param>
         /// <returns></returns>
-        bool DeleteReasonInList(Reason reason);
+        bool DeleteReasonInList(List<Guid> deletedList);
         #endregion
 
         #region Блок работы с категориями
@@ -57,21 +58,21 @@ namespace MemoRandom.Data.Interfaces
         /// Получение списка категорий из внешнего хранилища
         /// </summary>
         /// <returns></returns>
-        ObservableCollection<Category> GetCategories();
+        List<DbCategory> GetCategories();
 
         /// <summary>
         /// Обновление категории во внешнем хранилище
         /// </summary>
         /// <param name="category"></param>
         /// <returns></returns>
-        bool UpdateCategories(Category category);
+        bool UpdateCategories(DbCategory category);
 
         /// <summary>
         /// Удаление категории из внешнего хранилища
         /// </summary>
         /// <param name="category"></param>
         /// <returns></returns>
-        bool DeleteCategory(Category category);
+        bool DeleteCategory(Guid categoryId);
         #endregion
 
         #region Блок работы с людьми
@@ -105,11 +106,11 @@ namespace MemoRandom.Data.Interfaces
         #endregion
 
         #region Блок работы с людьми для сравнения
-        ObservableCollection<ComparedHuman> GetComparedHumans();
+        List<DbComparedHuman> GetComparedHumans();
 
-        bool UpdateComparedHuman(ComparedHuman comparedHuman);
+        bool UpdateComparedHuman(DbComparedHuman comparedHuman);
 
-        bool DeleteComparedHuman(ComparedHuman comparedHuman);
+        bool DeleteComparedHuman(Guid compHumanId);
         #endregion
     }
 }

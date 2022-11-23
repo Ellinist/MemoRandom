@@ -1,4 +1,6 @@
 ﻿using MemoRandom.Client.Common.Implementations;
+using MemoRandom.Client.Common.Models;
+using MemoRandom.Data.DbModels;
 using MemoRandom.Data.Interfaces;
 using MemoRandom.Models.Models;
 using Prism.Commands;
@@ -248,7 +250,19 @@ namespace MemoRandom.Client.ViewModels
 
                 await Task.Run(() =>
                 {
-                    var result = _msSqlController.UpdateCategories(SelectedCategory);
+                    DbCategory cat = new()
+                    {
+                        CategoryId = SelectedCategory.CategoryId,
+                        CategoryName = SelectedCategory.CategoryName,
+                        PeriodFrom = SelectedCategory.StartAge,
+                        PeriodTo = SelectedCategory.StopAge,
+                        ColorA = (byte)SelectedCategory.CategoryColor.ScA,
+                        ColorR = (byte)SelectedCategory.CategoryColor.ScR,
+                        ColorG = (byte)SelectedCategory.CategoryColor.ScG,
+                        ColorB = (byte)SelectedCategory.CategoryColor.ScB
+                    };
+
+                    var result = _msSqlController.UpdateCategories(cat);
                     if (!result)
                     {
                         MessageBox.Show("Не удалось обновить категорию", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -264,13 +278,16 @@ namespace MemoRandom.Client.ViewModels
             }
             else // Создание новой категории
             {
-                Category cat = new()
+                DbCategory cat = new()
                 {
-                    CategoryId = CategoryId,
-                    CategoryName = CategoryName,
-                    StartAge = PeriodFrom,
-                    StopAge = PeriodTo,
-                    CategoryColor = SelectedColor
+                    CategoryId = SelectedCategory.CategoryId,
+                    CategoryName = SelectedCategory.CategoryName,
+                    PeriodFrom = SelectedCategory.StartAge,
+                    PeriodTo = SelectedCategory.StopAge,
+                    ColorA = (byte)SelectedCategory.CategoryColor.ScA,
+                    ColorR = (byte)SelectedCategory.CategoryColor.ScR,
+                    ColorG = (byte)SelectedCategory.CategoryColor.ScG,
+                    ColorB = (byte)SelectedCategory.CategoryColor.ScB
                 };
 
                 await Task.Run(() =>
@@ -283,12 +300,19 @@ namespace MemoRandom.Client.ViewModels
                     }
                 });
 
-                CategoriesCollection?.Clear();
-                CommonDataController.AgeCategories.Add(cat);
+                Category category = new()
+                {
+                    CategoryId = SelectedCategory.CategoryId,
+                    CategoryName = SelectedCategory.CategoryName,
+                    CategoryColor = Color.FromArgb(cat.ColorA, cat.ColorR, cat.ColorG, cat.ColorB)
+                };
+
+                //CategoriesCollection?.Clear();
+                CommonDataController.AgeCategories.Add(category);
                 CommonDataController.RearrangeCollection();
                 //CategoriesCollection = Categories.GetCategories();
                 RaisePropertyChanged(nameof(CategoriesCollection));
-                SelectedIndex = CategoriesCollection.IndexOf(cat);
+                SelectedIndex = CategoriesCollection.IndexOf(category);
             }
 
             newFlag = false;
@@ -323,7 +347,7 @@ namespace MemoRandom.Client.ViewModels
         {
             if (SelectedCategory == null) return; // Здесь можно еще уведомление дать
 
-            if (!await Task.Run(() => _msSqlController.DeleteCategory(SelectedCategory)))
+            if (!await Task.Run(() => _msSqlController.DeleteCategory(SelectedCategory.CategoryId)))
             {
                 MessageBox.Show("Не получилось удалить выбранную категорию!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;

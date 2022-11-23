@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 
-namespace MemoRandom.Models.Models
+namespace MemoRandom.Client.Common.Models
 {
     /// <summary>
     /// Класс жизненного периода

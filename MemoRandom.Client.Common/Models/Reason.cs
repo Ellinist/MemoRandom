@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using Prism.Mvvm;
 
-namespace MemoRandom.Models.Models
+namespace MemoRandom.Client.Common.Models
 {
     /// <summary>
     /// Основной класс причины смерти

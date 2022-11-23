@@ -16,6 +16,7 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Windows.Threading;
 using MemoRandom.Client.Common.Implementations;
+using MemoRandom.Client.Common.Models;
 
 namespace MemoRandom.Client.ViewModels
 {
