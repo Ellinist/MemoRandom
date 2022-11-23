@@ -111,11 +111,11 @@ namespace MemoRandom.Client.ViewModels
                     _selectedHuman = value;
 
                     // При смене выбранного человека устанавливаем его текущим
-                    Humans.CurrentHuman = value;
+                    CommonDataController.CurrentHuman = value;
                     RaisePropertyChanged(nameof(SelectedHuman));
 
                     // Изменение изображения
-                    ImageSource = _msSqlController.GetHumanImage(Humans.CurrentHuman);
+                    ImageSource = _msSqlController.GetHumanImage(CommonDataController.CurrentHuman);
                     RaisePropertyChanged(nameof(ImageSource));
 
                     // Изменение текста прожитых лет
@@ -252,21 +252,21 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private void AddHuman()
         {
-            Humans.CurrentHuman = null; // Для новой записи!
+            CommonDataController.CurrentHuman = null; // Для новой записи!
             _container.Resolve<HumanDetailedView>().ShowDialog(); // Открываем окно создания/редактирования
 
-            if (Humans.CurrentHuman == null) return;
+            if (CommonDataController.CurrentHuman == null) return;
 
-            Humans.HumansList.Add(Humans.CurrentHuman); // Добавляем человека в список местного хранилища
+            CommonDataController.HumansList.Add(CommonDataController.CurrentHuman); // Добавляем человека в список местного хранилища
             SortHumansCollection(); // Сортировка по условию
-            HumansCollection.Clear();
-            HumansCollection = Humans.GetHumans();
+            //HumansCollection.Clear();
+            //HumansCollection = CommonDataController.GetHumans();
 
-            SelectedHuman = Humans.CurrentHuman;
-            PersonIndex = HumansCollection.IndexOf(Humans.CurrentHuman);
+            SelectedHuman = CommonDataController.CurrentHuman;
+            PersonIndex = HumansCollection.IndexOf(CommonDataController.CurrentHuman);
             RaisePropertyChanged(nameof(PersonIndex));
 
-            ImageSource = _msSqlController.GetHumanImage(Humans.CurrentHuman);
+            ImageSource = _msSqlController.GetHumanImage(CommonDataController.CurrentHuman);
             RaisePropertyChanged(nameof(ImageSource));
 
             var currentReason = PlainReasonsList.FirstOrDefault(x => x.ReasonId == SelectedHuman.DeathReasonId);
@@ -283,15 +283,15 @@ namespace MemoRandom.Client.ViewModels
         {
             _container.Resolve<HumanDetailedView>().ShowDialog(); // Запуск окна создания и редактирования человека
 
-            Humans.UpdateHuman(SelectedHuman); // Обновляем человека в списке местного хранилища
-            HumansCollection.Clear();
-            HumansCollection = Humans.GetHumans();
+            //Humans.UpdateHuman(SelectedHuman); // Обновляем человека в списке местного хранилища
+            //HumansCollection.Clear();
+            //HumansCollection = Humans.GetHumans();
             SortHumansCollection(); // Сортировка по условию
 
-            PersonIndex = HumansCollection.IndexOf(Humans.CurrentHuman);
+            PersonIndex = HumansCollection.IndexOf(CommonDataController.CurrentHuman);
             RaisePropertyChanged(nameof(PersonIndex));
 
-            ImageSource = _msSqlController.GetHumanImage(Humans.CurrentHuman);
+            ImageSource = _msSqlController.GetHumanImage(CommonDataController.CurrentHuman);
             RaisePropertyChanged(nameof(ImageSource));
 
             var currentReason = PlainReasonsList.FirstOrDefault(x => x.ReasonId == SelectedHuman.DeathReasonId);
@@ -319,9 +319,9 @@ namespace MemoRandom.Client.ViewModels
                     _msSqlController.DeleteHuman(SelectedHuman); // Удаление во внешнем хранилище
                 });
 
-                Humans.HumansList.Remove(SelectedHuman); // Удаление в списке
-                HumansCollection.Clear();
-                HumansCollection = Humans.GetHumans();
+                CommonDataController.HumansList.Remove(SelectedHuman); // Удаление в списке
+                //HumansCollection.Clear();
+                //HumansCollection = Humans.GetHumans();
             }
             catch (Exception ex)
             {
@@ -409,26 +409,27 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public async void HumansListView_Loaded(object sender, RoutedEventArgs e)
+        public void HumansListView_Loaded(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                ObservableCollection<Human> result = new(); // Результирующая коллекция людей
-                await Task.Run(() =>
-                {
-                    result = _msSqlController.GetHumans(); // Получаем из внешнего источника
+            HumansCollection = CommonDataController.HumansList;
+            //try
+            //{
+            //    ObservableCollection<Human> result = new(); // Результирующая коллекция людей
+            //    await Task.Run(() =>
+            //    {
+            //        result = _msSqlController.GetHumans(); // Получаем из внешнего источника
 
-                    Humans.HumansList = result; // Заносим результат в местное хранилище
-                    HumansCollection = Humans.GetHumans(); // Вятягиваем клон результата
-                });
+            //        Humans.HumansList = result; // Заносим результат в местное хранилище
+            //        HumansCollection = Humans.GetHumans(); // Вятягиваем клон результата
+            //    });
 
-                RaisePropertyChanged(nameof(HumansCollection));
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Не удалось прочитать данные!\n Код ошибки в журнале", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
-                _logger.Error($"Ошибка: {ex}");
-            }
+            //    RaisePropertyChanged(nameof(HumansCollection));
+            //}
+            //catch (Exception ex)
+            //{
+            //    MessageBox.Show("Не удалось прочитать данные!\n Код ошибки в журнале", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+            //    _logger.Error($"Ошибка: {ex}");
+            //}
         }
 
         /// <summary>
@@ -482,7 +483,7 @@ namespace MemoRandom.Client.ViewModels
                 CategoriesViewModel.ChangeCategory = new Action(() =>
                 {
                     //TODO Здесь думать, чтобы не обращаться к БД многократно
-                    HumansCollection = Humans.GetHumans();
+                    //HumansCollection = Humans.GetHumans();
                     SortHumansCollection();
                     RaisePropertyChanged(nameof(HumansCollection));
                 });

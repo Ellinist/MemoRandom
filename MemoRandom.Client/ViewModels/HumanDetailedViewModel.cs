@@ -511,7 +511,7 @@ namespace MemoRandom.Client.ViewModels
         /// <param name="e"></param>
         public void DetailedView_Loaded(object sender, RoutedEventArgs e)
         {
-            Human human = Humans.CurrentHuman;
+            Human human = CommonDataController.CurrentHuman;
 
             if (human != null)
             {
@@ -526,7 +526,7 @@ namespace MemoRandom.Client.ViewModels
                 DeathPlace        = human.DeathPlace;
                 HumanComments     = human.HumanComments;
                 DeathReasonId     = human.DeathReasonId;
-                TargetImageSource = (BitmapSource)_msSqlController.GetHumanImage(Humans.CurrentHuman); // Загружаем изображение
+                TargetImageSource = (BitmapSource)_msSqlController.GetHumanImage(CommonDataController.CurrentHuman); // Загружаем изображение
             }
             else
             {
@@ -559,7 +559,7 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private async void SaveHuman()
         {
-            var curHuman = Humans.CurrentHuman;
+            var curHuman = CommonDataController.CurrentHuman;
             if (curHuman != null) // Редактирование
             {
                 curHuman.LastName       = LastName;
@@ -577,7 +577,7 @@ namespace MemoRandom.Client.ViewModels
                 curHuman.DaysLived      = (DeathDate - BirthDate).Days; // Считаем число прожитых дней
                 curHuman.FullYearsLived = (float)((DeathDate - BirthDate).Days / 365.25D); // Считаем число полных прожитых лет
 
-                Humans.CurrentHuman = curHuman;
+                CommonDataController.CurrentHuman = curHuman;
             }
             else // Добавление нового
             {
@@ -601,7 +601,7 @@ namespace MemoRandom.Client.ViewModels
                     FullYearsLived = (float)((DeathDate - BirthDate).Days / 365.25) // Считаем число полных прожитых лет
                 };
 
-                Humans.CurrentHuman = human;
+                CommonDataController.CurrentHuman = human;
             }
 
             bool result = true;
@@ -610,7 +610,7 @@ namespace MemoRandom.Client.ViewModels
                 var image = BitmapSourceToBitmapImage(TargetImageSource);
                 await Task.Run(() =>
                 {
-                    result = _msSqlController.UpdateHumans(Humans.CurrentHuman, image);
+                    result = _msSqlController.UpdateHumans(CommonDataController.CurrentHuman, image);
                 });
                 if(result) CloseAction(); // Закрываем окно
             }

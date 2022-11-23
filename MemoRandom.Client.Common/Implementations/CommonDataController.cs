@@ -39,6 +39,16 @@ namespace MemoRandom.Client.Common.Implementations
         /// Коллекция людей для сравнения
         /// </summary>
         public static ObservableCollection<ComparedHuman> ComparedHumansCollection { get; set; } = new();
+
+        /// <summary>
+        /// Список людей
+        /// </summary>
+        public static ObservableCollection<Human> HumansList { get; set; } = new();
+
+        /// <summary>
+        /// Текущий выбор человека
+        /// </summary>
+        public static Human CurrentHuman { get; set; }
         #endregion
 
         #region IMPLEMENTATION
@@ -61,6 +71,10 @@ namespace MemoRandom.Client.Common.Implementations
 
             #region Чтение списка людей для сравнения
             ComparedHumansCollection = _msSqlController.GetComparedHumans();
+            #endregion
+
+            #region Чтение списка людей
+            HumansList = _msSqlController.GetHumans();
             #endregion
 
             return successResult;
