@@ -39,7 +39,6 @@
   <ItemGroup>
     <ProjectReference Include="..\MemoRandom.Client.Common\MemoRandom.Client.Common.csproj" />
     <ProjectReference Include="..\MemoRandom.Data\MemoRandom.Data.csproj" />
-    <ProjectReference Include="..\MemoRandom.Models\MemoRandom.Models.csproj" />
   </ItemGroup>
 
   <ItemGroup>

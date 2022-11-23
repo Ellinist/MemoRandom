@@ -14,7 +14,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MemoRandom.Data\MemoRandom.Data.csproj" />
-    <ProjectReference Include="..\MemoRandom.Models\MemoRandom.Models.csproj" />
   </ItemGroup>
 
 </Project>
