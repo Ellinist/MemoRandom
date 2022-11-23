@@ -243,16 +243,16 @@ namespace MemoRandom.Data.Implementations
             {
                 try
                 {
-                    var categoriesList = MemoContext.DbCategories.OrderBy(x => x.DbPeriodFrom).ToList(); // Читаем контекст базы данных
+                    var categoriesList = MemoContext.DbCategories.OrderBy(x => x.PeriodFrom).ToList(); // Читаем контекст базы данных
                     foreach (var category in categoriesList)
                     {
                         Category cat = new()
                         {
-                            CategoryId = category.DbCategoryId,
-                            CategoryName = category.DbCategoryName,
-                            StartAge = category.DbPeriodFrom,
-                            StopAge = category.DbPeriodTo,
-                            CategoryColor = System.Windows.Media.Color.FromArgb(category.DbColorA, category.DbColorR, category.DbColorG, category.DbColorB)
+                            CategoryId = category.CategoryId,
+                            CategoryName = category.CategoryName,
+                            StartAge = category.PeriodFrom,
+                            StopAge = category.PeriodTo,
+                            CategoryColor = System.Windows.Media.Color.FromArgb(category.ColorA, category.ColorR, category.ColorG, category.ColorB)
                         };
                         categories.Add(cat);
                     }
@@ -280,18 +280,18 @@ namespace MemoRandom.Data.Implementations
             {
                 try
                 {
-                    var updatedCategory = MemoContext.DbCategories.FirstOrDefault(x => x.DbCategoryId == category.CategoryId);
+                    var updatedCategory = MemoContext.DbCategories.FirstOrDefault(x => x.CategoryId == category.CategoryId);
 
                     if (updatedCategory != null) // Корректировка информации
                     {
-                        updatedCategory.DbCategoryId   = category.CategoryId;
-                        updatedCategory.DbCategoryName = category.CategoryName;
-                        updatedCategory.DbPeriodFrom   = category.StartAge;
-                        updatedCategory.DbPeriodTo     = category.StopAge;
-                        updatedCategory.DbColorA       = category.CategoryColor.A;
-                        updatedCategory.DbColorR       = category.CategoryColor.R;
-                        updatedCategory.DbColorG       = category.CategoryColor.G;
-                        updatedCategory.DbColorB       = category.CategoryColor.B;
+                        updatedCategory.CategoryId   = category.CategoryId;
+                        updatedCategory.CategoryName = category.CategoryName;
+                        updatedCategory.PeriodFrom   = category.StartAge;
+                        updatedCategory.PeriodTo     = category.StopAge;
+                        updatedCategory.ColorA       = category.CategoryColor.A;
+                        updatedCategory.ColorR       = category.CategoryColor.R;
+                        updatedCategory.ColorG       = category.CategoryColor.G;
+                        updatedCategory.ColorB       = category.CategoryColor.B;
 
                         MemoContext.SaveChanges();
                     }
@@ -299,14 +299,14 @@ namespace MemoRandom.Data.Implementations
                     {
                         DbCategory record = new()
                         {
-                            DbCategoryId   = category.CategoryId,
-                            DbCategoryName = category.CategoryName,
-                            DbPeriodFrom   = category.StartAge,
-                            DbPeriodTo     = category.StopAge,
-                            DbColorA       = category.CategoryColor.A,
-                            DbColorR       = category.CategoryColor.R,
-                            DbColorG       = category.CategoryColor.G,
-                            DbColorB       = category.CategoryColor.B
+                            CategoryId   = category.CategoryId,
+                            CategoryName = category.CategoryName,
+                            PeriodFrom   = category.StartAge,
+                            PeriodTo     = category.StopAge,
+                            ColorA       = category.CategoryColor.A,
+                            ColorR       = category.CategoryColor.R,
+                            ColorG       = category.CategoryColor.G,
+                            ColorB       = category.CategoryColor.B
 
                         };
 
@@ -336,7 +336,7 @@ namespace MemoRandom.Data.Implementations
             {
                 try
                 {
-                    var deletedCategory = MemoContext.DbCategories.FirstOrDefault(x => x.DbCategoryId == category.CategoryId);
+                    var deletedCategory = MemoContext.DbCategories.FirstOrDefault(x => x.CategoryId == category.CategoryId);
 
                     if (deletedCategory != null)
                     {

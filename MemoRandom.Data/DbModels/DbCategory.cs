@@ -14,48 +14,48 @@ namespace MemoRandom.Data.DbModels
         /// </summary>
         [Key]
         [Required]
-        public Guid DbCategoryId { get; set; }
+        public Guid CategoryId { get; set; }
 
         /// <summary>
         /// Название категории
         /// </summary>
         [Required]
-        public string DbCategoryName { get; set; }
+        public string CategoryName { get; set; }
 
         /// <summary>
         /// С какого возраста действует категория
         /// </summary>
         [Required]
-        public int DbPeriodFrom { get; set; }
+        public int PeriodFrom { get; set; }
 
         /// <summary>
         /// До какого возраста действует категория
         /// </summary>
         [Required]
-        public int DbPeriodTo { get; set; }
+        public int PeriodTo { get; set; }
 
         /// <summary>
         /// Яркость цвета
         /// </summary>
         [Required]
-        public byte DbColorA { get; set; }
+        public byte ColorA { get; set; }
 
         /// <summary>
         /// Красный цвет
         /// </summary>
         [Required]
-        public byte DbColorR { get; set; }
+        public byte ColorR { get; set; }
 
         /// <summary>
         /// Зеленый цвет
         /// </summary>
         [Required]
-        public byte DbColorG { get; set; }
+        public byte ColorG { get; set; }
 
         /// <summary>
         /// Синий цвет
         /// </summary>
         [Required]
-        public byte DbColorB { get; set; }
+        public byte ColorB { get; set; }
     }
 }
