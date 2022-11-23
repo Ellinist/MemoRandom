@@ -1,10 +1,4 @@
 ﻿using MemoRandom.Client.Common.Models;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
 namespace MemoRandom.Client.Common.Interfaces
@@ -27,19 +21,5 @@ namespace MemoRandom.Client.Common.Interfaces
         /// <param name="currentHuman"></param>
         /// <returns></returns>
         BitmapImage GetHumanImage(Human currentHuman);
-
-        ///// <summary>
-        ///// Получение иерархической коллекции причин смерти
-        ///// </summary>
-        ///// <returns></returns>
-        //ObservableCollection<Reason> GetReasonsCollection();
-
-        ///// <summary>
-        ///// Получение плоского списка причин смерти
-        ///// </summary>
-        ///// <returns></returns>
-        //List<Reason> GetReasonsList();
-
-        //void AddReasonToPlainList(Reason reason);
     }
 }
