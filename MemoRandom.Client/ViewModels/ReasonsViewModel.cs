@@ -468,10 +468,11 @@ namespace MemoRandom.Client.ViewModels
 
             await Task.Run(() =>
             {
-                var res = DeletingDaughters(selectedNode);
+                List<Guid> result = new List<Guid>();
+                DeletingDaughters(selectedNode, result);
 
-                var result = _dbController.DeleteReasonInList(res);
-                if (!result)
+                var res = _dbController.DeleteReasonInList(result);
+                if (!res)
                 {
                     MessageBox.Show("Не удалось удалить причину!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
@@ -539,14 +540,14 @@ namespace MemoRandom.Client.ViewModels
         /// <summary>
         /// Рекурсивный метод удаления дочерних узлов для удаляемой причины смерти
         /// </summary>
-        private static List<Guid> DeletingDaughters(Reason reason)
+        private static List<Guid> DeletingDaughters(Reason reason, List<Guid> result)
         {
-            List<Guid> result = new List<Guid>();
+            //List<Guid> result = new List<Guid>();
             result.Add(reason.ReasonId);
 
             foreach (var child in reason.ReasonChildren) // Если есть дочерние узлы, то выполняем удаление и по ним
             {
-                DeletingDaughters(child);
+                DeletingDaughters(child, result);
             }
 
             return result;
