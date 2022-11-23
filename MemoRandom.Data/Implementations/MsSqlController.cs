@@ -338,43 +338,43 @@ namespace MemoRandom.Data.Implementations
                     // Читаем контекст, выбирая только основные поля (без изображений)
                     var newList = MemoContext.DbHumans.Select(h => new
                     {
-                        h.DbHumanId,
-                        h.DbLastName,
-                        h.DbFirstName,
-                        h.DbPatronymic,
-                        h.DbBirthDate,
-                        h.DbBirthCountry,
-                        h.DbBirthPlace,
-                        h.DbDeathDate,
-                        h.DbDeathCountry,
-                        h.DbDeathPlace,
-                        h.DbImageFile,
-                        h.DbDeathReasonId,
-                        h.DbHumanComments,
-                        h.DbDaysLived,
-                        h.DbFullYearsLived
-                    }).OrderBy(x => x.DbFullYearsLived);
+                        h.HumanId,
+                        h.LastName,
+                        h.FirstName,
+                        h.Patronymic,
+                        h.BirthDate,
+                        h.BirthCountry,
+                        h.BirthPlace,
+                        h.DeathDate,
+                        h.DeathCountry,
+                        h.DeathPlace,
+                        h.ImageFile,
+                        h.DeathReasonId,
+                        h.HumanComments,
+                        h.DaysLived,
+                        h.FullYearsLived
+                    }).OrderBy(x => x.FullYearsLived);
 
                     // Перегоняем в результирующий список
                     foreach (var person in newList)
                     {
                         Human human = new()
                         {
-                            HumanId        = person.DbHumanId,
-                            LastName       = person.DbLastName,
-                            FirstName      = person.DbFirstName,
-                            Patronymic     = person.DbPatronymic,
-                            BirthDate      = person.DbBirthDate,
-                            BirthCountry   = person.DbBirthCountry,
-                            BirthPlace     = person.DbBirthPlace,
-                            DeathDate      = person.DbDeathDate,
-                            DeathCountry   = person.DbDeathCountry,
-                            DeathPlace     = person.DbDeathPlace,
-                            ImageFile      = person.DbImageFile,
-                            DeathReasonId  = person.DbDeathReasonId,
-                            HumanComments  = person.DbHumanComments,
-                            DaysLived      = person.DbDaysLived,
-                            FullYearsLived = person.DbFullYearsLived
+                            HumanId        = person.HumanId,
+                            LastName       = person.LastName,
+                            FirstName      = person.FirstName,
+                            Patronymic     = person.Patronymic,
+                            BirthDate      = person.BirthDate,
+                            BirthCountry   = person.BirthCountry,
+                            BirthPlace     = person.BirthPlace,
+                            DeathDate      = person.DeathDate,
+                            DeathCountry   = person.DeathCountry,
+                            DeathPlace     = person.DeathPlace,
+                            ImageFile      = person.ImageFile,
+                            DeathReasonId  = person.DeathReasonId,
+                            HumanComments  = person.HumanComments,
+                            DaysLived      = person.DaysLived,
+                            FullYearsLived = person.FullYearsLived
                         };
                         humansList.Add(human);
                     }
@@ -402,23 +402,23 @@ namespace MemoRandom.Data.Implementations
             {
                 try
                 {
-                    var updatedHuman = MemoContext.DbHumans.FirstOrDefault(x => x.DbHumanId == human.HumanId);
+                    var updatedHuman = MemoContext.DbHumans.FirstOrDefault(x => x.HumanId == human.HumanId);
                     if (updatedHuman != null) // Корректировка информации
                     {
-                        updatedHuman.DbLastName       = human.LastName;
-                        updatedHuman.DbFirstName      = human.FirstName;
-                        updatedHuman.DbPatronymic     = human.Patronymic;
-                        updatedHuman.DbBirthDate      = human.BirthDate;
-                        updatedHuman.DbBirthCountry   = human.BirthCountry;
-                        updatedHuman.DbBirthPlace     = human.BirthPlace;
-                        updatedHuman.DbDeathDate      = human.DeathDate;
-                        updatedHuman.DbDeathCountry   = human.DeathCountry;
-                        updatedHuman.DbDeathPlace     = human.DeathPlace;
-                        updatedHuman.DbDeathReasonId  = human.DeathReasonId;
-                        updatedHuman.DbImageFile      = human.ImageFile;
-                        updatedHuman.DbHumanComments  = human.HumanComments;
-                        updatedHuman.DbDaysLived      = human.DaysLived;
-                        updatedHuman.DbFullYearsLived = human.FullYearsLived;
+                        updatedHuman.LastName       = human.LastName;
+                        updatedHuman.FirstName      = human.FirstName;
+                        updatedHuman.Patronymic     = human.Patronymic;
+                        updatedHuman.BirthDate      = human.BirthDate;
+                        updatedHuman.BirthCountry   = human.BirthCountry;
+                        updatedHuman.BirthPlace     = human.BirthPlace;
+                        updatedHuman.DeathDate      = human.DeathDate;
+                        updatedHuman.DeathCountry   = human.DeathCountry;
+                        updatedHuman.DeathPlace     = human.DeathPlace;
+                        updatedHuman.DeathReasonId  = human.DeathReasonId;
+                        updatedHuman.ImageFile      = human.ImageFile;
+                        updatedHuman.HumanComments  = human.HumanComments;
+                        updatedHuman.DaysLived      = human.DaysLived;
+                        updatedHuman.FullYearsLived = human.FullYearsLived;
 
                         MemoContext.SaveChanges();
 
@@ -431,21 +431,21 @@ namespace MemoRandom.Data.Implementations
                     {
                         DbHuman record = new()
                         {
-                            DbHumanId        = human.HumanId,
-                            DbLastName       = human.LastName,
-                            DbFirstName      = human.FirstName,
-                            DbPatronymic     = human.Patronymic,
-                            DbBirthDate      = human.BirthDate,
-                            DbBirthCountry   = human.BirthCountry,
-                            DbBirthPlace     = human.BirthPlace,
-                            DbDeathDate      = human.DeathDate,
-                            DbDeathCountry   = human.DeathCountry,
-                            DbDeathPlace     = human.DeathPlace,
-                            DbDeathReasonId  = human.DeathReasonId,
-                            DbImageFile      = human.ImageFile,
-                            DbHumanComments  = human.HumanComments,
-                            DbDaysLived      = human.DaysLived,
-                            DbFullYearsLived = human.FullYearsLived
+                            HumanId        = human.HumanId,
+                            LastName       = human.LastName,
+                            FirstName      = human.FirstName,
+                            Patronymic     = human.Patronymic,
+                            BirthDate      = human.BirthDate,
+                            BirthCountry   = human.BirthCountry,
+                            BirthPlace     = human.BirthPlace,
+                            DeathDate      = human.DeathDate,
+                            DeathCountry   = human.DeathCountry,
+                            DeathPlace     = human.DeathPlace,
+                            DeathReasonId  = human.DeathReasonId,
+                            ImageFile      = human.ImageFile,
+                            HumanComments  = human.HumanComments,
+                            DaysLived      = human.DaysLived,
+                            FullYearsLived = human.FullYearsLived
                         };
 
                         MemoContext.DbHumans.Add(record);
@@ -479,7 +479,7 @@ namespace MemoRandom.Data.Implementations
             {
                 try
                 {
-                    var deletedHuman = MemoContext.DbHumans.FirstOrDefault(x => x.DbHumanId == currentHuman.HumanId);
+                    var deletedHuman = MemoContext.DbHumans.FirstOrDefault(x => x.HumanId == currentHuman.HumanId);
                     if (deletedHuman != null)
                     {
                         MemoContext.Remove(deletedHuman);

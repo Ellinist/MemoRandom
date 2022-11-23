@@ -354,13 +354,7 @@ namespace MemoRandom.Client.ViewModels
                     });
                 });
 
-                //_commonDataController.AddReasonToPlainList(rsn);
-                //ReasonsList.Clear();
-                //ReasonsList = _commonDataController.GetReasonsCollection();
                 RaisePropertyChanged();
-                //PlainReasonsList = _commonDataController.GetReasonsList();
-                //ReasonsList = _commonDataController.GetReasonsCollection();
-                RaisePropertyChanged(nameof(ReasonsCollection));
             }
         }
 
@@ -540,17 +534,14 @@ namespace MemoRandom.Client.ViewModels
         /// <summary>
         /// Рекурсивный метод удаления дочерних узлов для удаляемой причины смерти
         /// </summary>
-        private static List<Guid> DeletingDaughters(Reason reason, List<Guid> result)
+        private static void DeletingDaughters(Reason reason, List<Guid> result)
         {
-            //List<Guid> result = new List<Guid>();
-            result.Add(reason.ReasonId);
+            result.Add(reason.ReasonId); // Заносим ID в список
 
             foreach (var child in reason.ReasonChildren) // Если есть дочерние узлы, то выполняем удаление и по ним
             {
                 DeletingDaughters(child, result);
             }
-
-            return result;
         }
 
         /// <summary>
