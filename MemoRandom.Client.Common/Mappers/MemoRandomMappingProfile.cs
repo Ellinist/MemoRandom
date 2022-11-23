@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using MemoRandom.Data.DbModels;
-using MemoRandom.Models.Models;
 
 namespace MemoRandom.Client.Common.Mappers
 {

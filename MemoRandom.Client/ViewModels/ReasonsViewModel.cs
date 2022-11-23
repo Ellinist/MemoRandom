@@ -1,5 +1,4 @@
 ﻿using System;
-using MemoRandom.Models.Models;
 using Prism.Mvvm;
 using System.Collections.ObjectModel;
 using NLog;
@@ -13,7 +12,6 @@ using MemoRandom.Data.Interfaces;
 using System.Collections.Generic;
 using MemoRandom.Client.Common.Interfaces;
 using MemoRandom.Client.Common.Implementations;
-using MemoRandom.Data.Controllers;
 using MemoRandom.Data.DbModels;
 using MemoRandom.Client.Common.Models;
 

@@ -1,13 +1,10 @@
 ﻿using DryIoc;
-using MemoRandom.Client.Common.Implementations;
 using MemoRandom.Client.Common.Interfaces;
 using MemoRandom.Client.Views;
 using MemoRandom.Data.Interfaces;
-using MemoRandom.Models.Models;
 using NLog;
 using Prism.Mvvm;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Threading;
 using System.Threading.Tasks;

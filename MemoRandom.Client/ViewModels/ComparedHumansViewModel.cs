@@ -2,7 +2,6 @@
 using MemoRandom.Client.Common.Models;
 using MemoRandom.Data.DbModels;
 using MemoRandom.Data.Interfaces;
-using MemoRandom.Models.Models;
 using Prism.Commands;
 using Prism.Mvvm;
 using System;

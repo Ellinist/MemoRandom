@@ -1,10 +1,11 @@
-﻿using MemoRandom.Models.Models;
+﻿using MemoRandom.Client.Common.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
 
 namespace MemoRandom.Client.Common.Interfaces
 {
@@ -17,6 +18,15 @@ namespace MemoRandom.Client.Common.Interfaces
         bool ReadDataFromRepository();
 
         void UpdateHierarchicalReasonsData();
+
+        bool UpdateHumanData(Human human, BitmapImage humanImage);
+
+        /// <summary>
+        /// Получение изображения человека
+        /// </summary>
+        /// <param name="currentHuman"></param>
+        /// <returns></returns>
+        BitmapImage GetHumanImage(Human currentHuman);
 
         ///// <summary>
         ///// Получение иерархической коллекции причин смерти

@@ -1,5 +1,4 @@
 ﻿using MemoRandom.Data.DbModels;
-using MemoRandom.Models.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -80,7 +79,7 @@ namespace MemoRandom.Data.Interfaces
         /// Получение списка людей из внешнего хранилища
         /// </summary>
         /// <returns></returns>
-        ObservableCollection<Human> GetHumans();
+        List<DbHuman> GetHumans();
 
         /// <summary>
         /// Обновление (добавление или редактирование) списка людей
@@ -88,21 +87,23 @@ namespace MemoRandom.Data.Interfaces
         /// <param name="currentHuman"></param>
         /// <param name="humanImage"></param>
         /// <returns></returns>
-        bool UpdateHumans(Human currentHuman, BitmapImage humanImage);
+        bool UpdateHumans(DbHuman currentHuman);
 
         /// <summary>
         /// Удаление человека из списка
         /// </summary>
         /// <param name="currentHuman"></param>
         /// <returns></returns>
-        bool DeleteHuman(Human currentHuman);
+        bool DeleteHuman(Guid humanId, string imageFile);
 
-        /// <summary>
-        /// Получение изображения человека
-        /// </summary>
-        /// <param name="currentHuman"></param>
-        /// <returns></returns>
-        BitmapImage GetHumanImage(Human currentHuman);
+        ///// <summary>
+        ///// Получение изображения человека
+        ///// </summary>
+        ///// <param name="currentHuman"></param>
+        ///// <returns></returns>
+        //BitmapImage GetHumanImage(Human currentHuman);
+
+        string GetImageFolder();
         #endregion
 
         #region Блок работы с людьми для сравнения

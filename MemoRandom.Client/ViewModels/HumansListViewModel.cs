@@ -7,16 +7,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MemoRandom.Client.Views;
-using MemoRandom.Models.Models;
 using MemoRandom.Data.Interfaces;
 using System.Windows.Media.Imaging;
 using System.Windows;
 using System.Text;
 using System.Collections.ObjectModel;
 using System.Globalization;
-using System.Windows.Threading;
 using MemoRandom.Client.Common.Implementations;
 using MemoRandom.Client.Common.Models;
+using MemoRandom.Client.Common.Interfaces;
 
 namespace MemoRandom.Client.ViewModels
 {
@@ -41,6 +40,7 @@ namespace MemoRandom.Client.ViewModels
         private readonly ILogger _logger; // Экземпляр журнала
         private readonly IContainer _container; // Контейнер
         private readonly IMsSqlController _msSqlController;
+        private readonly ICommonDataController _commonDataController;
 
         private CultureInfo cultureInfo = new CultureInfo("ru-RU");
         #endregion
@@ -116,7 +116,7 @@ namespace MemoRandom.Client.ViewModels
                     RaisePropertyChanged(nameof(SelectedHuman));
 
                     // Изменение изображения
-                    ImageSource = _msSqlController.GetHumanImage(CommonDataController.CurrentHuman);
+                    ImageSource = _commonDataController.GetHumanImage(CommonDataController.CurrentHuman);
                     RaisePropertyChanged(nameof(ImageSource));
 
                     // Изменение текста прожитых лет
@@ -267,7 +267,7 @@ namespace MemoRandom.Client.ViewModels
             PersonIndex = HumansCollection.IndexOf(CommonDataController.CurrentHuman);
             RaisePropertyChanged(nameof(PersonIndex));
 
-            ImageSource = _msSqlController.GetHumanImage(CommonDataController.CurrentHuman);
+            ImageSource = _commonDataController.GetHumanImage(CommonDataController.CurrentHuman);
             RaisePropertyChanged(nameof(ImageSource));
 
             var currentReason = PlainReasonsList.FirstOrDefault(x => x.ReasonId == SelectedHuman.DeathReasonId);
@@ -292,7 +292,7 @@ namespace MemoRandom.Client.ViewModels
             PersonIndex = HumansCollection.IndexOf(CommonDataController.CurrentHuman);
             RaisePropertyChanged(nameof(PersonIndex));
 
-            ImageSource = _msSqlController.GetHumanImage(CommonDataController.CurrentHuman);
+            ImageSource = _commonDataController.GetHumanImage(CommonDataController.CurrentHuman);
             RaisePropertyChanged(nameof(ImageSource));
 
             var currentReason = PlainReasonsList.FirstOrDefault(x => x.ReasonId == SelectedHuman.DeathReasonId);
@@ -317,7 +317,7 @@ namespace MemoRandom.Client.ViewModels
             {
                 await Task.Run(() =>
                 {
-                    _msSqlController.DeleteHuman(SelectedHuman); // Удаление во внешнем хранилище
+                    _msSqlController.DeleteHuman(SelectedHuman.HumanId, SelectedHuman.ImageFile); // Удаление во внешнем хранилище
                 });
 
                 CommonDataController.HumansList.Remove(SelectedHuman); // Удаление в списке
@@ -470,11 +470,13 @@ namespace MemoRandom.Client.ViewModels
         /// <param name="container"></param>
         /// <param name="msSqlController"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public HumansListViewModel(ILogger logger, IContainer container, IMsSqlController msSqlController)
+        public HumansListViewModel(ILogger logger, IContainer container, IMsSqlController msSqlController,
+                                   ICommonDataController commonDataController)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _container = container ?? throw new ArgumentNullException(nameof(container));
             _msSqlController = msSqlController ?? throw new ArgumentNullException(nameof(msSqlController));
+            _commonDataController = commonDataController ?? throw new ArgumentNullException(nameof(commonDataController));
 
             InitializeCommands();
 

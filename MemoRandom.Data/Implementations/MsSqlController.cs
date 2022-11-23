@@ -1,7 +1,6 @@
 ﻿using MemoRandom.Data.Controllers;
 using MemoRandom.Data.DbModels;
 using MemoRandom.Data.Interfaces;
-using MemoRandom.Models.Models;
 using Microsoft.Data.SqlClient;
 using NLog;
 using System;
@@ -20,17 +19,17 @@ namespace MemoRandom.Data.Implementations
         /// <summary>
         /// Строка соединения с базой данных
         /// </summary>
-        public static string DbConnectionString { get; set; }
+        public string DbConnectionString { get; set; }
 
         /// <summary>
         /// Путь к папке хранения изображений
         /// </summary>
-        public static string ImageFolder { get; set; }
+        public string ImageFolder { get; set; }
 
         /// <summary>
         /// Контекст базы данных
         /// </summary>
-        public static MemoRandomDbContext MemoContext { get; set; }
+        public MemoRandomDbContext MemoContext { get; set; }
 
         /// <summary>
         /// Плоский список причин смерти для сериализации
@@ -327,57 +326,58 @@ namespace MemoRandom.Data.Implementations
         /// Получение списка людей из внешнего хранилища
         /// </summary>
         /// <returns></returns>
-        public ObservableCollection<Human> GetHumans()
+        public List<DbHuman> GetHumans()
         {
-            ObservableCollection<Human> humansList = new();
+            List<DbHuman> humansList = new();
 
             using (MemoContext = new MemoRandomDbContext(DbConnectionString))
             {
                 try
                 {
                     // Читаем контекст, выбирая только основные поля (без изображений)
-                    var newList = MemoContext.DbHumans.Select(h => new
-                    {
-                        h.HumanId,
-                        h.LastName,
-                        h.FirstName,
-                        h.Patronymic,
-                        h.BirthDate,
-                        h.BirthCountry,
-                        h.BirthPlace,
-                        h.DeathDate,
-                        h.DeathCountry,
-                        h.DeathPlace,
-                        h.ImageFile,
-                        h.DeathReasonId,
-                        h.HumanComments,
-                        h.DaysLived,
-                        h.FullYearsLived
-                    }).OrderBy(x => x.FullYearsLived);
+                    humansList = MemoContext.DbHumans.OrderBy(x => x.FullYearsLived).ToList();
+                    //var newList = MemoContext.DbHumans.Select(h => new
+                    //{
+                    //    h.HumanId,
+                    //    h.LastName,
+                    //    h.FirstName,
+                    //    h.Patronymic,
+                    //    h.BirthDate,
+                    //    h.BirthCountry,
+                    //    h.BirthPlace,
+                    //    h.DeathDate,
+                    //    h.DeathCountry,
+                    //    h.DeathPlace,
+                    //    h.ImageFile,
+                    //    h.DeathReasonId,
+                    //    h.HumanComments,
+                    //    h.DaysLived,
+                    //    h.FullYearsLived
+                    //}).OrderBy(x => x.FullYearsLived);
 
-                    // Перегоняем в результирующий список
-                    foreach (var person in newList)
-                    {
-                        Human human = new()
-                        {
-                            HumanId        = person.HumanId,
-                            LastName       = person.LastName,
-                            FirstName      = person.FirstName,
-                            Patronymic     = person.Patronymic,
-                            BirthDate      = person.BirthDate,
-                            BirthCountry   = person.BirthCountry,
-                            BirthPlace     = person.BirthPlace,
-                            DeathDate      = person.DeathDate,
-                            DeathCountry   = person.DeathCountry,
-                            DeathPlace     = person.DeathPlace,
-                            ImageFile      = person.ImageFile,
-                            DeathReasonId  = person.DeathReasonId,
-                            HumanComments  = person.HumanComments,
-                            DaysLived      = person.DaysLived,
-                            FullYearsLived = person.FullYearsLived
-                        };
-                        humansList.Add(human);
-                    }
+                    //// Перегоняем в результирующий список
+                    //foreach (var person in newList)
+                    //{
+                    //    DbHuman human = new()
+                    //    {
+                    //        HumanId        = person.HumanId,
+                    //        LastName       = person.LastName,
+                    //        FirstName      = person.FirstName,
+                    //        Patronymic     = person.Patronymic,
+                    //        BirthDate      = person.BirthDate,
+                    //        BirthCountry   = person.BirthCountry,
+                    //        BirthPlace     = person.BirthPlace,
+                    //        DeathDate      = person.DeathDate,
+                    //        DeathCountry   = person.DeathCountry,
+                    //        DeathPlace     = person.DeathPlace,
+                    //        ImageFile      = person.ImageFile,
+                    //        DeathReasonId  = person.DeathReasonId,
+                    //        HumanComments  = person.HumanComments,
+                    //        DaysLived      = person.DaysLived,
+                    //        FullYearsLived = person.FullYearsLived
+                    //    };
+                    //    humansList.Add(human);
+                    //}
                 }
                 catch (Exception ex)
                 {
@@ -394,7 +394,7 @@ namespace MemoRandom.Data.Implementations
         /// <param name="human"></param>
         /// <param name="humanImage"></param>
         /// <returns></returns>
-        public bool UpdateHumans(Human human, BitmapImage humanImage)
+        public bool UpdateHumans(DbHuman human)
         {
             bool successResult = true;
 
@@ -421,11 +421,6 @@ namespace MemoRandom.Data.Implementations
                         updatedHuman.FullYearsLived = human.FullYearsLived;
 
                         MemoContext.SaveChanges();
-
-                        if(humanImage != null)
-                        {
-                            SaveImageToFile(human, humanImage); // Сохраняем изображение
-                        }
                     }
                     else // Добавление новой записи
                     {
@@ -451,11 +446,6 @@ namespace MemoRandom.Data.Implementations
                         MemoContext.DbHumans.Add(record);
                         MemoContext.SaveChanges();
                     }
-
-                    if(humanImage != null)
-                    {
-                        SaveImageToFile(human, humanImage); // Сохраняем изображение
-                    }
                 }
                 catch (Exception ex)
                 {
@@ -471,7 +461,7 @@ namespace MemoRandom.Data.Implementations
         /// </summary>
         /// <param name="currentHuman"></param>
         /// <returns></returns>
-        public bool DeleteHuman(Human currentHuman)
+        public bool DeleteHuman(Guid humanId, string imageFile)
         {
             bool successResult = true;
 
@@ -479,16 +469,16 @@ namespace MemoRandom.Data.Implementations
             {
                 try
                 {
-                    var deletedHuman = MemoContext.DbHumans.FirstOrDefault(x => x.HumanId == currentHuman.HumanId);
+                    var deletedHuman = MemoContext.DbHumans.FirstOrDefault(x => x.HumanId == humanId);
                     if (deletedHuman != null)
                     {
                         MemoContext.Remove(deletedHuman);
                         MemoContext.SaveChanges();
                     }
 
-                    if (currentHuman.ImageFile != string.Empty)
+                    if (imageFile != string.Empty)
                     {
-                        if (!DeleteImageFile(currentHuman.ImageFile))
+                        if (!DeleteImageFile(imageFile))
                         {
                             successResult = false; // Если файл изображения удалить не удалось
                         }
@@ -504,48 +494,48 @@ namespace MemoRandom.Data.Implementations
             return successResult;
         }
 
-        /// <summary>
-        /// Получение изображения выбранного человека
-        /// </summary>
-        /// <param name="currentHuman"></param>
-        /// <returns></returns>
-        public BitmapImage GetHumanImage(Human currentHuman)
-        {
-            // Читаем файл изображения, если выбранный человек существует и у него есть изображение
-            if (currentHuman == null || currentHuman.ImageFile == string.Empty) return null;
-            
-            string combinedImagePath = Path.Combine(ImageFolder, currentHuman.ImageFile);
-            using Stream stream = File.OpenRead(combinedImagePath);
-            BitmapImage image = new BitmapImage();
-            image.BeginInit();
-            image.CacheOption = BitmapCacheOption.OnLoad;
-            image.StreamSource = stream;
-            image.EndInit();
-            stream.Close();
+        ///// <summary>
+        ///// Получение изображения выбранного человека
+        ///// </summary>
+        ///// <param name="currentHuman"></param>
+        ///// <returns></returns>
+        //public BitmapImage GetHumanImage(Human currentHuman)
+        //{
+        //    // Читаем файл изображения, если выбранный человек существует и у него есть изображение
+        //    if (currentHuman == null || currentHuman.ImageFile == string.Empty) return null;
 
-            return image;
-        }
+        //    string combinedImagePath = Path.Combine(ImageFolder, currentHuman.ImageFile);
+        //    using Stream stream = File.OpenRead(combinedImagePath);
+        //    BitmapImage image = new BitmapImage();
+        //    image.BeginInit();
+        //    image.CacheOption = BitmapCacheOption.OnLoad;
+        //    image.StreamSource = stream;
+        //    image.EndInit();
+        //    stream.Close();
 
-        /// <summary>
-        /// Сохранение изображения в файл
-        /// </summary>
-        /// <param name="human"></param>
-        /// <param name="humanImage"></param>
-        private static void SaveImageToFile(Human human, BitmapSource humanImage)
-        {
-            string combinedImagePath = Path.Combine(ImageFolder, human.ImageFile);
+        //    return image;
+        //}
 
-            JpegBitmapEncoder encoder = new JpegBitmapEncoder();
-            encoder.Frames.Add(BitmapFrame.Create(humanImage));
+        ///// <summary>
+        ///// Сохранение изображения в файл
+        ///// </summary>
+        ///// <param name="human"></param>
+        ///// <param name="humanImage"></param>
+        //private static void SaveImageToFile(Human human, BitmapSource humanImage)
+        //{
+        //    string combinedImagePath = Path.Combine(ImageFolder, human.ImageFile);
 
-            if (File.Exists(combinedImagePath))
-            {
-                File.Delete(combinedImagePath);
-            }
+        //    JpegBitmapEncoder encoder = new JpegBitmapEncoder();
+        //    encoder.Frames.Add(BitmapFrame.Create(humanImage));
 
-            using FileStream fs = new FileStream(combinedImagePath, FileMode.Create);
-            encoder.Save(fs);
-        }
+        //    if (File.Exists(combinedImagePath))
+        //    {
+        //        File.Delete(combinedImagePath);
+        //    }
+
+        //    using FileStream fs = new FileStream(combinedImagePath, FileMode.Create);
+        //    encoder.Save(fs);
+        //}
 
         /// <summary>
         /// Удаление файла изображения
@@ -568,6 +558,11 @@ namespace MemoRandom.Data.Implementations
             }
 
             return successResult;
+        }
+
+        public string GetImageFolder()
+        {
+            return ImageFolder;
         }
         #endregion
 

@@ -4,13 +4,13 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using AutoMapper;
 using MemoRandom.Data.DbModels;
-using MemoRandom.Models.Models;
 using MemoRandom.Client.Common.Models;
 using System.Windows.Media;
+using Human = MemoRandom.Client.Common.Models.Human;
+using System.IO;
+using System.Windows.Media.Imaging;
 
 namespace MemoRandom.Client.Common.Implementations
 {
@@ -76,7 +76,7 @@ namespace MemoRandom.Client.Common.Implementations
             #endregion
 
             #region Чтение списка людей
-            HumansList = _msSqlController.GetHumans();
+            HumansList = ConvertHumansFromDbSet(_msSqlController.GetHumans());
             #endregion
 
             return successResult;
@@ -89,6 +89,37 @@ namespace MemoRandom.Client.Common.Implementations
         {
             ReasonsCollection.Clear();
             FormObservableCollection(PlainReasonsList, null);
+        }
+
+        public bool UpdateHumanData(Human human, BitmapImage humanImage)
+        {
+            DbHuman updatedHuman = new()
+            {
+                HumanId = human.HumanId,
+                LastName = human.LastName,
+                FirstName = human.FirstName,
+                Patronymic = human.Patronymic,
+                BirthDate = human.BirthDate,
+                BirthCountry = human.BirthCountry,
+                BirthPlace = human.BirthPlace,
+                DeathDate = human.DeathDate,
+                DeathCountry = human.DeathCountry,
+                DeathPlace = human.DeathPlace,
+                DeathReasonId = human.DeathReasonId,
+                ImageFile = human.ImageFile,
+                HumanComments = human.HumanComments,
+                DaysLived = human.DaysLived,
+                FullYearsLived = human.FullYearsLived
+            };
+
+            _msSqlController.UpdateHumans(updatedHuman);
+
+            if (humanImage != null)
+            {
+                SaveImageToFile(humanImage, human); // Сохраняем изображение
+            }
+
+            return true;
         }
         #endregion
 
@@ -147,6 +178,80 @@ namespace MemoRandom.Client.Common.Implementations
 
             return comparedHumans;
         }
+
+        private ObservableCollection<Human> ConvertHumansFromDbSet(List<DbHuman> humans)
+        {
+            ObservableCollection<Human> resultCollection = new();
+
+            foreach (var item in humans)
+            {
+                Human human = new()
+                {
+                    HumanId = item.HumanId,
+                    LastName = item.LastName,
+                    FirstName = item.FirstName,
+                    Patronymic = item.Patronymic,
+                    BirthDate = item.BirthDate,
+                    BirthCountry = item.BirthCountry,
+                    BirthPlace = item.BirthPlace,
+                    DeathDate = item.DeathDate,
+                    DeathCountry = item.DeathCountry,
+                    DeathPlace = item.DeathPlace,
+                    ImageFile = item.ImageFile,
+                    DeathReasonId = item.DeathReasonId,
+                    HumanComments = item.HumanComments,
+                    DaysLived = item.DaysLived,
+                    FullYearsLived = item.FullYearsLived
+                };
+                resultCollection.Add(human);
+            }
+
+            return resultCollection;
+        }
+
+        /// <summary>
+        /// Получение изображения выбранного человека
+        /// </summary>
+        /// <param name="currentHuman"></param>
+        /// <returns></returns>
+        public BitmapImage GetHumanImage(Human currentHuman)
+        {
+            // Читаем файл изображения, если выбранный человек существует и у него есть изображение
+            if (currentHuman == null || currentHuman.ImageFile == string.Empty) return null;
+
+            string combinedImagePath = Path.Combine(_msSqlController.GetImageFolder(), currentHuman.ImageFile);
+            using Stream stream = File.OpenRead(combinedImagePath);
+            BitmapImage image = new BitmapImage();
+            image.BeginInit();
+            image.CacheOption = BitmapCacheOption.OnLoad;
+            image.StreamSource = stream;
+            image.EndInit();
+            stream.Close();
+
+            return image;
+        }
+
+        /// <summary>
+        /// Сохранение изображения в файл
+        /// </summary>
+        /// <param name="human"></param>
+        /// <param name="humanImage"></param>
+        private void SaveImageToFile(BitmapSource humanImage, Human human)
+        {
+            string combinedImagePath = Path.Combine(_msSqlController.GetImageFolder(), human.ImageFile);
+
+            JpegBitmapEncoder encoder = new JpegBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(humanImage));
+
+            if (File.Exists(combinedImagePath))
+            {
+                File.Delete(combinedImagePath);
+            }
+
+            using FileStream fs = new FileStream(combinedImagePath, FileMode.Create);
+            encoder.Save(fs);
+        }
+
 
         /// <summary>
         /// Формирование иерархической коллекции

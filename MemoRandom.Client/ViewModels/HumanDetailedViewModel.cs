@@ -9,9 +9,9 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using MemoRandom.Client.Common.Implementations;
+using MemoRandom.Client.Common.Interfaces;
 using MemoRandom.Client.Common.Models;
 using MemoRandom.Data.Interfaces;
-using MemoRandom.Models.Models;
 using NLog;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -28,6 +28,7 @@ namespace MemoRandom.Client.ViewModels
         #region PRIVATE FIELDS
         private readonly ILogger          _logger;
         private readonly IMsSqlController _msSqlController;
+        private readonly ICommonDataController _commonDataController;
 
         private const double SourceWidth = 450;
         private const double SourceHeight = 350;
@@ -527,7 +528,7 @@ namespace MemoRandom.Client.ViewModels
                 DeathPlace        = human.DeathPlace;
                 HumanComments     = human.HumanComments;
                 DeathReasonId     = human.DeathReasonId;
-                TargetImageSource = (BitmapSource)_msSqlController.GetHumanImage(CommonDataController.CurrentHuman); // Загружаем изображение
+                TargetImageSource = (BitmapSource)_commonDataController.GetHumanImage(CommonDataController.CurrentHuman); // Загружаем изображение
             }
             else
             {
@@ -611,7 +612,7 @@ namespace MemoRandom.Client.ViewModels
                 var image = BitmapSourceToBitmapImage(TargetImageSource);
                 await Task.Run(() =>
                 {
-                    result = _msSqlController.UpdateHumans(CommonDataController.CurrentHuman, image);
+                    result = _commonDataController.UpdateHumanData(CommonDataController.CurrentHuman, image);
                 });
                 if(result) CloseAction(); // Закрываем окно
             }
@@ -703,10 +704,12 @@ namespace MemoRandom.Client.ViewModels
         /// <param name="logger"></param>
         /// <param name="msSqlController"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public HumanDetailedViewModel(ILogger logger, IMsSqlController msSqlController)
+        public HumanDetailedViewModel(ILogger logger, IMsSqlController msSqlController,
+                                      ICommonDataController commonDataController)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _msSqlController = msSqlController ?? throw new ArgumentNullException(nameof(msSqlController));
+            _commonDataController = commonDataController ?? throw new ArgumentNullException(nameof(commonDataController));
 
             InitializeCommands();
         }

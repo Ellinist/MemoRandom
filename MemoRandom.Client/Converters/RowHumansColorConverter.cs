@@ -1,5 +1,5 @@
 ﻿using MemoRandom.Client.Common.Implementations;
-using MemoRandom.Models.Models;
+using MemoRandom.Client.Common.Models;
 using System;
 using System.Globalization;
 using System.Linq;
