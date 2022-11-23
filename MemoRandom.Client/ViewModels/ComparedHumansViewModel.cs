@@ -1,4 +1,5 @@
-﻿using MemoRandom.Data.Interfaces;
+﻿using MemoRandom.Client.Common.Implementations;
+using MemoRandom.Data.Interfaces;
 using MemoRandom.Models.Models;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -195,9 +196,9 @@ namespace MemoRandom.Client.ViewModels
                     }
                 });
 
-                ComparedHumansCollection.Clear();
-                ComparedHumans.ComparedHumansList.Add(compHuman);
-                ComparedHumansCollection = ComparedHumans.GetComparedHumans();
+                //ComparedHumansCollection.Clear();
+                CommonDataController.ComparedHumansCollection.Add(compHuman);
+                //ComparedHumansCollection = ComparedHumans.GetComparedHumans();
                 RaisePropertyChanged(nameof(ComparedHumansCollection));
                 SelectedIndex = ComparedHumansCollection.IndexOf(compHuman);
             }
@@ -217,9 +218,9 @@ namespace MemoRandom.Client.ViewModels
                 return;
             }
 
-            ComparedHumans.ComparedHumansList.Remove(SelectedHuman);
-            ComparedHumansCollection.Clear();
-            ComparedHumansCollection = ComparedHumans.GetComparedHumans();
+            CommonDataController.ComparedHumansCollection.Remove(SelectedHuman);
+            //ComparedHumansCollection.Clear();
+            //ComparedHumansCollection = ComparedHumans.GetComparedHumans();
             RaisePropertyChanged(nameof(ComparedHumansCollection));
             SelectedIndex = 0;
         }
@@ -231,8 +232,9 @@ namespace MemoRandom.Client.ViewModels
         /// <param name="e"></param>
         public void ComparedHumansView_Loaded(object sender, RoutedEventArgs e)
         {
-            ComparedHumans.ComparedHumansList = _msSqlController.GetComparedHumans();
-            ComparedHumansCollection = ComparedHumans.GetComparedHumans();
+            //ComparedHumans.ComparedHumansList = _msSqlController.GetComparedHumans();
+            //ComparedHumansCollection = ComparedHumans.GetComparedHumans();
+            ComparedHumansCollection = CommonDataController.ComparedHumansCollection;
             SelectedIndex = 0;
 
             RaisePropertyChanged(nameof(ComparedHumansCollection));
@@ -257,9 +259,6 @@ namespace MemoRandom.Client.ViewModels
         public ComparedHumansViewModel(IMsSqlController msSqlController)
         {
             _msSqlController = msSqlController ?? throw new ArgumentNullException(nameof(msSqlController));
-
-            ComparedHumansCollection = new();
-            //ComparedHumansList = _msSqlController.GetComparedHumans();
 
             InitCommands();
         }

@@ -33,7 +33,12 @@ namespace MemoRandom.Client.Common.Implementations
         /// <summary>
         /// Коллекция категорий (статическая)
         /// </summary>
-        public static ObservableCollection<Category> AgeCategories { get; set; }
+        public static ObservableCollection<Category> AgeCategories { get; set; } = new();
+
+        /// <summary>
+        /// Коллекция людей для сравнения
+        /// </summary>
+        public static ObservableCollection<ComparedHuman> ComparedHumansCollection { get; set; } = new();
         #endregion
 
         #region IMPLEMENTATION
@@ -45,10 +50,18 @@ namespace MemoRandom.Client.Common.Implementations
         {
             bool successResult = true;
 
+            #region Чтение причин смерти и формирование плоского и иерархического списков
             PlainReasonsList = ConvertFromDbSet(_msSqlController.GetReasons());
             FormObservableCollection(PlainReasonsList, null);
+            #endregion
 
+            #region Чтение списка категорий
             AgeCategories = _msSqlController.GetCategories();
+            #endregion
+
+            #region Чтение списка людей для сравнения
+            ComparedHumansCollection = _msSqlController.GetComparedHumans();
+            #endregion
 
             return successResult;
         }
