@@ -188,11 +188,14 @@ namespace MemoRandom.Client.ViewModels
             get => _selectedComboColor;
             set
             {
-                _selectedComboColor = value;
-                var selectedItem = (PropertyInfo)value;
-                SelectedColor = (Color)selectedItem.GetValue(null, null);
+                if(value != null)
+                {
+                    _selectedComboColor = value;
+                    var selectedItem = (PropertyInfo)value;
+                    SelectedColor = (Color)selectedItem.GetValue(null, null);
 
-                RaisePropertyChanged(nameof(SelectedComboColor));
+                    RaisePropertyChanged(nameof(SelectedComboColor));
+                }
             }
         }
 
@@ -277,16 +280,25 @@ namespace MemoRandom.Client.ViewModels
             }
             else // Создание новой категории
             {
+                Category category = new()
+                {
+                    CategoryId = CategoryId,
+                    CategoryName = CategoryName,
+                    StartAge = PeriodFrom,
+                    StopAge = PeriodTo,
+                    CategoryColor = SelectedColor
+                };
+
                 DbCategory cat = new()
                 {
-                    CategoryId = SelectedCategory.CategoryId,
-                    CategoryName = SelectedCategory.CategoryName,
-                    PeriodFrom = SelectedCategory.StartAge,
-                    PeriodTo = SelectedCategory.StopAge,
-                    ColorA = (byte)SelectedCategory.CategoryColor.ScA,
-                    ColorR = (byte)SelectedCategory.CategoryColor.ScR,
-                    ColorG = (byte)SelectedCategory.CategoryColor.ScG,
-                    ColorB = (byte)SelectedCategory.CategoryColor.ScB
+                    CategoryId = CategoryId,
+                    CategoryName = CategoryName,
+                    PeriodFrom = PeriodFrom,
+                    PeriodTo = PeriodTo,
+                    ColorA = SelectedColor.A,
+                    ColorR = SelectedColor.R,
+                    ColorG = SelectedColor.G,
+                    ColorB = SelectedColor.B
                 };
 
                 await Task.Run(() =>
@@ -298,13 +310,6 @@ namespace MemoRandom.Client.ViewModels
                         return;
                     }
                 });
-
-                Category category = new()
-                {
-                    CategoryId = SelectedCategory.CategoryId,
-                    CategoryName = SelectedCategory.CategoryName,
-                    CategoryColor = Color.FromArgb(cat.ColorA, cat.ColorR, cat.ColorG, cat.ColorB)
-                };
 
                 //CategoriesCollection?.Clear();
                 CommonDataController.AgeCategories.Add(category);
@@ -367,6 +372,7 @@ namespace MemoRandom.Client.ViewModels
         public void CategoriesView_Loaded(object sender, RoutedEventArgs e)
         {
             CategoriesCollection = CommonDataController.AgeCategories;
+            if(CategoriesCollection.Count == 0) return;
 
             SelectedIndex = 0;
 
