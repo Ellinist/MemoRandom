@@ -254,14 +254,11 @@ namespace MemoRandom.Client.ViewModels
                 {
                     DbCategory cat = new()
                     {
-                        CategoryId = SelectedCategory.CategoryId,
+                        CategoryId   = SelectedCategory.CategoryId,
                         CategoryName = SelectedCategory.CategoryName,
-                        StartAge = SelectedCategory.StartAge,
-                        StopAge  = SelectedCategory.StopAge,
-                        ColorA = SelectedCategory.CategoryColor.A,
-                        ColorR = SelectedCategory.CategoryColor.R,
-                        ColorG = SelectedCategory.CategoryColor.G,
-                        ColorB = SelectedCategory.CategoryColor.B
+                        StartAge     = SelectedCategory.StartAge,
+                        StopAge      = SelectedCategory.StopAge,
+                        StringColor  = SelectedCategory.CategoryColor.ToString()
                     };
 
                     var result = _msSqlController.UpdateCategories(cat);
@@ -272,9 +269,7 @@ namespace MemoRandom.Client.ViewModels
                     }
                 });
 
-                //CategoriesCollection?.Clear();
                 CommonDataController.RearrangeCollection();
-                //CategoriesCollection = Categories.GetCategories();
                 RaisePropertyChanged(nameof(CategoriesCollection));
                 SelectedIndex = CategoriesCollection.IndexOf(SelectedCategory);
             }
@@ -286,7 +281,8 @@ namespace MemoRandom.Client.ViewModels
                     CategoryName  = CategoryName,
                     StartAge      = PeriodFrom,
                     StopAge       = PeriodTo,
-                    CategoryColor = SelectedColor
+                    CategoryColor = SelectedColor,
+                    StringColor   = SelectedColor.ToString()
                 };
 
                 DbCategory cat = new()
@@ -295,10 +291,7 @@ namespace MemoRandom.Client.ViewModels
                     CategoryName = CategoryName,
                     StartAge     = PeriodFrom,
                     StopAge      = PeriodTo,
-                    ColorA       = SelectedColor.A,
-                    ColorR       = SelectedColor.R,
-                    ColorG       = SelectedColor.G,
-                    ColorB       = SelectedColor.B,
+                    StringColor  = SelectedColor.ToString()
                 };
 
                 await Task.Run(() =>
@@ -311,10 +304,8 @@ namespace MemoRandom.Client.ViewModels
                     }
                 });
 
-                //CategoriesCollection?.Clear();
                 CommonDataController.AgeCategories.Add(category);
                 CommonDataController.RearrangeCollection();
-                //CategoriesCollection = Categories.GetCategories();
                 RaisePropertyChanged(nameof(CategoriesCollection));
                 SelectedIndex = CategoriesCollection.IndexOf(category);
             }
@@ -379,7 +370,7 @@ namespace MemoRandom.Client.ViewModels
             CategoryName = SelectedCategory.CategoryName;
             PeriodFrom   = SelectedCategory.StartAge;
             PeriodTo     = SelectedCategory.StopAge;
-
+            
             // Устанавливаем индекс списка выбора цвета на позицию выбранного в таблице цвета
             SelectedComboIndex = typeof(Colors).GetProperties()
                                                .Select(p => p.GetValue(null)).ToList()

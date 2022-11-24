@@ -36,27 +36,8 @@ namespace MemoRandom.Data.DbModels
         public int StopAge { get; set; }
 
         /// <summary>
-        /// Яркость цвета
+        /// Цвет категории
         /// </summary>
-        [Required]
-        public byte ColorA { get; set; }
-
-        /// <summary>
-        /// Красный цвет
-        /// </summary>
-        [Required]
-        public byte ColorR { get; set; }
-
-        /// <summary>
-        /// Зеленый цвет
-        /// </summary>
-        [Required]
-        public byte ColorG { get; set; }
-
-        /// <summary>
-        /// Синий цвет
-        /// </summary>
-        [Required]
-        public byte ColorB { get; set; }
+        public string StringColor { get; set; }
     }
 }

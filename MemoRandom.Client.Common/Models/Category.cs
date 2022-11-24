@@ -30,5 +30,7 @@ namespace MemoRandom.Client.Common.Models
         public int StopAge { get; set; }
 
         public Color CategoryColor { get; set; }
+
+        public string StringColor { get; set; }
     }
 }

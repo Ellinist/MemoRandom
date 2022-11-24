@@ -11,6 +11,7 @@ using System.Windows.Media;
 using Human = MemoRandom.Client.Common.Models.Human;
 using System.IO;
 using System.Windows.Media.Imaging;
+using Microsoft.VisualBasic;
 
 namespace MemoRandom.Client.Common.Implementations
 {
@@ -69,6 +70,10 @@ namespace MemoRandom.Client.Common.Implementations
 
             #region Чтение списка категорий
             AgeCategories = ConvertCategoriesFromDbSet(_msSqlController.GetCategories());
+            foreach (var item in AgeCategories)
+            {
+                item.CategoryColor = (Color)ColorConverter.ConvertFromString(item.StringColor);
+            }
             //AgeCategories = _mapper.Map<List<DbCategory>, ObservableCollection<Category>>(_msSqlController.GetCategories());
             #endregion
 
@@ -95,7 +100,8 @@ namespace MemoRandom.Client.Common.Implementations
             {
                 Category category = new();
                 category = _mapper.Map<Category>(cat);
-                category.CategoryColor = Color.FromArgb(cat.ColorA, cat.ColorR, cat.ColorG, cat.ColorB);
+                
+                //category.CategoryColor = Color.FromArgb(cat.ColorA, cat.ColorR, cat.ColorG, cat.ColorB);
                 categories.Add(category);
             }
 

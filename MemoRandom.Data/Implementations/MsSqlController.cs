@@ -254,10 +254,7 @@ namespace MemoRandom.Data.Implementations
                         updatedCategory.CategoryName = category.CategoryName;
                         updatedCategory.StartAge     = category.StartAge;
                         updatedCategory.StopAge      = category.StopAge;
-                        updatedCategory.ColorA       = category.ColorA;
-                        updatedCategory.ColorR       = category.ColorR;
-                        updatedCategory.ColorG       = category.ColorG;
-                        updatedCategory.ColorB       = category.ColorB;
+                        updatedCategory.StringColor  = category.StringColor;
 
                         MemoContext.SaveChanges();
                     }
@@ -269,10 +266,7 @@ namespace MemoRandom.Data.Implementations
                             CategoryName = category.CategoryName,
                             StartAge     = category.StartAge,
                             StopAge      = category.StopAge,
-                            ColorA       = category.ColorA,
-                            ColorR       = category.ColorR,
-                            ColorG       = category.ColorG,
-                            ColorB       = category.ColorB,
+                            StringColor  = category.StringColor
                         };
 
                         MemoContext.DbCategories.Add(record);
