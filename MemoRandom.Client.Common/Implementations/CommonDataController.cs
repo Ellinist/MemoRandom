@@ -69,14 +69,15 @@ namespace MemoRandom.Client.Common.Implementations
 
             #region Чтение списка категорий
             AgeCategories = ConvertCategoriesFromDbSet(_msSqlController.GetCategories());
+            //AgeCategories = _mapper.Map<List<DbCategory>, ObservableCollection<Category>>(_msSqlController.GetCategories());
             #endregion
 
             #region Чтение списка людей для сравнения
-            ComparedHumansCollection = ConvertComparedHumansFromDbSet(_msSqlController.GetComparedHumans());
+            ComparedHumansCollection = _mapper.Map<List<DbComparedHuman>, ObservableCollection<ComparedHuman>>(_msSqlController.GetComparedHumans());
             #endregion
 
             #region Чтение списка людей
-            HumansList = ConvertHumansFromDbSet(_msSqlController.GetHumans());
+            HumansList = _mapper.Map<List<DbHuman>, ObservableCollection<Human>>(_msSqlController.GetHumans());
             #endregion
 
             return successResult;
@@ -118,43 +119,6 @@ namespace MemoRandom.Client.Common.Implementations
             }
 
             return categories;
-        }
-
-        /// <summary>
-        /// Получение списка людей для сравнения
-        /// </summary>
-        /// <param name="humans"></param>
-        /// <returns></returns>
-        private ObservableCollection<ComparedHuman> ConvertComparedHumansFromDbSet(List<DbComparedHuman> humans)
-        {
-            ObservableCollection<ComparedHuman> comparedHumans = new();
-            foreach (var item in humans)
-            {
-                ComparedHuman human = new();
-                human = _mapper.Map<ComparedHuman>(item);
-                comparedHumans.Add(human);
-            }
-
-            return comparedHumans;
-        }
-
-        /// <summary>
-        /// Получение рабочего списка людей
-        /// </summary>
-        /// <param name="humans"></param>
-        /// <returns></returns>
-        private ObservableCollection<Human> ConvertHumansFromDbSet(List<DbHuman> humans)
-        {
-            ObservableCollection<Human> resultCollection = new();
-
-            foreach (var item in humans)
-            {
-                Human human = new();
-                human = _mapper.Map<Human>(item);
-                resultCollection.Add(human);
-            }
-
-            return resultCollection;
         }
 
         /// <summary>
