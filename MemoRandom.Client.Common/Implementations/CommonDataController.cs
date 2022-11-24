@@ -186,7 +186,6 @@ namespace MemoRandom.Client.Common.Implementations
             encoder.Save(fs);
         }
 
-
         /// <summary>
         /// Формирование иерархической коллекции
         /// </summary>

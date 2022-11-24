@@ -298,7 +298,7 @@ namespace MemoRandom.Client.ViewModels
                     ColorA       = SelectedColor.A,
                     ColorR       = SelectedColor.R,
                     ColorG       = SelectedColor.G,
-                    ColorB       = SelectedColor.B
+                    ColorB       = SelectedColor.B,
                 };
 
                 await Task.Run(() =>

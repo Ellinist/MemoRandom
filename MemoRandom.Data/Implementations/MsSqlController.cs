@@ -272,8 +272,7 @@ namespace MemoRandom.Data.Implementations
                             ColorA       = category.ColorA,
                             ColorR       = category.ColorR,
                             ColorG       = category.ColorG,
-                            ColorB       = category.ColorB
-
+                            ColorB       = category.ColorB,
                         };
 
                         MemoContext.DbCategories.Add(record);
