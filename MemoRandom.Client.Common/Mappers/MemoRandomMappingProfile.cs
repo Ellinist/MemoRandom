@@ -10,7 +10,7 @@ namespace MemoRandom.Client.Common.Mappers
         {
             CreateMap<DbReason, Reason>().ReverseMap();
 
-            CreateMap<DbCategory, Category>();
+            CreateMap<DbCategory, Category>().ReverseMap();
                 //.ForMember(x => x.CategoryId, x => x.MapFrom(x => x.CategoryId))
                 //.ForMember(x => x.CategoryName, x => x.MapFrom(x => x.CategoryName))
                 //.ForMember(x => x.StartAge, x => x.MapFrom(x => x.StartAge))

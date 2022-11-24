@@ -11,13 +11,14 @@ using System.Windows.Media;
 using Human = MemoRandom.Client.Common.Models.Human;
 using System.IO;
 using System.Windows.Media.Imaging;
-using Microsoft.VisualBasic;
+using NLog;
 
 namespace MemoRandom.Client.Common.Implementations
 {
     public class CommonDataController : ICommonDataController
     {
         #region PRIVATE FIELDS
+        private readonly ILogger _logger;
         private readonly IMsSqlController _msSqlController;
         private readonly IMapper _mapper;
         #endregion
@@ -69,12 +70,11 @@ namespace MemoRandom.Client.Common.Implementations
             #endregion
 
             #region Чтение списка категорий
-            AgeCategories = ConvertCategoriesFromDbSet(_msSqlController.GetCategories());
-            foreach (var item in AgeCategories)
+            AgeCategories = _mapper.Map<List<DbCategory>, ObservableCollection<Category>>(_msSqlController.GetCategories());
+            foreach (var item in AgeCategories) // Преобразование строк в цвет
             {
                 item.CategoryColor = (Color)ColorConverter.ConvertFromString(item.StringColor);
             }
-            //AgeCategories = _mapper.Map<List<DbCategory>, ObservableCollection<Category>>(_msSqlController.GetCategories());
             #endregion
 
             #region Чтение списка людей для сравнения
@@ -89,23 +89,24 @@ namespace MemoRandom.Client.Common.Implementations
         }
 
         /// <summary>
-        /// Получение списка категорий
+        /// Обновление (добавление) категории во внешнее хранилище
         /// </summary>
-        /// <param name="categoriesList"></param>
+        /// <param name="category"></param>
         /// <returns></returns>
-        private ObservableCollection<Category> ConvertCategoriesFromDbSet(List<DbCategory> categoriesList)
+        public bool UpdateCategoriesInRepository(Category category)
         {
-            ObservableCollection<Category> categories = new();
-            foreach (var cat in categoriesList)
-            {
-                Category category = new();
-                category = _mapper.Map<Category>(cat);
-                
-                //category.CategoryColor = Color.FromArgb(cat.ColorA, cat.ColorR, cat.ColorG, cat.ColorB);
-                categories.Add(category);
-            }
+            DbCategory dbCategory = _mapper.Map<DbCategory>(category);
+            return _msSqlController.UpdateCategories(dbCategory);
+        }
 
-            return categories;
+        /// <summary>
+        /// Удаление выбранной категории во внешнем хранилище
+        /// </summary>
+        /// <param name="category"></param>
+        /// <returns></returns>
+        public bool DeleteCategoryInRepository(Category category)
+        {
+            return _msSqlController.DeleteCategory(category.CategoryId);
         }
 
         /// <summary>
@@ -115,6 +116,26 @@ namespace MemoRandom.Client.Common.Implementations
         {
             ReasonsCollection.Clear();
             FormObservableCollection(PlainReasonsList, null);
+        }
+
+        /// <summary>
+        /// Обновление (добавление) человека для сравнения во внешнем хранилище
+        /// </summary>
+        /// <param name="comparedHuman"></param>
+        /// <returns></returns>
+        public bool UpdateComparedHumanInRepository(ComparedHuman comparedHuman)
+        {
+            DbComparedHuman dbComparedHuman = _mapper.Map<DbComparedHuman>(comparedHuman);
+            return _msSqlController.UpdateComparedHuman(dbComparedHuman);
+        }
+
+        /// <summary>
+        /// Удаление человека для сравнения во внешнем хранилище
+        /// </summary>
+        /// <returns></returns>
+        public bool DeleteComparedHumanInRepository(ComparedHuman comparedHuman)
+        {
+            return _msSqlController.DeleteComparedHuman(comparedHuman.ComparedHumanId);
         }
 
         public bool UpdateHumanData(Human human, BitmapImage humanImage)
@@ -261,8 +282,10 @@ namespace MemoRandom.Client.Common.Implementations
 
         #region CTOR
         public CommonDataController(IMsSqlController msSqlController,
+                                    ILogger logger,
                                     IMapper mapper)
         {
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _msSqlController = msSqlController ?? throw new ArgumentNullException(nameof(msSqlController));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }

@@ -1,4 +1,5 @@
 ﻿using MemoRandom.Client.Common.Implementations;
+using MemoRandom.Client.Common.Interfaces;
 using MemoRandom.Client.Common.Models;
 using MemoRandom.Data.DbModels;
 using MemoRandom.Data.Interfaces;
@@ -17,7 +18,7 @@ namespace MemoRandom.Client.ViewModels
     public class ComparedHumansViewModel :BindableBase
     {
         #region PRIVATE FIELDS
-        private readonly IMsSqlController _msSqlController;
+        private readonly ICommonDataController _commonDataController;
 
         private string _comparedHumansTitle = "Люди для сравнения";
         private ObservableCollection<ComparedHuman> _comparedHumansCollection;
@@ -170,14 +171,7 @@ namespace MemoRandom.Client.ViewModels
 
                 await Task.Run(() =>
                 {
-                    DbComparedHuman savingHuman = new()
-                    {
-                        ComparedHumanId = SelectedHuman.ComparedHumanId,
-                        ComparedHumanFullName = SelectedHuman.ComparedHumanFullName,
-                        ComparedHumanBirthDate = SelectedHuman.ComparedHumanBirthDate
-                    };
-
-                    var result = _msSqlController.UpdateComparedHuman(savingHuman);
+                    var result = _commonDataController.UpdateComparedHumanInRepository(SelectedHuman);
                     if (!result)
                     {
                         MessageBox.Show("Не удалось обновить человека для сравнения", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -196,14 +190,7 @@ namespace MemoRandom.Client.ViewModels
 
                 await Task.Run(() =>
                 {
-                    DbComparedHuman dbCompHuman = new()
-                    {
-                        ComparedHumanId = compHuman.ComparedHumanId,
-                        ComparedHumanFullName = compHuman.ComparedHumanFullName,
-                        ComparedHumanBirthDate = compHuman.ComparedHumanBirthDate
-                    };
-
-                    var result = _msSqlController.UpdateComparedHuman(dbCompHuman);
+                    var result = _commonDataController.UpdateComparedHumanInRepository(compHuman);
                     if (!result)
                     {
                         MessageBox.Show("Не удалось добавить человека для сравнения!", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -211,9 +198,7 @@ namespace MemoRandom.Client.ViewModels
                     }
                 });
 
-                //ComparedHumansCollection.Clear();
                 CommonDataController.ComparedHumansCollection.Add(compHuman);
-                //ComparedHumansCollection = ComparedHumans.GetComparedHumans();
                 RaisePropertyChanged(nameof(ComparedHumansCollection));
                 SelectedIndex = ComparedHumansCollection.IndexOf(compHuman);
             }
@@ -226,7 +211,7 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private void DeleteComparedHuman()
         {
-            var result = _msSqlController.DeleteComparedHuman(SelectedHuman.ComparedHumanId);
+            var result = _commonDataController.DeleteComparedHumanInRepository(SelectedHuman);
             if (!result)
             {
                 MessageBox.Show("Не удалось удалить человека для сравнения!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -234,8 +219,6 @@ namespace MemoRandom.Client.ViewModels
             }
 
             CommonDataController.ComparedHumansCollection.Remove(SelectedHuman);
-            //ComparedHumansCollection.Clear();
-            //ComparedHumansCollection = ComparedHumans.GetComparedHumans();
             RaisePropertyChanged(nameof(ComparedHumansCollection));
             SelectedIndex = 0;
         }
@@ -247,8 +230,6 @@ namespace MemoRandom.Client.ViewModels
         /// <param name="e"></param>
         public void ComparedHumansView_Loaded(object sender, RoutedEventArgs e)
         {
-            //ComparedHumans.ComparedHumansList = _msSqlController.GetComparedHumans();
-            //ComparedHumansCollection = ComparedHumans.GetComparedHumans();
             ComparedHumansCollection = CommonDataController.ComparedHumansCollection;
             SelectedIndex = 0;
 
@@ -271,9 +252,9 @@ namespace MemoRandom.Client.ViewModels
         /// <summary>
         /// Конструктор
         /// </summary>
-        public ComparedHumansViewModel(IMsSqlController msSqlController)
+        public ComparedHumansViewModel(ICommonDataController commonDataController)
         {
-            _msSqlController = msSqlController ?? throw new ArgumentNullException(nameof(msSqlController));
+            _commonDataController = commonDataController ?? throw new ArgumentNullException(nameof(commonDataController));
 
             InitCommands();
         }

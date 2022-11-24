@@ -1,4 +1,5 @@
 ﻿using MemoRandom.Client.Common.Implementations;
+using MemoRandom.Client.Common.Interfaces;
 using MemoRandom.Client.Common.Models;
 using MemoRandom.Data.DbModels;
 using MemoRandom.Data.Interfaces;
@@ -23,11 +24,11 @@ namespace MemoRandom.Client.ViewModels
         public static Action ChangeCategory { get; set; }
 
         #region PRIVATE FIELDS
-        private readonly IMsSqlController _msSqlController;
+        private readonly ICommonDataController _commonDataController;
 
         private string _categoriesTitle = "Возрастные категории";
         private IEnumerable<PropertyInfo> _colorsList;
-        private ObservableCollection<Category> _categoriesCollection;
+        private ObservableCollection<Category> _categoriesCollection = new();
         private int _selectedIndex;
         private Guid _categoryId;
         private string _categoryName;
@@ -149,7 +150,7 @@ namespace MemoRandom.Client.ViewModels
                 SelectedComboIndex = typeof(Colors).GetProperties()
                                                    .Select(p => p.GetValue(null)).ToList()
                                                    .FindIndex(x => (Color)x == _selectedCategory.CategoryColor);
-
+                
                 RaisePropertyChanged(nameof(SelectedCategory));
             }
         }
@@ -248,20 +249,12 @@ namespace MemoRandom.Client.ViewModels
                 SelectedCategory.StartAge      = PeriodFrom;
                 SelectedCategory.StopAge       = PeriodTo;
                 SelectedCategory.CategoryColor = SelectedColor;
+                SelectedCategory.StringColor   = SelectedColor.ToString();
                 #endregion
 
                 await Task.Run(() =>
                 {
-                    DbCategory cat = new()
-                    {
-                        CategoryId   = SelectedCategory.CategoryId,
-                        CategoryName = SelectedCategory.CategoryName,
-                        StartAge     = SelectedCategory.StartAge,
-                        StopAge      = SelectedCategory.StopAge,
-                        StringColor  = SelectedCategory.CategoryColor.ToString()
-                    };
-
-                    var result = _msSqlController.UpdateCategories(cat);
+                    var result = _commonDataController.UpdateCategoriesInRepository(SelectedCategory);
                     if (!result)
                     {
                         MessageBox.Show("Не удалось обновить категорию", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -285,18 +278,9 @@ namespace MemoRandom.Client.ViewModels
                     StringColor   = SelectedColor.ToString()
                 };
 
-                DbCategory cat = new()
-                {
-                    CategoryId   = CategoryId,
-                    CategoryName = CategoryName,
-                    StartAge     = PeriodFrom,
-                    StopAge      = PeriodTo,
-                    StringColor  = SelectedColor.ToString()
-                };
-
                 await Task.Run(() =>
                 {
-                    var result = _msSqlController.UpdateCategories(cat);
+                    var result = _commonDataController.UpdateCategoriesInRepository(category);
                     if (!result)
                     {
                         MessageBox.Show("Не удалось добавить категорию", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -342,15 +326,13 @@ namespace MemoRandom.Client.ViewModels
         {
             if (SelectedCategory == null) return; // Здесь можно еще уведомление дать
 
-            if (!await Task.Run(() => _msSqlController.DeleteCategory(SelectedCategory.CategoryId)))
+            if (!await Task.Run(() => _commonDataController.DeleteCategoryInRepository(SelectedCategory)))
             {
                 MessageBox.Show("Не получилось удалить выбранную категорию!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
             CommonDataController.AgeCategories.Remove(SelectedCategory);
-            //CategoriesCollection.Clear();
-            //CategoriesCollection = Categories.GetCategories();
             RaisePropertyChanged(nameof(CategoriesCollection));
             SelectedIndex = 0;
         }
@@ -384,8 +366,8 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private void InitCommands()
         {
-            NewCategoryCommand = new DelegateCommand(NewCategory);
-            SaveCategoryCommand = new DelegateCommand(SaveCategory);
+            NewCategoryCommand    = new DelegateCommand(NewCategory);
+            SaveCategoryCommand   = new DelegateCommand(SaveCategory);
             DeleteCategoryCommand = new DelegateCommand(DeleteCategory);
         }
 
@@ -400,13 +382,10 @@ namespace MemoRandom.Client.ViewModels
         /// <summary>
         /// Конструктор
         /// </summary>
-        /// <param name="msSqlController"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public CategoriesViewModel(IMsSqlController msSqlController)
+        public CategoriesViewModel(ICommonDataController commonDataController)
         {
-            _msSqlController = msSqlController ?? throw new ArgumentNullException(nameof(msSqlController));
-
-            CategoriesCollection = new(); // Создаем список категорий
+            _commonDataController = commonDataController ?? throw new ArgumentNullException(nameof(commonDataController));
 
             ColorsList = typeof(Colors).GetProperties(); // Получаем список свойств с цветами
 

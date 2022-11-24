@@ -314,6 +314,106 @@ namespace MemoRandom.Data.Implementations
         }
         #endregion
 
+        #region Блок работы с людьми для сравнения
+        /// <summary>
+        /// Получение списка людей для сравнения
+        /// </summary>
+        /// <returns></returns>
+        public List<DbComparedHuman> GetComparedHumans()
+        {
+            List<DbComparedHuman> comparedHumans = new();
+            using (MemoContext = new MemoRandomDbContext(DbConnectionString))
+            {
+                try
+                {
+                    comparedHumans = MemoContext.DbComparedHumans.ToList(); // Читаем контекст базы данных
+                }
+                catch (Exception ex)
+                {
+                    comparedHumans = null; // В случае ошибки чтения обнуляем связанный список
+                    _logger.Error($"Ошибка чтения людей для сравнения: {ex.HResult}");
+                }
+            }
+
+            return comparedHumans;
+        }
+
+        /// <summary>
+        /// Добавление человека для сравнения во внешнее хранилище
+        /// </summary>
+        /// <param name="comparedHuman"></param>
+        /// <returns></returns>
+        public bool UpdateComparedHuman(DbComparedHuman comparedHuman)
+        {
+            var success = true;
+
+            using (MemoContext = new MemoRandomDbContext(DbConnectionString))
+            {
+                try
+                {
+                    var updatedComparedHuman = MemoContext.DbComparedHumans.FirstOrDefault(x => x.ComparedHumanId == comparedHuman.ComparedHumanId);
+
+                    if (updatedComparedHuman != null) // Корректировка информации
+                    {
+                        updatedComparedHuman.ComparedHumanFullName = comparedHuman.ComparedHumanFullName;
+                        updatedComparedHuman.ComparedHumanBirthDate = comparedHuman.ComparedHumanBirthDate;
+
+                        MemoContext.SaveChanges();
+                    }
+                    else // Добавление новой записи в таблицу людей для сравнения
+                    {
+                        DbComparedHuman record = new()
+                        {
+                            ComparedHumanId = comparedHuman.ComparedHumanId,
+                            ComparedHumanFullName = comparedHuman.ComparedHumanFullName,
+                            ComparedHumanBirthDate = comparedHuman.ComparedHumanBirthDate
+                        };
+
+                        MemoContext.DbComparedHumans.Add(record);
+                        MemoContext.SaveChanges();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    success = false;
+                    _logger.Error($"Ошибка обновления людей для сравнения: {ex.HResult}");
+                }
+            }
+
+            return success;
+        }
+
+        /// <summary>
+        /// Удаление человека для сравнения из внешнего хранилища
+        /// </summary>
+        /// <param name="comparedHuman"></param>
+        /// <returns></returns>
+        public bool DeleteComparedHuman(Guid compHumanId)
+        {
+            bool successResult = true;
+
+            using (MemoContext = new MemoRandomDbContext(DbConnectionString))
+            {
+                try
+                {
+                    var deletedHuman = MemoContext.DbComparedHumans.FirstOrDefault(x => x.ComparedHumanId == compHumanId);
+                    if (deletedHuman != null)
+                    {
+                        MemoContext.Remove(deletedHuman);
+                        MemoContext.SaveChanges();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    successResult = false;
+                    _logger.Error($"Ошибка удаления человека для сравнения: {ex.HResult}");
+                }
+            }
+
+            return successResult;
+        }
+        #endregion
+
         #region <Блок работы с людьми
         /// <summary>
         /// Получение списка людей из внешнего хранилища
@@ -556,106 +656,6 @@ namespace MemoRandom.Data.Implementations
         public string GetImageFolder()
         {
             return ImageFolder;
-        }
-        #endregion
-
-        #region Блок работы с людьми для сравнения
-        /// <summary>
-        /// Получение списка людей для сравнения
-        /// </summary>
-        /// <returns></returns>
-        public List<DbComparedHuman> GetComparedHumans()
-        {
-            List<DbComparedHuman> comparedHumans = new();
-            using (MemoContext = new MemoRandomDbContext(DbConnectionString))
-            {
-                try
-                {
-                    comparedHumans = MemoContext.DbComparedHumans.ToList(); // Читаем контекст базы данных
-                }
-                catch (Exception ex)
-                {
-                    comparedHumans = null; // В случае ошибки чтения обнуляем связанный список
-                    _logger.Error($"Ошибка чтения людей для сравнения: {ex.HResult}");
-                }
-            }
-
-            return comparedHumans;
-        }
-
-        /// <summary>
-        /// Добавление человека для сравнения во внешнее хранилище
-        /// </summary>
-        /// <param name="comparedHuman"></param>
-        /// <returns></returns>
-        public bool UpdateComparedHuman(DbComparedHuman comparedHuman)
-        {
-            var success = true;
-
-            using (MemoContext = new MemoRandomDbContext(DbConnectionString))
-            {
-                try
-                {
-                    var updatedComparedHuman = MemoContext.DbComparedHumans.FirstOrDefault(x => x.ComparedHumanId == comparedHuman.ComparedHumanId);
-                    
-                    if(updatedComparedHuman != null) // Корректировка информации
-                    {
-                        updatedComparedHuman.ComparedHumanFullName = comparedHuman.ComparedHumanFullName;
-                        updatedComparedHuman.ComparedHumanBirthDate = comparedHuman.ComparedHumanBirthDate;
-
-                        MemoContext.SaveChanges();
-                    }
-                    else // Добавление новой записи в таблицу людей для сравнения
-                    {
-                        DbComparedHuman record = new()
-                        {
-                            ComparedHumanId        = comparedHuman.ComparedHumanId,
-                            ComparedHumanFullName  = comparedHuman.ComparedHumanFullName,
-                            ComparedHumanBirthDate = comparedHuman.ComparedHumanBirthDate
-                        };
-
-                        MemoContext.DbComparedHumans.Add(record);
-                        MemoContext.SaveChanges();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    success = false;
-                    _logger.Error($"Ошибка обновления людей для сравнения: {ex.HResult}");
-                }
-            }
-
-            return success;
-        }
-
-        /// <summary>
-        /// Удаление человека для сравнения из внешнего хранилища
-        /// </summary>
-        /// <param name="comparedHuman"></param>
-        /// <returns></returns>
-        public bool DeleteComparedHuman(Guid compHumanId)
-        {
-            bool successResult = true;
-
-            using (MemoContext = new MemoRandomDbContext(DbConnectionString))
-            {
-                try
-                {
-                    var deletedHuman = MemoContext.DbComparedHumans.FirstOrDefault(x => x.ComparedHumanId == compHumanId);
-                    if (deletedHuman != null)
-                    {
-                        MemoContext.Remove(deletedHuman);
-                        MemoContext.SaveChanges();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    successResult = false;
-                    _logger.Error($"Ошибка удаления человека для сравнения: {ex.HResult}");
-                }
-            }
-
-            return successResult;
         }
         #endregion
 
