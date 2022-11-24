@@ -19,6 +19,7 @@ namespace MemoRandom.Client.Views
         {
             DgHumans.UpdateLayout();
             DgHumans.ScrollIntoView(DgHumans.SelectedItem, null);
+            DgHumans.Focus();
         }
 
 
