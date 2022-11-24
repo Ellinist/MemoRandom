@@ -43,6 +43,7 @@ namespace MemoRandom.Client.Views
             this.Closed += _vm.HumansListView_Closed; // Событие закрытия окна
             DgHumans.Sorting += _vm.DgHumans_Sorting; // Событие сортировки по столбцу
             DgHumans.SelectionChanged += DgHumans_SelectionChanged;
+            DgHumans.MouseDoubleClick += _vm.DgHumans_MouseDoubleClick;
         }
         #endregion
     }

@@ -296,6 +296,11 @@ namespace MemoRandom.Client.ViewModels
             }
         }
 
+        public void DgHumans_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            EditHumanData();
+        }
+
         /// <summary>
         /// Удаление выбранного человека
         /// </summary>
