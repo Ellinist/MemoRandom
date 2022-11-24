@@ -63,7 +63,7 @@ namespace MemoRandom.Client.Common.Implementations
             bool successResult = true;
 
             #region Чтение причин смерти и формирование плоского и иерархического списков
-            PlainReasonsList = ConvertReasonsFromDbSet(_msSqlController.GetReasons());
+            PlainReasonsList = _mapper.Map<List<DbReason>, List<Reason>>(_msSqlController.GetReasons());
             FormObservableCollection(PlainReasonsList, null);
             #endregion
 
@@ -81,25 +81,6 @@ namespace MemoRandom.Client.Common.Implementations
             #endregion
 
             return successResult;
-        }
-
-        /// <summary>
-        /// Получение списка причин смерти
-        /// </summary>
-        /// <param name="dbList"></param>
-        /// <returns></returns>
-        private List<Reason> ConvertReasonsFromDbSet(List<DbReason> dbList)
-        {
-            List<Reason> reasons = new();
-
-            foreach (DbReason dbReason in dbList)
-            {
-                Reason reason = new Reason();
-                reason = _mapper.Map<Reason>(dbReason);
-                reasons.Add(reason);
-            }
-
-            return reasons;
         }
 
         /// <summary>
@@ -161,8 +142,6 @@ namespace MemoRandom.Client.Common.Implementations
             return true;
         }
         #endregion
-
-        
 
         /// <summary>
         /// Получение изображения выбранного человека
