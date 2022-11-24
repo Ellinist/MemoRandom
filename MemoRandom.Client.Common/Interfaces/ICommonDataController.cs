@@ -25,13 +25,35 @@ namespace MemoRandom.Client.Common.Interfaces
         /// <returns></returns>
         bool DeleteCategoryInRepository(Category category);
 
+        /// <summary>
+        /// Обновление (добавление) человека для сравнения во внешнем хранилище
+        /// </summary>
+        /// <param name="comparedHuman"></param>
+        /// <returns></returns>
         bool UpdateComparedHumanInRepository(ComparedHuman comparedHuman);
 
+        /// <summary>
+        /// Удаление человека для сравнения во внешнем хранилище
+        /// </summary>
+        /// <returns></returns>
         bool DeleteComparedHumanInRepository(ComparedHuman comparedHuman);
 
-        void UpdateHierarchicalReasonsData();
+        /// <summary>
+        /// Обновление (добавление) человека во внешнем хранилище
+        /// </summary>
+        /// <param name="human"></param>
+        /// <returns></returns>
+        bool UpdateHumanInRepository(Human human, BitmapImage humanImage);
 
-        bool UpdateHumanData(Human human, BitmapImage humanImage);
+        /// <summary>
+        /// Удаление человека из внешнего хранилища
+        /// </summary>
+        /// <param name="human"></param>
+        /// <param name="imageFile"></param>
+        /// <returns></returns>
+        bool DeleteHumanInRepository(Human human, string imageFile);
+
+        void UpdateHierarchicalReasonsData();
 
         /// <summary>
         /// Получение изображения человека

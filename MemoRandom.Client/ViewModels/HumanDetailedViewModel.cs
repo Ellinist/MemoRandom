@@ -27,7 +27,6 @@ namespace MemoRandom.Client.ViewModels
 
         #region PRIVATE FIELDS
         private readonly ILogger          _logger;
-        private readonly IMsSqlController _msSqlController;
         private readonly ICommonDataController _commonDataController;
 
         private const double SourceWidth = 450;
@@ -612,7 +611,7 @@ namespace MemoRandom.Client.ViewModels
                 var image = BitmapSourceToBitmapImage(TargetImageSource);
                 await Task.Run(() =>
                 {
-                    result = _commonDataController.UpdateHumanData(CommonDataController.CurrentHuman, image);
+                    result = _commonDataController.UpdateHumanInRepository(CommonDataController.CurrentHuman, image);
                 });
                 if(result) CloseAction(); // Закрываем окно
             }
@@ -704,11 +703,10 @@ namespace MemoRandom.Client.ViewModels
         /// <param name="logger"></param>
         /// <param name="msSqlController"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public HumanDetailedViewModel(ILogger logger, IMsSqlController msSqlController,
+        public HumanDetailedViewModel(ILogger logger,
                                       ICommonDataController commonDataController)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _msSqlController = msSqlController ?? throw new ArgumentNullException(nameof(msSqlController));
             _commonDataController = commonDataController ?? throw new ArgumentNullException(nameof(commonDataController));
 
             InitializeCommands();

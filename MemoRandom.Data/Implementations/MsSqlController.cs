@@ -554,7 +554,7 @@ namespace MemoRandom.Data.Implementations
         /// </summary>
         /// <param name="currentHuman"></param>
         /// <returns></returns>
-        public bool DeleteHuman(Guid humanId, string imageFile)
+        public bool DeleteHuman(Guid humanId)
         {
             bool successResult = true;
 
@@ -567,14 +567,6 @@ namespace MemoRandom.Data.Implementations
                     {
                         MemoContext.Remove(deletedHuman);
                         MemoContext.SaveChanges();
-                    }
-
-                    if (imageFile != string.Empty)
-                    {
-                        if (!DeleteImageFile(imageFile))
-                        {
-                            successResult = false; // Если файл изображения удалить не удалось
-                        }
                     }
                 }
                 catch (Exception ex)
@@ -629,29 +621,6 @@ namespace MemoRandom.Data.Implementations
         //    using FileStream fs = new FileStream(combinedImagePath, FileMode.Create);
         //    encoder.Save(fs);
         //}
-
-        /// <summary>
-        /// Удаление файла изображения
-        /// </summary>
-        /// <param name="fileName"></param>
-        /// <returns></returns>
-        private bool DeleteImageFile(string fileName)
-        {
-            bool successResult = true;
-
-            try
-            {
-                string combinedImagePath = Path.Combine(ImageFolder, fileName);
-                File.Delete(combinedImagePath);
-            }
-            catch (Exception ex)
-            {
-                successResult = false;
-                _logger.Error($"Ошибка удаления файла изображения: {ex.HResult}");
-            }
-
-            return successResult;
-        }
 
         public string GetImageFolder()
         {

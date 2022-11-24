@@ -39,7 +39,6 @@ namespace MemoRandom.Client.ViewModels
 
         private readonly ILogger _logger; // Экземпляр журнала
         private readonly IContainer _container; // Контейнер
-        private readonly IMsSqlController _msSqlController;
         private readonly ICommonDataController _commonDataController;
 
         private CultureInfo cultureInfo = new CultureInfo("ru-RU");
@@ -260,8 +259,6 @@ namespace MemoRandom.Client.ViewModels
 
             CommonDataController.HumansList.Add(CommonDataController.CurrentHuman); // Добавляем человека в список местного хранилища
             SortHumansCollection(); // Сортировка по условию
-            //HumansCollection.Clear();
-            //HumansCollection = CommonDataController.GetHumans();
 
             SelectedHuman = CommonDataController.CurrentHuman;
             PersonIndex = HumansCollection.IndexOf(CommonDataController.CurrentHuman);
@@ -284,9 +281,6 @@ namespace MemoRandom.Client.ViewModels
         {
             _container.Resolve<HumanDetailedView>().ShowDialog(); // Запуск окна создания и редактирования человека
 
-            //Humans.UpdateHuman(SelectedHuman); // Обновляем человека в списке местного хранилища
-            //HumansCollection.Clear();
-            //HumansCollection = Humans.GetHumans();
             SortHumansCollection(); // Сортировка по условию
 
             PersonIndex = HumansCollection.IndexOf(CommonDataController.CurrentHuman);
@@ -317,12 +311,10 @@ namespace MemoRandom.Client.ViewModels
             {
                 await Task.Run(() =>
                 {
-                    _msSqlController.DeleteHuman(SelectedHuman.HumanId, SelectedHuman.ImageFile); // Удаление во внешнем хранилище
+                    _commonDataController.DeleteHumanInRepository(SelectedHuman, SelectedHuman.ImageFile); // Удаление во внешнем хранилище
                 });
 
                 CommonDataController.HumansList.Remove(SelectedHuman); // Удаление в списке
-                //HumansCollection.Clear();
-                //HumansCollection = Humans.GetHumans();
             }
             catch (Exception ex)
             {
@@ -413,24 +405,6 @@ namespace MemoRandom.Client.ViewModels
         public void HumansListView_Loaded(object sender, RoutedEventArgs e)
         {
             HumansCollection = CommonDataController.HumansList;
-            //try
-            //{
-            //    ObservableCollection<Human> result = new(); // Результирующая коллекция людей
-            //    await Task.Run(() =>
-            //    {
-            //        result = _msSqlController.GetHumans(); // Получаем из внешнего источника
-
-            //        Humans.HumansList = result; // Заносим результат в местное хранилище
-            //        HumansCollection = Humans.GetHumans(); // Вятягиваем клон результата
-            //    });
-
-            //    RaisePropertyChanged(nameof(HumansCollection));
-            //}
-            //catch (Exception ex)
-            //{
-            //    MessageBox.Show("Не удалось прочитать данные!\n Код ошибки в журнале", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
-            //    _logger.Error($"Ошибка: {ex}");
-            //}
         }
 
         /// <summary>
@@ -470,12 +444,11 @@ namespace MemoRandom.Client.ViewModels
         /// <param name="container"></param>
         /// <param name="msSqlController"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public HumansListViewModel(ILogger logger, IContainer container, IMsSqlController msSqlController,
+        public HumansListViewModel(ILogger logger, IContainer container,
                                    ICommonDataController commonDataController)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _container = container ?? throw new ArgumentNullException(nameof(container));
-            _msSqlController = msSqlController ?? throw new ArgumentNullException(nameof(msSqlController));
             _commonDataController = commonDataController ?? throw new ArgumentNullException(nameof(commonDataController));
 
             InitializeCommands();

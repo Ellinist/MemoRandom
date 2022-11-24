@@ -138,26 +138,14 @@ namespace MemoRandom.Client.Common.Implementations
             return _msSqlController.DeleteComparedHuman(comparedHuman.ComparedHumanId);
         }
 
-        public bool UpdateHumanData(Human human, BitmapImage humanImage)
+        /// <summary>
+        /// Обновление (добавление) человека во внешнем хранилище
+        /// </summary>
+        /// <param name="human"></param>
+        /// <returns></returns>
+        public bool UpdateHumanInRepository(Human human, BitmapImage humanImage)
         {
-            DbHuman updatedHuman = new()
-            {
-                HumanId = human.HumanId,
-                LastName = human.LastName,
-                FirstName = human.FirstName,
-                Patronymic = human.Patronymic,
-                BirthDate = human.BirthDate,
-                BirthCountry = human.BirthCountry,
-                BirthPlace = human.BirthPlace,
-                DeathDate = human.DeathDate,
-                DeathCountry = human.DeathCountry,
-                DeathPlace = human.DeathPlace,
-                DeathReasonId = human.DeathReasonId,
-                ImageFile = human.ImageFile,
-                HumanComments = human.HumanComments,
-                DaysLived = human.DaysLived,
-                FullYearsLived = human.FullYearsLived
-            };
+            DbHuman updatedHuman = _mapper.Map<DbHuman>(human);
 
             _msSqlController.UpdateHumans(updatedHuman);
 
@@ -167,6 +155,25 @@ namespace MemoRandom.Client.Common.Implementations
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Удаление человека из внешнего хранилища
+        /// </summary>
+        /// <param name="human"></param>
+        /// <param name="imageFile"></param>
+        /// <returns></returns>
+        public bool DeleteHumanInRepository(Human human, string imageFile)
+        {
+            bool success = _msSqlController.DeleteHuman(human.HumanId);
+            if (imageFile != string.Empty)
+            {
+                if (!DeleteImageFile(imageFile))
+                {
+                    success = false; // Если файл изображения удалить не удалось
+                }
+            }
+            return success;
         }
         #endregion
 
@@ -211,6 +218,29 @@ namespace MemoRandom.Client.Common.Implementations
 
             using FileStream fs = new FileStream(combinedImagePath, FileMode.Create);
             encoder.Save(fs);
+        }
+
+        /// <summary>
+        /// Удаление файла изображения
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        private bool DeleteImageFile(string fileName)
+        {
+            bool successResult = true;
+
+            try
+            {
+                string combinedImagePath = Path.Combine(_msSqlController.GetImageFolder(), fileName);
+                File.Delete(combinedImagePath);
+            }
+            catch (Exception ex)
+            {
+                successResult = false;
+                _logger.Error($"Ошибка удаления файла изображения: {ex.HResult}");
+            }
+
+            return successResult;
         }
 
         /// <summary>
@@ -277,6 +307,13 @@ namespace MemoRandom.Client.Common.Implementations
                 AgeCategories.Add(item);
             }
         }
+
+
+
+
+
+
+
 
 
 
