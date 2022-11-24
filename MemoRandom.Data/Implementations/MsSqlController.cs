@@ -221,7 +221,7 @@ namespace MemoRandom.Data.Implementations
             {
                 try
                 {
-                    categories = MemoContext.DbCategories.OrderBy(x => x.PeriodFrom).ToList(); // Читаем контекст базы данных
+                    categories = MemoContext.DbCategories.OrderBy(x => x.StartAge).ToList(); // Читаем контекст базы данных
                 }
                 catch (Exception ex)
                 {
@@ -252,8 +252,8 @@ namespace MemoRandom.Data.Implementations
                     {
                         updatedCategory.CategoryId   = category.CategoryId;
                         updatedCategory.CategoryName = category.CategoryName;
-                        updatedCategory.PeriodFrom   = category.PeriodFrom;
-                        updatedCategory.PeriodTo     = category.PeriodTo;
+                        updatedCategory.StartAge     = category.StartAge;
+                        updatedCategory.StopAge      = category.StopAge;
                         updatedCategory.ColorA       = category.ColorA;
                         updatedCategory.ColorR       = category.ColorR;
                         updatedCategory.ColorG       = category.ColorG;
@@ -267,8 +267,8 @@ namespace MemoRandom.Data.Implementations
                         {
                             CategoryId   = category.CategoryId,
                             CategoryName = category.CategoryName,
-                            PeriodFrom   = category.PeriodFrom,
-                            PeriodTo     = category.PeriodTo,
+                            StartAge     = category.StartAge,
+                            StopAge      = category.StopAge,
                             ColorA       = category.ColorA,
                             ColorR       = category.ColorR,
                             ColorG       = category.ColorG,

@@ -256,12 +256,12 @@ namespace MemoRandom.Client.ViewModels
                     {
                         CategoryId = SelectedCategory.CategoryId,
                         CategoryName = SelectedCategory.CategoryName,
-                        PeriodFrom = SelectedCategory.StartAge,
-                        PeriodTo = SelectedCategory.StopAge,
-                        ColorA = (byte)SelectedCategory.CategoryColor.ScA,
-                        ColorR = (byte)SelectedCategory.CategoryColor.ScR,
-                        ColorG = (byte)SelectedCategory.CategoryColor.ScG,
-                        ColorB = (byte)SelectedCategory.CategoryColor.ScB
+                        StartAge = SelectedCategory.StartAge,
+                        StopAge  = SelectedCategory.StopAge,
+                        ColorA = SelectedCategory.CategoryColor.A,
+                        ColorR = SelectedCategory.CategoryColor.R,
+                        ColorG = SelectedCategory.CategoryColor.G,
+                        ColorB = SelectedCategory.CategoryColor.B
                     };
 
                     var result = _msSqlController.UpdateCategories(cat);
@@ -282,23 +282,23 @@ namespace MemoRandom.Client.ViewModels
             {
                 Category category = new()
                 {
-                    CategoryId = CategoryId,
-                    CategoryName = CategoryName,
-                    StartAge = PeriodFrom,
-                    StopAge = PeriodTo,
+                    CategoryId    = CategoryId,
+                    CategoryName  = CategoryName,
+                    StartAge      = PeriodFrom,
+                    StopAge       = PeriodTo,
                     CategoryColor = SelectedColor
                 };
 
                 DbCategory cat = new()
                 {
-                    CategoryId = CategoryId,
+                    CategoryId   = CategoryId,
                     CategoryName = CategoryName,
-                    PeriodFrom = PeriodFrom,
-                    PeriodTo = PeriodTo,
-                    ColorA = SelectedColor.A,
-                    ColorR = SelectedColor.R,
-                    ColorG = SelectedColor.G,
-                    ColorB = SelectedColor.B
+                    StartAge     = PeriodFrom,
+                    StopAge      = PeriodTo,
+                    ColorA       = SelectedColor.A,
+                    ColorR       = SelectedColor.R,
+                    ColorG       = SelectedColor.G,
+                    ColorB       = SelectedColor.B
                 };
 
                 await Task.Run(() =>

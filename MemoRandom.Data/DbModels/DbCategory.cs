@@ -26,13 +26,13 @@ namespace MemoRandom.Data.DbModels
         /// С какого возраста действует категория
         /// </summary>
         [Required]
-        public int PeriodFrom { get; set; }
+        public int StartAge { get; set; }
 
         /// <summary>
         /// До какого возраста действует категория
         /// </summary>
         [Required]
-        public int PeriodTo { get; set; }
+        public int StopAge { get; set; }
 
         /// <summary>
         /// Яркость цвета

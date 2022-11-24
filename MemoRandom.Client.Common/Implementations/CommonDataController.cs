@@ -63,7 +63,7 @@ namespace MemoRandom.Client.Common.Implementations
             bool successResult = true;
 
             #region Чтение причин смерти и формирование плоского и иерархического списков
-            PlainReasonsList = ConvertFromDbSet(_msSqlController.GetReasons());
+            PlainReasonsList = ConvertReasonsFromDbSet(_msSqlController.GetReasons());
             FormObservableCollection(PlainReasonsList, null);
             #endregion
 
@@ -80,6 +80,81 @@ namespace MemoRandom.Client.Common.Implementations
             #endregion
 
             return successResult;
+        }
+
+        /// <summary>
+        /// Получение списка причин смерти
+        /// </summary>
+        /// <param name="dbList"></param>
+        /// <returns></returns>
+        private List<Reason> ConvertReasonsFromDbSet(List<DbReason> dbList)
+        {
+            List<Reason> reasons = new();
+
+            foreach (DbReason dbReason in dbList)
+            {
+                Reason reason = new Reason();
+                reason = _mapper.Map<Reason>(dbReason);
+                reasons.Add(reason);
+            }
+
+            return reasons;
+        }
+
+        /// <summary>
+        /// Получение списка категорий
+        /// </summary>
+        /// <param name="categoriesList"></param>
+        /// <returns></returns>
+        private ObservableCollection<Category> ConvertCategoriesFromDbSet(List<DbCategory> categoriesList)
+        {
+            ObservableCollection<Category> categories = new();
+            foreach (var cat in categoriesList)
+            {
+                Category category = new();
+                category = _mapper.Map<Category>(cat);
+                category.CategoryColor = Color.FromArgb(cat.ColorA, cat.ColorR, cat.ColorG, cat.ColorB);
+                categories.Add(category);
+            }
+
+            return categories;
+        }
+
+        /// <summary>
+        /// Получение списка людей для сравнения
+        /// </summary>
+        /// <param name="humans"></param>
+        /// <returns></returns>
+        private ObservableCollection<ComparedHuman> ConvertComparedHumansFromDbSet(List<DbComparedHuman> humans)
+        {
+            ObservableCollection<ComparedHuman> comparedHumans = new();
+            foreach (var item in humans)
+            {
+                ComparedHuman human = new();
+                human = _mapper.Map<ComparedHuman>(item);
+                comparedHumans.Add(human);
+            }
+
+            return comparedHumans;
+        }
+
+        /// <summary>
+        /// Получение рабочего списка людей
+        /// </summary>
+        /// <param name="humans"></param>
+        /// <returns></returns>
+        private ObservableCollection<Human> ConvertHumansFromDbSet(List<DbHuman> humans)
+        {
+            ObservableCollection<Human> resultCollection = new();
+
+            foreach (var item in humans)
+            {
+                Human human = new();
+                human = _mapper.Map<Human>(item);
+                resultCollection.Add(human);
+            }
+
+            return resultCollection;
         }
 
         /// <summary>
@@ -123,91 +198,7 @@ namespace MemoRandom.Client.Common.Implementations
         }
         #endregion
 
-        private List<Reason> ConvertFromDbSet(List<DbReason> dbList)
-        {
-            List<Reason> reasons = new();
-            
-            foreach(DbReason dbReason in dbList)
-            {
-                Reason reason = new()
-                {
-                     ReasonId = dbReason.ReasonId,
-                     ReasonName = dbReason.ReasonName,
-                     ReasonComment = dbReason.ReasonComment,
-                     ReasonDescription = dbReason.ReasonDescription,
-                     ReasonParentId = dbReason.ReasonParentId
-                };
-                reasons.Add(reason);
-            }
-
-            return reasons;
-        }
-
-        private ObservableCollection<Category> ConvertCategoriesFromDbSet(List<DbCategory> categoriesList)
-        {
-            ObservableCollection<Category> categories = new();
-            foreach (var cat in categoriesList)
-            {
-                Category category = new()
-                {
-                    CategoryId = cat.CategoryId,
-                    CategoryName = cat.CategoryName,
-                    StartAge = cat.PeriodFrom,
-                    StopAge = cat.PeriodTo,
-                    CategoryColor = Color.FromArgb(cat.ColorA, cat.ColorR, cat.ColorG, cat.ColorB)
-                };
-                categories.Add(category);
-            }
-
-            return categories;
-        }
-
-        private ObservableCollection<ComparedHuman> ConvertComparedHumansFromDbSet(List<DbComparedHuman> humans)
-        {
-            ObservableCollection<ComparedHuman> comparedHumans = new();
-            foreach (var item in humans)
-            {
-                ComparedHuman human = new()
-                {
-                    ComparedHumanId = item.ComparedHumanId,
-                    ComparedHumanFullName = item.ComparedHumanFullName,
-                    ComparedHumanBirthDate = item.ComparedHumanBirthDate
-                };
-                comparedHumans.Add(human);
-            }
-
-            return comparedHumans;
-        }
-
-        private ObservableCollection<Human> ConvertHumansFromDbSet(List<DbHuman> humans)
-        {
-            ObservableCollection<Human> resultCollection = new();
-
-            foreach (var item in humans)
-            {
-                Human human = new()
-                {
-                    HumanId = item.HumanId,
-                    LastName = item.LastName,
-                    FirstName = item.FirstName,
-                    Patronymic = item.Patronymic,
-                    BirthDate = item.BirthDate,
-                    BirthCountry = item.BirthCountry,
-                    BirthPlace = item.BirthPlace,
-                    DeathDate = item.DeathDate,
-                    DeathCountry = item.DeathCountry,
-                    DeathPlace = item.DeathPlace,
-                    ImageFile = item.ImageFile,
-                    DeathReasonId = item.DeathReasonId,
-                    HumanComments = item.HumanComments,
-                    DaysLived = item.DaysLived,
-                    FullYearsLived = item.FullYearsLived
-                };
-                resultCollection.Add(human);
-            }
-
-            return resultCollection;
-        }
+        
 
         /// <summary>
         /// Получение изображения выбранного человека

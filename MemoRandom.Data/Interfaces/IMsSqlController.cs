@@ -96,13 +96,6 @@ namespace MemoRandom.Data.Interfaces
         /// <returns></returns>
         bool DeleteHuman(Guid humanId, string imageFile);
 
-        ///// <summary>
-        ///// Получение изображения человека
-        ///// </summary>
-        ///// <param name="currentHuman"></param>
-        ///// <returns></returns>
-        //BitmapImage GetHumanImage(Human currentHuman);
-
         string GetImageFolder();
         #endregion
 
