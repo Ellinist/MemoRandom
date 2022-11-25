@@ -45,7 +45,10 @@ namespace MemoRandom.Client.ViewModels
 
         private void ProgressMethod(object control)
         {
+            string name = string.Empty;
+            
             var t = control as ComparedBlockControl;
+            //string name = t.ComparedHumanFullName;
 
             ProgressDispatcher.Invoke(() =>
             {
@@ -55,15 +58,17 @@ namespace MemoRandom.Client.ViewModels
 
                 t.LeftUpTb.Text = "Test";
                 t.CenterUpTb.Text = t.ComparedHumanFullName;
+                name = t.ComparedHumanFullName;
             });
 
             for (var i = 0; i < 1000; i++)
             {
-                if(t.ComparedHumanFullName == "Старый")
+
+                if (name == "Старый")
                 {
                     Thread.Sleep(100);
                 }
-                else if(t.ComparedHumanFullName == "Средний")
+                else if (name == "Средний")
                 {
                     Thread.Sleep(70);
                 }
@@ -71,7 +76,7 @@ namespace MemoRandom.Client.ViewModels
                 {
                     Thread.Sleep(40);
                 }
-                
+
                 ProgressDispatcher.Invoke(() =>
                 {
                     t.CurrentProgressBar.Value = i;
