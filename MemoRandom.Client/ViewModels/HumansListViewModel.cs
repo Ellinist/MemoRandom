@@ -352,6 +352,8 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         public DelegateCommand ComparedHumansOpenCommand { get; private set; }
 
+        public DelegateCommand DynamicShowCommand { get; private set; }
+
         public DelegateCommand SettingsMenuCommand { get; private set; }
         
         public DelegateCommand HumansListMenuCommand { get; private set; }
@@ -376,6 +378,15 @@ namespace MemoRandom.Client.ViewModels
             StartAboutCommand    = new DelegateCommand(OpenAboutView);
             CategoriesCommand    = new DelegateCommand(CategoriesOpen);
             ComparedHumansOpenCommand = new DelegateCommand(ComparedHumansOpen);
+            DynamicShowCommand   = new DelegateCommand(DynamicShow);
+        }
+
+        /// <summary>
+        /// Вызов окна динамического отображения прогресса
+        /// </summary>
+        private void DynamicShow()
+        {
+            _container.Resolve<ComparingProcessView>().ShowDialog();
         }
 
         /// <summary>

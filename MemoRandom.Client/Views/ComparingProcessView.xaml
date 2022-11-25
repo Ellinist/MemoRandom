@@ -5,7 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MemoRandom.Client.Views"
         mc:Ignorable="d"
-        Title="ComparingProcessView" Height="450" Width="800">
+        Title="ComparingProcessView"
+        MinHeight="600"
+        MinWidth="1800">
+    
+    
+    
     <Grid>
         
     </Grid>
