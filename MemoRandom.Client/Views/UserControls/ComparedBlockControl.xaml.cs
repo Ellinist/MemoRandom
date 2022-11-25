@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace MemoRandom.Client.Views.UserControls
 {
@@ -22,11 +23,12 @@ namespace MemoRandom.Client.Views.UserControls
     /// </summary>
     public partial class ComparedBlockControl : UserControl
     {
-        public ComparedBlockControl(ComparedBlockControlViewModel vm, Human human)
+        public ComparedBlockControl(ComparedBlockControlViewModel vm, Human human, Dispatcher dispatcher)
         {
             InitializeComponent();
 
             DataContext = vm;
+            vm.ProgressDispatcher = dispatcher;
             vm.LeftUpTextBlock = LeftUpTb;
             vm.CurrentProgressBar = CurrentProgressBar;
             vm.Human = human;
