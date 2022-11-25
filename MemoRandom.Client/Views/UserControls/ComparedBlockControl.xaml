@@ -5,18 +5,18 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MemoRandom.Client.Views.UserControls"
              mc:Ignorable="d" 
-             d:DesignHeight="350" d:DesignWidth="1600">
+             d:DesignHeight="350">
     <Grid>
         <Grid.ColumnDefinitions>
             
             <!--Левое изображение (пройденный этап)-->
-            <ColumnDefinition MinWidth="450" MaxWidth="450"/>
+            <ColumnDefinition MinWidth="225" MaxWidth="225"/>
             
             <!--Прогресс-индикатор-->
-            <ColumnDefinition/>
+            <ColumnDefinition Width="*"/>
             
             <!--Правое изображение (этап по плану)-->
-            <ColumnDefinition MinWidth="450" MaxWidth="450"/>
+            <ColumnDefinition MinWidth="225" MaxWidth="225"/>
         </Grid.ColumnDefinitions>
 
         <!--Изображение прошедшее-->
@@ -25,7 +25,8 @@
         </Image>
 
         <!--Прогресс-индикатор-->
-        <ProgressBar Grid.Column="1">
+        <ProgressBar Grid.Column="1"
+                     x:Name="CurrentProgressBar">
             
         </ProgressBar>
 
@@ -49,6 +50,7 @@
             </Grid.RowDefinitions>
 
             <TextBlock Grid.Row="1" Grid.Column="1"
+                       x:Name="LeftUpTb"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Center"
                        FontSize="24"

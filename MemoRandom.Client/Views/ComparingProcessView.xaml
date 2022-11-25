@@ -12,6 +12,10 @@
     
     
     <Grid>
-        
+        <StackPanel x:Name="ProgressStackPanel"
+                    Orientation="Vertical"
+                    HorizontalAlignment="Stretch">
+            
+        </StackPanel>
     </Grid>
 </Window>

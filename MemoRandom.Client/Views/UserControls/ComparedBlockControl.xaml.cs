@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MemoRandom.Client.Common.Models;
+using MemoRandom.Client.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,9 +22,15 @@ namespace MemoRandom.Client.Views.UserControls
     /// </summary>
     public partial class ComparedBlockControl : UserControl
     {
-        public ComparedBlockControl()
+        public ComparedBlockControl(ComparedBlockControlViewModel vm, Human human)
         {
             InitializeComponent();
+
+            DataContext = vm;
+            vm.LeftUpTextBlock = LeftUpTb;
+            vm.CurrentProgressBar = CurrentProgressBar;
+            vm.Human = human;
+            this.Loaded += vm.ComparedBlockControl_Loaded;
         }
     }
 }

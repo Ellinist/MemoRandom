@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MemoRandom.Client.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +20,20 @@ namespace MemoRandom.Client.Views
     /// </summary>
     public partial class ComparingProcessView : Window
     {
-        public ComparingProcessView()
+        private ComparingProcessViewModel _vm;
+
+        public ComparingProcessView(ComparingProcessViewModel vm)
         {
             InitializeComponent();
+
+            DataContext = vm;
+            _vm = vm;
+            this.Loaded += ComparingProcessView_Loaded;
+        }
+
+        private void ComparingProcessView_Loaded(object sender, RoutedEventArgs e)
+        {
+            _vm.GetStackPanel(ProgressStackPanel);
         }
     }
 }
