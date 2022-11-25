@@ -1,11 +1,8 @@
 ﻿using MemoRandom.Client.Common.Implementations;
 using MemoRandom.Client.Common.Models;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Media;
 
@@ -14,7 +11,7 @@ namespace MemoRandom.Client.Converters
     public class RowCategoryColorConverter : IValueConverter
     {
         /// <summary>
-        /// Прмяая конвертация
+        /// Прямая конвертация
         /// </summary>
         /// <param name="value"></param>
         /// <param name="targetType"></param>
@@ -23,11 +20,11 @@ namespace MemoRandom.Client.Converters
         /// <returns></returns>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var currentategory = value as Category;
+            var currentCategory = value as Category;
 
-            if (currentategory != null)
+            if (currentCategory != null)
             {
-                var o = CommonDataController.AgeCategories.FirstOrDefault(x => x.CategoryColor == currentategory.CategoryColor);
+                var o = CommonDataController.AgeCategories.FirstOrDefault(x => x.CategoryColor == currentCategory.CategoryColor);
 
                 if (o == null) return Colors.White.ToString(); // Если цвет не задан, то белый
                 return o.CategoryColor.ToString();

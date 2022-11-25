@@ -1,8 +1,6 @@
 ﻿using MemoRandom.Client.Common.Implementations;
 using MemoRandom.Client.Common.Interfaces;
 using MemoRandom.Client.Common.Models;
-using MemoRandom.Data.DbModels;
-using MemoRandom.Data.Interfaces;
 using Prism.Commands;
 using Prism.Mvvm;
 using System;
@@ -223,14 +221,14 @@ namespace MemoRandom.Client.ViewModels
         public DelegateCommand DeleteCategoryCommand { get; private set; }
         #endregion
 
-        private bool newFlag = false;
+        private bool _newFlag = false;
 
         /// <summary>
         /// Создание новой категории
         /// </summary>
         private void NewCategory()
         {
-            newFlag = true;
+            _newFlag = true;
             CategoryId = Guid.NewGuid();
             CategoryName = "Введите название!";
             PeriodFrom = 0;
@@ -242,7 +240,7 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private async void SaveCategory()
         {
-            if (!newFlag) // Существующая запись категории
+            if (!_newFlag) // Существующая запись категории
             {
                 #region Обновление выбранной категории
                 SelectedCategory.CategoryName  = CategoryName;
@@ -294,7 +292,7 @@ namespace MemoRandom.Client.ViewModels
                 SelectedIndex = CategoriesCollection.IndexOf(category);
             }
 
-            newFlag = false;
+            _newFlag = false;
 
             ChangeCategory.Invoke();
 
@@ -382,6 +380,7 @@ namespace MemoRandom.Client.ViewModels
         /// <summary>
         /// Конструктор
         /// </summary>
+        /// <param name="commonDataController"></param>
         /// <exception cref="ArgumentNullException"></exception>
         public CategoriesViewModel(ICommonDataController commonDataController)
         {

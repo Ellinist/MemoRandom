@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MemoRandom.Client.Enums
+﻿namespace MemoRandom.Client.Enums
 {
     public enum HumanColumns
     {

@@ -1,6 +1,5 @@
 ﻿using Prism.Commands;
 using Prism.Mvvm;
-using System.Diagnostics;
 using System.Reflection;
 using System.Windows;
 
