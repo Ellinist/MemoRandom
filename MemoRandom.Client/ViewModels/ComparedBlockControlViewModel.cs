@@ -14,49 +14,49 @@ namespace MemoRandom.Client.ViewModels
 {
     public class ComparedBlockControlViewModel :BindableBase
     {
-        public Dispatcher ProgressDispatcher { get; set; }
-        public ProgressBar CurrentProgressBar { get; set; }
-        public TextBlock LeftUpTextBlock { get; set; }
-        public TextBlock CenterUpTextBlock { get; set; }
-        public ComparedHuman ComparedHuman { get; set; }
+        //public Dispatcher ProgressDispatcher { get; set; }
+        //public ProgressBar CurrentProgressBar { get; set; }
+        //public TextBlock LeftUpTextBlock { get; set; }
+        //public TextBlock CenterUpTextBlock { get; set; }
+        //public ComparedHuman ComparedHuman { get; set; }
 
 
-        public void ComparedBlockControl_Loaded(object sender, RoutedEventArgs e)
-        {
-            CenterUpTextBlock.Text = ComparedHuman.ComparedHumanFullName;
+        //public void ComparedBlockControl_Loaded(object sender, RoutedEventArgs e)
+        //{
+        //    CenterUpTextBlock.Text = ComparedHuman.ComparedHumanFullName;
 
-            for (int i = 0; i < 10; i++)
-            {
-                Thread.Sleep(10);
-                ProgressDispatcher.Invoke(() =>
-                {
-                    CurrentProgressBar.Value = i;
-                    //Thread.Sleep(10);
-                    //CurrentProgressBar.Value = i;
-                });
-                //CurrentProgressBar.Value = i;
-            }
+        //    for (int i = 0; i < 10; i++)
+        //    {
+        //        Thread.Sleep(10);
+        //        ProgressDispatcher.Invoke(() =>
+        //        {
+        //            CurrentProgressBar.Value = i;
+        //            //Thread.Sleep(10);
+        //            //CurrentProgressBar.Value = i;
+        //        });
+        //        //CurrentProgressBar.Value = i;
+        //    }
 
-            //var t = ComparedHuman;
+        //    //var t = ComparedHuman;
 
-            //ProgressDispatcher.Invoke(() =>
-            //{
-            //    LeftUpTextBlock.Text = "Тестовое";
-            //    CenterUpTextBlock.Text = ComparedHuman.ComparedHumanFullName;
-            //    CurrentProgressBar.Minimum = 0;
-            //    CurrentProgressBar.Maximum = 1000;
-            //});
+        //    //ProgressDispatcher.Invoke(() =>
+        //    //{
+        //    //    LeftUpTextBlock.Text = "Тестовое";
+        //    //    CenterUpTextBlock.Text = ComparedHuman.ComparedHumanFullName;
+        //    //    CurrentProgressBar.Minimum = 0;
+        //    //    CurrentProgressBar.Maximum = 1000;
+        //    //});
 
-            //for (int i = 0; i < 1000; i++)
-            //{
-            //    Thread.Sleep(500);
+        //    //for (int i = 0; i < 1000; i++)
+        //    //{
+        //    //    Thread.Sleep(500);
 
-            //    ProgressDispatcher.Invoke(() =>
-            //    {
-            //        CurrentProgressBar.Value = i;
-            //    });
-            //}
-        }
+        //    //    ProgressDispatcher.Invoke(() =>
+        //    //    {
+        //    //        CurrentProgressBar.Value = i;
+        //    //    });
+        //    //}
+        //}
 
         #region CTOR
         public ComparedBlockControlViewModel()
