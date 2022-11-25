@@ -12,10 +12,13 @@
     
     
     <Grid>
-        <StackPanel x:Name="ProgressStackPanel"
+        <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                      VerticalScrollBarVisibility="Auto">
+            <StackPanel x:Name="ProgressStackPanel"
                     Orientation="Vertical"
                     HorizontalAlignment="Stretch">
-            
-        </StackPanel>
+
+            </StackPanel>
+        </ScrollViewer>
     </Grid>
 </Window>

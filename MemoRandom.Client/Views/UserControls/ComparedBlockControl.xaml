@@ -58,6 +58,7 @@
                        Text="Left Up"/>
 
             <TextBlock Grid.Row="1" Grid.Column="3"
+                       x:Name="CenterUpTb"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Center"
                        FontSize="24"

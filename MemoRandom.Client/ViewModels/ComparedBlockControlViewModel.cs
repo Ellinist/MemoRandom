@@ -17,61 +17,45 @@ namespace MemoRandom.Client.ViewModels
         public Dispatcher ProgressDispatcher { get; set; }
         public ProgressBar CurrentProgressBar { get; set; }
         public TextBlock LeftUpTextBlock { get; set; }
-        public Human Human { get; set; }
+        public TextBlock CenterUpTextBlock { get; set; }
+        public ComparedHuman ComparedHuman { get; set; }
 
 
         public void ComparedBlockControl_Loaded(object sender, RoutedEventArgs e)
         {
-            var t = Human;
+            CenterUpTextBlock.Text = ComparedHuman.ComparedHumanFullName;
 
-            LeftUpTextBlock.Text = "Тестовое";
-            CurrentProgressBar.Minimum = 0;
-            CurrentProgressBar.Maximum = 1000;
+            for (int i = 0; i < 10; i++)
+            {
+                Thread.Sleep(10);
+                ProgressDispatcher.Invoke(() =>
+                {
+                    CurrentProgressBar.Value = i;
+                    //Thread.Sleep(10);
+                    //CurrentProgressBar.Value = i;
+                });
+                //CurrentProgressBar.Value = i;
+            }
 
-            Thread thread = new Thread(ProgressMethod);
-            thread.Start();
+            //var t = ComparedHuman;
 
-            //ProgressDispatcher.BeginInvoke(() =>
-            //{
-            //    LeftUpTextBlock.Text = "Тестовое";
-            //    CurrentProgressBar.Minimum = 0;
-            //    CurrentProgressBar.Maximum = 1000;
-            //    CurrentProgressBar.Value = 53;
-            //});
-            
-
-            
             //ProgressDispatcher.Invoke(() =>
             //{
-
+            //    LeftUpTextBlock.Text = "Тестовое";
+            //    CenterUpTextBlock.Text = ComparedHuman.ComparedHumanFullName;
+            //    CurrentProgressBar.Minimum = 0;
+            //    CurrentProgressBar.Maximum = 1000;
             //});
 
-            //for(int i = 0; i < 1000; i++)
+            //for (int i = 0; i < 1000; i++)
             //{
-            //    Thread.Sleep(100);
+            //    Thread.Sleep(500);
+
             //    ProgressDispatcher.Invoke(() =>
             //    {
             //        CurrentProgressBar.Value = i;
             //    });
             //}
-        }
-
-        private void ProgressMethod()
-        {
-            for (int i = 0; i < 1000; i++)
-            {
-                //for (var j = 0; j < 1_000_000; j++)
-                //{
-                //    Math.Sqrt(15489.12);
-                //}
-
-                Thread.Sleep(1000);
-
-                ProgressDispatcher.Invoke(() =>
-                {
-                    CurrentProgressBar.Value = i;
-                });
-            }
         }
 
         #region CTOR
