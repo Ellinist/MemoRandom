@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
+using MemoRandom.Client.Models;
 
 namespace MemoRandom.Client.ViewModels
 {
@@ -33,109 +34,51 @@ namespace MemoRandom.Client.ViewModels
             foreach(var human in CommonDataController.ComparedHumansCollection)
             {
                 ComparedBlockControl control = new();
-                control.ComparedHumanFullName = human.ComparedHumanFullName;
+                ComparedHumanProgressData data = new()
+                {
+                    ComparedHumanBar = control,
+                    FullName = human.ComparedHumanFullName,
+                    BirthDate = human.ComparedHumanBirthDate
+                };
 
                 ProgressStackPanel.Children.Add(control);
 
                 // Каждый человек для сравнения в своем потоке
+                new Thread(ProgressMethod).Start(data);
+
                 //Thread thread = new Thread(ProgressMethod);
                 //thread.Start(control);
-                /*Thread thread = */new Thread(() => PrMethod(human.ComparedHumanFullName, control)).Start();
+                ////*Thread thread = */new Thread(() => PrMethod(human.ComparedHumanFullName, control)).Start();
             }
         }
 
-        // Для тестирования нового подхода
-        private void PrMethod(string name, object control)
+        private void ProgressMethod(object paramsData)
         {
-            var t = control as ComparedBlockControl;
-            //string name = t.ComparedHumanFullName;
+            ComparedHumanProgressData data = paramsData as ComparedHumanProgressData;
+            if (data == null) return;
+
+            var control = data.ComparedHumanBar;
 
             ProgressDispatcher.Invoke(() =>
             {
-                t.CurrentProgressBar.Minimum = 0;
-                t.CurrentProgressBar.Maximum = 1000;
-                t.CurrentProgressBar.Value = 0;
+                control.CurrentProgressBar.Minimum = 0;
+                control.CurrentProgressBar.Maximum = 1000;
+                control.CurrentProgressBar.Value = 0;
 
-                t.LeftUpTb.Text = "Test";
-                t.CenterUpTb.Text = t.ComparedHumanFullName;
-                //name = t.ComparedHumanFullName;
+                control.CenterUpTb.Text = data.FullName;
+                control.LeftUpTb.Text = data.BirthDate.ToLongDateString();
             });
 
             for (var i = 0; i < 1000; i++)
             {
-
-                if (name == "Старый")
-                {
-                    Thread.Sleep(100);
-                }
-                else if (name == "Средний")
-                {
-                    Thread.Sleep(70);
-                }
-                else
-                {
-                    Thread.Sleep(40);
-                }
-
+                Thread.Sleep(20);
                 ProgressDispatcher.Invoke(() =>
                 {
-                    t.CurrentProgressBar.Value = i;
+                    control.CurrentProgressBar.Value = i;
                 });
             }
         }
 
-        private void ProgressMethod(object control)
-        {
-            string name = string.Empty;
-            
-            var t = control as ComparedBlockControl;
-            //string name = t.ComparedHumanFullName;
-
-            ProgressDispatcher.Invoke(() =>
-            {
-                t.CurrentProgressBar.Minimum = 0;
-                t.CurrentProgressBar.Maximum = 1000;
-                t.CurrentProgressBar.Value = 0;
-
-                t.LeftUpTb.Text = "Test";
-                t.CenterUpTb.Text = t.ComparedHumanFullName;
-                name = t.ComparedHumanFullName;
-            });
-
-            for (var i = 0; i < 1000; i++)
-            {
-
-                if (name == "Старый")
-                {
-                    Thread.Sleep(100);
-                }
-                else if (name == "Средний")
-                {
-                    Thread.Sleep(70);
-                }
-                else
-                {
-                    Thread.Sleep(40);
-                }
-
-                ProgressDispatcher.Invoke(() =>
-                {
-                    t.CurrentProgressBar.Value = i;
-                });
-            }
-            
-            
-
-            //var currentHuman = humanObject as ComparedHuman;
-            //if (currentHuman == null) return;
-
-            //ProgressDispatcher.Invoke(() =>
-            //{
-            //    // Для каждого человека для сравнения создаем свой UC
-            //    //ComparedBlockControlViewModel humanVm = new();
-            //    ProgressStackPanel.Children.Add(/*new ComparedBlockControl(humanVm, currentHuman, ProgressDispatcher)*/);
-            //});
-        }
 
         #region CTOR
         public ComparingProcessViewModel()
