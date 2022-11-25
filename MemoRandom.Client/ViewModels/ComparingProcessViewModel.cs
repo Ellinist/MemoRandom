@@ -38,8 +38,49 @@ namespace MemoRandom.Client.ViewModels
                 ProgressStackPanel.Children.Add(control);
 
                 // Каждый человек для сравнения в своем потоке
-                Thread thread = new Thread(ProgressMethod);
-                thread.Start(control);
+                //Thread thread = new Thread(ProgressMethod);
+                //thread.Start(control);
+                /*Thread thread = */new Thread(() => PrMethod(human.ComparedHumanFullName, control)).Start();
+            }
+        }
+
+        // Для тестирования нового подхода
+        private void PrMethod(string name, object control)
+        {
+            var t = control as ComparedBlockControl;
+            //string name = t.ComparedHumanFullName;
+
+            ProgressDispatcher.Invoke(() =>
+            {
+                t.CurrentProgressBar.Minimum = 0;
+                t.CurrentProgressBar.Maximum = 1000;
+                t.CurrentProgressBar.Value = 0;
+
+                t.LeftUpTb.Text = "Test";
+                t.CenterUpTb.Text = t.ComparedHumanFullName;
+                //name = t.ComparedHumanFullName;
+            });
+
+            for (var i = 0; i < 1000; i++)
+            {
+
+                if (name == "Старый")
+                {
+                    Thread.Sleep(100);
+                }
+                else if (name == "Средний")
+                {
+                    Thread.Sleep(70);
+                }
+                else
+                {
+                    Thread.Sleep(40);
+                }
+
+                ProgressDispatcher.Invoke(() =>
+                {
+                    t.CurrentProgressBar.Value = i;
+                });
             }
         }
 
