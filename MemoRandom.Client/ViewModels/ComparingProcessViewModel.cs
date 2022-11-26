@@ -8,6 +8,7 @@ using System.Windows.Threading;
 using MemoRandom.Client.Models;
 using System;
 using ImTools;
+using System.Linq;
 
 namespace MemoRandom.Client.ViewModels
 {
@@ -74,6 +75,11 @@ namespace MemoRandom.Client.ViewModels
             //    });
             //}
 
+            var startSpan = DateTime.Now - data.BirthDate;
+            var orderedList = CommonDataController.HumansList.OrderBy(x => x.DaysLived);
+            var earlier = orderedList.LastOrDefault(x => x.DaysLived < startSpan.TotalDays);
+            var later = orderedList.FirstOrDefault(x => x.DaysLived > startSpan.TotalDays);
+
             while (true)
             {
                 var currentPos = DateTime.Now - data.BirthDate;
@@ -90,6 +96,9 @@ namespace MemoRandom.Client.ViewModels
                 Thread.Sleep(1);
                 ProgressDispatcher.Invoke(() =>
                 {
+                    if(earlier != null) control.LeftDownTb.Text = earlier.LastName;
+                    if(later != null) control.RightDownTb.Text = later.LastName;
+
                     control.CenterDownTb.Text = ("Прожито:" + years + " лет, " + days + " дней, " + hours + ":" + minutes + ":" + seconds + "." + milliseconds).ToString();
                 });
             }

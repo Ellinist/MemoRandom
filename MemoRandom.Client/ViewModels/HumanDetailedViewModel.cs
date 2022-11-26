@@ -575,7 +575,7 @@ namespace MemoRandom.Client.ViewModels
                 curHuman.ImageFile      = TargetImageSource != null ? curHuman.HumanId.ToString() + ".jpg" : string.Empty;
                 curHuman.HumanComments  = HumanComments;
                 curHuman.DeathReasonId  = DeathReasonId;
-                curHuman.DaysLived      = (DeathDate - BirthDate).Days; // Считаем число прожитых дней
+                curHuman.DaysLived      = (DeathDate - BirthDate).TotalDays; // Считаем полное число прожитых дней
                 curHuman.FullYearsLived = (float)((DeathDate - BirthDate).Days / 365.25D); // Считаем число полных прожитых лет
 
                 CommonDataController.CurrentHuman = curHuman;
@@ -598,7 +598,7 @@ namespace MemoRandom.Client.ViewModels
                     ImageFile      = TargetImageSource != null ? newHumanId.ToString() + ".jpg" : string.Empty,
                     HumanComments  = HumanComments,
                     DeathReasonId  = DeathReasonId,
-                    DaysLived      = (DeathDate - BirthDate).Days, // Считаем число прожитых дней
+                    DaysLived      = (DeathDate - BirthDate).TotalDays, // Считаем полное число прожитых дней
                     FullYearsLived = (float)((DeathDate - BirthDate).Days / 365.25) // Считаем число полных прожитых лет
                 };
 

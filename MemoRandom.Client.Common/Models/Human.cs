@@ -23,7 +23,7 @@ namespace MemoRandom.Client.Common.Models
         private string _imageFile;
         private Guid _deathReasonId;
         private string _humanComments;
-        private int _daysLived;
+        private double _daysLived;
         private float _fullYearsLived;
         #endregion
 
@@ -215,7 +215,7 @@ namespace MemoRandom.Client.Common.Models
         /// Число прожитых дней
         /// Сохраняется в БД для ускорения чтения информации
         /// </summary>
-        public int DaysLived
+        public double DaysLived
         {
             get => _daysLived;
             set

@@ -168,7 +168,7 @@
                                         <DataGridTextColumn Header="Дней"
                                                             IsReadOnly="True"
                                                             Width="64"
-                                                            Binding="{Binding Path=DaysLived}"/>
+                                                            Binding="{Binding Path=DaysLived, StringFormat=#}"/>
                                         <DataGridTextColumn Header="Лет"
                                                             IsReadOnly="True"
                                                             Width="100"

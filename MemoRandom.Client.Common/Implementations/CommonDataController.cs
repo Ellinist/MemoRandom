@@ -82,6 +82,7 @@ namespace MemoRandom.Client.Common.Implementations
             #endregion
 
             #region Чтение списка людей
+            var re = _msSqlController.GetHumans();
             HumansList = _mapper.Map<List<DbHuman>, ObservableCollection<Human>>(_msSqlController.GetHumans());
             #endregion
 

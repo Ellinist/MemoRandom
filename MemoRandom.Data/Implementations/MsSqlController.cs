@@ -429,48 +429,6 @@ namespace MemoRandom.Data.Implementations
                 {
                     // Читаем контекст, выбирая только основные поля (без изображений)
                     humansList = MemoContext.DbHumans.OrderBy(x => x.FullYearsLived).ToList();
-                    //var newList = MemoContext.DbHumans.Select(h => new
-                    //{
-                    //    h.HumanId,
-                    //    h.LastName,
-                    //    h.FirstName,
-                    //    h.Patronymic,
-                    //    h.BirthDate,
-                    //    h.BirthCountry,
-                    //    h.BirthPlace,
-                    //    h.DeathDate,
-                    //    h.DeathCountry,
-                    //    h.DeathPlace,
-                    //    h.ImageFile,
-                    //    h.DeathReasonId,
-                    //    h.HumanComments,
-                    //    h.DaysLived,
-                    //    h.FullYearsLived
-                    //}).OrderBy(x => x.FullYearsLived);
-
-                    //// Перегоняем в результирующий список
-                    //foreach (var person in newList)
-                    //{
-                    //    DbHuman human = new()
-                    //    {
-                    //        HumanId        = person.HumanId,
-                    //        LastName       = person.LastName,
-                    //        FirstName      = person.FirstName,
-                    //        Patronymic     = person.Patronymic,
-                    //        BirthDate      = person.BirthDate,
-                    //        BirthCountry   = person.BirthCountry,
-                    //        BirthPlace     = person.BirthPlace,
-                    //        DeathDate      = person.DeathDate,
-                    //        DeathCountry   = person.DeathCountry,
-                    //        DeathPlace     = person.DeathPlace,
-                    //        ImageFile      = person.ImageFile,
-                    //        DeathReasonId  = person.DeathReasonId,
-                    //        HumanComments  = person.HumanComments,
-                    //        DaysLived      = person.DaysLived,
-                    //        FullYearsLived = person.FullYearsLived
-                    //    };
-                    //    humansList.Add(human);
-                    //}
                 }
                 catch (Exception ex)
                 {
