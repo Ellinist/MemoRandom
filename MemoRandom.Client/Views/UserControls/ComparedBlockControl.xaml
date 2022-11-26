@@ -48,13 +48,15 @@
             </Grid.ColumnDefinitions>
 
             <Grid.RowDefinitions>
-                <RowDefinition Height="40"/>
+                <RowDefinition Height="10"/>
+                <RowDefinition/>
+                <RowDefinition/>
                 <RowDefinition/>
                 <RowDefinition/>
                 <RowDefinition Height="40"/>
                 <RowDefinition/>
                 <RowDefinition/>
-                <RowDefinition Height="40"/>
+                <RowDefinition Height="10"/>
             </Grid.RowDefinitions>
 
             <!--ФИО пережитого человека-->
@@ -62,61 +64,106 @@
                        x:Name="PreviousHumanNameTextBlock"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Left"
-                       FontSize="24"
+                       Foreground="Blue"
+                       FontSize="18"
                        FontWeight="Bold"/>
 
-            <!--Детали пережитого человека-->
+            <!--Дата рождения пережитого человека-->
             <TextBlock Grid.Row="2" Grid.Column="1"
-                       x:Name="PreviousHumanDetailesTextBlock"
+                       x:Name="PreviousHumanBirthDateTextBlock"
                        HorizontalAlignment="Left"
                        VerticalAlignment="Center"
                        FontSize="16"
-                       FontWeight="Bold"/>
+                       FontWeight="Normal"/>
+
+            <!--Дата смерти пережитого человека-->
+            <TextBlock Grid.Row="3" Grid.Column="1"
+                       x:Name="PreviousHumanDeathDateTextBlock"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Center"
+                       FontSize="16"
+                       FontWeight="Normal"/>
+            
+            <!--Чило полных прожитых лет пережитого человека-->
+            <TextBlock Grid.Row="4" Grid.Column="1"
+                       x:Name="PreviousHumanFullYearsTextBlock"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Center"
+                       FontSize="16"
+                       FontWeight="Normal"/>
+
+            
+            
+            
 
             <!--ФИО текущего анализируемого человека для сравнения-->
             <TextBlock Grid.Row="1" Grid.Column="3"
                        x:Name="CurrentHumanTextBlock"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Center"
-                       FontSize="24"
+                       FontSize="18"
                        FontWeight="Bold"
                        Text="Center Up"/>
 
             <!--Детали текущего анализируемого ченловека-->
             <TextBlock Grid.Row="2" Grid.Column="3"
-                       x:Name="CurrentHumanDetailesTextBlock"/>
+                       x:Name="CurrentHumanDetailesTextBlock"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"
+                       FontSize="16"
+                       FontWeight="Normal"/>
+
+            <TextBlock Grid.Row="3" Grid.Column="3"
+                       x:Name="CurrentHumanLivedPeriod"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"
+                       FontSize="16"
+                       FontWeight="Normal"
+                       Text="Center Down"/>
+
+
+            
+            
+            
+            
 
             <!--ФИО человека, еще не пережитого-->
             <TextBlock Grid.Row="1" Grid.Column="5"
                        x:Name="NextHumanNameTextBlock"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Right"
-                       FontSize="24"
-                       FontWeight="Bold"
-                       Text="Right Up"/>
+                       Foreground="Magenta"
+                       FontSize="18"
+                       FontWeight="Bold"/>
 
-            <TextBlock Grid.Row="4" Grid.Column="1"
+            <TextBlock Grid.Row="2" Grid.Column="5"
+                       x:Name="NextHumanBirthDateTextBlock"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Right"
+                       FontSize="16"
+                       FontWeight="Normal"/>
+
+            <TextBlock Grid.Row="3" Grid.Column="5"
+                       x:Name="NextHumanDeathDateTextBlock"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Right"
+                       FontSize="16"
+                       FontWeight="Normal"/>
+
+            <TextBlock Grid.Row="6" Grid.Column="1"
                        x:Name="LeftDownTb"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Left"
                        FontSize="24"
-                       FontWeight="Bold"
+                       FontWeight="Normal"
                        Text="Left Down"/>
-
-            <TextBlock Grid.Row="4" Grid.Column="3"
-                       x:Name="CenterDownTb"
-                       VerticalAlignment="Center"
-                       HorizontalAlignment="Center"
-                       FontSize="24"
-                       FontWeight="Bold"
-                       Text="Center Down"/>
 
             <TextBlock Grid.Row="4" Grid.Column="5"
                        x:Name="RightDownTb"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Right"
                        FontSize="24"
-                       FontWeight="Bold"
+                       FontWeight="Normal"
                        Text="Right Down"/>
         </Grid>
 

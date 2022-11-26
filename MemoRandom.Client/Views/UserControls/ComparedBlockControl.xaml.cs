@@ -24,14 +24,6 @@ namespace MemoRandom.Client.Views.UserControls
         public ComparedBlockControl(/*ComparedBlockControlViewModel vm, ComparedHuman human, Dispatcher dispatcher*/)
         {
             InitializeComponent();
-
-            //DataContext = vm;
-            //vm.ProgressDispatcher = dispatcher;
-            //vm.LeftUpTextBlock = LeftUpTb;
-            //vm.CenterUpTextBlock = CenterUpTb;
-            //vm.CurrentProgressBar = CurrentProgressBar;
-            //vm.ComparedHuman = human;
-            //this.Loaded += vm.ComparedBlockControl_Loaded;
         }
     }
 }
