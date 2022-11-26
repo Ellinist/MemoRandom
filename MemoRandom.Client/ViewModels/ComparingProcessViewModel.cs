@@ -108,6 +108,9 @@ namespace MemoRandom.Client.ViewModels
                     control.PreviousHumanBirthDateTextBlock.Text = "Родился: " + earlier.BirthDate.ToLongDateString();
                     control.PreviousHumanDeathDateTextBlock.Text = "Умер: " + earlier.DeathDate.ToLongDateString();
                     control.PreviousHumanFullYearsTextBlock.Text = "Прожил " + Math.Floor(earlier.FullYearsLived) + " лет";
+
+                    var resulto = data.BirthDate + (earlier.DeathDate - earlier.BirthDate);
+                    control.PreviousHumanOverLifeDate.Text = "Пройдено: " + resulto.ToString();
                 }
                 if (later != null) // Если следующий игрок был найден
                 {
@@ -118,6 +121,9 @@ namespace MemoRandom.Client.ViewModels
                     control.NextHumanBirthDateTextBlock.Text = "Родился: " + later.BirthDate.ToLongDateString();
                     control.NextHumanDeathDateTextBlock.Text = "Умер: " + later.DeathDate.ToLongDateString();
                     control.NextHumanFullYearsTextBlock.Text = "Прожил: " + Math.Floor(later.FullYearsLived) + " лет";
+
+                    var resulto = data.BirthDate + (later.DeathDate - later.BirthDate);
+                    control.NextHumanOverLifeDate.Text = "Пройдем: " + resulto.ToString();
                 }
 
                 control.CurrentHumanTextBlock.Text = data.FullName;
@@ -132,12 +138,12 @@ namespace MemoRandom.Client.ViewModels
                 var hours = currentPos.Hours;
                 var minutes = currentPos.Minutes;
                 var seconds = currentPos.Seconds;
-                var milliseconds = currentPos.Milliseconds;
+                //var milliseconds = currentPos.Milliseconds;
 
-                Thread.Sleep(1);
+                Thread.Sleep(10);
                 ProgressDispatcher.Invoke(() =>
                 {
-                    control.CurrentHumanLivedPeriod.Text = ("Прожито: " + years + " лет, " + days + " дней, " + hours + ":" + minutes + ":" + seconds + "." + milliseconds).ToString();
+                    control.CurrentHumanLivedPeriod.Text = ("Прожито: " + years + " лет, " + days + " дней, " + hours + ":" + minutes + ":" + seconds/* + "." + milliseconds*/).ToString();
                 });
             }
         }

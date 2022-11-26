@@ -42,11 +42,11 @@
         <Grid Grid.Column="1" Margin="2, 3, 2, 3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="40"/>
-                <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="40"/>
+                <ColumnDefinition Width="1.5*"/>
+                <ColumnDefinition Width="20"/>
                 <ColumnDefinition Width="3*"/>
-                <ColumnDefinition Width="40"/>
-                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="20"/>
+                <ColumnDefinition Width="1.5*"/>
                 <ColumnDefinition Width="40"/>
             </Grid.ColumnDefinitions>
 
@@ -101,7 +101,7 @@
                        x:Name="PreviousHumanOverLifeDate"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Left"
-                       FontSize="24"
+                       FontSize="18"
                        FontWeight="Normal"/>
             
             
@@ -180,7 +180,7 @@
                        x:Name="NextHumanOverLifeDate"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Right"
-                       FontSize="24"
+                       FontSize="18"
                        FontWeight="Normal"/>
         </Grid>
 
