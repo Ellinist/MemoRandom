@@ -117,6 +117,7 @@ namespace MemoRandom.Client.ViewModels
                     control.NextImage.Source = _commonDataController.GetHumanImage(later);
                     control.NextHumanBirthDateTextBlock.Text = "Родился: " + later.BirthDate.ToLongDateString();
                     control.NextHumanDeathDateTextBlock.Text = "Умер: " + later.DeathDate.ToLongDateString();
+                    control.NextHumanFullYearsTextBlock.Text = "Прожил: " + Math.Floor(later.FullYearsLived) + " лет";
                 }
 
                 control.CurrentHumanTextBlock.Text = data.FullName;
@@ -136,7 +137,7 @@ namespace MemoRandom.Client.ViewModels
                 Thread.Sleep(1);
                 ProgressDispatcher.Invoke(() =>
                 {
-                    control.CurrentHumanLivedPeriod.Text = ("Прожито:" + years + " лет, " + days + " дней, " + hours + ":" + minutes + ":" + seconds + "." + milliseconds).ToString();
+                    control.CurrentHumanLivedPeriod.Text = ("Прожито: " + years + " лет, " + days + " дней, " + hours + ":" + minutes + ":" + seconds + "." + milliseconds).ToString();
                 });
             }
         }

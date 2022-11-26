@@ -21,22 +21,25 @@
 
         <!--Изображение прошедшее-->
         <Image Grid.Column="0"
+               Margin="5, 3, 3, 3"
                x:Name="PreviousImage">
             
         </Image>
 
         <!--Прогресс-индикатор-->
         <ProgressBar Grid.Column="1"
+                     Margin="2, 3, 2, 3"
                      x:Name="CurrentProgressBar">
             
         </ProgressBar>
 
         <Image Grid.Column="2"
+               Margin="3, 3, 5, 3"
                x:Name="NextImage">
             
         </Image>
 
-        <Grid Grid.Column="1">
+        <Grid Grid.Column="1" Margin="2, 3, 2, 3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="40"/>
                 <ColumnDefinition Width="1*"/>
@@ -53,12 +56,13 @@
                 <RowDefinition/>
                 <RowDefinition/>
                 <RowDefinition/>
-                <RowDefinition Height="40"/>
+                <RowDefinition Height="10"/>
                 <RowDefinition/>
                 <RowDefinition/>
                 <RowDefinition Height="10"/>
             </Grid.RowDefinitions>
 
+            <!--Левый столбец данных-->
             <!--ФИО пережитого человека-->
             <TextBlock Grid.Row="1" Grid.Column="1"
                        x:Name="PreviousHumanNameTextBlock"
@@ -92,18 +96,28 @@
                        FontSize="16"
                        FontWeight="Normal"/>
 
+            <!--Когда (дата) анализируемый человек пережил предыдущего-->
+            <TextBlock Grid.Row="6" Grid.Column="1"
+                       x:Name="PreviousHumanOverLifeDate"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Left"
+                       FontSize="24"
+                       FontWeight="Normal"/>
             
             
             
-
+            
+            
+            
+            
+            <!--Средний столбец данных-->
             <!--ФИО текущего анализируемого человека для сравнения-->
             <TextBlock Grid.Row="1" Grid.Column="3"
                        x:Name="CurrentHumanTextBlock"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Center"
                        FontSize="18"
-                       FontWeight="Bold"
-                       Text="Center Up"/>
+                       FontWeight="Bold"/>
 
             <!--Детали текущего анализируемого ченловека-->
             <TextBlock Grid.Row="2" Grid.Column="3"
@@ -113,20 +127,21 @@
                        FontSize="16"
                        FontWeight="Normal"/>
 
+            <!--Сколько прожил нанализируемый человек-->
             <TextBlock Grid.Row="3" Grid.Column="3"
                        x:Name="CurrentHumanLivedPeriod"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Center"
                        FontSize="16"
-                       FontWeight="Normal"
-                       Text="Center Down"/>
+                       FontWeight="Normal"/>
 
 
             
             
             
             
-
+            
+            <!--Правый столюец данных-->
             <!--ФИО человека, еще не пережитого-->
             <TextBlock Grid.Row="1" Grid.Column="5"
                        x:Name="NextHumanNameTextBlock"
@@ -136,6 +151,7 @@
                        FontSize="18"
                        FontWeight="Bold"/>
 
+            <!--Дата рождения еще не пережитого человека-->
             <TextBlock Grid.Row="2" Grid.Column="5"
                        x:Name="NextHumanBirthDateTextBlock"
                        VerticalAlignment="Center"
@@ -143,6 +159,7 @@
                        FontSize="16"
                        FontWeight="Normal"/>
 
+            <!--Дата смерти еще не пережитого человека-->
             <TextBlock Grid.Row="3" Grid.Column="5"
                        x:Name="NextHumanDeathDateTextBlock"
                        VerticalAlignment="Center"
@@ -150,21 +167,21 @@
                        FontSize="16"
                        FontWeight="Normal"/>
 
-            <TextBlock Grid.Row="6" Grid.Column="1"
-                       x:Name="LeftDownTb"
-                       VerticalAlignment="Center"
-                       HorizontalAlignment="Left"
-                       FontSize="24"
-                       FontWeight="Normal"
-                       Text="Left Down"/>
-
+            <!--Чило полных прожитых лет еще не пережитого человека-->
             <TextBlock Grid.Row="4" Grid.Column="5"
-                       x:Name="RightDownTb"
+                       x:Name="NextHumanFullYearsTextBlock"
+                       HorizontalAlignment="Right"
+                       VerticalAlignment="Center"
+                       FontSize="16"
+                       FontWeight="Normal"/>
+
+            <!--Когда (дата) анализируемый человек переживет следующего-->
+            <TextBlock Grid.Row="6" Grid.Column="5"
+                       x:Name="NextHumanOverLifeDate"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Right"
                        FontSize="24"
-                       FontWeight="Normal"
-                       Text="Right Down"/>
+                       FontWeight="Normal"/>
         </Grid>
 
         <!--Изображение будущее-->
