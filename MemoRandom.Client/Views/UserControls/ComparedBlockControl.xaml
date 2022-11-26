@@ -50,36 +50,52 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="40"/>
                 <RowDefinition/>
+                <RowDefinition/>
                 <RowDefinition Height="40"/>
+                <RowDefinition/>
                 <RowDefinition/>
                 <RowDefinition Height="40"/>
             </Grid.RowDefinitions>
 
+            <!--ФИО пережитого человека-->
             <TextBlock Grid.Row="1" Grid.Column="1"
-                       x:Name="LeftUpTb"
+                       x:Name="PreviousHumanNameTextBlock"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Left"
                        FontSize="24"
-                       FontWeight="Bold"
-                       Text="Left Up"/>
+                       FontWeight="Bold"/>
 
+            <!--Детали пережитого человека-->
+            <TextBlock Grid.Row="2" Grid.Column="1"
+                       x:Name="PreviousHumanDetailesTextBlock"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Center"
+                       FontSize="16"
+                       FontWeight="Bold"/>
+
+            <!--ФИО текущего анализируемого человека для сравнения-->
             <TextBlock Grid.Row="1" Grid.Column="3"
-                       x:Name="CenterUpTb"
+                       x:Name="CurrentHumanTextBlock"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Center"
                        FontSize="24"
                        FontWeight="Bold"
                        Text="Center Up"/>
 
+            <!--Детали текущего анализируемого ченловека-->
+            <TextBlock Grid.Row="2" Grid.Column="3"
+                       x:Name="CurrentHumanDetailesTextBlock"/>
+
+            <!--ФИО человека, еще не пережитого-->
             <TextBlock Grid.Row="1" Grid.Column="5"
-                       x:Name="RightUpTb"
+                       x:Name="NextHumanNameTextBlock"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Right"
                        FontSize="24"
                        FontWeight="Bold"
                        Text="Right Up"/>
 
-            <TextBlock Grid.Row="3" Grid.Column="1"
+            <TextBlock Grid.Row="4" Grid.Column="1"
                        x:Name="LeftDownTb"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Left"
@@ -87,7 +103,7 @@
                        FontWeight="Bold"
                        Text="Left Down"/>
 
-            <TextBlock Grid.Row="3" Grid.Column="3"
+            <TextBlock Grid.Row="4" Grid.Column="3"
                        x:Name="CenterDownTb"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Center"
@@ -95,7 +111,7 @@
                        FontWeight="Bold"
                        Text="Center Down"/>
 
-            <TextBlock Grid.Row="3" Grid.Column="5"
+            <TextBlock Grid.Row="4" Grid.Column="5"
                        x:Name="RightDownTb"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Right"

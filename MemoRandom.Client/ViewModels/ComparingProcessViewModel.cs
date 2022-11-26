@@ -99,11 +99,35 @@ namespace MemoRandom.Client.ViewModels
                 control.CurrentProgressBar.Maximum = 1000;
                 control.CurrentProgressBar.Value = 0;
 
-                control.PreviousImage.Source = _commonDataController.GetHumanImage(earlier);
-                control.NextImage.Source = _commonDataController.GetHumanImage(later);
+                if (earlier != null) // Если предыдущий игрок был найден
+                {
+                    //var test = earlier.FirstName != string.Empty ? earlier.FirstName : "";
+                    //var test2 = earlier.Patronymic != string.Empty ? earlier.Patronymic : "";
+                    //var fullName = earlier.LastName + " "
+                    //             + (earlier.FirstName != string.Empty ? earlier.FirstName : "") + " "
+                    //             + (earlier.Patronymic != string.Empty ? earlier.Patronymic : "");
+                                   
+                                   
+                    control.PreviousHumanNameTextBlock.Text = earlier.LastName + " "
+                                                            + (earlier.FirstName != string.Empty ? earlier.FirstName : "") + " "
+                                                            + (earlier.Patronymic != string.Empty ? earlier.Patronymic : "");
+                    control.PreviousImage.Source = _commonDataController.GetHumanImage(earlier);
+                    control.PreviousHumanDetailesTextBlock.Text = "Родился: " + earlier.BirthDate.ToLongDateString();
+                }
+                if (later != null) // Если следующий игрок был найден
+                {
+                    //var fullName = later.LastName +
+                    //               later.FirstName != string.Empty ? later.FirstName : "" +
+                    //               later.Patronymic != string.Empty ? later.Patronymic : "";
+                    control.NextHumanNameTextBlock.Text = later.LastName + " "
+                                                        + (later.FirstName != string.Empty ? later.FirstName : "") + " "
+                                                        + (later.Patronymic != string.Empty ? later.Patronymic : "");
+                    control.NextImage.Source = _commonDataController.GetHumanImage(later);
 
-                control.CenterUpTb.Text = data.FullName;
-                control.LeftUpTb.Text = data.BirthDate.ToLongDateString();
+                }
+
+                control.CurrentHumanTextBlock.Text = data.FullName;
+                control.CurrentHumanDetailesTextBlock.Text = data.BirthDate.ToLongDateString();
             });
 
             while (!token.IsCancellationRequested)
@@ -119,9 +143,6 @@ namespace MemoRandom.Client.ViewModels
                 Thread.Sleep(1);
                 ProgressDispatcher.Invoke(() =>
                 {
-                    if (earlier != null) control.LeftDownTb.Text = earlier.LastName;
-                    if (later != null) control.RightDownTb.Text = later.LastName;
-
                     control.CenterDownTb.Text = ("Прожито:" + years + " лет, " + days + " дней, " + hours + ":" + minutes + ":" + seconds + "." + milliseconds).ToString();
                 });
             }
