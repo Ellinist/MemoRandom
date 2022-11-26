@@ -285,7 +285,7 @@ namespace MemoRandom.Data.Implementations
         /// <summary>
         /// Удаление категории
         /// </summary>
-        /// <param name="category"></param>
+        /// <param name="categoryId"></param>
         /// <returns></returns>
         public bool DeleteCategory(Guid categoryId)
         {
@@ -321,12 +321,12 @@ namespace MemoRandom.Data.Implementations
         /// <returns></returns>
         public List<DbComparedHuman> GetComparedHumans()
         {
-            List<DbComparedHuman> comparedHumans = new();
+            List<DbComparedHuman> comparedHumans;
             using (MemoContext = new MemoRandomDbContext(DbConnectionString))
             {
                 try
                 {
-                    comparedHumans = MemoContext.DbComparedHumans.ToList(); // Читаем контекст базы данных
+                    comparedHumans = MemoContext.DbComparedHumans.OrderBy(x => x.ComparedHumanBirthDate).ToList(); // Читаем контекст базы данных
                 }
                 catch (Exception ex)
                 {
