@@ -23,16 +23,11 @@ namespace MemoRandom.Client.Converters
         /// <returns></returns>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if(value is Human currentHuman)
-            {
-                var o = CommonDataController.AgeCategories.FirstOrDefault(x => x.StartAge <= currentHuman.FullYearsLived &&
-                                                                          x.StopAge + 1 > currentHuman.FullYearsLived);
+            if (value is not Human currentHuman) return Colors.White.ToString();
+            var o = CommonDataController.AgeCategories.FirstOrDefault(x => x.StartAge <= currentHuman.FullYearsLived &&
+                                                                           x.StopAge + 1 > currentHuman.FullYearsLived);
 
-                if (o == null) return Colors.White.ToString(); // Если цвет не задан, то белый
-                return o.CategoryColor.ToString();
-            }
-
-            return Colors.White.ToString();
+            return o == null ? Colors.White.ToString() : o.CategoryColor.ToString();
         }
 
         /// <summary>
