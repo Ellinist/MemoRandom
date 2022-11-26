@@ -9,6 +9,7 @@ using MemoRandom.Client.Models;
 using System;
 using ImTools;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace MemoRandom.Client.ViewModels
 {
@@ -22,6 +23,26 @@ namespace MemoRandom.Client.ViewModels
         public Window ProgressView { get; set; }
 
         public StackPanel ProgressStackPanel { get; set; }
+
+        private Thread ProgressThread { get; set; }
+
+        private CancellationTokenSource cancelTokenSource = new CancellationTokenSource();
+        private CancellationToken token;
+
+        /// <summary>
+        /// Метод закрытия окна
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void ComparingProcessView_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            //Dispose();
+
+            cancelTokenSource.Cancel();
+            cancelTokenSource.Dispose();
+
+            e.Cancel = false; // Окно закрываем
+        }
 
         public void GetStackPanel(StackPanel panel)
         {
@@ -41,8 +62,16 @@ namespace MemoRandom.Client.ViewModels
                 ProgressStackPanel.Children.Add(control);
 
                 // Каждый человек для сравнения в своем потоке
-                new Thread(ProgressMethod).Start(data);
+                //ProgressThread = new Thread(ProgressMethod);
+                //ProgressThread.Start(data);
 
+                Task task = new Task(() =>
+                {
+                    ProgressMethod(data);
+                }, token);
+
+                task.Start();
+                
                 //Thread thread = new Thread(ProgressMethod);
                 //thread.Start(control);
                 ////*Thread thread = */new Thread(() => PrMethod(human.ComparedHumanFullName, control)).Start();
@@ -66,21 +95,12 @@ namespace MemoRandom.Client.ViewModels
                 control.LeftUpTb.Text = data.BirthDate.ToLongDateString();
             });
 
-            //for (var i = 0; i < 1000; i++)
-            //{
-            //    Thread.Sleep(3);
-            //    ProgressDispatcher.Invoke(() =>
-            //    {
-            //        control.CurrentProgressBar.Value = i;
-            //    });
-            //}
-
             var startSpan = DateTime.Now - data.BirthDate;
             var orderedList = CommonDataController.HumansList.OrderBy(x => x.DaysLived);
             var earlier = orderedList.LastOrDefault(x => x.DaysLived < startSpan.TotalDays);
             var later = orderedList.FirstOrDefault(x => x.DaysLived > startSpan.TotalDays);
 
-            while (true)
+            while (!token.IsCancellationRequested)
             {
                 var currentPos = DateTime.Now - data.BirthDate;
                 var days = currentPos.Days;
@@ -89,15 +109,12 @@ namespace MemoRandom.Client.ViewModels
                 var minutes = currentPos.Minutes;
                 var seconds = currentPos.Seconds;
                 var milliseconds = currentPos.Milliseconds;
-                //var currentPos = DateTime.Now - data.BirthDate;
-                //var years = currentPos.TotalDays / 365;
-                //var days = currentPos.TotalDays;
-                //var hours = currentPos.TotalHours;
+
                 Thread.Sleep(1);
                 ProgressDispatcher.Invoke(() =>
                 {
-                    if(earlier != null) control.LeftDownTb.Text = earlier.LastName;
-                    if(later != null) control.RightDownTb.Text = later.LastName;
+                    if (earlier != null) control.LeftDownTb.Text = earlier.LastName;
+                    if (later != null) control.RightDownTb.Text = later.LastName;
 
                     control.CenterDownTb.Text = ("Прожито:" + years + " лет, " + days + " дней, " + hours + ":" + minutes + ":" + seconds + "." + milliseconds).ToString();
                 });
@@ -108,6 +125,7 @@ namespace MemoRandom.Client.ViewModels
         #region CTOR
         public ComparingProcessViewModel()
         {
+            token = cancelTokenSource.Token;
             ProgressDispatcher = Dispatcher.CurrentDispatcher;
         }
         #endregion

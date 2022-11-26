@@ -22,6 +22,17 @@ namespace MemoRandom.Client.Views
     {
         private ComparingProcessViewModel _vm;
 
+        private void ComparingProcessView_Loaded(object sender, RoutedEventArgs e)
+        {
+            _vm.GetStackPanel(ProgressStackPanel);
+        }
+
+
+
+
+
+
+        #region CTOR
         public ComparingProcessView(ComparingProcessViewModel vm)
         {
             InitializeComponent();
@@ -29,11 +40,8 @@ namespace MemoRandom.Client.Views
             DataContext = vm;
             _vm = vm;
             this.Loaded += ComparingProcessView_Loaded;
+            this.Closing += vm.ComparingProcessView_Closing;
         }
-
-        private void ComparingProcessView_Loaded(object sender, RoutedEventArgs e)
-        {
-            _vm.GetStackPanel(ProgressStackPanel);
-        }
+        #endregion
     }
 }
