@@ -8,5 +8,6 @@ namespace MemoRandom.Client.Models
         public ComparedBlockControl ComparedHumanBar { get; set; }
         public string FullName { get; set; }
         public DateTime BirthDate { get; set; }
+        public double FullYearsLived { get; set; }
     }
 }

@@ -59,7 +59,8 @@ namespace MemoRandom.Client.ViewModels
                 {
                     ComparedHumanBar = control,
                     FullName = human.ComparedHumanFullName,
-                    BirthDate = human.ComparedHumanBirthDate
+                    BirthDate = human.ComparedHumanBirthDate,
+                    FullYearsLived = Math.Floor((DateTime.Now - human.ComparedHumanBirthDate).Days / 365.25)
                 };
 
                 ProgressStackPanel.Children.Add(control);
@@ -133,14 +134,14 @@ namespace MemoRandom.Client.ViewModels
             while (!token.IsCancellationRequested)
             {
                 var currentPos = DateTime.Now - data.BirthDate;
-                var days = currentPos.Days;
-                var years = days / 365;
+                var yy = data.FullYearsLived * 365.25;
+                var years = currentPos.Days / 365 ;
+                var days = Math.Floor(currentPos.TotalDays - yy);
                 var hours = currentPos.Hours;
                 var minutes = currentPos.Minutes;
                 var seconds = currentPos.Seconds;
-                //var milliseconds = currentPos.Milliseconds;
 
-                Thread.Sleep(10);
+                Thread.Sleep(1000);
                 ProgressDispatcher.Invoke(() =>
                 {
                     control.CurrentHumanLivedPeriod.Text = ("Прожито: " + years + " лет, " + days + " дней, " + hours + ":" + minutes + ":" + seconds/* + "." + milliseconds*/).ToString();
