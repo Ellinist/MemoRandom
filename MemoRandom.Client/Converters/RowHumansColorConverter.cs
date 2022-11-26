@@ -23,9 +23,7 @@ namespace MemoRandom.Client.Converters
         /// <returns></returns>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var currentHuman = value as Human;
-
-            if(currentHuman != null)
+            if(value is Human currentHuman)
             {
                 var o = CommonDataController.AgeCategories.FirstOrDefault(x => x.StartAge <= currentHuman.FullYearsLived &&
                                                                           x.StopAge + 1 > currentHuman.FullYearsLived);

@@ -56,11 +56,23 @@
                 <RowDefinition/>
                 <RowDefinition/>
                 <RowDefinition/>
-                <RowDefinition Height="10"/>
+                <RowDefinition Height="2"/>
                 <RowDefinition/>
                 <RowDefinition/>
                 <RowDefinition Height="10"/>
             </Grid.RowDefinitions>
+
+            <!--Горизонтальный разделитель смысловых блоков-->
+            <Border Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3"
+                    Margin="20, 0, 20, 0"
+                    BorderBrush="Black"
+                    BorderThickness="2"/>
+
+            <!--Горизонтальный разделитель смысловых блоков-->
+            <Border Grid.Row="5" Grid.Column="4" Grid.ColumnSpan="3"
+                    Margin="20, 0, 20, 0"
+                    BorderBrush="Black"
+                    BorderThickness="2"/>
 
             <!--Левый столбец данных-->
             <!--ФИО пережитого человека-->
@@ -88,7 +100,7 @@
                        FontSize="16"
                        FontWeight="Normal"/>
             
-            <!--Чило полных прожитых лет пережитого человека-->
+            <!--Число полных прожитых лет пережитого человека-->
             <TextBlock Grid.Row="4" Grid.Column="1"
                        x:Name="PreviousHumanFullYearsTextBlock"
                        HorizontalAlignment="Left"
@@ -101,8 +113,17 @@
                        x:Name="PreviousHumanOverLifeDate"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Left"
-                       FontSize="18"
+                       FontSize="16"
                        FontWeight="Normal"/>
+
+            <!--Сколько прошло после пережитого игрока (в днях)-->
+            <TextBlock Grid.Row="7" Grid.Column="1"
+                       x:Name="SpentDaysFromPreviousHuman"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Left"
+                       FontSize="16"
+                       FontWeight="Normal"
+                       Text="Прошло"/>
             
             
             
@@ -119,7 +140,7 @@
                        FontSize="18"
                        FontWeight="Bold"/>
 
-            <!--Детали текущего анализируемого ченловека-->
+            <!--Детали текущего анализируемого человека-->
             <TextBlock Grid.Row="2" Grid.Column="3"
                        x:Name="CurrentHumanDetailesTextBlock"
                        VerticalAlignment="Center"
@@ -127,13 +148,14 @@
                        FontSize="16"
                        FontWeight="Normal"/>
 
-            <!--Сколько прожил нанализируемый человек-->
+            <!--Сколько прожил анализируемый человек-->
             <TextBlock Grid.Row="3" Grid.Column="3"
                        x:Name="CurrentHumanLivedPeriod"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Center"
+                       Foreground="Navy"
                        FontSize="16"
-                       FontWeight="Normal"/>
+                       FontWeight="Bold"/>
 
 
             
@@ -141,7 +163,7 @@
             
             
             
-            <!--Правый столюец данных-->
+            <!--Правый столбец данных-->
             <!--ФИО человека, еще не пережитого-->
             <TextBlock Grid.Row="1" Grid.Column="5"
                        x:Name="NextHumanNameTextBlock"
@@ -180,8 +202,18 @@
                        x:Name="NextHumanOverLifeDate"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Right"
-                       FontSize="18"
+                       FontSize="16"
                        FontWeight="Normal"/>
+
+            <!--Сколько прошло после пережитого игрока (в днях)-->
+            <TextBlock Grid.Row="7" Grid.Column="5"
+                       x:Name="RestDaysToNextHuman"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Right"
+                       FontSize="16"
+                       FontWeight="Normal"
+                       Text="Осталось"/>
+
         </Grid>
 
         <!--Изображение будущее-->
