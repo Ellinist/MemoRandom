@@ -44,11 +44,11 @@
         <Grid Grid.Column="1" Margin="2, 3, 2, 3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="40"/>
-                <ColumnDefinition Width="1.5*"/>
+                <ColumnDefinition Width="2.5*"/>
                 <ColumnDefinition Width="20"/>
-                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="2.5*"/>
                 <ColumnDefinition Width="20"/>
-                <ColumnDefinition Width="1.5*"/>
+                <ColumnDefinition Width="2.5*"/>
                 <ColumnDefinition Width="40"/>
             </Grid.ColumnDefinitions>
 

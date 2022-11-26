@@ -107,8 +107,13 @@ namespace MemoRandom.Client.ViewModels
                                                             + (earlier.FirstName  != string.Empty ? (earlier.FirstName[0..1] + ".") : "") + " "
                                                             + (earlier.Patronymic != string.Empty ? (earlier.Patronymic[0..1] + ".") : "");
                     control.PreviousImage.Source = _commonDataController.GetHumanImage(earlier);
-                    control.PreviousHumanBirthDateTextBlock.Text = "Родился: " + earlier.BirthDate.ToLongDateString();
-                    control.PreviousHumanDeathDateTextBlock.Text = "Умер: " + earlier.DeathDate.ToLongDateString();
+                    control.PreviousHumanBirthDateTextBlock.Text = "Приход: " + earlier.BirthDate.ToLongDateString();
+
+                    var deathReasonName = CommonDataController.PlainReasonsList.FirstOrDefault(x => x.ReasonId == earlier.DeathReasonId);
+
+                    control.PreviousHumanDeathDateTextBlock.Text = "Уход: " +
+                                                                   earlier.DeathDate.ToLongDateString() + " (" +
+                                                                   deathReasonName.ReasonName + ")";
                     control.PreviousHumanFullYearsTextBlock.Text = "Прожил " + Math.Floor(earlier.FullYearsLived) + " лет";
 
                     control.PreviousHumanOverLifeDate.Text = "Пройдено: "
@@ -120,8 +125,11 @@ namespace MemoRandom.Client.ViewModels
                                                         + (later.FirstName  != string.Empty ? (later.FirstName[0..1] + ".")  : "") + " "
                                                         + (later.Patronymic != string.Empty ? (later.Patronymic[0..1] + ".") : "");
                     control.NextImage.Source = _commonDataController.GetHumanImage(later);
-                    control.NextHumanBirthDateTextBlock.Text = "Родился: " + later.BirthDate.ToLongDateString();
-                    control.NextHumanDeathDateTextBlock.Text = "Умер: " + later.DeathDate.ToLongDateString();
+                    control.NextHumanBirthDateTextBlock.Text = "Приход: " + later.BirthDate.ToLongDateString();
+
+                    var deathReasonName = CommonDataController.PlainReasonsList.FirstOrDefault(x => x.ReasonId == later.DeathReasonId);
+                    control.NextHumanDeathDateTextBlock.Text = "(" + deathReasonName.ReasonName + ") " +
+                                                               "Уход: " + later.DeathDate.ToLongDateString();
                     control.NextHumanFullYearsTextBlock.Text = "Прожил: " + Math.Floor(later.FullYearsLived) + " лет";
 
                     control.NextHumanOverLifeDate.Text = "Пройдем: "
@@ -147,14 +155,40 @@ namespace MemoRandom.Client.ViewModels
                 {
                     if (earlier != null)
                     {
-                        control.SpentDaysFromPreviousHuman.Text = "Прошло " +
-                            (DateTime.Now - (data.BirthDate + (earlier.DeathDate - earlier.BirthDate))).TotalDays.ToString() + " дней";
+                        // Пройденный период
+                        var spent = DateTime.Now - (data.BirthDate + (earlier.DeathDate - earlier.BirthDate));
+                        var spentDays = Math.Floor(spent.TotalDays);
+                        var spentHours = spent.Hours;
+                        var spentMinutes = spent.Minutes;
+                        var spentSeconds = spent.Seconds;
+
+                        control.SpentDaysFromPreviousHuman.Text = "Прошло: " +
+                                                                  spentDays.ToString() + " дней" + " " +
+                                                                  spentHours.ToString() + " часов, " +
+                                                                  spentMinutes.ToString() + ":" +
+                                                                  spentSeconds.ToString();
+
+                        //control.SpentDaysFromPreviousHuman.Text = "Прошло " +
+                        //    (DateTime.Now - (data.BirthDate + (earlier.DeathDate - earlier.BirthDate))).TotalDays.ToString() + " дней";
                     }
 
                     if (later != null)
                     {
-                        control.RestDaysToNextHuman.Text = "Прошло " +
-                                                           ((data.BirthDate + (later.DeathDate - later.BirthDate)) - DateTime.Now).TotalDays.ToString() + " дней";
+                        // Оставшийся период
+                        var spent = (data.BirthDate + (later.DeathDate - later.BirthDate)) - DateTime.Now;
+                        var spentDays = Math.Floor(spent.TotalDays);
+                        var spentHours = spent.Hours;
+                        var spentMinutes = spent.Minutes;
+                        var spentSeconds = spent.Seconds;
+
+                        control.RestDaysToNextHuman.Text = "Осталось: " +
+                                                           spentDays.ToString() + " дней" + " " +
+                                                           spentHours.ToString() + " часов, " +
+                                                           spentMinutes.ToString() + ":" +
+                                                           spentSeconds.ToString();
+
+                        //control.RestDaysToNextHuman.Text = "Прошло " +
+                        //                                   ((data.BirthDate + (later.DeathDate - later.BirthDate)) - DateTime.Now).TotalDays.ToString() + " дней";
                     }
                     control.CurrentHumanLivedPeriod.Text = ("Прожито: " + years + " лет, " + days + " дней, " + hours + ":" + minutes + ":" + seconds/* + "." + milliseconds*/).ToString();
                 });
