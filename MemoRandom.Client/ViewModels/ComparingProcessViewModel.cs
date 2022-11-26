@@ -90,8 +90,8 @@ namespace MemoRandom.Client.ViewModels
 
             var startSpan = DateTime.Now - data.BirthDate;
             var orderedList = CommonDataController.HumansList.OrderBy(x => x.DaysLived);
-            var earlier = orderedList.LastOrDefault(x => x.DaysLived < startSpan.TotalDays);
-            var later = orderedList.FirstOrDefault(x => x.DaysLived > startSpan.TotalDays);
+            var earlier = orderedList.LastOrDefault(x => x.DaysLived < startSpan.Days);
+            var later = orderedList.FirstOrDefault(x => x.DaysLived > startSpan.Days);
 
             ProgressDispatcher.Invoke(() =>
             {
