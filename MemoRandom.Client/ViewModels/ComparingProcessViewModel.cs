@@ -6,6 +6,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
 using MemoRandom.Client.Models;
+using System;
+using ImTools;
 
 namespace MemoRandom.Client.ViewModels
 {
@@ -63,12 +65,32 @@ namespace MemoRandom.Client.ViewModels
                 control.LeftUpTb.Text = data.BirthDate.ToLongDateString();
             });
 
-            for (var i = 0; i < 1000; i++)
+            //for (var i = 0; i < 1000; i++)
+            //{
+            //    Thread.Sleep(3);
+            //    ProgressDispatcher.Invoke(() =>
+            //    {
+            //        control.CurrentProgressBar.Value = i;
+            //    });
+            //}
+
+            while (true)
             {
-                Thread.Sleep(20);
+                var currentPos = DateTime.Now - data.BirthDate;
+                var days = currentPos.Days;
+                var years = days / 365;
+                var hours = currentPos.Hours;
+                var minutes = currentPos.Minutes;
+                var seconds = currentPos.Seconds;
+                var milliseconds = currentPos.Milliseconds;
+                //var currentPos = DateTime.Now - data.BirthDate;
+                //var years = currentPos.TotalDays / 365;
+                //var days = currentPos.TotalDays;
+                //var hours = currentPos.TotalHours;
+                Thread.Sleep(1);
                 ProgressDispatcher.Invoke(() =>
                 {
-                    control.CurrentProgressBar.Value = i;
+                    control.CenterDownTb.Text = ("Прожито:" + years + " лет, " + days + " дней, " + hours + ":" + minutes + ":" + seconds + "." + milliseconds).ToString();
                 });
             }
         }
