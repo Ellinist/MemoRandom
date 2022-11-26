@@ -147,12 +147,14 @@ namespace MemoRandom.Client.ViewModels
                 {
                     if (earlier != null)
                     {
-                        //var t2 = data.BirthDate + (earlier.DeathDate - earlier.BirthDate);
-                        //var t1 = DateTime.Now - data.BirthDate + (earlier.DeathDate - earlier.BirthDate);
-                        //var temp = (DateTime.Now - data.BirthDate + (earlier.DeathDate - earlier.BirthDate)).Days;
+                        control.SpentDaysFromPreviousHuman.Text = "Прошло " +
+                            (DateTime.Now - (data.BirthDate + (earlier.DeathDate - earlier.BirthDate))).TotalDays.ToString() + " дней";
+                    }
 
-                        //control.SpentDaysFromPreviousHuman.Text = "Прошло " +
-                        //    (DateTime.Now - data.BirthDate + (earlier.DeathDate - earlier.BirthDate).Days.ToString() + " дней";
+                    if (later != null)
+                    {
+                        control.RestDaysToNextHuman.Text = "Прошло " +
+                                                           ((data.BirthDate + (later.DeathDate - later.BirthDate)) - DateTime.Now).TotalDays.ToString() + " дней";
                     }
                     control.CurrentHumanLivedPeriod.Text = ("Прожито: " + years + " лет, " + days + " дней, " + hours + ":" + minutes + ":" + seconds/* + "." + milliseconds*/).ToString();
                 });
