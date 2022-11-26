@@ -10,6 +10,7 @@ using System;
 using ImTools;
 using System.Linq;
 using System.Threading.Tasks;
+using MemoRandom.Client.Common.Interfaces;
 
 namespace MemoRandom.Client.ViewModels
 {
@@ -18,6 +19,8 @@ namespace MemoRandom.Client.ViewModels
     /// </summary>
     public class ComparingProcessViewModel : BindableBase
     {
+        private readonly ICommonDataController _commonDataController;
+
         public Dispatcher ProgressDispatcher { get; set; }
 
         public Window ProgressView { get; set; }
@@ -85,20 +88,23 @@ namespace MemoRandom.Client.ViewModels
 
             var control = data.ComparedHumanBar;
 
+            var startSpan = DateTime.Now - data.BirthDate;
+            var orderedList = CommonDataController.HumansList.OrderBy(x => x.DaysLived);
+            var earlier = orderedList.LastOrDefault(x => x.DaysLived < startSpan.TotalDays);
+            var later = orderedList.FirstOrDefault(x => x.DaysLived > startSpan.TotalDays);
+
             ProgressDispatcher.Invoke(() =>
             {
                 control.CurrentProgressBar.Minimum = 0;
                 control.CurrentProgressBar.Maximum = 1000;
                 control.CurrentProgressBar.Value = 0;
 
+                control.PreviousImage.Source = _commonDataController.GetHumanImage(earlier);
+                control.NextImage.Source = _commonDataController.GetHumanImage(later);
+
                 control.CenterUpTb.Text = data.FullName;
                 control.LeftUpTb.Text = data.BirthDate.ToLongDateString();
             });
-
-            var startSpan = DateTime.Now - data.BirthDate;
-            var orderedList = CommonDataController.HumansList.OrderBy(x => x.DaysLived);
-            var earlier = orderedList.LastOrDefault(x => x.DaysLived < startSpan.TotalDays);
-            var later = orderedList.FirstOrDefault(x => x.DaysLived > startSpan.TotalDays);
 
             while (!token.IsCancellationRequested)
             {
@@ -123,8 +129,10 @@ namespace MemoRandom.Client.ViewModels
 
 
         #region CTOR
-        public ComparingProcessViewModel()
+        public ComparingProcessViewModel(ICommonDataController commonDataController)
         {
+            _commonDataController = commonDataController ?? throw new ArgumentNullException(nameof(Common));
+
             token = cancelTokenSource.Token;
             ProgressDispatcher = Dispatcher.CurrentDispatcher;
         }

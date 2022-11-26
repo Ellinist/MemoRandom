@@ -20,7 +20,8 @@
         </Grid.ColumnDefinitions>
 
         <!--Изображение прошедшее-->
-        <Image Grid.Column="0">
+        <Image Grid.Column="0"
+               x:Name="PreviousImage">
             
         </Image>
 
@@ -29,6 +30,11 @@
                      x:Name="CurrentProgressBar">
             
         </ProgressBar>
+
+        <Image Grid.Column="2"
+               x:Name="NextImage">
+            
+        </Image>
 
         <Grid Grid.Column="1">
             <Grid.ColumnDefinitions>
