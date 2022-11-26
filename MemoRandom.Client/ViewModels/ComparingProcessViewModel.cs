@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Threading;
 using MemoRandom.Client.Models;
 using System;
+using System.Globalization;
 using ImTools;
 using System.Linq;
 using System.Threading.Tasks;
@@ -110,8 +111,8 @@ namespace MemoRandom.Client.ViewModels
                     control.PreviousHumanDeathDateTextBlock.Text = "Умер: " + earlier.DeathDate.ToLongDateString();
                     control.PreviousHumanFullYearsTextBlock.Text = "Прожил " + Math.Floor(earlier.FullYearsLived) + " лет";
 
-                    var resulto = data.BirthDate + (earlier.DeathDate - earlier.BirthDate);
-                    control.PreviousHumanOverLifeDate.Text = "Пройдено: " + resulto.ToString();
+                    control.PreviousHumanOverLifeDate.Text = "Пройдено: "
+                                                           + (data.BirthDate + (earlier.DeathDate - earlier.BirthDate)).ToString("dd MMMM yyyy hh: mm");
                 }
                 if (later != null) // Если следующий игрок был найден
                 {
@@ -123,8 +124,8 @@ namespace MemoRandom.Client.ViewModels
                     control.NextHumanDeathDateTextBlock.Text = "Умер: " + later.DeathDate.ToLongDateString();
                     control.NextHumanFullYearsTextBlock.Text = "Прожил: " + Math.Floor(later.FullYearsLived) + " лет";
 
-                    var resulto = data.BirthDate + (later.DeathDate - later.BirthDate);
-                    control.NextHumanOverLifeDate.Text = "Пройдем: " + resulto.ToString();
+                    control.NextHumanOverLifeDate.Text = "Пройдем: "
+                                                       + (data.BirthDate + (later.DeathDate - later.BirthDate)).ToString("dd MMMM yyyy hh: mm");
                 }
 
                 control.CurrentHumanTextBlock.Text = data.FullName;
@@ -144,6 +145,15 @@ namespace MemoRandom.Client.ViewModels
                 Thread.Sleep(1000);
                 ProgressDispatcher.Invoke(() =>
                 {
+                    if (earlier != null)
+                    {
+                        //var t2 = data.BirthDate + (earlier.DeathDate - earlier.BirthDate);
+                        //var t1 = DateTime.Now - data.BirthDate + (earlier.DeathDate - earlier.BirthDate);
+                        //var temp = (DateTime.Now - data.BirthDate + (earlier.DeathDate - earlier.BirthDate)).Days;
+
+                        //control.SpentDaysFromPreviousHuman.Text = "Прошло " +
+                        //    (DateTime.Now - data.BirthDate + (earlier.DeathDate - earlier.BirthDate).Days.ToString() + " дней";
+                    }
                     control.CurrentHumanLivedPeriod.Text = ("Прожито: " + years + " лет, " + days + " дней, " + hours + ":" + minutes + ":" + seconds/* + "." + milliseconds*/).ToString();
                 });
             }

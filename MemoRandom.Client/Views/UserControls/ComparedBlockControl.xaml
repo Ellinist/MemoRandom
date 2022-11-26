@@ -6,6 +6,8 @@
              xmlns:local="clr-namespace:MemoRandom.Client.Views.UserControls"
              mc:Ignorable="d" 
              d:DesignHeight="350">
+
+
     <Grid>
         <Grid.ColumnDefinitions>
             

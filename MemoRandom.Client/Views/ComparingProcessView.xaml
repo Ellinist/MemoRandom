@@ -7,7 +7,9 @@
         mc:Ignorable="d"
         Title="ComparingProcessView"
         MinHeight="600"
-        MinWidth="1800">
+        MinWidth="1800"
+        WindowStartupLocation="CenterScreen"
+        WindowState="Maximized">
     
     
     
