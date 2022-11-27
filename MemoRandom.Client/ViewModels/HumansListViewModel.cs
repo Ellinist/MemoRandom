@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MemoRandom.Client.Views;
-using MemoRandom.Data.Interfaces;
 using System.Windows.Media.Imaging;
 using System.Windows;
 using System.Text;

@@ -7,6 +7,11 @@
              mc:Ignorable="d" 
              d:DesignHeight="350">
 
+    <!--<UserControl.Resources>
+        <Style TargetType="TextBlock" x:Key="Super">
+            <Setter Property="TextBlock.TextDecorations" Value=""/>
+        </Style>
+    </UserControl.Resources>-->
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -115,17 +120,19 @@
                        x:Name="PreviousHumanOverLifeDate"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Left"
+                       Foreground="DarkMagenta"
+                       FontStyle="Italic"
                        FontSize="16"
-                       FontWeight="Normal"/>
+                       FontWeight="Bold"/>
 
             <!--Сколько прошло после пережитого игрока (в днях)-->
             <TextBlock Grid.Row="7" Grid.Column="1"
                        x:Name="SpentDaysFromPreviousHuman"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Left"
+                       Foreground="Yellow"
                        FontSize="16"
-                       FontWeight="Normal"
-                       Text="Прошло"/>
+                       FontWeight="Bold"/>
             
             
             
@@ -155,7 +162,7 @@
                        x:Name="CurrentHumanLivedPeriod"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Center"
-                       Foreground="Navy"
+                       Foreground="Yellow"
                        FontSize="16"
                        FontWeight="Bold"/>
 
@@ -204,17 +211,19 @@
                        x:Name="NextHumanOverLifeDate"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Right"
+                       Foreground="DarkMagenta"
+                       FontStyle="Italic"
                        FontSize="16"
-                       FontWeight="Normal"/>
+                       FontWeight="Bold"/>
 
             <!--Сколько прошло после пережитого игрока (в днях)-->
             <TextBlock Grid.Row="7" Grid.Column="5"
                        x:Name="RestDaysToNextHuman"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Right"
+                       Foreground="Yellow"
                        FontSize="16"
-                       FontWeight="Normal"
-                       Text="Осталось"/>
+                       FontWeight="Bold"/>
 
         </Grid>
 
