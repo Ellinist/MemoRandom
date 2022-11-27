@@ -247,6 +247,7 @@ namespace MemoRandom.Client.ViewModels
         private string GetWastedTime(ComparedHumanProgressData comparedHumanData)
         {
             var currentPos = DateTime.Now - comparedHumanData.BirthDate;
+            var yy = comparedHumanData.FullYearsLived * 365.25;
             var years = currentPos.Days / 365;
             var days = (int)Math.Floor(currentPos.TotalDays - yy);
             var time = string.Format("{0:D2}:{1:D2}:{2:D2}.{3:D3}", currentPos.Hours, currentPos.Minutes, currentPos.Seconds, currentPos.Milliseconds);
