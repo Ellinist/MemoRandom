@@ -73,7 +73,7 @@ namespace MemoRandom.Client.Common.Implementations
             AgeCategories = _mapper.Map<List<DbCategory>, ObservableCollection<Category>>(_msSqlController.GetCategories());
             foreach (var item in AgeCategories) // Преобразование строк в цвет
             {
-                item.CategoryColor = (Color)ColorConverter.ConvertFromString(item.StringColor);
+                item.CategoryColor = (Color)ColorConverter.ConvertFromString(item.StringColor)!;
             }
             #endregion
 

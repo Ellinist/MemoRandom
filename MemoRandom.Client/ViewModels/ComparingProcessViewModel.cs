@@ -63,19 +63,12 @@ namespace MemoRandom.Client.ViewModels
                 ProgressStackPanel.Children.Add(control);
 
                 // Каждый человек для сравнения в своем потоке
-                //ProgressThread = new Thread(ProgressMethod);
-                //ProgressThread.Start(data);
-
                 Task task = new Task(() =>
                 {
                     ProgressMethod(data);
-                }, token);
+                }, token); // Передаем токен остановки
 
                 task.Start();
-                
-                //Thread thread = new Thread(ProgressMethod);
-                //thread.Start(control);
-                ////*Thread thread = */new Thread(() => PrMethod(human.ComparedHumanFullName, control)).Start();
             }
         }
 
@@ -94,20 +87,31 @@ namespace MemoRandom.Client.ViewModels
             ProgressDispatcher.Invoke(() =>
             {
                 control.CurrentProgressBar.Minimum = 0;
-                control.CurrentProgressBar.Maximum = 1000;
-                control.CurrentProgressBar.Value = 0;
 
                 if (earlier != null) // Если предыдущий игрок был найден
                 {
+                    var before = (DateTime.Now - (data.BirthDate + (earlier.DeathDate - earlier.BirthDate))).Days;
+                    if (later != null)
+                    {
+                        var till = ((data.BirthDate + (later.DeathDate - later.BirthDate)) - DateTime.Now).Days;
+                        control.CurrentProgressBar.Maximum = before + till;
+                        control.CurrentProgressBar.Value = before;
+                    }
+                    else
+                    {
+                        control.CurrentProgressBar.Maximum = before;
+                        control.CurrentProgressBar.Value = before;
+                    }
+
                     control.PreviousHumanNameTextBlock.Text = earlier.LastName + " "
                                                             + (earlier.FirstName  != string.Empty ? (earlier.FirstName[0..1] + ".") : "") + " "
                                                             + (earlier.Patronymic != string.Empty ? (earlier.Patronymic[0..1] + ".") : "");
                     control.PreviousImage.Source = _commonDataController.GetHumanImage(earlier);
-                    control.PreviousHumanBirthDateTextBlock.Text = "Приход: " + earlier.BirthDate.ToLongDateString();
+                    control.PreviousHumanBirthDateTextBlock.Text = "Рождение: " + earlier.BirthDate.ToLongDateString();
 
                     var deathReasonName = CommonDataController.PlainReasonsList.FirstOrDefault(x => x.ReasonId == earlier.DeathReasonId);
 
-                    control.PreviousHumanDeathDateTextBlock.Text = "Уход: " +
+                    control.PreviousHumanDeathDateTextBlock.Text = "Смерть: " +
                                                                    earlier.DeathDate.ToLongDateString() + " (" +
                                                                    deathReasonName.ReasonName + ")";
                     control.PreviousHumanFullYearsTextBlock.Text = "Прожил " + Math.Floor(earlier.FullYearsLived) + " лет";
@@ -115,6 +119,22 @@ namespace MemoRandom.Client.ViewModels
                     control.PreviousHumanOverLifeDate.Text = "Пройдено: "
                                                            + (data.BirthDate + (earlier.DeathDate - earlier.BirthDate)).ToString("dd MMMM yyyy hh: mm");
                 }
+                else
+                {
+                    var before = (DateTime.Now - data.BirthDate).Days;
+                    if (later != null)
+                    {
+                        var till = ((data.BirthDate + (later.DeathDate - later.BirthDate)) - DateTime.Now).Days;
+                        control.CurrentProgressBar.Maximum = before + till;
+                        control.CurrentProgressBar.Value = before;
+                    }
+                    else
+                    {
+                        control.CurrentProgressBar.Maximum = before;
+                        control.CurrentProgressBar.Value = before;
+                    }
+                }
+
                 if (later != null) // Если следующий игрок был найден
                 {
                     control.NextHumanNameTextBlock.Text = later.LastName + " "
@@ -163,9 +183,6 @@ namespace MemoRandom.Client.ViewModels
                                                                   spentHours.ToString() + " часов, " +
                                                                   spentMinutes.ToString() + ":" +
                                                                   spentSeconds.ToString();
-
-                        //control.SpentDaysFromPreviousHuman.Text = "Прошло " +
-                        //    (DateTime.Now - (data.BirthDate + (earlier.DeathDate - earlier.BirthDate))).TotalDays.ToString() + " дней";
                     }
 
                     if (later != null)
@@ -182,9 +199,6 @@ namespace MemoRandom.Client.ViewModels
                                                            spentHours.ToString() + " часов, " +
                                                            spentMinutes.ToString() + ":" +
                                                            spentSeconds.ToString();
-
-                        //control.RestDaysToNextHuman.Text = "Прошло " +
-                        //                                   ((data.BirthDate + (later.DeathDate - later.BirthDate)) - DateTime.Now).TotalDays.ToString() + " дней";
                     }
                     control.CurrentHumanLivedPeriod.Text = ("Прожито: " + years + " лет, " + days + " дней, " + hours + ":" + minutes + ":" + seconds/* + "." + milliseconds*/).ToString();
                 });
