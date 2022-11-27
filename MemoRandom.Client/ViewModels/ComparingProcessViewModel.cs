@@ -7,8 +7,6 @@ using System.Windows.Controls;
 using System.Windows.Threading;
 using MemoRandom.Client.Models;
 using System;
-using System.Globalization;
-using ImTools;
 using System.Linq;
 using System.Threading.Tasks;
 using MemoRandom.Client.Common.Interfaces;
@@ -40,8 +38,6 @@ namespace MemoRandom.Client.ViewModels
         /// <param name="e"></param>
         public void ComparingProcessView_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            //Dispose();
-
             cancelTokenSource.Cancel();
             cancelTokenSource.Dispose();
 
@@ -53,7 +49,7 @@ namespace MemoRandom.Client.ViewModels
             ProgressStackPanel = panel;
 
             // Цикл по всем людям для сравнения
-            foreach(var human in CommonDataController.ComparedHumansCollection)
+            foreach(var human in CommonDataController.ComparedHumansCollection.Where(x => x.IsComparedHumanConsidered == true))
             {
                 ComparedBlockControl control = new();
                 ComparedHumanProgressData data = new()

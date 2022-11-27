@@ -5,10 +5,8 @@ using Microsoft.Data.SqlClient;
 using NLog;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Windows.Media.Imaging;
 
 namespace MemoRandom.Data.Implementations
 {
@@ -117,14 +115,6 @@ namespace MemoRandom.Data.Implementations
             {
                 try
                 {
-                    //DbReason record = new DbReason()
-                    //{
-                    //    ReasonId          = reason.ReasonId,
-                    //    ReasonName        = reason.ReasonName,
-                    //    ReasonComment     = reason.ReasonComment,
-                    //    ReasonDescription = reason.ReasonDescription,
-                    //    ReasonParentId    = reason.ReasonParentId
-                    //};
                     MemoContext.DbReasons.Add(reason);
                     MemoContext.SaveChanges();
                 }
@@ -179,7 +169,7 @@ namespace MemoRandom.Data.Implementations
         /// <summary>
         /// Удаление причины смерти и всех ее дочерних узлов
         /// </summary>
-        /// <param name="reason"></param>
+        /// <param name="deletedList"></param>
         /// <returns></returns>
         public bool DeleteReasonInList(List<Guid> deletedList)
         {
@@ -355,8 +345,9 @@ namespace MemoRandom.Data.Implementations
 
                     if (updatedComparedHuman != null) // Корректировка информации
                     {
-                        updatedComparedHuman.ComparedHumanFullName = comparedHuman.ComparedHumanFullName;
-                        updatedComparedHuman.ComparedHumanBirthDate = comparedHuman.ComparedHumanBirthDate;
+                        updatedComparedHuman.ComparedHumanFullName     = comparedHuman.ComparedHumanFullName;
+                        updatedComparedHuman.ComparedHumanBirthDate    = comparedHuman.ComparedHumanBirthDate;
+                        updatedComparedHuman.IsComparedHumanConsidered = comparedHuman.IsComparedHumanConsidered;
 
                         MemoContext.SaveChanges();
                     }
@@ -364,9 +355,10 @@ namespace MemoRandom.Data.Implementations
                     {
                         DbComparedHuman record = new()
                         {
-                            ComparedHumanId = comparedHuman.ComparedHumanId,
-                            ComparedHumanFullName = comparedHuman.ComparedHumanFullName,
-                            ComparedHumanBirthDate = comparedHuman.ComparedHumanBirthDate
+                            ComparedHumanId           = comparedHuman.ComparedHumanId,
+                            ComparedHumanFullName     = comparedHuman.ComparedHumanFullName,
+                            ComparedHumanBirthDate    = comparedHuman.ComparedHumanBirthDate,
+                            IsComparedHumanConsidered = comparedHuman.IsComparedHumanConsidered
                         };
 
                         MemoContext.DbComparedHumans.Add(record);

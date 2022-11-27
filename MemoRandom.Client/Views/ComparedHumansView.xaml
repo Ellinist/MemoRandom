@@ -45,7 +45,7 @@
     
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition MinWidth="400" MaxWidth="400"/>
+            <ColumnDefinition MinWidth="600" MaxWidth="600"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
@@ -75,6 +75,15 @@
                                     Binding="{Binding ComparedHumanBirthDate, StringFormat=dd MMMM yyyy hh:mm, ConverterCulture=ru-RU}">
 
                 </DataGridTextColumn>
+
+                <!--Учитывать ли человека для сравнения в прогрессе?-->
+                <DataGridCheckBoxColumn Header="Учитывать"
+                                        x:Name="IsComparedHumanConsidered"
+                                        Width="120" MinWidth="120"
+                                        IsReadOnly="True"
+                                        Binding="{Binding IsComparedHumanConsidered}">
+
+                </DataGridCheckBoxColumn>
             </DataGrid.Columns>
         </DataGrid>
 
@@ -139,6 +148,24 @@
                                         SelectedTimeFormat="Short"
                                         Culture="ru-RU"
                                         SelectedDateTime="{Binding ComparedHumanBirthDate}"/>
+                </Grid>
+
+                <Grid Margin="2, 2, 2, 2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0"
+                               Style="{StaticResource TextBlockFontSize}"
+                               Padding="0, 0, 5, 0"
+                               HorizontalAlignment="Right"
+                               Text="Учитывать?:"/>
+                    <CheckBox Grid.Column="1"
+                              VerticalAlignment="Center"
+                              HorizontalAlignment="Left"
+                              IsThreeState="False"
+                              IsChecked="{Binding IsConsidered}"/>
                 </Grid>
             </StackPanel>
 

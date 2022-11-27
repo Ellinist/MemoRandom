@@ -14,6 +14,7 @@ namespace MemoRandom.Client.Common.Models
         private Guid _comparedHumanId;
         private string _comparedHumanFullName;
         private DateTime _comparedHumanBirthDate;
+        private bool _isComparedHumanConsidered;
         #endregion
 
         /// <summary>
@@ -56,6 +57,16 @@ namespace MemoRandom.Client.Common.Models
             {
                 _comparedHumanBirthDate= value;
                 RaisePropertyChanged(nameof(ComparedHumanBirthDate));
+            }
+        }
+
+        public bool IsComparedHumanConsidered
+        {
+            get => _isComparedHumanConsidered;
+            set
+            {
+                _isComparedHumanConsidered = value;
+                RaisePropertyChanged(nameof(IsComparedHumanConsidered));
             }
         }
     }

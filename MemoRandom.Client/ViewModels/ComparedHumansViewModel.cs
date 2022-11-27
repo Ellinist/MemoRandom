@@ -27,6 +27,7 @@ namespace MemoRandom.Client.ViewModels
         private DateTime _comparedHumanBirthDate;
         private int _selectedIndex;
         private ComparedHuman _selectedHuman;
+        private bool _isConsidered;
         #endregion
 
         #region PROPS
@@ -83,6 +84,7 @@ namespace MemoRandom.Client.ViewModels
                 ComparedHumanId = SelectedHuman.ComparedHumanId;
                 ComparedHumanFullName = SelectedHuman.ComparedHumanFullName;
                 ComparedHumanBirthDate = SelectedHuman.ComparedHumanBirthDate;
+                IsConsidered = SelectedHuman.IsComparedHumanConsidered;
                 RaisePropertyChanged(nameof(SelectedHuman));
             }
         }
@@ -125,6 +127,19 @@ namespace MemoRandom.Client.ViewModels
                 RaisePropertyChanged(nameof(ComparedHumanBirthDate));
             }
         }
+
+        /// <summary>
+        /// Рассматривается ли человек для сравнения в прогрессе анализа
+        /// </summary>
+        public bool IsConsidered
+        {
+            get => _isConsidered;
+            set
+            {
+                _isConsidered = value;
+                RaisePropertyChanged(nameof(IsConsidered));
+            }
+        }
         #endregion
 
         #region COMMANDS
@@ -162,11 +177,12 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private async void SaveComparedHuman()
         {
-            if (!newFlag) // Существующая запись человка дял сравнения
+            if (!newFlag) // Существующая запись человека дял сравнения
             {
                 #region Обновление выбранного для сравнения человека
                 SelectedHuman.ComparedHumanFullName = ComparedHumanFullName;
                 SelectedHuman.ComparedHumanBirthDate = ComparedHumanBirthDate;
+                SelectedHuman.IsComparedHumanConsidered = IsConsidered;
                 #endregion
 
                 await Task.Run(() =>
@@ -185,7 +201,8 @@ namespace MemoRandom.Client.ViewModels
                 {
                     ComparedHumanId = ComparedHumanId,
                     ComparedHumanFullName = ComparedHumanFullName,
-                    ComparedHumanBirthDate = ComparedHumanBirthDate
+                    ComparedHumanBirthDate = ComparedHumanBirthDate,
+                    IsComparedHumanConsidered = IsConsidered
                 };
 
                 await Task.Run(() =>

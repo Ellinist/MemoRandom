@@ -27,5 +27,10 @@ namespace MemoRandom.Data.DbModels
         /// </summary>
         [Required]
         public DateTime ComparedHumanBirthDate { get; set; }
+
+        /// <summary>
+        /// Учитывать человека для сравнения в прогрессе сравнения
+        /// </summary>
+        public bool IsComparedHumanConsidered { get; set; }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Prism.DryIoc;
-using DryIoc;
 using Prism.Ioc;
 using Prism.Events;
 using NLog;
