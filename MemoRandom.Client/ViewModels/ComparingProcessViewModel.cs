@@ -198,7 +198,7 @@ namespace MemoRandom.Client.ViewModels
 
                             // Оставшийся до не пережитого игрока период времени
                             var laterSpent = comparedHumanData.BirthDate + (later.DeathDate - later.BirthDate) - DateTime.Now;
-                            var laterSpentDays = (int)Math.Floor(laterSpent.TotalDays);
+                            var laterSpentDays = laterSpent.Days;
                             var laterSpentTime = string.Format("{0:D2}:{1:D2}:{2:D2}.{3:D3}", laterSpent.Hours, laterSpent.Minutes, laterSpent.Seconds, laterSpent.Milliseconds);
 
                             control.RestDaysToNextHuman.Text = "Осталось: " +
@@ -241,7 +241,7 @@ namespace MemoRandom.Client.ViewModels
 
                         // Выводим время, прошедшее с момента прохода пережитого игрока
                         var earlierSpent = DateTime.Now - (comparedHumanData.BirthDate + (earlier.DeathDate - earlier.BirthDate));
-                        var earlierSpentDays = (int)Math.Floor(earlierSpent.TotalDays);
+                        var earlierSpentDays = earlierSpent.Days;
                         var earlierSpentTime = string.Format("{0:D2}:{1:D2}:{2:D2}.{3:D3}", earlierSpent.Hours, earlierSpent.Minutes, earlierSpent.Seconds, earlierSpent.Milliseconds);
                         control.SpentDaysFromPreviousHuman.Text = "Прошло: " +
                                                                   earlierSpentDays.ToString() + " " +
@@ -289,7 +289,7 @@ namespace MemoRandom.Client.ViewModels
 
                             // Оставшийся до не пережитого игрока период времени
                             var laterSpent = /*comparedHumanData.BirthDate + */(later.DeathDate - later.BirthDate) - (DateTime.Now - comparedHumanData.BirthDate);
-                            var laterSpentDays = (int)Math.Floor(laterSpent.TotalDays);
+                            var laterSpentDays = laterSpent.Days;
                             var laterSpentTime = string.Format("{0:D2}:{1:D2}:{2:D2}.{3:D3}", laterSpent.Hours, laterSpent.Minutes, laterSpent.Seconds, laterSpent.Milliseconds);
 
                             control.RestDaysToNextHuman.Text = "Осталось: " +
