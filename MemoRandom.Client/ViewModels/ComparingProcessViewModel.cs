@@ -118,7 +118,34 @@ namespace MemoRandom.Client.ViewModels
             // Но! Прежде вычисляем стартовые позиции
             var orderedList = CommonDataController.HumansList.OrderBy(x => x.FullYearsLived); // Упорядоченный по возрасту список людей
 
-            // Получаем информацию о пережитом (если есть) и не пережитом (если есть) человеке - в процессе работы может поменяться
+            //var period = DateTime.Now - comparedHumanData.BirthDate; // Прожитый период в днях
+            //for(var j = 0; j < period.Days; j++)
+            //{
+            //    var earlier1 = orderedList.LastOrDefault(x => x.DaysLived < j);  // Пережитый
+            //    var later1 = orderedList.FirstOrDefault(x => x.DaysLived > j); // Не пережитый
+
+            //    if (earlier1 != null) // Если пережитый игрок существует
+            //    {
+            //        ProgressDispatcher.Invoke(() =>
+            //        {
+            //            LeftPicture = _commonDataController.GetHumanImage(earlier1); // Загружаем картинку в правильном потоке
+            //        });
+            //    }
+
+            //    if (later1 != null) // Если еще не пережитый игрок существует
+            //    {
+            //        ProgressDispatcher.Invoke(() =>
+            //        {
+            //            RightPicture = _commonDataController.GetHumanImage(later1); // Загружаем картинку в правильном потоке
+            //        });
+            //    }
+            //    Thread.Sleep(10);
+
+            //    MainProcess(control, earlier1, later1, comparedHumanData, period, orderedList, LeftPicture, RightPicture);
+            //}
+
+
+            // Получаем информацию о пережитом(если есть) и не пережитом(если есть) человеке - в процессе работы может поменяться
             var startSpan = DateTime.Now - comparedHumanData.BirthDate; // Стартовый диапазон анализируемого человека
             var earlier = orderedList.LastOrDefault(x => x.DaysLived < startSpan.TotalDays);  // Пережитый
             var later = orderedList.FirstOrDefault(x => x.DaysLived > startSpan.TotalDays); // Не пережитый
@@ -156,7 +183,7 @@ namespace MemoRandom.Client.ViewModels
 
             startSpan = DateTime.Now - comparedHumanData.BirthDate; // Обновляемый диапазон анализируемого человека
 
-            // Получаем информацию о пережитом (если есть) и не пережитом (если есть) человеке - в процессе работы может поменяться
+            //Получаем информацию о пережитом(если есть) и не пережитом(если есть) человеке - в процессе работы может поменяться
             earlier = orderedList.LastOrDefault(x => x.DaysLived < startSpan.TotalDays);  // Пережитый
             later = orderedList.FirstOrDefault(x => x.DaysLived > startSpan.TotalDays); // Не пережитый
 
