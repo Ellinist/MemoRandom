@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
-
-namespace MemoRandom.Client.Common.Enums
+﻿namespace MemoRandom.Client.Common.Enums
 {
     public static class Periods
     {

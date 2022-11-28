@@ -1,9 +1,5 @@
-﻿using MemoRandom.Client.Common.Models;
-using MemoRandom.Client.ViewModels;
-using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Threading;
 
 namespace MemoRandom.Client.Views.UserControls
 {
