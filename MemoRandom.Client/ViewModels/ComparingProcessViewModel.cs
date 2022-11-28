@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using MemoRandom.Client.Common.Interfaces;
 using MemoRandom.Client.Common.Enums;
 using MemoRandom.Client.Common.Models;
+using System.Windows.Documents;
 
 namespace MemoRandom.Client.ViewModels
 {
@@ -119,7 +120,7 @@ namespace MemoRandom.Client.ViewModels
             var orderedList = CommonDataController.HumansList.OrderBy(x => x.FullYearsLived); // Упорядоченный по возрасту список людей
 
             var period = DateTime.Now - comparedHumanData.BirthDate; // Прожитый период в днях
-            for (var j = 0; j < period.Days; j++)
+            for (var j = 0; j < period.Days; j += 10)
             {
                 var earlier1 = orderedList.LastOrDefault(x => x.DaysLived < j);  // Пережитый
                 var later1 = orderedList.FirstOrDefault(x => x.DaysLived > j); // Не пережитый
@@ -139,38 +140,39 @@ namespace MemoRandom.Client.ViewModels
                         RightPicture = _commonDataController.GetHumanImage(later1); // Загружаем картинку в правильном потоке
                     });
                 }
-                Thread.Sleep(10);
+                //Thread.Sleep(10);
 
                 var span = comparedHumanData.BirthDate.AddDays(j);
                 MainProcess(control, earlier1, later1, comparedHumanData, period, orderedList, LeftPicture, RightPicture, span);
+
+                if (token.IsCancellationRequested) return; // При прерывании процесса вываливаемся вообще
             }
 
+            // Получаем информацию о пережитом(если есть) и не пережитом(если есть) человеке - в процессе работы может поменяться
+            var startSpan = DateTime.Now - comparedHumanData.BirthDate; // Стартовый диапазон анализируемого человека
+            var earlier = orderedList.LastOrDefault(x => x.DaysLived < startSpan.TotalDays);  // Пережитый
+            var later = orderedList.FirstOrDefault(x => x.DaysLived > startSpan.TotalDays); // Не пережитый
+            if (earlier != null) // Если пережитый игрок существует
+            {
+                ProgressDispatcher.Invoke(() =>
+                {
+                    LeftPicture = _commonDataController.GetHumanImage(earlier); // Загружаем картинку в правильном потоке
+                });
+            }
 
-            //// Получаем информацию о пережитом(если есть) и не пережитом(если есть) человеке - в процессе работы может поменяться
-            //var startSpan = DateTime.Now - comparedHumanData.BirthDate; // Стартовый диапазон анализируемого человека
-            //var earlier = orderedList.LastOrDefault(x => x.DaysLived < startSpan.TotalDays);  // Пережитый
-            //var later = orderedList.FirstOrDefault(x => x.DaysLived > startSpan.TotalDays); // Не пережитый
-            //if (earlier != null) // Если пережитый игрок существует
-            //{
-            //    ProgressDispatcher.Invoke(() =>
-            //    {
-            //        LeftPicture = _commonDataController.GetHumanImage(earlier); // Загружаем картинку в правильном потоке
-            //    });
-            //}
+            if (later != null) // Если еще не пережитый игрок существует
+            {
+                ProgressDispatcher.Invoke(() =>
+                {
+                    RightPicture = _commonDataController.GetHumanImage(later); // Загружаем картинку в правильном потоке
+                });
+            }
 
-            //if (later != null) // Если еще не пережитый игрок существует
-            //{
-            //    ProgressDispatcher.Invoke(() =>
-            //    {
-            //        RightPicture = _commonDataController.GetHumanImage(later); // Загружаем картинку в правильном потоке
-            //    });
-            //}
-
-            //// Запускаем основной цикл отображения изменяющихся данных (зависят от текущего времени)
-            //while (!token.IsCancellationRequested) // Пока команда для остановки потока не придет, выполняем работу потока
-            //{
-            //    MainProcess(control, earlier, later, comparedHumanData, startSpan, orderedList, LeftPicture, RightPicture, DateTime.Now);
-            //}
+            // Запускаем основной цикл отображения изменяющихся данных (зависят от текущего времени)
+            while (!token.IsCancellationRequested) // Пока команда для остановки потока не придет, выполняем работу потока
+            {
+                MainProcess(control, earlier, later, comparedHumanData, startSpan, orderedList, LeftPicture, RightPicture, DateTime.Now);
+            }
         }
 
         private void MainProcess(ComparedBlockControl control,
@@ -181,7 +183,7 @@ namespace MemoRandom.Client.ViewModels
                                  BitmapSource LeftPicture, BitmapSource RightPicture,
                                  DateTime currentDateTime)
         {
-            //Thread.Sleep(100); // Для облегчения работы программы замораживаем на 100 мс
+            Thread.Sleep(5); // Для облегчения работы программы замораживаем на 100 мс
 
             //startSpan = currentDateTime - comparedHumanData.BirthDate; // Обновляемый диапазон анализируемого человека
 
@@ -252,6 +254,7 @@ namespace MemoRandom.Client.ViewModels
                     }
                     else // Если же не пережитого не существует, то максимум прогресс-нидикатора и текущая позиция совпадают
                     {
+                        // Сюда попадаем только тогда, когда анализируемый человек самый последний в списке - малопонятная схема
                         control.CurrentProgressBar.Maximum = before; // Максимум прогресс-индикатора
                         control.CurrentProgressBar.Value = before; // Текущая позиция прогресс-индикатора
                     }
@@ -340,6 +343,14 @@ namespace MemoRandom.Client.ViewModels
                         control.RestDaysToNextHuman.Text = "Осталось: " +
                                                            laterSpentDays.ToString() + " " +
                                                            _commonDataController.GetFinalText(laterSpentDays, PeriodTypes.Days) + " " + laterSpentTime;
+
+                        // Вычисляем время, прошедшее с момента рождения анализируемого
+                        var before2 = (currentDateTime - comparedHumanData.BirthDate).Days;
+                        // Вычисляем время до момента его ухода
+                        var till2 = ((comparedHumanData.BirthDate + (later.DeathDate - later.BirthDate)) - currentDateTime).Days;
+
+                        control.CurrentProgressBar.Maximum = before2 + till2; // Максимум прогресс-индикатора
+                        control.CurrentProgressBar.Value = before2; // Текущая позиция прогресс-индикатора
                     }
                     else // Не пережитый игрок не найден - странная ситуация - ничегошеньки нет (ни до, ни после)
                     {
