@@ -186,6 +186,10 @@ namespace MemoRandom.Client.ViewModels
                                 control.NextHumanDeathDateTextBlock.Text = "Смерть: (нет данных)";
                             }
 
+                            // Выводим дату, когда еще не пережитый игрок будет пройден
+                            control.NextHumanOverLifeDate.Text = "Пройдем: "
+                                                               + (comparedHumanData.BirthDate + (later.DeathDate - later.BirthDate)).ToString("dd MMMM yyyy hh: mm");
+
                             // Выводим количество прожитых лет еще не пережитым игроком
                             control.NextHumanFullYearsTextBlock.Text = "Прожил: " + Math.Floor(later.FullYearsLived) + " лет";
 
@@ -193,7 +197,7 @@ namespace MemoRandom.Client.ViewModels
                             control.CurrentProgressBar.Value   = before; // Значение текущей позиции прогресс-индикатора
 
                             // Оставшийся до не пережитого игрока период времени
-                            var laterSpent = (later.DeathDate - later.BirthDate) - (DateTime.Now - comparedHumanData.BirthDate);
+                            var laterSpent = comparedHumanData.BirthDate + (later.DeathDate - later.BirthDate) - DateTime.Now;
                             var laterSpentDays = (int)Math.Floor(laterSpent.TotalDays);
                             var laterSpentTime = string.Format("{0:D2}:{1:D2}:{2:D2}.{3:D3}", laterSpent.Hours, laterSpent.Minutes, laterSpent.Seconds, laterSpent.Milliseconds);
 
@@ -227,7 +231,11 @@ namespace MemoRandom.Client.ViewModels
                         {
                             control.PreviousHumanDeathDateTextBlock.Text = "Смерть: (нет данных)";
                         }
-                        
+
+                        // Выводим дату, когда пережитый игрок был пройден
+                        control.PreviousHumanOverLifeDate.Text = "Пройдено: "
+                                                               + (comparedHumanData.BirthDate + (earlier.DeathDate - earlier.BirthDate)).ToString("dd MMMM yyyy hh: mm");
+
                         // Выводим количество прожитых лет пережитым игроком
                         control.PreviousHumanFullYearsTextBlock.Text = "Прожил " + Math.Floor(earlier.FullYearsLived) + " лет";
 
@@ -272,11 +280,15 @@ namespace MemoRandom.Client.ViewModels
                                 control.NextHumanDeathDateTextBlock.Text = "Смерть: (нет данных)";
                             }
 
+                            // Выводим дату, когда еще не пережитый игрок будет пройден
+                            control.NextHumanOverLifeDate.Text = "Пройдем: "
+                                                               + (comparedHumanData.BirthDate + (later.DeathDate - later.BirthDate)).ToString("dd MMMM yyyy hh: mm");
+
                             // Выводим количество прожитых лет еще не пережитым игроком
                             control.NextHumanFullYearsTextBlock.Text = "Прожил " + Math.Floor(later.FullYearsLived) + " лет";
 
                             // Оставшийся до не пережитого игрока период времени
-                            var laterSpent = (later.DeathDate - later.BirthDate) - (DateTime.Now - comparedHumanData.BirthDate);
+                            var laterSpent = /*comparedHumanData.BirthDate + */(later.DeathDate - later.BirthDate) - (DateTime.Now - comparedHumanData.BirthDate);
                             var laterSpentDays = (int)Math.Floor(laterSpent.TotalDays);
                             var laterSpentTime = string.Format("{0:D2}:{1:D2}:{2:D2}.{3:D3}", laterSpent.Hours, laterSpent.Minutes, laterSpent.Seconds, laterSpent.Milliseconds);
 
