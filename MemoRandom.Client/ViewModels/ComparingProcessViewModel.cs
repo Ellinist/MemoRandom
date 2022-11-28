@@ -181,7 +181,7 @@ namespace MemoRandom.Client.ViewModels
                                 control.NextHumanDeathDateTextBlock.Text = "(" + laterDeathReasonName.ReasonName + ") " +
                                                                            "Уход: " + later.DeathDate.ToLongDateString();
                             }
-                            else
+                            else // Если не сопоставлена, то выведем лаконичную строку
                             {
                                 control.NextHumanDeathDateTextBlock.Text = "Смерть: (нет данных)";
                             }
@@ -227,7 +227,7 @@ namespace MemoRandom.Client.ViewModels
                                                                        earlier.DeathDate.ToLongDateString() + " (" +
                                                                        earlierDeathReasonName.ReasonName + ")";
                         }
-                        else
+                        else // Если не сопоставлена, то выведем лаконичную строку
                         {
                             control.PreviousHumanDeathDateTextBlock.Text = "Смерть: (нет данных)";
                         }
@@ -273,7 +273,7 @@ namespace MemoRandom.Client.ViewModels
                             if (laterDeathReasonName != null) // Если пережитому игроку сопоставлена причина смерти, то выводим ее
                             {
                                 control.NextHumanDeathDateTextBlock.Text = "(" + laterDeathReasonName.ReasonName + ") " +
-                                                                           "Уход: " + later.DeathDate.ToLongDateString();
+                                                                           "Смерть: " + later.DeathDate.ToLongDateString();
                             }
                             else
                             {
@@ -298,50 +298,11 @@ namespace MemoRandom.Client.ViewModels
                         }
                         else // Не пережитый игрок не найден - странная ситуация - ничегошеньки нет (ни до, ни после)
                         {
-
+                            // В душе не чаю, что тут писать
                         }
                     }
                 });
             }
-            
-            //while (!token.IsCancellationRequested)
-            //{
-            //    Thread.Sleep(1000);
-            //    ProgressDispatcher.Invoke(() =>
-            //    {
-            //        if (earlier != null)
-            //        {
-            //            // Пройденный период
-            //            var spent = DateTime.Now - (data.BirthDate + (earlier.DeathDate - earlier.BirthDate));
-            //            var spentDays = Math.Floor(spent.TotalDays);
-            //            var spentHours = spent.Hours;
-            //            var spentMinutes = spent.Minutes;
-            //            var spentSeconds = spent.Seconds;
-
-            //            control.SpentDaysFromPreviousHuman.Text = "Прошло: " +
-            //                                                      spentDays.ToString() + " дней" + " " +
-            //                                                      spentHours.ToString() + " часов, " +
-            //                                                      spentMinutes.ToString() + ":" +
-            //                                                      spentSeconds.ToString();
-            //        }
-
-            //        if (later != null)
-            //        {
-            //            // Оставшийся период
-            //            var spent = (data.BirthDate + (later.DeathDate - later.BirthDate)) - DateTime.Now;
-            //            var spentDays = Math.Floor(spent.TotalDays);
-            //            var spentHours = spent.Hours;
-            //            var spentMinutes = spent.Minutes;
-            //            var spentSeconds = spent.Seconds;
-
-            //            control.RestDaysToNextHuman.Text = "Осталось: " +
-            //                                               spentDays.ToString() + " дней" + " " +
-            //                                               spentHours.ToString() + " часов, " +
-            //                                               spentMinutes.ToString() + ":" +
-            //                                               spentSeconds.ToString();
-            //        }
-            //    });
-            //}
         }
 
         /// <summary>
