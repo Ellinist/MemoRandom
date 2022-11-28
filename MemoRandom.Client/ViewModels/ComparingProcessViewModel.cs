@@ -192,13 +192,14 @@ namespace MemoRandom.Client.ViewModels
                             control.CurrentProgressBar.Maximum = before + till; // Значение максимума прогресс-индикатора
                             control.CurrentProgressBar.Value   = before; // Значение текущей позиции прогресс-индикатора
 
-                            //Оставшийся период
-                            var laterSpent = (comparedHumanData.BirthDate + (later.DeathDate - later.BirthDate)) - DateTime.Now;
+                            // Оставшийся до не пережитого игрока период времени
+                            var laterSpent = (later.DeathDate - later.BirthDate) - (DateTime.Now - comparedHumanData.BirthDate);
                             var laterSpentDays = (int)Math.Floor(laterSpent.TotalDays);
                             var laterSpentTime = string.Format("{0:D2}:{1:D2}:{2:D2}.{3:D3}", laterSpent.Hours, laterSpent.Minutes, laterSpent.Seconds, laterSpent.Milliseconds);
 
-                            control.RestDaysToNextHuman.Text = "Прошло: " +
-                                                               laterSpentDays.ToString() + _commonDataController.GetFinalText(laterSpentDays, PeriodTypes.Days) + " " + laterSpentTime;
+                            control.RestDaysToNextHuman.Text = "Осталось: " +
+                                                               laterSpentDays + " " +
+                                                               _commonDataController.GetFinalText(laterSpentDays, PeriodTypes.Days) + " " + laterSpentTime;
                         }
                         else // Если же не пережитого не существует, то максимум прогресс-нидикатора и текущая позиция совпадают
                         {
@@ -235,7 +236,8 @@ namespace MemoRandom.Client.ViewModels
                         var earlierSpentDays = (int)Math.Floor(earlierSpent.TotalDays);
                         var earlierSpentTime = string.Format("{0:D2}:{1:D2}:{2:D2}.{3:D3}", earlierSpent.Hours, earlierSpent.Minutes, earlierSpent.Seconds, earlierSpent.Milliseconds);
                         control.SpentDaysFromPreviousHuman.Text = "Прошло: " +
-                                                                  earlierSpentDays.ToString() + _commonDataController.GetFinalText(earlierSpentDays, PeriodTypes.Days) + " " + earlierSpentTime;
+                                                                  earlierSpentDays.ToString() + " " +
+                                                                  _commonDataController.GetFinalText(earlierSpentDays, PeriodTypes.Days) + " " + earlierSpentTime;
                     }
                     else // Если пережитый игрок не был найден (не существует) - анализируемый человек первый по возрасту
                     {
@@ -272,8 +274,17 @@ namespace MemoRandom.Client.ViewModels
 
                             // Выводим количество прожитых лет еще не пережитым игроком
                             control.NextHumanFullYearsTextBlock.Text = "Прожил " + Math.Floor(later.FullYearsLived) + " лет";
+
+                            // Оставшийся до не пережитого игрока период времени
+                            var laterSpent = (later.DeathDate - later.BirthDate) - (DateTime.Now - comparedHumanData.BirthDate);
+                            var laterSpentDays = (int)Math.Floor(laterSpent.TotalDays);
+                            var laterSpentTime = string.Format("{0:D2}:{1:D2}:{2:D2}.{3:D3}", laterSpent.Hours, laterSpent.Minutes, laterSpent.Seconds, laterSpent.Milliseconds);
+
+                            control.RestDaysToNextHuman.Text = "Осталось: " +
+                                                               laterSpentDays.ToString() + " " +
+                                                               _commonDataController.GetFinalText(laterSpentDays, PeriodTypes.Days) + " " + laterSpentTime;
                         }
-                        else // Не пережитый игрок не найден - странная ситуация
+                        else // Не пережитый игрок не найден - странная ситуация - ничегошеньки нет (ни до, ни после)
                         {
 
                         }
