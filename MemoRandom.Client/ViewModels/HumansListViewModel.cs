@@ -15,6 +15,7 @@ using System.Globalization;
 using MemoRandom.Client.Common.Implementations;
 using MemoRandom.Client.Common.Models;
 using MemoRandom.Client.Common.Interfaces;
+using MemoRandom.Client.Common.Enums;
 
 namespace MemoRandom.Client.ViewModels
 {
@@ -184,22 +185,9 @@ namespace MemoRandom.Client.ViewModels
         {
             int years = (int)Math.Floor(selectedHuman.FullYearsLived); // Считаем число полных лет
             _yearsText.Clear();
-            int t1, t2;
-            t1 = years % 10;
-            t2 = years % 100;
-            if (t1 == 1 && t2 != 11)
-            {
-                _yearsText.Append("(" + years + " полный год)");
-            }
-            else if(t1 >= 2 && t1 <= 4 && (t2 < 10 || t2 >= 20))
-            {
-                _yearsText.Append("(" + years + " полных года)");
-            }
-            else
-            {
-                _yearsText.Append("(" + years + " полных лет)");
-            }
-            
+
+            _yearsText.Append("(" + years + " " + _commonDataController.GetFinalText(years, PeriodTypes.Years) + ")");
+
             DisplayedYears = _yearsText.ToString();
         }
 

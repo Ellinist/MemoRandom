@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using MemoRandom.Client.Common.Interfaces;
 using MemoRandom.Client.Common.Models;
+using MemoRandom.Client.Common.Enums;
 
 namespace MemoRandom.Client.ViewModels
 {
@@ -252,64 +253,12 @@ namespace MemoRandom.Client.ViewModels
             var days = (int)Math.Floor(currentPos.TotalDays - yy);
             var time = string.Format("{0:D2}:{1:D2}:{2:D2}.{3:D3}", currentPos.Hours, currentPos.Minutes, currentPos.Seconds, currentPos.Milliseconds);
 
-            string resultString = "Исчезло: " +
-                                  years + " " + SetRightYears(currentPos.Days / 365) + ", " +
-                                  days + " " + SetRightDays(days) + ", " +
+            string resultString = "Прошло: " +
+                                  years + " " + _commonDataController.GetFinalText(currentPos.Days / 365, PeriodTypes.Years) + ", " +
+                                  days  + " " + _commonDataController.GetFinalText(days, PeriodTypes.Days) + ", " +
                                   time;
 
             return resultString;
-        }
-
-        /// <summary>
-        /// Формирование текстов для отображения прожитых лет в соответствии с числом
-        /// </summary>
-        /// <param name="years"></param>
-        private string SetRightYears(int years)
-        {
-            string result = "";
-            int t1, t2;
-            t1 = years % 10;
-            t2 = years % 100;
-            if (t1 == 1 && t2 != 11)
-            {
-                result = "год";
-            }
-            else if (t1 >= 2 && t1 <= 4 && (t2 < 10 || t2 >= 20))
-            {
-                result = "года";
-            }
-            else
-            {
-                result = "лет";
-            }
-
-            return result;
-        }
-
-        /// <summary>
-        /// Формирование текстов для отображения прожитых лет в соответствии с числом
-        /// </summary>
-        /// <param name="days"></param>
-        private string SetRightDays(int days)
-        {
-            string result = "";
-            int t1, t2;
-            t1 = days % 10;
-            t2 = days % 100;
-            if (t1 == 1 && t2 != 11)
-            {
-                result = "день";
-            }
-            else if (t1 >= 2 && t1 <= 4 && (t2 < 10 || t2 >= 20))
-            {
-                result = "дня";
-            }
-            else
-            {
-                result = "дней";
-            }
-
-            return result;
         }
 
 

@@ -12,6 +12,7 @@ using Human = MemoRandom.Client.Common.Models.Human;
 using System.IO;
 using System.Windows.Media.Imaging;
 using NLog;
+using MemoRandom.Client.Common.Enums;
 
 namespace MemoRandom.Client.Common.Implementations
 {
@@ -307,6 +308,33 @@ namespace MemoRandom.Client.Common.Implementations
             {
                 AgeCategories.Add(item);
             }
+        }
+
+        /// <summary>
+        /// Формирование текстов для отображения прожитых периодов (лет, месяцев, дней, часов, минут, секунд) в соответствии с числом
+        /// </summary>
+        /// <param name="i"></param>
+        public string GetFinalText(int i, PeriodTypes type)
+        {
+            var periodValues = Periods.GetPeriodValues(type);
+            string result = "";
+            int t1, t2;
+            t1 = i % 10;
+            t2 = i % 100;
+            if (t1 == 1 && t2 != 11)
+            {
+                result = periodValues[0];
+            }
+            else if (t1 >= 2 && t1 <= 4 && (t2 < 10 || t2 >= 20))
+            {
+                result = periodValues[1];
+            }
+            else
+            {
+                result = periodValues[2];
+            }
+
+            return result;
         }
 
 

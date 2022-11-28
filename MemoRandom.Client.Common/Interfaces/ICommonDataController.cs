@@ -1,4 +1,5 @@
-﻿using MemoRandom.Client.Common.Models;
+﻿using MemoRandom.Client.Common.Enums;
+using MemoRandom.Client.Common.Models;
 using System.Windows.Media.Imaging;
 
 namespace MemoRandom.Client.Common.Interfaces
@@ -61,5 +62,7 @@ namespace MemoRandom.Client.Common.Interfaces
         /// <param name="currentHuman"></param>
         /// <returns></returns>
         BitmapImage GetHumanImage(Human currentHuman);
+
+        string GetFinalText(int i, PeriodTypes type);
     }
 }
