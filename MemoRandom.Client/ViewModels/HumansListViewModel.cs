@@ -272,6 +272,7 @@ namespace MemoRandom.Client.ViewModels
 
             PersonIndex = HumansCollection.IndexOf(CommonDataController.CurrentHuman);
             RaisePropertyChanged(nameof(PersonIndex));
+            SetFullYearsText(CommonDataController.CurrentHuman);
 
             ImageSource = _commonDataController.GetHumanImage(CommonDataController.CurrentHuman);
             RaisePropertyChanged(nameof(ImageSource));
