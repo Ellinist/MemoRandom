@@ -13,7 +13,6 @@ using System.Windows.Media.Imaging;
 using MemoRandom.Client.Common.Interfaces;
 using MemoRandom.Client.Common.Enums;
 using MemoRandom.Client.Common.Models;
-using System.Windows.Documents;
 
 namespace MemoRandom.Client.ViewModels
 {
@@ -35,15 +34,6 @@ namespace MemoRandom.Client.ViewModels
         public Dispatcher ProgressDispatcher { get; set; }
         #endregion
 
-
-        public Window ProgressView { get; set; }
-
-        public StackPanel ProgressStackPanel { get; set; }
-
-        private Thread ProgressThread { get; set; }
-
-        
-
         /// <summary>
         /// Метод закрытия окна
         /// </summary>
@@ -61,12 +51,9 @@ namespace MemoRandom.Client.ViewModels
         /// Формирование прогресс-индикаторов и потоков внутри
         /// </summary>
         /// <param name="panel"></param>
-        public void GetStackPanel(StackPanel panel)
+        public void SetStackPanel(StackPanel panel)
         {
-            ProgressStackPanel = panel;
-
-            var orderedComparedHumansList =
-                CommonDataController.ComparedHumansCollection.Where(x => x.IsComparedHumanConsidered == true);
+            var orderedComparedHumansList = CommonDataController.ComparedHumansCollection.Where(x => x.IsComparedHumanConsidered == true);
             // Цикл по всем людям для сравнения
             foreach (var human in orderedComparedHumansList)
             {
@@ -79,7 +66,7 @@ namespace MemoRandom.Client.ViewModels
                     FullYearsLived = Math.Floor((DateTime.Now - human.ComparedHumanBirthDate).Days / 365.25)
                 };
 
-                ProgressStackPanel.Children.Add(control);
+                panel.Children.Add(control);
 
                 // Каждый человек для сравнения в своем потоке
                 Task task = new Task(() =>
@@ -95,12 +82,11 @@ namespace MemoRandom.Client.ViewModels
         {
             // Объявляем переменные, ссылающиеся на картинки
             // Недопустимо выносить их в свойства класса, так как они обязаны существовать в рамках своего потока
-            BitmapSource LeftPicture = null;
-            BitmapSource RightPicture = null;
+            BitmapSource leftPicture  = null;
+            BitmapSource rightPicture = null;
 
             // Получаем основные данные по человеку для сравнения
-            var comparedHumanData = paramsData as ComparedHumanProgressData;
-            if (comparedHumanData == null) return; // Если таких данных нет, то выходим - ситуация нереальная
+            if (paramsData is not ComparedHumanProgressData comparedHumanData) return; // Если таких данных нет, то выходим - ситуация нереальная
 
             var control = comparedHumanData.ComparedHumanBar; // Получаем User Control для текущего анализируемого человека для сравнения
 
@@ -119,36 +105,7 @@ namespace MemoRandom.Client.ViewModels
             // Но! Прежде вычисляем стартовые позиции
             var orderedList = CommonDataController.HumansList.OrderBy(x => x.FullYearsLived); // Упорядоченный по возрасту список людей
 
-            //var period = DateTime.Now - comparedHumanData.BirthDate; // Прожитый период в днях
-            //for (var j = 0; j < period.Days; j += 10)
-            //{
-            //    var earlier1 = orderedList.LastOrDefault(x => x.DaysLived < j);  // Пережитый
-            //    var later1 = orderedList.FirstOrDefault(x => x.DaysLived > j); // Не пережитый
-
-            //    if (earlier1 != null) // Если пережитый игрок существует
-            //    {
-            //        ProgressDispatcher.Invoke(() =>
-            //        {
-            //            LeftPicture = _commonDataController.GetHumanImage(earlier1); // Загружаем картинку в правильном потоке
-            //        });
-            //    }
-
-            //    if (later1 != null) // Если еще не пережитый игрок существует
-            //    {
-            //        ProgressDispatcher.Invoke(() =>
-            //        {
-            //            RightPicture = _commonDataController.GetHumanImage(later1); // Загружаем картинку в правильном потоке
-            //        });
-            //    }
-            //    //Thread.Sleep(10);
-
-            //    var span = comparedHumanData.BirthDate.AddDays(j);
-            //    MainProcess(control, earlier1, later1, comparedHumanData, period, orderedList, LeftPicture, RightPicture, span);
-
-            //    if (token.IsCancellationRequested) return; // При прерывании процесса вываливаемся вообще
-            //}
-
-            // Получаем информацию о пережитом (если есть) и не пережитом(если есть) человеке - в процессе работы может поменяться
+            // Получаем информацию о пережитом (если есть) и не пережитом (если есть) человеке - в процессе работы может поменяться
             var startSpan = DateTime.Now - comparedHumanData.BirthDate; // Стартовый диапазон анализируемого человека
             var earlier = orderedList.LastOrDefault(x => x.DaysLived < startSpan.TotalDays);  // Пережитый
             var later = orderedList.FirstOrDefault(x => x.DaysLived > startSpan.TotalDays); // Не пережитый
@@ -156,7 +113,7 @@ namespace MemoRandom.Client.ViewModels
             {
                 ProgressDispatcher.Invoke(() =>
                 {
-                    LeftPicture = _commonDataController.GetHumanImage(earlier); // Загружаем картинку в правильном потоке
+                    leftPicture = _commonDataController.GetHumanImage(earlier); // Загружаем картинку в правильном потоке
                 });
             }
 
@@ -164,7 +121,7 @@ namespace MemoRandom.Client.ViewModels
             {
                 ProgressDispatcher.Invoke(() =>
                 {
-                    RightPicture = _commonDataController.GetHumanImage(later); // Загружаем картинку в правильном потоке
+                    rightPicture = _commonDataController.GetHumanImage(later); // Загружаем картинку в правильном потоке
                 });
             }
 
@@ -172,7 +129,7 @@ namespace MemoRandom.Client.ViewModels
             while (!token.IsCancellationRequested) // Пока команда для остановки потока не придет, выполняем работу потока
             {
                 Thread.Sleep(100);
-                MainProcess(control, earlier, later, comparedHumanData, startSpan, orderedList, LeftPicture, RightPicture, DateTime.Now);
+                MainProcess(control, earlier, later, comparedHumanData, /*startSpan, orderedList, */leftPicture, rightPicture, DateTime.Now);
             }
         }
 
@@ -191,14 +148,14 @@ namespace MemoRandom.Client.ViewModels
         private void MainProcess(ComparedBlockControl control,
                                  Human earlier, Human later,
                                  ComparedHumanProgressData comparedHumanData,
-                                 TimeSpan startSpan,
-                                 IOrderedEnumerable<Human> orderedList,
+                                 //TimeSpan startSpan,
+                                 //IOrderedEnumerable<Human> orderedList,
                                  BitmapSource LeftPicture, BitmapSource RightPicture,
                                  DateTime currentDateTime)
         {
             //startSpan = currentDateTime - comparedHumanData.BirthDate; // Обновляемый диапазон анализируемого человека
 
-            ////Получаем информацию о пережитом(если есть) и не пережитом(если есть) человеке - в процессе работы может поменяться
+            ////Получаем информацию о пережитом (если есть) и не пережитом (если есть) человеке - в процессе работы может поменяться
             //earlier = orderedList.LastOrDefault(x => x.DaysLived < startSpan.TotalDays);  // Пережитый
             //later = orderedList.FirstOrDefault(x => x.DaysLived > startSpan.TotalDays); // Не пережитый
 
@@ -408,3 +365,35 @@ namespace MemoRandom.Client.ViewModels
         #endregion
     }
 }
+
+
+#region MyRegion
+//var period = DateTime.Now - comparedHumanData.BirthDate; // Прожитый период в днях
+//for (var j = 0; j < period.Days; j += 10)
+//{
+//    var earlier1 = orderedList.LastOrDefault(x => x.DaysLived < j);  // Пережитый
+//    var later1 = orderedList.FirstOrDefault(x => x.DaysLived > j); // Не пережитый
+
+//    if (earlier1 != null) // Если пережитый игрок существует
+//    {
+//        ProgressDispatcher.Invoke(() =>
+//        {
+//            LeftPicture = _commonDataController.GetHumanImage(earlier1); // Загружаем картинку в правильном потоке
+//        });
+//    }
+
+//    if (later1 != null) // Если еще не пережитый игрок существует
+//    {
+//        ProgressDispatcher.Invoke(() =>
+//        {
+//            RightPicture = _commonDataController.GetHumanImage(later1); // Загружаем картинку в правильном потоке
+//        });
+//    }
+//    //Thread.Sleep(10);
+
+//    var span = comparedHumanData.BirthDate.AddDays(j);
+//    MainProcess(control, earlier1, later1, comparedHumanData, period, orderedList, LeftPicture, RightPicture, span);
+
+//    if (token.IsCancellationRequested) return; // При прерывании процесса вываливаемся вообще
+//} 
+#endregion
