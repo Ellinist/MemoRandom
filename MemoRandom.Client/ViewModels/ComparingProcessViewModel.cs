@@ -196,8 +196,6 @@ namespace MemoRandom.Client.ViewModels
                                  BitmapSource LeftPicture, BitmapSource RightPicture,
                                  DateTime currentDateTime)
         {
-            Thread.Sleep(5); // Для облегчения работы программы замораживаем на 100 мс
-
             //startSpan = currentDateTime - comparedHumanData.BirthDate; // Обновляемый диапазон анализируемого человека
 
             ////Получаем информацию о пережитом(если есть) и не пережитом(если есть) человеке - в процессе работы может поменяться
