@@ -133,12 +133,21 @@ namespace MemoRandom.Client.ViewModels
             // Запускаем основной цикл отображения изменяющихся данных (зависят от текущего времени)
             while (!token.IsCancellationRequested) // Пока команда для остановки потока не придет, выполняем работу потока
             {
-                Thread.Sleep(100);
                 MainProcess(control, earlier, later, comparedHumanData, /*startSpan, orderedList, */leftPicture, rightPicture, DateTime.Now);
+                // Замораживаем поток
+                Thread.Sleep(100);
+                
+                // Вот эта часть меняет картинку до (разработать механизм вычисления игрока)
+                if (counter < newList.Count - 1) counter++;
+                earlier = newList[counter];
 
-                // Вот эта часть меняет картинку до
-                //if (counter < newList.Count - 1) counter++;
-                //earlier = newList[counter];
+                //if (earlier != null) // Если пережитый игрок существует
+                //{
+                //    ProgressDispatcher.Invoke(() =>
+                //    {
+                //        leftPicture = _commonDataController.GetHumanImage(earlier); // Загружаем картинку в правильном потоке
+                //    });
+                //}
             }
         }
 
