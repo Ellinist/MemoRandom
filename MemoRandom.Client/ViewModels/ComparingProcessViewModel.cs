@@ -133,6 +133,19 @@ namespace MemoRandom.Client.ViewModels
             // Запускаем основной цикл отображения изменяющихся данных (зависят от текущего времени)
             while (!token.IsCancellationRequested) // Пока команда для остановки потока не придет, выполняем работу потока
             {
+                ProgressDispatcher.Invoke(() =>
+                {
+                    if(control.PreviousImage.Source == null)
+                    {
+                        var t = 1;
+                    }
+                });
+
+                //if(control.PreviousImage.Source == null)
+                //{
+                //    var rr = 1;
+                //}
+
                 MainProcess(control, earlier, later, comparedHumanData, /*startSpan, orderedList, */leftPicture, rightPicture, DateTime.Now);
                 // Замораживаем поток
                 Thread.Sleep(100);
