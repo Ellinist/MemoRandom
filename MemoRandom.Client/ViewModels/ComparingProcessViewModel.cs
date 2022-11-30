@@ -107,8 +107,12 @@ namespace MemoRandom.Client.ViewModels
 
             // Получаем информацию о пережитом (если есть) и не пережитом (если есть) человеке - в процессе работы может поменяться
             var startSpan = DateTime.Now - comparedHumanData.BirthDate; // Стартовый диапазон анализируемого человека
-            var earlier = orderedList.LastOrDefault(x => x.DaysLived < startSpan.TotalDays);  // Пережитый
-            var later = orderedList.FirstOrDefault(x => x.DaysLived > startSpan.TotalDays); // Не пережитый
+
+            var newList = orderedList.ToList();
+
+            var earlier = newList.LastOrDefault(x => x.DaysLived < startSpan.TotalDays);  // Пережитый
+            var later = newList.FirstOrDefault(x => x.DaysLived > startSpan.TotalDays); // Не пережитый
+
             if (earlier != null) // Если пережитый игрок существует
             {
                 ProgressDispatcher.Invoke(() =>
@@ -125,11 +129,16 @@ namespace MemoRandom.Client.ViewModels
                 });
             }
 
+            int counter = 0;
             // Запускаем основной цикл отображения изменяющихся данных (зависят от текущего времени)
             while (!token.IsCancellationRequested) // Пока команда для остановки потока не придет, выполняем работу потока
             {
                 Thread.Sleep(100);
                 MainProcess(control, earlier, later, comparedHumanData, /*startSpan, orderedList, */leftPicture, rightPicture, DateTime.Now);
+
+                // Вот эта часть меняет картинку до
+                //if (counter < newList.Count - 1) counter++;
+                //earlier = newList[counter];
             }
         }
 
