@@ -102,69 +102,47 @@ namespace MemoRandom.Client.ViewModels
             #endregion
 
             // ВНИМАНИЕ! Все остальные данные будут меняться и зависят от текущего времени
-            // Но! Прежде вычисляем стартовые позиции
-            var orderedList = CommonDataController.HumansList.OrderBy(x => x.FullYearsLived); // Упорядоченный по возрасту список людей
+            // Но! Прежде вычисляем стартовые позиции и вспомогательные данные
+            var orderedList = CommonDataController.HumansList.OrderBy(x => x.FullYearsLived).ToList(); // Упорядоченный по возрасту список людей
 
-            // Получаем информацию о пережитом (если есть) и не пережитом (если есть) человеке - в процессе работы может поменяться
             var startSpan = DateTime.Now - comparedHumanData.BirthDate; // Стартовый диапазон анализируемого человека
 
-            var newList = orderedList.ToList();
+            // Получаем информацию о пережитом (если есть) и не пережитом (если есть) человеке - в процессе работы может поменяться
+            var previousHuman = orderedList.LastOrDefault(x => x.DaysLived < startSpan.TotalDays);  // Пережитый
+            var nextHuman     = orderedList.FirstOrDefault(x => x.DaysLived > startSpan.TotalDays); // Не пережитый
 
-            var earlier = newList.LastOrDefault(x => x.DaysLived < startSpan.TotalDays);  // Пережитый
-            var later = newList.FirstOrDefault(x => x.DaysLived > startSpan.TotalDays); // Не пережитый
-
-            if (earlier != null) // Если пережитый игрок существует
+            ProgressDispatcher.Invoke(() => // Начальный вывод картинок пережитого и не пережитого игроков
             {
-                ProgressDispatcher.Invoke(() =>
+                if (previousHuman != null) // Если пережитый игрок существует - отображаем его картинку
                 {
-                    leftPicture = _commonDataController.GetHumanImage(earlier); // Загружаем картинку в правильном потоке
-                });
-            }
-
-            if (later != null) // Если еще не пережитый игрок существует
-            {
-                ProgressDispatcher.Invoke(() =>
+                    control.PreviousImage.Source = _commonDataController.GetHumanImage(previousHuman); // Загружаем картинку пережитого игрока
+                }
+                if (nextHuman != null)
                 {
-                    rightPicture = _commonDataController.GetHumanImage(later); // Загружаем картинку в правильном потоке
-                });
-            }
+                    control.NextImage.Source = _commonDataController.GetHumanImage(nextHuman); // Загружаем картинку еще не пережитого игрока
+                }
+            });
 
-            int counter = 0;
             // Запускаем основной цикл отображения изменяющихся данных (зависят от текущего времени)
             while (!token.IsCancellationRequested) // Пока команда для остановки потока не придет, выполняем работу потока
             {
-                //ProgressDispatcher.Invoke(() =>
-                //{
-                //    if(control.PreviousImage.Source == null)
-                //    {
-                //        var t = 1;
-                //    }
-                //});
-
-                //if(control.PreviousImage.Source == null)
-                //{
-                //    var rr = 1;
-                //}
-
-                Thread.Sleep(3000);
-
+                // Весь бесконечный цикл проходим в потоке UI
                 ProgressDispatcher.Invoke(() =>
                 {
-                    MainProcess(control, earlier, later, comparedHumanData, /*startSpan, orderedList, */leftPicture, rightPicture, DateTime.Now);
-                
-                    //MainProcess(control, earlier, later, comparedHumanData, /*startSpan, orderedList, */leftPicture, rightPicture, DateTime.Now);
-                    // Замораживаем поток
-                    
-                
-                    // Вот эта часть меняет картинку до (разработать механизм вычисления игрока)
-                    if (counter < newList.Count - 1) counter++;
-                    earlier = newList[counter];
+                    //if (previousHuman != null) // Если пережитый игрок существует - отображаем его картинку
+                    //{
+                    //    control.PreviousImage.Source = _commonDataController.GetHumanImage(previousHuman); // Загружаем картинку в правильном потоке
+                    //}
 
-                    if (earlier != null) // Если пережитый игрок существует
-                    {
-                        control.PreviousImage.Source = _commonDataController.GetHumanImage(earlier); // Загружаем картинку в правильном потоке
-                    }
+                    //if (nextHuman != null)
+                    //{
+                    //    control.NextImage.Source = _commonDataController.GetHumanImage(nextHuman);
+                    //}
+
+                    MainProcess(control, previousHuman, nextHuman, comparedHumanData, /*startSpan, orderedList, */leftPicture, rightPicture, DateTime.Now);
                 });
+
+                Thread.Sleep(100); // Остановка потока для уменьшения нагрузки на программу
             }
         }
 
@@ -210,8 +188,8 @@ namespace MemoRandom.Client.ViewModels
 
                     if (later != null) // Если не пережитый игрок существует
                     {
-                        // Если правая картинка нулевая - не выводим, если правая картинка не меняется - не выводим
-                        if (control.NextImage.Source != RightPicture && RightPicture != null) control.NextImage.Source = _commonDataController.GetHumanImage(later);
+                        //// Если правая картинка нулевая - не выводим, если правая картинка не меняется - не выводим
+                        //if (control.NextImage.Source != RightPicture && RightPicture != null) control.NextImage.Source = _commonDataController.GetHumanImage(later);
 
                         // Вычисляем время до момента его ухода
                         var till = ((comparedHumanData.BirthDate + (later.DeathDate - later.BirthDate)) - currentDateTime).Days;
@@ -305,8 +283,8 @@ namespace MemoRandom.Client.ViewModels
 
                     if (later != null) // Если не пережитый игрок существует
                     {
-                        // Если правая картинка нулевая - не выводим, если правая картинка не меняется - не выводим
-                        if (control.NextImage.Source != RightPicture && RightPicture != null) control.NextImage.Source = _commonDataController.GetHumanImage(later);
+                        //// Если правая картинка нулевая - не выводим, если правая картинка не меняется - не выводим
+                        //if (control.NextImage.Source != RightPicture && RightPicture != null) control.NextImage.Source = _commonDataController.GetHumanImage(later);
 
                         // Вычисляем время до момента его ухода
                         var till = ((comparedHumanData.BirthDate + (later.DeathDate - later.BirthDate)) - currentDateTime).Days;

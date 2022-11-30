@@ -99,7 +99,7 @@
                        x:Name="PreviousHumanBirthDateTextBlock"
                        HorizontalAlignment="Left"
                        VerticalAlignment="Center"
-                       Foreground="Black"
+                       Foreground="LightGreen"
                        FontSize="16"
                        FontWeight="Bold"/>
 
@@ -108,7 +108,7 @@
                        x:Name="PreviousHumanDeathDateTextBlock"
                        HorizontalAlignment="Left"
                        VerticalAlignment="Center"
-                       Foreground="Black"
+                       Foreground="AntiqueWhite"
                        FontSize="16"
                        FontWeight="Bold"/>
             
@@ -193,6 +193,7 @@
                        x:Name="NextHumanBirthDateTextBlock"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Right"
+                       Foreground="Chartreuse"
                        FontSize="16"
                        FontWeight="Bold"/>
 
@@ -201,6 +202,7 @@
                        x:Name="NextHumanDeathDateTextBlock"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Right"
+                       Foreground="AntiqueWhite"
                        FontSize="16"
                        FontWeight="Bold"/>
 
