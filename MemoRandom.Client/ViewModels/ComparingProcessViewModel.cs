@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using MemoRandom.Client.Common.Interfaces;
 using MemoRandom.Client.Common.Enums;
 using MemoRandom.Client.Common.Models;
+using MahApps.Metro.Controls;
 
 namespace MemoRandom.Client.ViewModels
 {
@@ -21,6 +22,12 @@ namespace MemoRandom.Client.ViewModels
     /// </summary>
     public class ComparingProcessViewModel : BindableBase
     {
+        #region CONSTANTS
+        private const int DaysHours      = 24;
+        private const int HoursMinutes   = 60;
+        private const int MinutesSeconds = 60;
+        #endregion
+
         #region PRIVATE FIELDS
         private readonly ICommonDataController _commonDataController;
         private readonly CancellationTokenSource cancelTokenSource = new CancellationTokenSource();
@@ -108,20 +115,39 @@ namespace MemoRandom.Client.ViewModels
             var startSpan = DateTime.Now - comparedHumanData.BirthDate; // Стартовый диапазон анализируемого человека
 
             // Получаем информацию о пережитом (если есть) и не пережитом (если есть) человеке - в процессе работы может поменяться
-            var previousHuman = orderedList.LastOrDefault(x  => x.DaysLived < startSpan.TotalDays);  // Пережитый
-            var nextHuman     = orderedList.FirstOrDefault(x => x.DaysLived > startSpan.TotalDays); // Не пережитый
+            var previousActor = orderedList.LastOrDefault(x  => x.DaysLived < startSpan.TotalDays);  // Пережитый
+            
+            var nextActor     = orderedList.FirstOrDefault(x => x.DaysLived > startSpan.TotalDays); // Не пережитый
+            Reason previousReason = null;
+            Reason nextReason = null;
 
+            #region Начальный вывод картинок и данных, если они должны быть
             ProgressDispatcher.Invoke(() => // Начальный вывод картинок пережитого и не пережитого игроков
-            {
-                if (previousHuman != null) // Если пережитый игрок существует - отображаем его картинку
                 {
-                    control.PreviousImage.Source = _commonDataController.GetHumanImage(previousHuman); // Загружаем картинку пережитого игрока
-                }
-                if (nextHuman != null)
-                {
-                    control.NextImage.Source = _commonDataController.GetHumanImage(nextHuman); // Загружаем картинку еще не пережитого игрока
-                }
-            });
+                    if (previousActor != null) // Если пережитый игрок существует - отображаем его картинку
+                    {
+                        var previousReason = CommonDataController.PlainReasonsList.FirstOrDefault(x => x.ReasonId == previousActor.DeathReasonId);
+                        control.PreviousImage.Source = _commonDataController.GetHumanImage(previousActor); // Загружаем картинку пережитого игрока
+
+                        // Отображение данных пережитого игрока, изменяемых только при смене игроков
+                        ShowPreviousData(control, previousActor, previousReason);
+                    }
+                    else
+                    {
+                        // Отображение данных еще не пережитого игрока, изменяемых только при смене игроков
+                        //ShowNextData(control, nextActor, nextReason);
+                    }
+
+                    if (nextActor != null)
+                    {
+                        var nextReason = CommonDataController.PlainReasonsList.FirstOrDefault(x => x.ReasonId == nextActor.DeathReasonId);
+                        control.NextImage.Source = _commonDataController.GetHumanImage(nextActor); // Загружаем картинку еще не пережитого игрока
+
+                        // Отображение данных еще не пережитого игрока, изменяемых только при смене игроков
+                        ShowNextData(control, nextActor, nextReason);
+                    }
+                });
+            #endregion
 
             // Запускаем основной цикл отображения изменяющихся данных (зависят от текущего времени)
             while (!token.IsCancellationRequested) // Пока команда для остановки потока не придет, выполняем работу потока
@@ -129,26 +155,35 @@ namespace MemoRandom.Client.ViewModels
                 // Весь бесконечный цикл проходим в потоке UI
                 ProgressDispatcher.Invoke(() =>
                 {
+                    // В метод надо пробрасывать только необходимые аргументы
+                    MainProcess(control, comparedHumanData, DateTime.Now, previousActor, nextActor);
+                    //MainProcess(control, previousHuman, nextHuman, comparedHumanData, DateTime.Now);
+
                     var currentTimeLap = DateTime.Now - comparedHumanData.BirthDate; // Вычисление разрыва между рождением и текущим временем
-                    if (currentTimeLap > (nextHuman.DeathDate - nextHuman.BirthDate))
+                    if (currentTimeLap > (nextActor.DeathDate - nextActor.BirthDate))
                     {
                         // Сдвигаем игроков влево
                         // ВНИМАНИЕ! Здесь поставить проверку, а вдруг следующего игрока нет! Обана!
-                        previousHuman = nextHuman; // Предыдущий игрок становится следующим
-                        nextHuman = orderedList.FirstOrDefault(x => x.DaysLived > currentTimeLap.TotalDays); // А следующий - вычисляется
+                        previousActor = nextActor; // Предыдущий игрок становится следующим
+                        nextActor = orderedList.FirstOrDefault(x => x.DaysLived > currentTimeLap.TotalDays); // А следующий - вычисляется
                         // И меняем картинки
-                        control.PreviousImage.Source = _commonDataController.GetHumanImage(previousHuman); // Загружаем картинку пережитого игрока
-                        if (nextHuman != null)
+                        control.PreviousImage.Source = _commonDataController.GetHumanImage(previousActor); // Загружаем картинку пережитого игрока
+                        if (nextActor != null)
                         {
-                            control.NextImage.Source = _commonDataController.GetHumanImage(nextHuman); // Загружаем картинку еще не пережитого игрока
+                            control.NextImage.Source = _commonDataController.GetHumanImage(nextActor); // Загружаем картинку еще не пережитого игрока
+
+                            // Отображение данных, изменяемых только при смене игроков
+                            ShowPreviousData(control, previousActor, previousReason);
+                            ShowNextData(control, nextActor, nextReason);
                         }
                         else
                         {
                             control.NextImage.Source = null; // Если следующий игрок не найден - картинка обнуляется
+
+                            //TODO обнулить данные для следующего игрока - его просто нет
+                            ShowNextNullData(control);
                         }
                     }
-
-                    MainProcess(control, previousHuman, nextHuman, comparedHumanData, DateTime.Now);
                 });
 
                 Thread.Sleep(100); // Остановка потока для уменьшения нагрузки на программу
@@ -156,211 +191,232 @@ namespace MemoRandom.Client.ViewModels
         }
 
         /// <summary>
-        /// Основной метод вывода в асинхронном режиме информации для сравнения
+        /// Вывод информации о пережитом игроке, меняющейся только при смене игроков
         /// </summary>
         /// <param name="control"></param>
-        /// <param name="earlier"></param>
-        /// <param name="later"></param>
-        /// <param name="comparedHumanData"></param>
-        /// <param name="currentDateTime"></param>
-        private void MainProcess(ComparedBlockControl control,
-                                 Human earlier, Human later,
-                                 ComparedHumanProgressData comparedHumanData,
-                                 DateTime currentDateTime)
+        /// <param name="previousActor"></param>
+        /// <param name="previousReason"></param>
+        private void ShowPreviousData(ComparedBlockControl control,
+                                      Human previousActor,
+                                      Reason previousReason)
         {
-            control.CurrentHumanLivedPeriod.Text = GetWastedTime(comparedHumanData, currentDateTime); // Выводим бесцельно потраченное время жизни анализируемого человека
+            // Выводим информацию (ФИО) о пережитом игроке
+            control.PreviousHumanNameTextBlock.Text = previousActor.LastName + " " +
+                                                     (previousActor.FirstName != string.Empty ? (previousActor.FirstName[0..1] + ".") : "") + " " +
+                                                     (previousActor.Patronymic != string.Empty ? (previousActor.Patronymic[0..1] + ".") : "");
 
-            if (earlier != null) // Если предыдущий игрок был найден
+            // Выводим дату рождения пережитого игрока
+            control.PreviousHumanBirthDateTextBlock.Text = "Рождение: " + previousActor.BirthDate.ToLongDateString() +
+                                                           " " + string.Format($"{previousActor.BirthDate.Hour:D2}") +
+                                                           " " + string.Format($"{previousActor.BirthDate.Minute:D2}");
+
+            // Выводим причину смерти и дату смерти еще не пережитого игрока
+            if (previousReason != null) // Если не пережитому игроку сопоставлена причина смерти, то выводим ее
             {
+                control.PreviousHumanDeathDateTextBlock.Text = "(" + previousReason.ReasonName + ") " + "Уход: " +
+                                                               previousActor.DeathDate.ToLongDateString() + " " +
+                                                               string.Format($"{previousActor.DeathDate.Hour:D2}") + ":" +
+                                                               string.Format($"{previousActor.DeathDate.Minute:D2}") + "";
+            }
+            else // Если не сопоставлена, то выведем лаконичную строку
+            {
+                control.PreviousHumanDeathDateTextBlock.Text = "(нет данных) Смерть:";
+            }
 
-                // Вычисляем время, прошедшее с момента ухода пережитого
-                var before = (currentDateTime - (comparedHumanData.BirthDate + (earlier.DeathDate - earlier.BirthDate)))
-                    .Days;
+            // Выводим количество прожитых лет пережитым игроком
+            var currentPos = previousActor.DeathDate - previousActor.BirthDate;
+            var yy = (int)Math.Floor(previousActor.FullYearsLived) * 365.25;
+            var previousDaysGone = (int)Math.Floor(currentPos.Days - yy);
+            var previousPeriodGone = (previousActor.DeathDate - previousActor.BirthDate);
+            control.PreviousHumanFullYearsTextBlock.Text = "Прожито: " + Math.Floor(previousActor.FullYearsLived) + " " +
+                                                           _commonDataController.GetFinalText((int)previousActor.FullYearsLived, PeriodTypes.Years) +
+                                                           " " + previousDaysGone + " " +
+                                                           _commonDataController.GetFinalText(previousDaysGone, PeriodTypes.Days) +
+                                                           " " + string.Format($"{previousPeriodGone.Hours:D2}:" +
+                                                                               $"{previousPeriodGone.Minutes:D2}");
+        }
 
-                if (later != null) // Если не пережитый игрок существует
+        /// <summary>
+        /// Вывод информации о еще не пережитом игроке, меняющейся только при смене игроков
+        /// </summary>
+        /// <param name="control"></param>
+        /// <param name="nextActor"></param>
+        /// <param name="nextReason"></param>
+        private void ShowNextData(ComparedBlockControl control,
+                                  Human nextActor,
+                                  Reason nextReason)
+        {
+            // Вывод общей информации о еще не пережитом игроке
+            // Выводим информацию (ФИО) о еще не пережитом игроке
+            control.NextHumanNameTextBlock.Text = nextActor.LastName + " " +
+                                                 (nextActor.FirstName != string.Empty ? (nextActor.FirstName[0..1] + ".") : "") + " " +
+                                                 (nextActor.Patronymic != string.Empty ? (nextActor.Patronymic[0..1] + ".") : "");
+
+            // Выводим дату рождения еще не пережитого игрока
+            control.NextHumanBirthDateTextBlock.Text = "Рождение: " + nextActor.BirthDate.ToLongDateString() +
+                                                       " " + string.Format($"{nextActor.BirthDate.Hour:D2}") +
+                                                       " " + string.Format($"{nextActor.BirthDate.Minute:D2}");
+
+            // Выводим причину смерти и дату смерти еще не пережитого игрока
+            if (nextReason != null) // Если не пережитому игроку сопоставлена причина смерти, то выводим ее
+            {
+                control.NextHumanDeathDateTextBlock.Text = "(" + nextReason.ReasonName + ") " + "Уход: " +
+                                                           nextActor.DeathDate.ToLongDateString() + " " +
+                                                           string.Format($"{nextActor.DeathDate.Hour:D2}") + ":" +
+                                                           string.Format($"{nextActor.DeathDate.Minute:D2}") + "";
+            }
+            else // Если не сопоставлена, то выведем лаконичную строку
+            {
+                control.NextHumanDeathDateTextBlock.Text = "(нет данных) Смерть:";
+            }
+
+            // Выводим количество прожитых лет еще не пережитым игроком
+            var currentPos = nextActor.DeathDate - nextActor.BirthDate;
+            var yy = (int)Math.Floor(nextActor.FullYearsLived) * 365.25;
+            var nextDaysLeft = (int)Math.Floor(currentPos.Days - yy);
+            var nextPeriodLeft = (nextActor.DeathDate - nextActor.BirthDate);
+            control.NextHumanFullYearsTextBlock.Text = "Прожито: " + Math.Floor(nextActor.FullYearsLived) + " " +
+                                                       _commonDataController.GetFinalText((int)nextActor.FullYearsLived, PeriodTypes.Years) +
+                                                       " " + nextDaysLeft + " " +
+                                                       _commonDataController.GetFinalText(nextDaysLeft, PeriodTypes.Days) +
+                                                       " " + string.Format($"{nextPeriodLeft.Hours:D2}:" +
+                                                                           $"{nextPeriodLeft.Minutes:D2}");
+        }
+
+        /// <summary>
+        /// Обнуление всех полей следующего игрока - если анализируемый остался последним в списке
+        /// </summary>
+        /// <param name="control"></param>
+        private void ShowNextNullData(ComparedBlockControl control)
+        {
+            control.NextHumanNameTextBlock.Text = string.Empty;
+
+            control.NextHumanBirthDateTextBlock.Text = string.Empty;
+
+            control.NextHumanDeathDateTextBlock.Text = string.Empty;
+
+            control.NextHumanFullYearsTextBlock.Text = string.Empty;
+
+            control.NextHumanOverLifeDate.Text = string.Empty;
+
+            control.RestDaysToNextHuman.Text = string.Empty;
+        }
+
+        /// <summary>
+        /// Временный метод - потом станет основным
+        /// </summary>
+        private void MainProcess(ComparedBlockControl control,
+                           ComparedHumanProgressData comparedHumanData,
+                           DateTime currentTime,
+                           Human previousActor, Human nextActor)
+        {
+            // Выводим бесцельно потраченное время жизни анализируемого человека
+            control.CurrentHumanLivedPeriod.Text = GetWastedTime(comparedHumanData, currentTime);
+
+            #region Блок существования предыдущего игрока
+            if(previousActor != null)
+            {
+                // Вычисляем время, прошедшее с момента ухода пережитого игрока
+                var previousActorDays = (currentTime - (comparedHumanData.BirthDate + (previousActor.DeathDate - previousActor.BirthDate))).TotalDays;
+                // Вычисляем количество секунд, прошедшее с момента ухода пережитого игрока
+                var previousActorSeconds = Math.Floor(previousActorDays * DaysHours * HoursMinutes * MinutesSeconds);
+
+                // Проверка на наличие не пережитого игрока
+                if(nextActor != null)
                 {
-                    // Вычисляем время до момента его ухода
-                    var till = ((comparedHumanData.BirthDate + (later.DeathDate - later.BirthDate)) - currentDateTime)
-                        .Days;
-
-                    // Выводим информацию (ФИО) о еще не пережитом игроке
-                    control.NextHumanNameTextBlock.Text = later.LastName + " "
-                                                                         + (later.FirstName != string.Empty
-                                                                             ? (later.FirstName[0..1] + ".")
-                                                                             : "") + " "
-                                                                         + (later.Patronymic != string.Empty
-                                                                             ? (later.Patronymic[0..1] + ".")
-                                                                             : "");
-
-                    // Выводим дату рождения еще не пережитого игрока
-                    control.NextHumanBirthDateTextBlock.Text = "Рождение: " + later.BirthDate.ToLongDateString();
-
-                    // Выводим причину смерти еще не пережитого игрока
-                    var laterDeathReasonName =
-                        CommonDataController.PlainReasonsList.FirstOrDefault(x => x.ReasonId == later.DeathReasonId);
-                    if (laterDeathReasonName !=
-                        null) // Если пережитому игроку сопоставлена причина смерти, то выводим ее
-                    {
-                        control.NextHumanDeathDateTextBlock.Text = "(" + laterDeathReasonName.ReasonName + ") " +
-                                                                   "Уход: " + later.DeathDate.ToLongDateString();
-                    }
-                    else // Если не сопоставлена, то выведем лаконичную строку
-                    {
-                        control.NextHumanDeathDateTextBlock.Text = "Смерть: (нет данных)";
-                    }
-
                     // Выводим дату, когда еще не пережитый игрок будет пройден
-                    control.NextHumanOverLifeDate.Text = "Пройдем: "
-                                                         + (comparedHumanData.BirthDate +
-                                                            (later.DeathDate - later.BirthDate))
-                                                         .ToString("dd MMMM yyyy hh: mm");
-
-                    // Выводим количество прожитых лет еще не пережитым игроком
-                    control.NextHumanFullYearsTextBlock.Text = "Прожил: " + Math.Floor(later.FullYearsLived) + " лет";
-
-                    control.CurrentProgressBar.Maximum = before + till; // Значение максимума прогресс-индикатора
-                    control.CurrentProgressBar.Value = before; // Значение текущей позиции прогресс-индикатора
+                    control.NextHumanOverLifeDate.Text = "Преодоление: " +
+                                                         (comparedHumanData.BirthDate +
+                                                         (nextActor.DeathDate - nextActor.BirthDate)).ToString("dd MMMM yyyy HH:mm");
 
                     // Оставшийся до не пережитого игрока период времени
-                    var laterSpent = comparedHumanData.BirthDate + (later.DeathDate - later.BirthDate) -
-                                     currentDateTime;
-                    var laterSpentDays = laterSpent.Days;
-                    var laterSpentTime = string.Format("{0:D2}:{1:D2}:{2:D2}.{3:D3}", laterSpent.Hours,
-                        laterSpent.Minutes, laterSpent.Seconds, laterSpent.Milliseconds);
+                    var nextPeriodLeft = comparedHumanData.BirthDate + (nextActor.DeathDate - nextActor.BirthDate) - currentTime;
+                    var nextDaysLeft = nextPeriodLeft.Days;                                // Оставшиеся целые дни
+                    var nextTimeLeft = string.Format($"{nextPeriodLeft.Hours:D2}:" +       // Часы
+                                                     $"{nextPeriodLeft.Minutes:D2}:" +     // Минуты
+                                                     $"{nextPeriodLeft.Seconds:D2}." +     // Секунды
+                                                     $"{nextPeriodLeft.Milliseconds:D3}"); // Миллисекунды
 
-                    control.RestDaysToNextHuman.Text = "Осталось: " +
-                                                       laterSpentDays + " " +
-                                                       _commonDataController.GetFinalText(laterSpentDays,
-                                                           PeriodTypes.Days) + " " + laterSpentTime;
+                    control.RestDaysToNextHuman.Text = "Осталось: " + nextDaysLeft + " " +
+                                                       _commonDataController.GetFinalText(nextDaysLeft, PeriodTypes.Days) +
+                                                       " " + nextTimeLeft;
+
+                    // Вычисляем время до момента его ухода
+                    var nextActorDays = ((comparedHumanData.BirthDate + (nextActor.DeathDate - nextActor.BirthDate)) - currentTime).TotalDays;
+                    // Вычисляем количество секунд, которое должно пройти до достижения возраста пережитого игрока
+                    var nextActorSeconds = Math.Floor(nextActorDays * DaysHours * HoursMinutes * MinutesSeconds);
+
+                    #region Управление прогресс-индикатором
+                    control.CurrentProgressBar.Maximum = previousActorSeconds + nextActorSeconds; // Значение максимума прогресс-индикатора
+                    control.CurrentProgressBar.Value   = previousActorSeconds; // Значение текущей позиции прогресс-индикатора
+                    #endregion
                 }
-                else // Если же не пережитого не существует, то максимум прогресс-нидикатора и текущая позиция совпадают
+                else
                 {
                     // Сюда попадаем только тогда, когда анализируемый человек самый последний в списке - малопонятная схема
-                    control.CurrentProgressBar.Maximum = before; // Максимум прогресс-индикатора
-                    control.CurrentProgressBar.Value = before; // Текущая позиция прогресс-индикатора
+                    control.CurrentProgressBar.Maximum = previousActorSeconds; // Максимум прогресс-индикатора
+                    control.CurrentProgressBar.Value   = previousActorSeconds; // Текущая позиция прогресс-индикатора
                 }
 
-                // Выводим информацию (ФИО) о пережитом игроке
-                control.PreviousHumanNameTextBlock.Text = earlier.LastName + " "
-                                                                           + (earlier.FirstName != string.Empty
-                                                                               ? (earlier.FirstName[0..1] + ".")
-                                                                               : "") + " "
-                                                                           + (earlier.Patronymic != string.Empty
-                                                                               ? (earlier.Patronymic[0..1] + ".")
-                                                                               : "");
+                // Выводим дату, когда еще не пережитый игрок будет пройден
+                control.PreviousHumanOverLifeDate.Text = "Преодоление: " +
+                                                         (comparedHumanData.BirthDate +
+                                                         (previousActor.DeathDate - previousActor.BirthDate)).ToString("dd MMMM yyyy HH:mm");
 
-                // Выводим дату рождения пережитого игрока
-                control.PreviousHumanBirthDateTextBlock.Text = "Рождение: " + earlier.BirthDate.ToLongDateString();
-
-                // Выводим причину смерти пережитого игрока
-                var earlierDeathReasonName =
-                    CommonDataController.PlainReasonsList.FirstOrDefault(x => x.ReasonId == earlier.DeathReasonId);
-                if (earlierDeathReasonName != null) // Если пережитому игроку сопоставлена причина смерти, то выводим ее
-                {
-                    control.PreviousHumanDeathDateTextBlock.Text = "Смерть: " +
-                                                                   earlier.DeathDate.ToLongDateString() + " (" +
-                                                                   earlierDeathReasonName.ReasonName + ")";
-                }
-                else // Если не сопоставлена, то выведем лаконичную строку
-                {
-                    control.PreviousHumanDeathDateTextBlock.Text = "Смерть: (нет данных)";
-                }
-
-                // Выводим дату, когда пережитый игрок был пройден
-                control.PreviousHumanOverLifeDate.Text = "Пройдено: "
-                                                         + (comparedHumanData.BirthDate +
-                                                            (earlier.DeathDate - earlier.BirthDate))
-                                                         .ToString("dd MMMM yyyy hh: mm");
-
-                // Выводим количество прожитых лет пережитым игроком
-                control.PreviousHumanFullYearsTextBlock.Text = "Прожил " + Math.Floor(earlier.FullYearsLived) + " лет";
 
                 // Выводим время, прошедшее с момента прохода пережитого игрока
-                var earlierSpent = currentDateTime -
-                                   (comparedHumanData.BirthDate + (earlier.DeathDate - earlier.BirthDate));
-                var earlierSpentDays = earlierSpent.Days;
-                var earlierSpentTime = string.Format("{0:D2}:{1:D2}:{2:D2}.{3:D3}", earlierSpent.Hours,
-                    earlierSpent.Minutes, earlierSpent.Seconds, earlierSpent.Milliseconds);
+                var previousPeriodGone = currentTime - (comparedHumanData.BirthDate + (previousActor.DeathDate - previousActor.BirthDate));
+                var previousDaysGone = previousPeriodGone.Days;
+                var previousTimeGone = string.Format($"{previousPeriodGone.Hours:D2}:" +
+                                                     $"{previousPeriodGone.Minutes:D2}:" +
+                                                     $"{previousPeriodGone.Seconds:D2}." +
+                                                     $"{previousPeriodGone.Milliseconds:D3}");
                 control.SpentDaysFromPreviousHuman.Text = "Прошло: " +
-                                                          earlierSpentDays.ToString() + " " +
-                                                          _commonDataController.GetFinalText(earlierSpentDays,
-                                                              PeriodTypes.Days) + " " + earlierSpentTime;
+                                                          previousDaysGone.ToString() + " " +
+                                                          _commonDataController.GetFinalText(previousDaysGone, PeriodTypes.Days) +
+                                                          " " + previousTimeGone;
             }
-            else // Если пережитый игрок не был найден (не существует) - анализируемый человек первый по возрасту
+            #endregion
+            #region Блок отсутствия предыдущего игрока
+            else
             {
-                // Вычисляем время, прошедшее с момента рождения анализируемого человека
-                var before = (currentDateTime - comparedHumanData.BirthDate).Days;
-
-                if (later != null) // Если не пережитый игрок существует
+                if (nextActor != null)
                 {
-                    //// Если правая картинка нулевая - не выводим, если правая картинка не меняется - не выводим
-                    //if (control.NextImage.Source != RightPicture && RightPicture != null) control.NextImage.Source = _commonDataController.GetHumanImage(later);
-
-                    // Вычисляем время до момента его ухода
-                    var till = ((comparedHumanData.BirthDate + (later.DeathDate - later.BirthDate)) - currentDateTime)
-                        .Days;
-
-                    // Выводим информацию (ФИО) о еще не пережитом игроке
-                    control.NextHumanNameTextBlock.Text = later.LastName + " "
-                                                                         + (later.FirstName != string.Empty
-                                                                             ? (later.FirstName[0..1] + ".")
-                                                                             : "") + " "
-                                                                         + (later.Patronymic != string.Empty
-                                                                             ? (later.Patronymic[0..1] + ".")
-                                                                             : "");
-
-                    // Выводим дату рождения еще не пережитого игрока
-                    control.NextHumanBirthDateTextBlock.Text = "Рождение: " + later.BirthDate.ToLongDateString();
-
-                    // Выводим причину смерти еще не пережитого игрока
-                    var laterDeathReasonName =
-                        CommonDataController.PlainReasonsList.FirstOrDefault(x => x.ReasonId == later.DeathReasonId);
-                    if (laterDeathReasonName !=
-                        null) // Если пережитому игроку сопоставлена причина смерти, то выводим ее
-                    {
-                        control.NextHumanDeathDateTextBlock.Text = "(" + laterDeathReasonName.ReasonName + ") " +
-                                                                   "Смерть: " + later.DeathDate.ToLongDateString();
-                    }
-                    else
-                    {
-                        control.NextHumanDeathDateTextBlock.Text = "Смерть: (нет данных)";
-                    }
-
                     // Выводим дату, когда еще не пережитый игрок будет пройден
-                    control.NextHumanOverLifeDate.Text = "Пройдем: "
-                                                         + (comparedHumanData.BirthDate +
-                                                            (later.DeathDate - later.BirthDate))
-                                                         .ToString("dd MMMM yyyy hh: mm");
-
-                    // Выводим количество прожитых лет еще не пережитым игроком
-                    control.NextHumanFullYearsTextBlock.Text = "Прожил " + Math.Floor(later.FullYearsLived) + " лет";
+                    control.NextHumanOverLifeDate.Text = "Преодоление: " +
+                                                         (comparedHumanData.BirthDate +
+                                                         (nextActor.DeathDate - nextActor.BirthDate)).ToString("dd MMMM yyyy HH:mm");
 
                     // Оставшийся до не пережитого игрока период времени
-                    var laterSpent = /*comparedHumanData.BirthDate + */(later.DeathDate - later.BirthDate) -
-                                                                       (currentDateTime - comparedHumanData.BirthDate);
-                    var laterSpentDays = laterSpent.Days;
-                    var laterSpentTime = string.Format("{0:D2}:{1:D2}:{2:D2}.{3:D3}", laterSpent.Hours,
-                        laterSpent.Minutes, laterSpent.Seconds, laterSpent.Milliseconds);
+                    var nextPeriodLeft = comparedHumanData.BirthDate + (nextActor.DeathDate - nextActor.BirthDate) - currentTime;
+                    var nextDaysLeft = nextPeriodLeft.Days;                                // Оставшиеся целые дни
+                    var nextTimeLeft = string.Format($"{nextPeriodLeft.Hours:D2}:" +       // Часы
+                                                     $"{nextPeriodLeft.Minutes:D2}:" +     // Минуты
+                                                     $"{nextPeriodLeft.Seconds:D2}." +     // Секунды
+                                                     $"{nextPeriodLeft.Milliseconds:D3}"); // Миллисекунды
 
-                    control.RestDaysToNextHuman.Text = "Осталось: " +
-                                                       laterSpentDays.ToString() + " " +
-                                                       _commonDataController.GetFinalText(laterSpentDays,
-                                                           PeriodTypes.Days) + " " + laterSpentTime;
+                    control.RestDaysToNextHuman.Text = "Осталось: " + nextDaysLeft + " " +
+                                                       _commonDataController.GetFinalText(nextDaysLeft, PeriodTypes.Days) +
+                                                       " " + nextTimeLeft;
 
-                    // Вычисляем время, прошедшее с момента рождения анализируемого
-                    var before2 = (currentDateTime - comparedHumanData.BirthDate).Days;
                     // Вычисляем время до момента его ухода
-                    var till2 = ((comparedHumanData.BirthDate + (later.DeathDate - later.BirthDate)) - currentDateTime)
-                        .Days;
+                    var nextActorDays = ((comparedHumanData.BirthDate + (nextActor.DeathDate - nextActor.BirthDate)) - currentTime).TotalDays;
+                    // Вычисляем количество секунд, которое должно пройти до достижения возраста пережитого игрока
+                    var nextActorSeconds = Math.Floor(nextActorDays * DaysHours * HoursMinutes * MinutesSeconds);
+                    var currentHumanDays = (currentTime - comparedHumanData.BirthDate).TotalDays;
+                    var currentHumanSeconds = Math.Floor(currentHumanDays * DaysHours * HoursMinutes * MinutesSeconds);
 
-                    control.CurrentProgressBar.Maximum = before2 + till2; // Максимум прогресс-индикатора
-                    control.CurrentProgressBar.Value = before2; // Текущая позиция прогресс-индикатора
+                    #region Управление прогресс-индикатором
+                    control.CurrentProgressBar.Maximum = nextActorSeconds + currentHumanSeconds; // Значение максимума прогресс-индикатора
+                    control.CurrentProgressBar.Value = currentHumanSeconds; // Значение текущей позиции прогресс-индикатора
+                    #endregion
                 }
-                else // Не пережитый игрок не найден - странная ситуация - ничегошеньки нет (ни до, ни после)
+                else
                 {
-                    // В душе не чаю, что тут писать
+                    // Ситуация странная - не ни до ни после
                 }
             }
+            #endregion
         }
 
         /// <summary>
@@ -373,7 +429,10 @@ namespace MemoRandom.Client.ViewModels
             var yy = comparedHumanData.FullYearsLived * 365.25;
             var years = currentPos.Days / 365;
             var days = (int)Math.Floor(currentPos.TotalDays - yy);
-            var time = string.Format("{0:D2}:{1:D2}:{2:D2}.{3:D3}", currentPos.Hours, currentPos.Minutes, currentPos.Seconds, currentPos.Milliseconds);
+            var time = string.Format($"{currentPos.Hours:D2}:" +
+                                     $"{currentPos.Minutes:D2}:" +
+                                     $"{currentPos.Seconds:D2}." +
+                                     $"{currentPos.Milliseconds:D3}");
 
             string resultString = "Прошло: " +
                                   years + " " + _commonDataController.GetFinalText(currentPos.Days / 365, PeriodTypes.Years) + ", " +
