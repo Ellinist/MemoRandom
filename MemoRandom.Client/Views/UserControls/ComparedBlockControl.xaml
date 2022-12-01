@@ -91,7 +91,7 @@
                        x:Name="PreviousHumanNameTextBlock"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Left"
-                       Foreground="Black"
+                       Foreground="Aquamarine"
                        FontSize="22"
                        FontWeight="Bold"/>
 
@@ -100,7 +100,7 @@
                        x:Name="PreviousHumanBirthDateTextBlock"
                        HorizontalAlignment="Left"
                        VerticalAlignment="Center"
-                       Foreground="AliceBlue"
+                       Foreground="White"
                        FontSize="15"
                        FontWeight="Bold"/>
 
@@ -109,7 +109,7 @@
                        x:Name="PreviousHumanDeathDateTextBlock"
                        HorizontalAlignment="Left"
                        VerticalAlignment="Center"
-                       Foreground="AliceBlue"
+                       Foreground="White"
                        FontSize="15"
                        FontWeight="Bold"/>
             
@@ -118,7 +118,7 @@
                        x:Name="PreviousHumanFullYearsTextBlock"
                        HorizontalAlignment="Left"
                        VerticalAlignment="Center"
-                       Foreground="AliceBlue"
+                       Foreground="White"
                        FontSize="15"
                        FontWeight="Bold"/>
 
@@ -127,7 +127,7 @@
                        x:Name="PreviousHumanOverLifeDate"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Left"
-                       Foreground="Yellow"
+                       Foreground="Aqua"
                        FontStyle="Italic"
                        FontSize="15"
                        FontWeight="Bold"/>
@@ -137,7 +137,7 @@
                        x:Name="SpentDaysFromPreviousHuman"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Left"
-                       Foreground="AliceBlue"
+                       Foreground="Yellow"
                        FontSize="15"
                        FontWeight="Bold"/>
             
@@ -153,6 +153,7 @@
                        x:Name="CurrentHumanTextBlock"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Center"
+                       Foreground="White"
                        FontSize="22"
                        FontWeight="Bold"/>
 
@@ -161,6 +162,7 @@
                        x:Name="CurrentHumanDetailesTextBlock"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Center"
+                       Foreground="White"
                        FontSize="18"
                        FontWeight="Bold"/>
 
@@ -186,7 +188,7 @@
                        x:Name="NextHumanNameTextBlock"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Right"
-                       Foreground="Black"
+                       Foreground="Aquamarine"
                        FontSize="22"
                        FontWeight="Bold"/>
 
@@ -195,7 +197,7 @@
                        x:Name="NextHumanBirthDateTextBlock"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Right"
-                       Foreground="AliceBlue"
+                       Foreground="White"
                        FontSize="15"
                        FontWeight="Bold"/>
 
@@ -204,7 +206,7 @@
                        x:Name="NextHumanDeathDateTextBlock"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Right"
-                       Foreground="AliceBlue"
+                       Foreground="White"
                        FontSize="15"
                        FontWeight="Bold"/>
 
@@ -213,7 +215,7 @@
                        x:Name="NextHumanFullYearsTextBlock"
                        HorizontalAlignment="Right"
                        VerticalAlignment="Center"
-                       Foreground="AliceBlue"
+                       Foreground="White"
                        FontSize="15"
                        FontWeight="Bold"/>
 
@@ -222,7 +224,7 @@
                        x:Name="NextHumanOverLifeDate"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Right"
-                       Foreground="Yellow"
+                       Foreground="Aqua"
                        FontStyle="Italic"
                        FontSize="15"
                        FontWeight="Bold"/>
@@ -232,7 +234,7 @@
                        x:Name="RestDaysToNextHuman"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Right"
-                       Foreground="AliceBlue"
+                       Foreground="Yellow"
                        FontSize="15"
                        FontWeight="Bold"/>
 

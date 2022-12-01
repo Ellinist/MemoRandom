@@ -106,7 +106,11 @@ namespace MemoRandom.Client.ViewModels
             ProgressDispatcher.Invoke(() =>
             {
                 control.CurrentHumanTextBlock.Text = comparedHumanData.FullName; // Выводим полное ФИО
-                control.CurrentHumanDetailesTextBlock.Text = "Родился: " + comparedHumanData.BirthDate.ToLongDateString(); // Выводим дату рождения
+
+                control.CurrentHumanDetailesTextBlock.Text = "Рождение: " + comparedHumanData.BirthDate.ToLongDateString() + // Выводим дату рождения
+                                                             " " + string.Format($"{comparedHumanData.BirthDate.Hour:D2}") +
+                                                             " " + string.Format($"{comparedHumanData.BirthDate.Minute:D2}");
+
                 control.CurrentProgressBar.Minimum = 0; // Начальная точка для прогресс-индикатора
                 // Вышеуказанные данные не будут меняться
             });
