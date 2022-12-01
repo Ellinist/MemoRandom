@@ -365,7 +365,7 @@ namespace MemoRandom.Client.ViewModels
                 // Выводим дату, когда еще не пережитый игрок будет пройден
                 control.PreviousHumanOverLifeDate.Text = "Преодоление: " +
                                                          (comparedHumanData.BirthDate +
-                                                         previousActor.DeathDate.Subtract(previousActor.BirthDate).ToString("dd MMMM yyyy HH:mm"));
+                                                         previousActor.DeathDate.Subtract(previousActor.BirthDate)).ToString("dd MMMM yyyy HH:mm");
 
 
                 // Выводим время, прошедшее с момента прохода пережитого игрока
@@ -389,7 +389,7 @@ namespace MemoRandom.Client.ViewModels
                     // Выводим дату, когда еще не пережитый игрок будет пройден
                     control.NextHumanOverLifeDate.Text = "Преодоление: " +
                                                          (comparedHumanData.BirthDate +
-                                                         nextActor.DeathDate.Subtract(nextActor.BirthDate).ToString("dd MMMM yyyy HH:mm"));
+                                                         nextActor.DeathDate.Subtract(nextActor.BirthDate)).ToString("dd MMMM yyyy HH:mm");
 
                     // Оставшийся до не пережитого игрока период времени
                     var nextPeriodLeft = comparedHumanData.BirthDate + nextActor.DeathDate.Subtract(nextActor.BirthDate) - currentTime;
@@ -429,7 +429,7 @@ namespace MemoRandom.Client.ViewModels
         /// <returns></returns>
         private string GetWastedTime(ComparedHumanProgressData comparedHumanData, DateTime currentDateTime)
         {
-            var currentPos = currentDateTime - comparedHumanData.BirthDate;
+            var currentPos = currentDateTime.Subtract(comparedHumanData.BirthDate);
             var yy = comparedHumanData.FullYearsLived * 365.25;
             var years = currentPos.Days / 365;
             var days = (int)Math.Floor(currentPos.TotalDays - yy);
@@ -466,6 +466,7 @@ namespace MemoRandom.Client.ViewModels
 
 
 #region Расчет количества високосных дней в периоде
+// Это не совсем верно, так как начало периода может приходиться на день после високосного года, а здесь учитывается весь год
 //private static int NumberOfLeapYears(int startYear, int endYear)
 //{
 //    int counter = 0;
