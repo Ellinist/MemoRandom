@@ -109,7 +109,7 @@ namespace MemoRandom.Client.ViewModels
 
                 control.CurrentHumanDetailesTextBlock.Text = "Рождение: " + comparedHumanData.BirthDate.ToLongDateString() + // Выводим дату рождения
                                                              " " + string.Format($"{comparedHumanData.BirthDate.Hour:D2}") +
-                                                             " " + string.Format($"{comparedHumanData.BirthDate.Minute:D2}");
+                                                             ":" + string.Format($"{comparedHumanData.BirthDate.Minute:D2}");
 
                 control.CurrentProgressBar.Minimum = 0; // Начальная точка для прогресс-индикатора
                 // Вышеуказанные данные не будут меняться
@@ -216,7 +216,7 @@ namespace MemoRandom.Client.ViewModels
             // Выводим дату рождения пережитого игрока
             control.PreviousHumanBirthDateTextBlock.Text = "Рождение: " + previousActor.BirthDate.ToLongDateString() +
                                                            " " + string.Format($"{previousActor.BirthDate.Hour:D2}") +
-                                                           " " + string.Format($"{previousActor.BirthDate.Minute:D2}");
+                                                           ":" + string.Format($"{previousActor.BirthDate.Minute:D2}");
 
             // Выводим причину смерти и дату смерти еще не пережитого игрока
             if (previousReason != null) // Если не пережитому игроку сопоставлена причина смерти, то выводим ее
@@ -263,7 +263,7 @@ namespace MemoRandom.Client.ViewModels
             // Выводим дату рождения еще не пережитого игрока
             control.NextHumanBirthDateTextBlock.Text = "Рождение: " + nextActor.BirthDate.ToLongDateString() +
                                                        " " + string.Format($"{nextActor.BirthDate.Hour:D2}") +
-                                                       " " + string.Format($"{nextActor.BirthDate.Minute:D2}");
+                                                       ":" + string.Format($"{nextActor.BirthDate.Minute:D2}");
 
             // Выводим причину смерти и дату смерти еще не пережитого игрока
             if (nextReason != null) // Если не пережитому игроку сопоставлена причина смерти, то выводим ее
