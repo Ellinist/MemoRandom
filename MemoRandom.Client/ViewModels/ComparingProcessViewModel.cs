@@ -190,7 +190,7 @@ namespace MemoRandom.Client.ViewModels
                     }
                 });
 
-                Thread.Sleep(100); // Остановка потока для уменьшения нагрузки на программу
+                Thread.Sleep(250); // Остановка потока для уменьшения нагрузки на программу
             }
         }
 
@@ -307,8 +307,13 @@ namespace MemoRandom.Client.ViewModels
         }
 
         /// <summary>
-        /// Временный метод - потом станет основным
+        /// Основной процессорный метод вывода данных на экран
         /// </summary>
+        /// <param name="control"></param>
+        /// <param name="comparedHumanData"></param>
+        /// <param name="currentTime"></param>
+        /// <param name="previousActor"></param>
+        /// <param name="nextActor"></param>
         private void MainProcess(ComparedBlockControl control,
                            ComparedHumanProgressData comparedHumanData,
                            DateTime currentTime,
@@ -393,11 +398,11 @@ namespace MemoRandom.Client.ViewModels
 
                     // Оставшийся до не пережитого игрока период времени
                     var nextPeriodLeft = comparedHumanData.BirthDate + nextActor.DeathDate.Subtract(nextActor.BirthDate) - currentTime;
-                    var nextDaysLeft = nextPeriodLeft.Days;                                // Оставшиеся целые дни
+                    var nextDaysLeft = nextPeriodLeft.Days;                                  // Оставшиеся целые дни
                     var nextTimeLeft = string.Format($"{nextPeriodLeft.Hours:D2}:" +       // Часы
-                                                     $"{nextPeriodLeft.Minutes:D2}:" +     // Минуты
-                                                     $"{nextPeriodLeft.Seconds:D2}." +     // Секунды
-                                                     $"{nextPeriodLeft.Milliseconds:D3}"); // Миллисекунды
+                                                           $"{nextPeriodLeft.Minutes:D2}:" +     // Минуты
+                                                           $"{nextPeriodLeft.Seconds:D2}." +     // Секунды
+                                                           $"{nextPeriodLeft.Milliseconds:D3}"); // Миллисекунды
 
                     control.RestDaysToNextHuman.Text = "Осталось: " + nextDaysLeft + " " +
                                                        _commonDataController.GetFinalText(nextDaysLeft, PeriodTypes.Days) +
