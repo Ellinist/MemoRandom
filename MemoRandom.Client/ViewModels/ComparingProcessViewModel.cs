@@ -365,7 +365,7 @@ namespace MemoRandom.Client.ViewModels
                 // Выводим дату, когда еще не пережитый игрок будет пройден
                 control.PreviousHumanOverLifeDate.Text = "Преодоление: " +
                                                          (comparedHumanData.BirthDate +
-                                                         previousActor.DeathDate.Subtract(previousActor.BirthDate).ToString("dd MMMM yyyy HH:mm");
+                                                         previousActor.DeathDate.Subtract(previousActor.BirthDate).ToString("dd MMMM yyyy HH:mm"));
 
 
                 // Выводим время, прошедшее с момента прохода пережитого игрока
@@ -389,7 +389,7 @@ namespace MemoRandom.Client.ViewModels
                     // Выводим дату, когда еще не пережитый игрок будет пройден
                     control.NextHumanOverLifeDate.Text = "Преодоление: " +
                                                          (comparedHumanData.BirthDate +
-                                                         nextActor.DeathDate.Subtract(nextActor.BirthDate).ToString("dd MMMM yyyy HH:mm");
+                                                         nextActor.DeathDate.Subtract(nextActor.BirthDate).ToString("dd MMMM yyyy HH:mm"));
 
                     // Оставшийся до не пережитого игрока период времени
                     var nextPeriodLeft = comparedHumanData.BirthDate + nextActor.DeathDate.Subtract(nextActor.BirthDate) - currentTime;
