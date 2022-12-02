@@ -1,12 +1,13 @@
 ﻿using MemoRandom.Client.ViewModels;
 using System.Windows;
+using MahApps.Metro.Controls;
 
 namespace MemoRandom.Client.Views
 {
     /// <summary>
     /// Логика взаимодействия для ComparingProcessView.xaml
     /// </summary>
-    public partial class ComparingProcessView : Window
+    public partial class ComparingProcessView : MetroWindow
     {
         private ComparingProcessViewModel _vm;
 

@@ -2,18 +2,15 @@
 using MemoRandom.Client.Views.UserControls;
 using Prism.Mvvm;
 using System.Threading;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
 using MemoRandom.Client.Models;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Media.Imaging;
 using MemoRandom.Client.Common.Interfaces;
 using MemoRandom.Client.Common.Enums;
 using MemoRandom.Client.Common.Models;
-using MahApps.Metro.Controls;
 
 namespace MemoRandom.Client.ViewModels
 {
@@ -32,9 +29,24 @@ namespace MemoRandom.Client.ViewModels
         private readonly ICommonDataController _commonDataController;
         private readonly CancellationTokenSource cancelTokenSource = new CancellationTokenSource();
         private CancellationToken token; // Токен для остановки потока
+
+        private string _comparingTitle = "Кого мы пережили и... как много еще предстоит сделать!";
         #endregion
 
         #region PROPS
+        /// <summary>
+        /// Заголовок окна сравнения
+        /// </summary>
+        public string ComparingTitle
+        {
+            get => _comparingTitle;
+            set
+            {
+                _comparingTitle = value;
+                RaisePropertyChanged(nameof(ComparingTitle));
+            }
+        }
+
         /// <summary>
         /// Графический поток отображаемых элементов
         /// </summary>
