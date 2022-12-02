@@ -239,7 +239,7 @@ namespace MemoRandom.Client.ViewModels
 
             // Выводим количество прожитых лет пережитым игроком
             var previousPeriodGone = previousActor.DeathDate.Subtract(previousActor.BirthDate);
-            int previousDaysGone = _commonDataController.GetLeapYears(previousActor.BirthDate, previousActor.DeathDate).Item2;
+            int previousDaysGone = _commonDataController.GetYearsAndDaysConsideredLeaps(previousActor.BirthDate, previousActor.DeathDate).Item2;
             control.PreviousHumanFullYearsTextBlock.Text = "Прожито: " + previousActor.FullYearsLived + " " +
                                                            _commonDataController.GetFinalText(previousActor.FullYearsLived, PeriodTypes.Years) +
                                                            " " + previousDaysGone + " " +
@@ -283,7 +283,7 @@ namespace MemoRandom.Client.ViewModels
 
             // Выводим количество прожитых лет еще не пережитым игроком
             var nextPeriodLeft = nextActor.DeathDate.Subtract(nextActor.BirthDate);
-            int nextDaysLeft = _commonDataController.GetLeapYears(nextActor.BirthDate, nextActor.DeathDate).Item2;
+            int nextDaysLeft = _commonDataController.GetYearsAndDaysConsideredLeaps(nextActor.BirthDate, nextActor.DeathDate).Item2;
             control.NextHumanFullYearsTextBlock.Text = "Прожито: " + nextActor.FullYearsLived + " " +
                                                        _commonDataController.GetFinalText(nextActor.FullYearsLived, PeriodTypes.Years) +
                                                        " " + nextDaysLeft + " " +
@@ -405,7 +405,7 @@ namespace MemoRandom.Client.ViewModels
                 if (nextActor != null)
                 {
                     // Вычисляем коррекцию дней
-                    int correctionNextDays = _commonDataController.GetLeapYears(nextActor.BirthDate, nextActor.DeathDate).Item2;
+                    int correctionNextDays = _commonDataController.GetYearsAndDaysConsideredLeaps(nextActor.BirthDate, nextActor.DeathDate).Item2;
 
                     // Выводим дату, когда еще не пережитый игрок будет пройден
                     control.NextHumanOverLifeDate.Text = "Преодоление: " +
@@ -456,7 +456,7 @@ namespace MemoRandom.Client.ViewModels
         /// <returns></returns>
         private string GetWastedTime(ComparedHumanProgressData comparedHumanData, DateTime currentDateTime)
         {
-             (int y, int d) = _commonDataController.GetLeapYears(comparedHumanData.BirthDate, currentDateTime);
+             (int y, int d) = _commonDataController.GetYearsAndDaysConsideredLeaps(comparedHumanData.BirthDate, currentDateTime);
 
             var currentPos = currentDateTime.Subtract(comparedHumanData.BirthDate);
             var time = string.Format($"{currentPos.Hours:D2}:" +

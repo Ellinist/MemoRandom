@@ -81,6 +81,6 @@ namespace MemoRandom.Client.Common.Interfaces
         /// <param name="start"></param>
         /// <param name="stop"></param>
         /// <returns></returns>
-        Tuple<int, int> GetLeapYears(DateTime start, DateTime stop);
+        Tuple<int, int> GetYearsAndDaysConsideredLeaps(DateTime start, DateTime stop);
     }
 }

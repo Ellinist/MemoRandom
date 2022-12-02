@@ -561,7 +561,7 @@ namespace MemoRandom.Client.ViewModels
         {
             var curHuman = CommonDataController.CurrentHuman;
 
-            (int years, int days) = _commonDataController.GetLeapYears(BirthDate, DeathDate);
+            (int years, int days) = _commonDataController.GetYearsAndDaysConsideredLeaps(BirthDate, DeathDate);
 
             if (curHuman != null) // Редактирование
             {

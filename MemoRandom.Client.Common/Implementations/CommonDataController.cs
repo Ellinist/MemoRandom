@@ -345,7 +345,7 @@ namespace MemoRandom.Client.Common.Implementations
         /// <param name="start"></param>
         /// <param name="stop"></param>
         /// <returns></returns>
-        public Tuple<int, int> GetLeapYears(DateTime start, DateTime stop)
+        public Tuple<int, int> GetYearsAndDaysConsideredLeaps(DateTime start, DateTime stop)
         {
             var age = stop.Year - start.Year;
             if (start > stop.AddYears(-age)) age--;
