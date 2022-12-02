@@ -228,7 +228,7 @@ namespace MemoRandom.Client.ViewModels
 
             // Выводим количество прожитых лет пережитым игроком
             var previousPeriodGone = previousActor.DeathDate.Subtract(previousActor.BirthDate);
-            (int previousYears, int previousDaysGone) = _commonDataController.GetLeapYears(previousActor.BirthDate, previousActor.DeathDate);
+            int previousDaysGone = _commonDataController.GetLeapYears(previousActor.BirthDate, previousActor.DeathDate).Item2;
             control.PreviousHumanFullYearsTextBlock.Text = "Прожито: " + previousActor.FullYearsLived + " " +
                                                            _commonDataController.GetFinalText(previousActor.FullYearsLived, PeriodTypes.Years) +
                                                            " " + previousDaysGone + " " +
@@ -247,7 +247,6 @@ namespace MemoRandom.Client.ViewModels
                                   Human nextActor,
                                   Reason nextReason)
         {
-            // Вывод общей информации о еще не пережитом игроке
             // Выводим информацию (ФИО) о еще не пережитом игроке
             control.NextHumanNameTextBlock.Text = nextActor.LastName + " " +
                                                  (nextActor.FirstName != string.Empty ? (nextActor.FirstName[0..1] + ".") : "") + " " +
@@ -273,7 +272,7 @@ namespace MemoRandom.Client.ViewModels
 
             // Выводим количество прожитых лет еще не пережитым игроком
             var nextPeriodLeft = nextActor.DeathDate.Subtract(nextActor.BirthDate);
-            (int nextYears, int nextDaysLeft) = _commonDataController.GetLeapYears(nextActor.BirthDate, nextActor.DeathDate);
+            int nextDaysLeft = _commonDataController.GetLeapYears(nextActor.BirthDate, nextActor.DeathDate).Item2;
             control.NextHumanFullYearsTextBlock.Text = "Прожито: " + nextActor.FullYearsLived + " " +
                                                        _commonDataController.GetFinalText(nextActor.FullYearsLived, PeriodTypes.Years) +
                                                        " " + nextDaysLeft + " " +
@@ -310,9 +309,9 @@ namespace MemoRandom.Client.ViewModels
         /// <param name="previousActor"></param>
         /// <param name="nextActor"></param>
         private void MainProcess(ComparedBlockControl control,
-                           ComparedHumanProgressData comparedHumanData,
-                           DateTime currentTime,
-                           Human previousActor, Human nextActor)
+                                 ComparedHumanProgressData comparedHumanData,
+                                 DateTime currentTime,
+                                 Human previousActor, Human nextActor)
         {
             // Выводим бесцельно потраченное время жизни анализируемого человека
             control.CurrentHumanLivedPeriod.Text = GetWastedTime(comparedHumanData, currentTime);
@@ -321,13 +320,11 @@ namespace MemoRandom.Client.ViewModels
             if(previousActor != null)
             {
                 // Вычисляем время, прошедшее с момента ухода пережитого игрока
-                //(int curYears, int curDays) = _commonDataController.GetLeapYears(comparedHumanData.BirthDate, currentTime);
-                //(int formerYears, int formerDays) = _commonDataController.GetLeapYears(previousActor.BirthDate, previousActor.DeathDate);
-                //var daysGone = (curYears * 365 + curDays) - (formerYears * 365 + formerDays);
-                var previousActorDays = ((currentTime - comparedHumanData.BirthDate) - (previousActor.DeathDate.Subtract(previousActor.BirthDate))).TotalDays;
+                var previousActorDays = (currentTime.Subtract(comparedHumanData.BirthDate) -
+                                         previousActor.DeathDate.Subtract(previousActor.BirthDate)).TotalDays;
+                
                 // Вычисляем количество секунд, прошедшее с момента ухода пережитого игрока
                 var previousActorSeconds = Math.Floor(previousActorDays * DaysHours * HoursMinutes * MinutesSeconds);
-                //var previousActorSeconds = daysGone * DaysHours * HoursMinutes * MinutesSeconds;
 
                 // Проверка на наличие не пережитого игрока
                 if (nextActor != null)
@@ -338,12 +335,10 @@ namespace MemoRandom.Client.ViewModels
                                                          (nextActor.DeathDate - nextActor.BirthDate)).ToString("dd MMMM yyyy HH:mm");
 
                     // Оставшийся до не пережитого игрока период времени
-                    (int y, int d) = _commonDataController.GetLeapYears(nextActor.BirthDate, nextActor.DeathDate);
-                    //var daysLeft = (nextYears * 365 + nextDays) - (meYears * 365 + meDays);
+                    int correctionDays = _commonDataController.GetLeapYears(nextActor.BirthDate, nextActor.DeathDate).Item2;
 
-                    var nextPeriodLeft = comparedHumanData.BirthDate + nextActor.DeathDate.Subtract(nextActor.BirthDate) - currentTime;
-                    //var nextDaysLeft = daysLeft;                                // Оставшиеся целые дни
-                    var nextDaysLeft = nextPeriodLeft.Days + d;                                // Оставшиеся целые дни
+                    var nextPeriodLeft = nextActor.DeathDate.Subtract(nextActor.BirthDate) - currentTime.Subtract(comparedHumanData.BirthDate);
+                    var nextDaysLeft = nextPeriodLeft.Days + correctionDays;               // Оставшиеся целые дни
                     var nextTimeLeft = string.Format($"{nextPeriodLeft.Hours:D2}:" +       // Часы
                                                      $"{nextPeriodLeft.Minutes:D2}:" +     // Минуты
                                                      $"{nextPeriodLeft.Seconds:D2}." +     // Секунды
@@ -354,10 +349,15 @@ namespace MemoRandom.Client.ViewModels
                                                        " " + nextTimeLeft;
 
                     // Вычисляем время до момента его ухода
-                    var nextActorDays = ((nextActor.DeathDate - nextActor.BirthDate) - (currentTime - comparedHumanData.BirthDate)).TotalDays;
-                    //var nextActorDays = ((comparedHumanData.BirthDate + nextActor.DeathDate.Subtract(nextActor.BirthDate)) - currentTime).TotalDays;
+                    var nextActorDays = (nextActor.DeathDate.Subtract(nextActor.BirthDate) -
+                                         currentTime.Subtract(comparedHumanData.BirthDate)).TotalDays + correctionDays;
+
                     // Вычисляем количество секунд, которое должно пройти до достижения возраста пережитого игрока
                     var nextActorSeconds = Math.Floor(nextActorDays * DaysHours * HoursMinutes * MinutesSeconds);
+
+
+
+
 
                     #region Управление прогресс-индикатором
                     control.CurrentProgressBar.Maximum = previousActorSeconds + nextActorSeconds; // Значение максимума прогресс-индикатора
@@ -378,10 +378,10 @@ namespace MemoRandom.Client.ViewModels
 
 
                 // Выводим время, прошедшее с момента прохода пережитого игрока
-                (int y1, int d1) = _commonDataController.GetLeapYears(previousActor.BirthDate, previousActor.DeathDate);
-                //(int y2, int d2) = _commonDataController.GetLeapYears(comparedHumanData.BirthDate, currentTime);
+                int correctionPreviousDays = _commonDataController.GetLeapYears(previousActor.BirthDate, previousActor.DeathDate).Item2;
+
                 var previousPeriodGone = currentTime.Subtract(comparedHumanData.BirthDate) - previousActor.DeathDate.Subtract(previousActor.BirthDate);
-                var previousDaysGone = previousPeriodGone.Days + d1;
+                var previousDaysGone = previousPeriodGone.Days + correctionPreviousDays;
                 var previousTimeGone = string.Format($"{previousPeriodGone.Hours:D2}:" +
                                                      $"{previousPeriodGone.Minutes:D2}:" +
                                                      $"{previousPeriodGone.Seconds:D2}." +
@@ -397,17 +397,17 @@ namespace MemoRandom.Client.ViewModels
             {
                 if (nextActor != null)
                 {
-                    // Выводим дату, когда еще не пережитый игрок будет пройден
-                    (int y1, int d1) = _commonDataController.GetLeapYears(nextActor.BirthDate, nextActor.DeathDate);
+                    // Вычисляем коррекцию дней
+                    int correctionNextDays = _commonDataController.GetLeapYears(nextActor.BirthDate, nextActor.DeathDate).Item2;
 
+                    // Выводим дату, когда еще не пережитый игрок будет пройден
                     control.NextHumanOverLifeDate.Text = "Преодоление: " +
                                                          (comparedHumanData.BirthDate +
                                                          nextActor.DeathDate.Subtract(nextActor.BirthDate)).ToString("dd MMMM yyyy HH:mm");
 
                     // Оставшийся до не пережитого игрока период времени
-                    var nextPeriodLeft = nextActor.DeathDate.Subtract(nextActor.BirthDate) - (currentTime - comparedHumanData.BirthDate);
-                    //var nextPeriodLeft = comparedHumanData.BirthDate + nextActor.DeathDate.Subtract(nextActor.BirthDate) - currentTime;
-                    var nextDaysLeft = nextPeriodLeft.Days + d1;                                // Оставшиеся целые дни
+                    var nextPeriodLeft = nextActor.DeathDate.Subtract(nextActor.BirthDate) - currentTime.Subtract(comparedHumanData.BirthDate);
+                    var nextDaysLeft = nextPeriodLeft.Days + correctionNextDays;           // Оставшиеся целые дни
                     var nextTimeLeft = string.Format($"{nextPeriodLeft.Hours:D2}:" +       // Часы
                                                      $"{nextPeriodLeft.Minutes:D2}:" +     // Минуты
                                                      $"{nextPeriodLeft.Seconds:D2}." +     // Секунды
@@ -418,15 +418,19 @@ namespace MemoRandom.Client.ViewModels
                                                        " " + nextTimeLeft;
 
                     // Вычисляем время до момента его ухода
-                    var nextActorDays = (nextActor.DeathDate.Subtract(nextActor.BirthDate) - (currentTime - comparedHumanData.BirthDate)).TotalDays + d1;
-                    //var nextActorDays = ((comparedHumanData.BirthDate + nextActor.DeathDate.Subtract(nextActor.BirthDate)) - currentTime).TotalDays;
-                    // Вычисляем количество секунд, которое должно пройти до достижения возраста пережитого игрока
-                    var nextActorSeconds = Math.Floor(nextActorDays * DaysHours * HoursMinutes * MinutesSeconds);
-                    //(int y, int d) = _commonDataController.GetLeapYears(comparedHumanData.BirthDate, currentTime);
-                    var currentHumanDays = (currentTime - comparedHumanData.BirthDate).TotalDays;
-                    var currentHumanSeconds = Math.Floor(currentHumanDays * DaysHours * HoursMinutes * MinutesSeconds);
+                    var nextActorDays = (nextActor.DeathDate.Subtract(nextActor.BirthDate) -
+                                         currentTime.Subtract(comparedHumanData.BirthDate)).TotalDays + correctionNextDays;
+
+
+
+
+
 
                     #region Управление прогресс-индикатором
+                    // Вычисляем количество секунд, которое должно пройти до достижения возраста пережитого игрока
+                    var nextActorSeconds = Math.Floor(nextActorDays * DaysHours * HoursMinutes * MinutesSeconds);
+                    var currentHumanDays = currentTime.Subtract(comparedHumanData.BirthDate).TotalDays;
+                    var currentHumanSeconds = Math.Floor(currentHumanDays * DaysHours * HoursMinutes * MinutesSeconds);
                     control.CurrentProgressBar.Maximum = nextActorSeconds + currentHumanSeconds; // Значение максимума прогресс-индикатора
                     control.CurrentProgressBar.Value = currentHumanSeconds; // Значение текущей позиции прогресс-индикатора
                     #endregion
@@ -448,9 +452,6 @@ namespace MemoRandom.Client.ViewModels
             (int y, int d) = _commonDataController.GetLeapYears(comparedHumanData.BirthDate, currentDateTime);
 
             var currentPos = currentDateTime.Subtract(comparedHumanData.BirthDate);
-            //var yy = comparedHumanData.FullYearsLived * 365.25;
-            //var years = currentPos.Days / 365;
-            //var days = (int)Math.Floor(currentPos.TotalDays - yy);
             var time = string.Format($"{currentPos.Hours:D2}:" +
                                      $"{currentPos.Minutes:D2}:" +
                                      $"{currentPos.Seconds:D2}." +
@@ -460,11 +461,6 @@ namespace MemoRandom.Client.ViewModels
                                   y + " " + _commonDataController.GetFinalText(y, PeriodTypes.Years) + ", " +
                                   d + " " + _commonDataController.GetFinalText(d, PeriodTypes.Days) + ", " +
                                   time;
-
-            //string resultString = "Прошло: " +
-            //                      years + " " + _commonDataController.GetFinalText(currentPos.Days / 365, PeriodTypes.Years) + ", " +
-            //                      days  + " " + _commonDataController.GetFinalText(days, PeriodTypes.Days) + ", " +
-            //                      time;
 
             return resultString;
         }
@@ -476,6 +472,11 @@ namespace MemoRandom.Client.ViewModels
 
 
         #region CTOR
+        /// <summary>
+        /// Конструктор
+        /// </summary>
+        /// <param name="commonDataController"></param>
+        /// <exception cref="ArgumentNullException"></exception>
         public ComparingProcessViewModel(ICommonDataController commonDataController)
         {
             _commonDataController = commonDataController ?? throw new ArgumentNullException(nameof(Common));
