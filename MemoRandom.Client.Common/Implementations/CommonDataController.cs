@@ -3,6 +3,7 @@ using MemoRandom.Data.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics.Metrics;
 using System.Linq;
 using AutoMapper;
 using MemoRandom.Data.DbModels;
@@ -13,6 +14,7 @@ using System.IO;
 using System.Windows.Media.Imaging;
 using NLog;
 using MemoRandom.Client.Common.Enums;
+using System.Windows.Controls;
 
 namespace MemoRandom.Client.Common.Implementations
 {
@@ -345,35 +347,25 @@ namespace MemoRandom.Client.Common.Implementations
         /// <returns></returns>
         public Tuple<int, int> GetLeapYears(DateTime start, DateTime stop)
         {
-            int years = stop.Subtract(start).Days / 365;
-            int days = stop.Subtract(start).Days - (years * 365);
-
+            var age = stop.Year - start.Year;
+            if (start > stop.AddYears(-age)) age--;
+            var days = stop.Subtract(start).Days - (age * 365);
             for (int year = start.Year; year <= stop.Year; year++)
             {
                 if (year == start.Year)
                 {
-                    if (DateTime.IsLeapYear(start.Year) && (start.Date < DateTime.Parse($"01.03.{start.Year}")))
-                    {
-                        days--;
-                    }
+                    if (DateTime.IsLeapYear(start.Year) && (start.Date < DateTime.Parse($"01.03.{start.Year}"))) days--;
                 }
                 if ((year != start.Year) && (year != stop.Year))
                 {
-                    if (DateTime.IsLeapYear(year))
-                    {
-                        days--;
-                    }
+                    if (DateTime.IsLeapYear(year)) days--;
                 }
                 if (year == stop.Year)
                 {
-                    if (DateTime.IsLeapYear(year) && (stop.Date > DateTime.Parse($"28.02.{stop.Year}")))
-                    {
-                        days--;
-                    }
+                    if (DateTime.IsLeapYear(year) && (stop.Date > DateTime.Parse($"28.02.{stop.Year}"))) days--;
                 }
             }
-
-            return new Tuple<int, int>(years, days);
+            return new Tuple<int, int>(age, days);
         }
 
 
