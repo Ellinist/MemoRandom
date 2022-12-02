@@ -345,6 +345,8 @@ namespace MemoRandom.Client.Common.Implementations
         /// <returns></returns>
         public Tuple<int, int> GetLeapYears(DateTime start, DateTime stop)
         {
+            var t1 = stop.Subtract(start);
+            //var t2
             int years = stop.Subtract(start).Days / 365;
             int days = stop.Subtract(start).Days - (years * 365);
 
