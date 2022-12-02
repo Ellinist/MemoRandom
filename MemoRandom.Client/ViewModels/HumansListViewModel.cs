@@ -183,7 +183,8 @@ namespace MemoRandom.Client.ViewModels
         /// <param name="selectedHuman"></param>
         private void SetFullYearsText(Human selectedHuman)
         {
-            int years = (int)Math.Floor(selectedHuman.FullYearsLived); // Считаем число полных лет
+            //int years = (int)Math.Floor(selectedHuman.FullYearsLived); // Считаем число полных лет
+            int years = selectedHuman.FullYearsLived; // Считаем число полных лет
             _yearsText.Clear();
 
             _yearsText.Append("(" + years + " " + _commonDataController.GetFinalText(years, PeriodTypes.Years) + ")");

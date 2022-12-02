@@ -32,6 +32,6 @@ namespace MemoRandom.Data.DbModels
         public Guid DeathReasonId { get; set; }
         public string HumanComments { get; set; }
         public double DaysLived { get; set; }
-        public float FullYearsLived { get; set; }
+        public int FullYearsLived { get; set; }
     }
 }

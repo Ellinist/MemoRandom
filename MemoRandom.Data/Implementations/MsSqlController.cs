@@ -420,7 +420,7 @@ namespace MemoRandom.Data.Implementations
                 try
                 {
                     // Читаем контекст, выбирая только основные поля (без изображений)
-                    humansList = MemoContext.DbHumans.OrderBy(x => x.FullYearsLived).ToList();
+                    humansList = MemoContext.DbHumans.OrderBy(x => x.DaysLived).ToList();
                 }
                 catch (Exception ex)
                 {

@@ -24,7 +24,7 @@ namespace MemoRandom.Client.Common.Models
         private Guid _deathReasonId;
         private string _humanComments;
         private double _daysLived;
-        private float _fullYearsLived;
+        private int _fullYearsLived;
         #endregion
 
         /// <summary>
@@ -228,7 +228,7 @@ namespace MemoRandom.Client.Common.Models
         /// <summary>
         /// Полное число прожитых лет - для упорядочения по возрастанию прожитых лет
         /// </summary>
-        public float FullYearsLived
+        public int FullYearsLived
         {
             get => _fullYearsLived;
             set

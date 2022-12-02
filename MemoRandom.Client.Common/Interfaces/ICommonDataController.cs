@@ -1,5 +1,6 @@
 ﻿using MemoRandom.Client.Common.Enums;
 using MemoRandom.Client.Common.Models;
+using System;
 using System.Windows.Media.Imaging;
 
 namespace MemoRandom.Client.Common.Interfaces
@@ -54,6 +55,9 @@ namespace MemoRandom.Client.Common.Interfaces
         /// <returns></returns>
         bool DeleteHumanInRepository(Human human, string imageFile);
 
+        /// <summary>
+        /// Обновление иерархической коллекции причин смерти
+        /// </summary>
         void UpdateHierarchicalReasonsData();
 
         /// <summary>
@@ -63,6 +67,20 @@ namespace MemoRandom.Client.Common.Interfaces
         /// <returns></returns>
         BitmapImage GetHumanImage(Human currentHuman);
 
+        /// <summary>
+        /// Получение слов с правильными окончаниями
+        /// </summary>
+        /// <param name="i"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
         string GetFinalText(int i, PeriodTypes type);
+
+        /// <summary>
+        /// Получение количества лет и дней за период
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="stop"></param>
+        /// <returns></returns>
+        Tuple<int, int> GetLeapYears(DateTime start, DateTime stop);
     }
 }

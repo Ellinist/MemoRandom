@@ -11,7 +11,6 @@ using System.Windows.Media.Imaging;
 using MemoRandom.Client.Common.Implementations;
 using MemoRandom.Client.Common.Interfaces;
 using MemoRandom.Client.Common.Models;
-using MemoRandom.Data.Interfaces;
 using NLog;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -561,6 +560,9 @@ namespace MemoRandom.Client.ViewModels
         private async void SaveHuman()
         {
             var curHuman = CommonDataController.CurrentHuman;
+
+            (int years, int days) = _commonDataController.GetLeapYears(BirthDate, DeathDate);
+
             if (curHuman != null) // Редактирование
             {
                 curHuman.LastName       = LastName;
@@ -576,7 +578,8 @@ namespace MemoRandom.Client.ViewModels
                 curHuman.HumanComments  = HumanComments;
                 curHuman.DeathReasonId  = DeathReasonId;
                 curHuman.DaysLived      = (DeathDate - BirthDate).TotalDays; // Считаем полное число прожитых дней
-                curHuman.FullYearsLived = (float)((DeathDate - BirthDate).Days / 365.25D); // Считаем число полных прожитых лет
+                //curHuman.FullYearsLived = (float)((DeathDate - BirthDate).Days / 365.25D); // Считаем число полных прожитых лет
+                curHuman.FullYearsLived = years;
 
                 CommonDataController.CurrentHuman = curHuman;
             }
@@ -599,7 +602,8 @@ namespace MemoRandom.Client.ViewModels
                     HumanComments  = HumanComments,
                     DeathReasonId  = DeathReasonId,
                     DaysLived      = (DeathDate - BirthDate).TotalDays, // Считаем полное число прожитых дней
-                    FullYearsLived = (float)((DeathDate - BirthDate).Days / 365.25) // Считаем число полных прожитых лет
+                    //FullYearsLived = (float)((DeathDate - BirthDate).Days / 365.25) // Считаем число полных прожитых лет
+                    FullYearsLived = years
                 };
 
                 CommonDataController.CurrentHuman = human;

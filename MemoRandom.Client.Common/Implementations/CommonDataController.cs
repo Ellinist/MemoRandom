@@ -337,6 +337,44 @@ namespace MemoRandom.Client.Common.Implementations
             return result;
         }
 
+        /// <summary>
+        /// Получение количества лет и дней за период
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="stop"></param>
+        /// <returns></returns>
+        public Tuple<int, int> GetLeapYears(DateTime start, DateTime stop)
+        {
+            int years = stop.Subtract(start).Days / 365;
+            int days = stop.Subtract(start).Days - (years * 365);
+
+            for (int year = start.Year; year <= stop.Year; year++)
+            {
+                if (year == start.Year)
+                {
+                    if (DateTime.IsLeapYear(start.Year) && (start.Date < DateTime.Parse($"01.03.{start.Year}")))
+                    {
+                        days--;
+                    }
+                }
+                if ((year != start.Year) && (year != stop.Year))
+                {
+                    if (DateTime.IsLeapYear(year))
+                    {
+                        days--;
+                    }
+                }
+                if (year == stop.Year)
+                {
+                    if (DateTime.IsLeapYear(year) && (stop.Date > DateTime.Parse($"28.02.{stop.Year}")))
+                    {
+                        days--;
+                    }
+                }
+            }
+
+            return new Tuple<int, int>(years, days);
+        }
 
 
 
