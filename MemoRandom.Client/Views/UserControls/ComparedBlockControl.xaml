@@ -39,7 +39,7 @@
                      x:Name="CurrentProgressBar"
                      IsIndeterminate="false"
                      
-                     Background="DarkGreen">
+                     Background="Chocolate">
             
         </ProgressBar>
 

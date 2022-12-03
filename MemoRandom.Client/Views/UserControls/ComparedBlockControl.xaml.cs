@@ -17,7 +17,7 @@ namespace MemoRandom.Client.Views.UserControls
             set { SetValue(ComparedHumanFullNameProperty, value); }
         }
 
-        public ComparedBlockControl(/*ComparedBlockControlViewModel vm, ComparedHuman human, Dispatcher dispatcher*/)
+        public ComparedBlockControl()
         {
             InitializeComponent();
         }
