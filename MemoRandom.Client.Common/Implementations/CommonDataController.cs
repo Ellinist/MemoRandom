@@ -341,6 +341,8 @@ namespace MemoRandom.Client.Common.Implementations
 
         /// <summary>
         /// Получение количества лет и дней за период
+        /// В этом методе учитываются високосные годы
+        /// С учетом дат рождения и смерти - попадание на период с 29 февраля
         /// </summary>
         /// <param name="start"></param>
         /// <param name="stop"></param>
