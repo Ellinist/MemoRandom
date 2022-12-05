@@ -199,11 +199,19 @@ namespace MemoRandom.Client.ViewModels
         /// <param name="e"></param>
         public void DgHumans_Sorting(object sender, System.Windows.Controls.DataGridSortingEventArgs e)
         {
+            var temp = CommonDataController.CurrentHuman;
+
             _sortDirection = e.Column.SortDirection.ToString();
             _sortMember = e.Column.SortMemberPath;
 
             SortHumansCollection();
             RaisePropertyChanged(nameof(HumansCollection));
+
+            SelectedHuman = temp;
+            var i = HumansCollection.IndexOf(temp);
+            PersonIndex = i;
+            RaisePropertyChanged(nameof(SelectedHuman));
+            RaisePropertyChanged(nameof(PersonIndex));
         }
 
         /// <summary>
