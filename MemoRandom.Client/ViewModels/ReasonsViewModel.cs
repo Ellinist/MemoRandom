@@ -221,7 +221,7 @@ namespace MemoRandom.Client.ViewModels
         }
 
         /// <summary>
-        /// Плоский список - нужен только для раоты с БД и со списком в окне редактирования людей
+        /// Плоский список - нужен только для работы с БД и со списком в окне редактирования людей
         /// </summary>
         private List<Reason> PlainReasonsList
         {
@@ -290,7 +290,7 @@ namespace MemoRandom.Client.ViewModels
             }
             else // Занесение изменений в иерархическое дерево
             {
-                if (ReasonName == null || ReasonName == string.Empty)
+                if (string.IsNullOrEmpty(ReasonName))
                 {
                     MessageBox.Show("Нельзя создать причину смерти с пустым названием!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
