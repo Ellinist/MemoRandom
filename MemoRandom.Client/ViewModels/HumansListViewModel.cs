@@ -24,9 +24,10 @@ namespace MemoRandom.Client.ViewModels
     /// </summary>
     public class HumansListViewModel : BindableBase, IDisposable
     {
+        public event Action<Human> SetCurrentRecordEvent;
+
         #region PRIVATE FIELDS
         private string _humansViewTitle = "Начало";
-        private ObservableCollection<Human> _humansList;
         private int _personIndex;
         private int _previousIndex = 0; // Индекс предыдущего выбранного узла в списке
         private Human _selectedHuman;
@@ -63,10 +64,10 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         public ObservableCollection<Human> HumansCollection
         {
-            get => _humansList;
+            get => CommonDataController.HumansList;
             set
             {
-                _humansList = value;
+                CommonDataController.HumansList = value;
                 RaisePropertyChanged(nameof(HumansCollection));
             }
         }
@@ -205,13 +206,20 @@ namespace MemoRandom.Client.ViewModels
             _sortMember = e.Column.SortMemberPath;
 
             SortHumansCollection();
-            RaisePropertyChanged(nameof(HumansCollection));
+            //RaisePropertyChanged(nameof(HumansCollection));
+            RaisePropertyChanged(nameof(CommonDataController.HumansList));
 
             SelectedHuman = temp;
-            var i = HumansCollection.IndexOf(temp);
+            //var i = HumansCollection.IndexOf(temp);
+            //PersonIndex = i;
+
+            var i = CommonDataController.HumansList.IndexOf(temp);
             PersonIndex = i;
+
             RaisePropertyChanged(nameof(SelectedHuman));
             RaisePropertyChanged(nameof(PersonIndex));
+
+            SetCurrentRecordEvent.Invoke(temp);
         }
 
         /// <summary>
@@ -235,11 +243,16 @@ namespace MemoRandom.Client.ViewModels
                           HumansCollection.OrderBy(x => propertyInfo.GetValue(x, null)).ToList();
             }
 
-            HumansCollection.Clear();
+            CommonDataController.HumansList.Clear();
             foreach (var item in result)
             {
-                HumansCollection.Add(item);
+                CommonDataController.HumansList.Add(item);
             }
+            //HumansCollection.Clear();
+            //foreach (var item in result)
+            //{
+            //    HumansCollection.Add(item);
+            //}
             RaisePropertyChanged(nameof(HumansCollection));
         }
 

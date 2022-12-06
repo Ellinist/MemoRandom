@@ -37,9 +37,6 @@ namespace MemoRandom.Client.ViewModels
         private const string SAVE_BUTTON          = "Сохранить";
         private string _saveButtonText            = CHANGE_BUTTON;
         private string _addButtonText             = ADD_BUTTON;
-
-        //private ObservableCollection<Reason> _reasonsCollection;
-        //private List<Reason> _reasonsList;
         private string _reasonName;
         private string _reasonComment;
         private string _reasonDescription;

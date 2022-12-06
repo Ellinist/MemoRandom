@@ -48,7 +48,7 @@ namespace MemoRandom.Client.Common.Implementations
         public static ObservableCollection<ComparedHuman> ComparedHumansCollection { get; set; } = new();
 
         /// <summary>
-        /// Список людей
+        /// Список людей - основной список
         /// </summary>
         public static ObservableCollection<Human> HumansList { get; set; } = new();
 
@@ -85,7 +85,6 @@ namespace MemoRandom.Client.Common.Implementations
             #endregion
 
             #region Чтение списка людей
-            var re = _msSqlController.GetHumans();
             HumansList = _mapper.Map<List<DbHuman>, ObservableCollection<Human>>(_msSqlController.GetHumans());
             #endregion
 

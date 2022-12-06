@@ -1,5 +1,7 @@
 ﻿using MahApps.Metro.Controls;
+using MemoRandom.Client.Common.Models;
 using MemoRandom.Client.ViewModels;
+using System;
 
 namespace MemoRandom.Client.Views
 {
@@ -17,11 +19,23 @@ namespace MemoRandom.Client.Views
         /// <param name="e"></param>
         private void DgHumans_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            DgHumans.UpdateLayout();
-            DgHumans.ScrollIntoView(DgHumans.SelectedItem, null);
-            DgHumans.Focus();
+            if(DgHumans.SelectedItem != null)
+            {
+                DgHumans.UpdateLayout();
+                DgHumans.ScrollIntoView(DgHumans.SelectedItem, null);
+                DgHumans.Focus();
+            }
         }
 
+        /// <summary>
+        /// Позиционирование фокуса на требуемой записи
+        /// </summary>
+        /// <param name="human"></param>
+        private void SetCurrentRecord(Human human)
+        {
+            DgHumans.SelectedItem = human;
+        }
+        
 
 
 
@@ -44,6 +58,8 @@ namespace MemoRandom.Client.Views
             DgHumans.Sorting += _vm.DgHumans_Sorting; // Событие сортировки по столбцу
             DgHumans.SelectionChanged += DgHumans_SelectionChanged;
             DgHumans.MouseDoubleClick += _vm.DgHumans_MouseDoubleClick;
+
+            _vm.SetCurrentRecordEvent += SetCurrentRecord;
         }
         #endregion
     }

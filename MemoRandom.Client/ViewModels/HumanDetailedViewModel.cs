@@ -528,7 +528,7 @@ namespace MemoRandom.Client.ViewModels
                 DeathReasonId     = human.DeathReasonId;
                 TargetImageSource = (BitmapSource)_commonDataController.GetHumanImage(CommonDataController.CurrentHuman); // Загружаем изображение
             }
-            else
+            else // Создание нового человека
             {
                 TimeSpan ts = TimeSpan.FromDays(365 * 50);
                 LastName      = "Введите фамилию";
@@ -578,7 +578,6 @@ namespace MemoRandom.Client.ViewModels
                 curHuman.HumanComments  = HumanComments;
                 curHuman.DeathReasonId  = DeathReasonId;
                 curHuman.DaysLived      = (DeathDate - BirthDate).TotalDays; // Считаем полное число прожитых дней
-                //curHuman.FullYearsLived = (float)((DeathDate - BirthDate).Days / 365.25D); // Считаем число полных прожитых лет
                 curHuman.FullYearsLived = years;
 
                 CommonDataController.CurrentHuman = curHuman;
@@ -602,11 +601,12 @@ namespace MemoRandom.Client.ViewModels
                     HumanComments  = HumanComments,
                     DeathReasonId  = DeathReasonId,
                     DaysLived      = (DeathDate - BirthDate).TotalDays, // Считаем полное число прожитых дней
-                    //FullYearsLived = (float)((DeathDate - BirthDate).Days / 365.25) // Считаем число полных прожитых лет
                     FullYearsLived = years
                 };
 
                 CommonDataController.CurrentHuman = human;
+
+                CommonDataController.HumansList.Add(human); // И добавляем в основной список
             }
 
             bool result = true;
