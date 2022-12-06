@@ -54,7 +54,7 @@ namespace MemoRandom.Client.ViewModels
 
         #region PROPS
         /// <summary>
-        /// Заголовок окна справочника причин смерти
+        /// Заголовок окна со списком людей
         /// </summary>
         public string HumansViewTitle
         {
@@ -253,7 +253,6 @@ namespace MemoRandom.Client.ViewModels
             _sortMember = e.Column.SortMemberPath;
 
             SortHumansCollection();
-            //RaisePropertyChanged(nameof(HumansCollection));
             RaisePropertyChanged(nameof(CommonDataController.HumansList));
 
             SelectedHuman = previousHuman;
@@ -328,6 +327,8 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private void EditHumanData()
         {
+            var previousHuman = CommonDataController.CurrentHuman;
+
             _container.Resolve<HumanDetailedView>().ShowDialog(); // Запуск окна создания и редактирования человека
 
             SortHumansCollection(); // Сортировка по условию
@@ -344,6 +345,8 @@ namespace MemoRandom.Client.ViewModels
             {
                 HumanDeathReasonName = currentReason.ReasonName;
             }
+
+            SetCurrentRecordEvent.Invoke(previousHuman);
         }
 
         public void DgHumans_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
