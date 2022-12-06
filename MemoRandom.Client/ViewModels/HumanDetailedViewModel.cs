@@ -606,7 +606,7 @@ namespace MemoRandom.Client.ViewModels
 
                 CommonDataController.CurrentHuman = human;
 
-                CommonDataController.HumansList.Add(human); // И добавляем в основной список
+                //CommonDataController.HumansList.Add(human); // И добавляем в основной список
             }
 
             bool result = true;

@@ -20,7 +20,7 @@ namespace MemoRandom.Client.Views
         /// <param name="e"></param>
         private void DgHumans_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            if(DgHumans.SelectedItem != null)
+            if (DgHumans.SelectedItem != null)
             {
                 DgHumans.UpdateLayout();
                 DgHumans.ScrollIntoView(DgHumans.SelectedItem, null);
@@ -35,6 +35,9 @@ namespace MemoRandom.Client.Views
         private void SetCurrentRecord(Human human)
         {
             DgHumans.SelectedItem = human;
+            DgHumans.UpdateLayout();
+            DgHumans.ScrollIntoView(DgHumans.SelectedItem, null);
+            DgHumans.Focus();
         }
 
         /// <summary>
