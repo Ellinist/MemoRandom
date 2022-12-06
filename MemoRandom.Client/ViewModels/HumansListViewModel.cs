@@ -16,6 +16,8 @@ using MemoRandom.Client.Common.Implementations;
 using MemoRandom.Client.Common.Models;
 using MemoRandom.Client.Common.Interfaces;
 using MemoRandom.Client.Common.Enums;
+using ScottPlot;
+using System.Security;
 
 namespace MemoRandom.Client.ViewModels
 {
@@ -43,6 +45,8 @@ namespace MemoRandom.Client.ViewModels
         private readonly ICommonDataController _commonDataController;
 
         private CultureInfo cultureInfo = new CultureInfo("ru-RU");
+
+        private double _averageAge;
         #endregion
 
         #region PROPS
@@ -175,6 +179,16 @@ namespace MemoRandom.Client.ViewModels
                 RaisePropertyChanged(nameof(PlainReasonsList));
             }
         }
+
+        public double AverageAge
+        {
+            get => _averageAge;
+            set
+            {
+                _averageAge = value;
+                RaisePropertyChanged(nameof(AverageAge));
+            }
+        }
         #endregion
 
         #region Частные методы
@@ -200,7 +214,7 @@ namespace MemoRandom.Client.ViewModels
         /// <param name="e"></param>
         public void DgHumans_Sorting(object sender, System.Windows.Controls.DataGridSortingEventArgs e)
         {
-            var temp = CommonDataController.CurrentHuman;
+            var previousHuman = CommonDataController.CurrentHuman;
 
             _sortDirection = e.Column.SortDirection.ToString();
             _sortMember = e.Column.SortMemberPath;
@@ -209,17 +223,15 @@ namespace MemoRandom.Client.ViewModels
             //RaisePropertyChanged(nameof(HumansCollection));
             RaisePropertyChanged(nameof(CommonDataController.HumansList));
 
-            SelectedHuman = temp;
-            //var i = HumansCollection.IndexOf(temp);
-            //PersonIndex = i;
+            SelectedHuman = previousHuman;
 
-            var i = CommonDataController.HumansList.IndexOf(temp);
+            var i = CommonDataController.HumansList.IndexOf(previousHuman);
             PersonIndex = i;
 
             RaisePropertyChanged(nameof(SelectedHuman));
             RaisePropertyChanged(nameof(PersonIndex));
 
-            SetCurrentRecordEvent.Invoke(temp);
+            SetCurrentRecordEvent.Invoke(previousHuman);
         }
 
         /// <summary>
@@ -248,11 +260,6 @@ namespace MemoRandom.Client.ViewModels
             {
                 CommonDataController.HumansList.Add(item);
             }
-            //HumansCollection.Clear();
-            //foreach (var item in result)
-            //{
-            //    HumansCollection.Add(item);
-            //}
             RaisePropertyChanged(nameof(HumansCollection));
         }
 
@@ -428,10 +435,26 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void HumansListView_Loaded(object sender, RoutedEventArgs e)
+        public void HumansListView_Loaded(WpfPlot plot/*object sender, RoutedEventArgs e*/)
         {
+            //var sc = sender;
+
             HumansCollection = CommonDataController.HumansList;
+            AverageAge = 0;
+            for(int i = 0; i < CommonDataController.HumansList.Count; i++)
+            {
+                AverageAge += CommonDataController.HumansList[i].FullYearsLived;
+            }
+            AverageAge /= CommonDataController.HumansList.Count;
+
+
+            var plt = plot.Plot;
+
+            double[] values = { 778, 283, 184, 76, 43 };
+            plt.AddPie(values);
+            plot.Refresh();
         }
+                                
 
         /// <summary>
         /// Обработчик закрытия окна

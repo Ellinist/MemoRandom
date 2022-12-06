@@ -7,6 +7,7 @@
                  xmlns:uc="clr-namespace:MemoRandom.Client.Views.UserControls"
                  xmlns:fa="http://schemas.fontawesome.io/icons/"
                  xmlns:conv="clr-namespace:MemoRandom.Client.Converters"
+                 xmlns:scott="clr-namespace:ScottPlot.WPF;assembly=ScottPlot.WPF"
                  mc:Ignorable="d"
                  ShowIconOnTitleBar="True"
                  Icon="pack://application:,,,/Resources/Icons/mainWindowIcon.ico"
@@ -444,7 +445,29 @@
                         </StackPanel>
                     </TabItem.Header>
                     <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
 
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <Grid Grid.Row="0" Grid.Column="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0"
+                                       Text="Средний возраст: "/>
+                            <TextBlock Grid.Column="1"
+                                       Text="{Binding AverageAge}"/>
+                        </Grid>
+
+                        <WpfPlot Grid.Row="1" Grid.Column="0"
+                                 x:Name="HumansChart"/>
                     </Grid>
                 </TabItem>
             </TabControl>
