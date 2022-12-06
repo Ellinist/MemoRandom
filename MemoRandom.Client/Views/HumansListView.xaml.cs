@@ -37,6 +37,11 @@ namespace MemoRandom.Client.Views
             DgHumans.SelectedItem = human;
         }
 
+        /// <summary>
+        /// Метод отработки при загрузке окна
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void HumansListView_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
             _vm.HumansListView_Loaded(HumansChart);
@@ -57,7 +62,6 @@ namespace MemoRandom.Client.Views
 
             DataContext = vm;
 
-            //this.Loaded += HumansListView_Loaded(); // Событие открытия окна
             this.Loaded += HumansListView_Loaded;
             this.Closed += _vm.HumansListView_Closed; // Событие закрытия окна
             DgHumans.Sorting += _vm.DgHumans_Sorting; // Событие сортировки по столбцу
