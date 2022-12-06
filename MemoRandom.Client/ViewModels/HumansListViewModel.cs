@@ -46,7 +46,10 @@ namespace MemoRandom.Client.ViewModels
 
         private CultureInfo cultureInfo = new CultureInfo("ru-RU");
 
+        private int _humansQuantity;
         private double _averageAge;
+        private double _minimumAge;
+        private double _maximumAge;
         #endregion
 
         #region PROPS
@@ -180,6 +183,16 @@ namespace MemoRandom.Client.ViewModels
             }
         }
 
+        public int HumansQuantity
+        {
+            get => _humansQuantity;
+            set
+            {
+                _humansQuantity = value;
+                RaisePropertyChanged(nameof(HumansQuantity));
+            }
+        }
+
         public double AverageAge
         {
             get => _averageAge;
@@ -187,6 +200,26 @@ namespace MemoRandom.Client.ViewModels
             {
                 _averageAge = value;
                 RaisePropertyChanged(nameof(AverageAge));
+            }
+        }
+
+        public double MinimumAge
+        {
+            get => _minimumAge;
+            set
+            {
+                _minimumAge = value;
+                RaisePropertyChanged(nameof(MinimumAge));
+            }
+        }
+
+        public double MaximumAge
+        {
+            get => _maximumAge;
+            set
+            {
+                _maximumAge = value;
+                RaisePropertyChanged(nameof(MaximumAge));
             }
         }
         #endregion
@@ -437,22 +470,21 @@ namespace MemoRandom.Client.ViewModels
         /// <param name="e"></param>
         public void HumansListView_Loaded(WpfPlot plot/*object sender, RoutedEventArgs e*/)
         {
-            //var sc = sender;
-
-            HumansCollection = CommonDataController.HumansList;
-            AverageAge = 0;
-            for(int i = 0; i < CommonDataController.HumansList.Count; i++)
-            {
-                AverageAge += CommonDataController.HumansList[i].FullYearsLived;
-            }
-            AverageAge /= CommonDataController.HumansList.Count;
-
+            CalculateAnalitics();
 
             var plt = plot.Plot;
 
             double[] values = { 778, 283, 184, 76, 43 };
             plt.AddPie(values);
             plot.Refresh();
+        }
+
+        private void CalculateAnalitics()
+        {
+            HumansQuantity = CommonDataController.HumansList.Count;
+            MinimumAge = CommonDataController.HumansList.Min(x => x.DaysLived);
+            AverageAge = CommonDataController.HumansList.Average(x => x.DaysLived);
+            MaximumAge = CommonDataController.HumansList.Max(x => x.DaysLived);
         }
                                 
 

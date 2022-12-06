@@ -455,16 +455,70 @@
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
 
-                        <Grid Grid.Row="0" Grid.Column="0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0"
-                                       Text="Средний возраст: "/>
-                            <TextBlock Grid.Column="1"
-                                       Text="{Binding AverageAge}"/>
-                        </Grid>
+                        <GroupBox Grid.Row="0" Grid.Column="0"
+                                  FontSize="20"
+                                  Header="Общие характеристики">
+                            <StackPanel Orientation="Vertical">
+
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Grid.Column="0"
+                                               Padding="0, 0, 5, 0"
+                                               Text="Количество записей:"
+                                               HorizontalAlignment="Right"/>
+
+                                    <TextBlock Grid.Column="1"
+                                               Text="{Binding HumansQuantity}"/>
+                                </Grid>
+                                
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Grid.Column="0"
+                                               Padding="0, 0, 5, 0"
+                                               Text="Самый ранний уход:"
+                                               HorizontalAlignment="Right"/>
+
+                                    <TextBlock Grid.Column="1"
+                                               Text="{Binding MinimumAge}"/>
+                                </Grid>
+                                
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0"
+                                               Padding="0, 0, 5, 0"
+                                               Text="Средний возраст:"
+                                               HorizontalAlignment="Right"/>
+                                    <TextBlock Grid.Column="1"
+                                               Text="{Binding AverageAge}"/>
+                                </Grid>
+
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Grid.Column="0"
+                                               Padding="0, 0, 5, 0"
+                                               Text="Самый поздний уход:"
+                                               HorizontalAlignment="Right"/>
+
+                                    <TextBlock Grid.Column="1"
+                                               Text="{Binding MaximumAge}"/>
+                                </Grid>
+                            </StackPanel>
+                        </GroupBox>
 
                         <WpfPlot Grid.Row="1" Grid.Column="0"
                                  x:Name="HumansChart"/>
