@@ -339,7 +339,7 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private void EditHumanData()
         {
-            var previousHuman = CommonDataController.CurrentHuman;
+            //var previousHuman = CommonDataController.CurrentHuman;
 
             _container.Resolve<HumanDetailedView>().ShowDialog(); // Запуск окна создания и редактирования человека
 
@@ -358,7 +358,7 @@ namespace MemoRandom.Client.ViewModels
                 HumanDeathReasonName = currentReason.ReasonName;
             }
 
-            SetCurrentRecordEvent.Invoke(previousHuman);
+            //SetCurrentRecordEvent.Invoke(previousHuman);
         }
 
         public void DgHumans_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)

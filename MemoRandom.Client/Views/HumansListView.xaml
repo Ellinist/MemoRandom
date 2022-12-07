@@ -84,8 +84,10 @@
                                 <ColumnDefinition MinWidth="450" MaxWidth="450" Width="450"></ColumnDefinition>
                             </Grid.ColumnDefinitions>
 
+                            <!--ScrollViewer.CanContentScroll="True"-->
+                            
                             <Border Grid.Column="0" 
-                                    ScrollViewer.CanContentScroll="True"
+                                    
                                     Margin="3, 0, 5, 5"
                                     BorderBrush="Black"
                                     BorderThickness="0.4">
@@ -95,6 +97,7 @@
                                           SelectionMode="Single"
                                           UseLayoutRounding="True"
                                           CanUserAddRows="False"
+                                          ScrollViewer.CanContentScroll="True"
                                           IsSynchronizedWithCurrentItem="True"
                                           AutoGenerateColumns="False"
                                                                                     
