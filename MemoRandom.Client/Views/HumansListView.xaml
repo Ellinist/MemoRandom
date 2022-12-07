@@ -466,20 +466,29 @@
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition/>
+                                        <ColumnDefinition Width="50"/>
+                                        <ColumnDefinition/>
                                         <ColumnDefinition/>
                                     </Grid.ColumnDefinitions>
 
                                     <TextBlock Grid.Column="0"
                                                Padding="0, 0, 5, 0"
-                                               Text="Количество записей:"
+                                               Text="Количество записей в базе:"
                                                HorizontalAlignment="Right"/>
 
                                     <TextBlock Grid.Column="1"
                                                Text="{Binding HumansQuantity}"/>
+
+                                    <TextBlock Grid.Column="2"
+                                               Padding="5, 0, 5, 0"
+                                               Text="человек"
+                                               HorizontalAlignment="Left"/>
                                 </Grid>
                                 
                                 <Grid>
                                     <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition Width="50"/>
                                         <ColumnDefinition/>
                                         <ColumnDefinition/>
                                     </Grid.ColumnDefinitions>
@@ -491,10 +500,22 @@
 
                                     <TextBlock Grid.Column="1"
                                                Text="{Binding MinimumAge}"/>
+
+                                    <TextBlock Grid.Column="2"
+                                               Padding="5, 0, 5, 0"
+                                               Text="лет"
+                                               HorizontalAlignment="Left"/>
+
+                                    <TextBlock Grid.Column="3"
+                                               Padding="5, 0, 5, 0"
+                                               Text="{Binding EarliestHuman}"
+                                               HorizontalAlignment="Center"/>
                                 </Grid>
                                 
                                 <Grid>
                                     <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition Width="50"/>
                                         <ColumnDefinition/>
                                         <ColumnDefinition/>
                                     </Grid.ColumnDefinitions>
@@ -502,12 +523,20 @@
                                                Padding="0, 0, 5, 0"
                                                Text="Средний возраст:"
                                                HorizontalAlignment="Right"/>
+                                    
                                     <TextBlock Grid.Column="1"
                                                Text="{Binding AverageAge}"/>
+
+                                    <TextBlock Grid.Column="2"
+                                               Padding="5, 0, 5, 0"
+                                               Text="лет"
+                                               HorizontalAlignment="Left"/>
                                 </Grid>
 
                                 <Grid>
                                     <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition Width="50"/>
                                         <ColumnDefinition/>
                                         <ColumnDefinition/>
                                     </Grid.ColumnDefinitions>
@@ -519,6 +548,16 @@
 
                                     <TextBlock Grid.Column="1"
                                                Text="{Binding MaximumAge}"/>
+
+                                    <TextBlock Grid.Column="2"
+                                               Padding="5, 0, 5, 0"
+                                               Text="лет"
+                                               HorizontalAlignment="Left"/>
+
+                                    <TextBlock Grid.Column="3"
+                                               Padding="5, 0, 5, 0"
+                                               Text="{Binding OldestHuman}"
+                                               HorizontalAlignment="Center"/>
                                 </Grid>
                             </StackPanel>
                         </GroupBox>

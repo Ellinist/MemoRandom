@@ -50,6 +50,8 @@ namespace MemoRandom.Client.ViewModels
         private double _averageAge;
         private double _minimumAge;
         private double _maximumAge;
+        private string _earliestHuman;
+        private string _oldestHuman;
         #endregion
 
         #region PROPS
@@ -232,6 +234,26 @@ namespace MemoRandom.Client.ViewModels
             {
                 _maximumAge = value;
                 RaisePropertyChanged(nameof(MaximumAge));
+            }
+        }
+
+        public string EarliestHuman
+        {
+            get => _earliestHuman;
+            set
+            {
+                _earliestHuman = value;
+                RaisePropertyChanged(nameof(EarliestHuman));
+            }
+        }
+
+        public string OldestHuman
+        {
+            get => _oldestHuman;
+            set
+            {
+                _oldestHuman = value;
+                RaisePropertyChanged(nameof(OldestHuman));
             }
         }
         #endregion
@@ -497,9 +519,20 @@ namespace MemoRandom.Client.ViewModels
         private void CalculateAnalitics()
         {
             HumansQuantity = CommonDataController.HumansList.Count;
-            MinimumAge = CommonDataController.HumansList.Min(x => x.DaysLived);
+
+            var min = CommonDataController.HumansList.Min(x => x.DaysLived);
+            var minHuman = CommonDataController.HumansList.FirstOrDefault(x => x.DaysLived == min);
+            MinimumAge = minHuman.FullYearsLived;
+            EarliestHuman = minHuman.LastName + " " +
+                            minHuman.FirstName[0..1] + "." +
+                           (minHuman.Patronymic != string.Empty ? (minHuman.Patronymic[0..1] + ".") : string.Empty);
             AverageAge = CommonDataController.HumansList.Average(x => x.DaysLived);
-            MaximumAge = CommonDataController.HumansList.Max(x => x.DaysLived);
+            var max = CommonDataController.HumansList.Max(x => x.DaysLived);
+            var maxHuman = CommonDataController.HumansList.FirstOrDefault(x => x.DaysLived == max);
+            MaximumAge = maxHuman.FullYearsLived;
+            OldestHuman = maxHuman.LastName + " " +
+                          maxHuman.FirstName[0..1] + "." +
+                         (maxHuman.Patronymic != string.Empty ? (maxHuman.Patronymic[0..1] + ".") : string.Empty);
         }
                                 
 
