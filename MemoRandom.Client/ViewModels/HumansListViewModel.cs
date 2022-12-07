@@ -183,6 +183,9 @@ namespace MemoRandom.Client.ViewModels
             }
         }
 
+        /// <summary>
+        /// Количество записей (людей) в хранилище - количество анализируемых людей
+        /// </summary>
         public int HumansQuantity
         {
             get => _humansQuantity;
@@ -193,6 +196,9 @@ namespace MemoRandom.Client.ViewModels
             }
         }
 
+        /// <summary>
+        /// Средний (прожитый) возраст анализируемых людей
+        /// </summary>
         public double AverageAge
         {
             get => _averageAge;
@@ -203,6 +209,9 @@ namespace MemoRandom.Client.ViewModels
             }
         }
 
+        /// <summary>
+        /// Минимальный прожитый возраст (самый ранний уход)
+        /// </summary>
         public double MinimumAge
         {
             get => _minimumAge;
@@ -213,6 +222,9 @@ namespace MemoRandom.Client.ViewModels
             }
         }
 
+        /// <summary>
+        /// Максимальный прожитый возраст (самый поздний уход)
+        /// </summary>
         public double MaximumAge
         {
             get => _maximumAge;
