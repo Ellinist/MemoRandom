@@ -481,7 +481,7 @@
 
                                     <TextBlock Grid.Column="2"
                                                Padding="5, 0, 5, 0"
-                                               Text="человек"
+                                               Text="{Binding MenQuantities}"
                                                HorizontalAlignment="Left"/>
                                 </Grid>
                                 
@@ -503,7 +503,7 @@
 
                                     <TextBlock Grid.Column="2"
                                                Padding="5, 0, 5, 0"
-                                               Text="лет"
+                                               Text="{Binding EarliestYears}"
                                                HorizontalAlignment="Left"/>
 
                                     <TextBlock Grid.Column="3"
@@ -551,7 +551,7 @@
 
                                     <TextBlock Grid.Column="2"
                                                Padding="5, 0, 5, 0"
-                                               Text="лет"
+                                               Text="{Binding OldestYears}"
                                                HorizontalAlignment="Left"/>
 
                                     <TextBlock Grid.Column="3"

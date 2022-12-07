@@ -73,7 +73,7 @@ namespace MemoRandom.Client.Common.Interfaces
         /// <param name="i"></param>
         /// <param name="type"></param>
         /// <returns></returns>
-        string GetFinalText(int i, PeriodTypes type);
+        string GetFinalText(int i, ScopeTypes type);
 
         /// <summary>
         /// Получение количества лет и дней за период

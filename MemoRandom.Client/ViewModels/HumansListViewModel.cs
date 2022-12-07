@@ -48,10 +48,13 @@ namespace MemoRandom.Client.ViewModels
 
         private int _humansQuantity;
         private double _averageAge;
-        private double _minimumAge;
-        private double _maximumAge;
+        private int _minimumAge;
+        private int _maximumAge;
         private string _earliestHuman;
         private string _oldestHuman;
+        private string _menQuantities;
+        private string _earliestYears;
+        private string _oldestYears;
         #endregion
 
         #region PROPS
@@ -214,7 +217,7 @@ namespace MemoRandom.Client.ViewModels
         /// <summary>
         /// Минимальный прожитый возраст (самый ранний уход)
         /// </summary>
-        public double MinimumAge
+        public int MinimumAge
         {
             get => _minimumAge;
             set
@@ -227,7 +230,7 @@ namespace MemoRandom.Client.ViewModels
         /// <summary>
         /// Максимальный прожитый возраст (самый поздний уход)
         /// </summary>
-        public double MaximumAge
+        public int MaximumAge
         {
             get => _maximumAge;
             set
@@ -256,6 +259,36 @@ namespace MemoRandom.Client.ViewModels
                 RaisePropertyChanged(nameof(OldestHuman));
             }
         }
+
+        public string MenQuantities
+        {
+            get => _menQuantities;
+            set
+            {
+                _menQuantities = value;
+                RaisePropertyChanged(nameof(MenQuantities));
+            }
+        }
+
+        public string EarliestYears
+        {
+            get => _earliestYears;
+            set
+            {
+                _earliestYears = value;
+                RaisePropertyChanged(nameof(EarliestYears));
+            }
+        }
+
+        public string OldestYears
+        {
+            get => _oldestYears;
+            set
+            {
+                _oldestYears = value;
+                RaisePropertyChanged(nameof(OldestYears));
+            }
+        }
         #endregion
 
         #region Частные методы
@@ -269,7 +302,7 @@ namespace MemoRandom.Client.ViewModels
             int years = selectedHuman.FullYearsLived; // Считаем число полных лет
             _yearsText.Clear();
 
-            _yearsText.Append("(" + years + " " + _commonDataController.GetFinalText(years, PeriodTypes.Years) + ")");
+            _yearsText.Append("(" + years + " " + _commonDataController.GetFinalText(years, ScopeTypes.Years) + ")");
 
             DisplayedYears = _yearsText.ToString();
         }
@@ -354,6 +387,7 @@ namespace MemoRandom.Client.ViewModels
             {
                 HumanDeathReasonName = currentReason.ReasonName;
             }
+            CalculateAnalitics();
         }
 
         /// <summary>
@@ -361,8 +395,6 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private void EditHumanData()
         {
-            //var previousHuman = CommonDataController.CurrentHuman;
-
             _container.Resolve<HumanDetailedView>().ShowDialog(); // Запуск окна создания и редактирования человека
 
             SortHumansCollection(); // Сортировка по условию
@@ -379,8 +411,7 @@ namespace MemoRandom.Client.ViewModels
             {
                 HumanDeathReasonName = currentReason.ReasonName;
             }
-
-            //SetCurrentRecordEvent.Invoke(previousHuman);
+            CalculateAnalitics();
         }
 
         public void DgHumans_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -519,6 +550,7 @@ namespace MemoRandom.Client.ViewModels
         private void CalculateAnalitics()
         {
             HumansQuantity = CommonDataController.HumansList.Count;
+            MenQuantities = _commonDataController.GetFinalText(HumansQuantity, ScopeTypes.Men);
 
             var min = CommonDataController.HumansList.Min(x => x.DaysLived);
             var minHuman = CommonDataController.HumansList.FirstOrDefault(x => x.DaysLived == min);
@@ -526,13 +558,17 @@ namespace MemoRandom.Client.ViewModels
             EarliestHuman = minHuman.LastName + " " +
                             minHuman.FirstName[0..1] + "." +
                            (minHuman.Patronymic != string.Empty ? (minHuman.Patronymic[0..1] + ".") : string.Empty);
+            EarliestYears = _commonDataController.GetFinalText(MinimumAge, ScopeTypes.Years);
+            
             AverageAge = CommonDataController.HumansList.Average(x => x.DaysLived);
+
             var max = CommonDataController.HumansList.Max(x => x.DaysLived);
             var maxHuman = CommonDataController.HumansList.FirstOrDefault(x => x.DaysLived == max);
             MaximumAge = maxHuman.FullYearsLived;
             OldestHuman = maxHuman.LastName + " " +
                           maxHuman.FirstName[0..1] + "." +
                          (maxHuman.Patronymic != string.Empty ? (maxHuman.Patronymic[0..1] + ".") : string.Empty);
+            OldestYears = _commonDataController.GetFinalText(MaximumAge, ScopeTypes.Years);
         }
                                 
 

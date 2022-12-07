@@ -1,28 +1,31 @@
 ﻿namespace MemoRandom.Client.Common.Enums
 {
-    public static class Periods
+    public static class Scopes
     {
-        public static string[] GetPeriodValues(PeriodTypes type)
+        public static string[] GetPeriodValues(ScopeTypes type)
         {
             switch(type)
             {
-                case PeriodTypes.Years:
+                case ScopeTypes.Years:
                     return new string[] { "год", "года", "лет" };
 
-                case PeriodTypes.Months:
+                case ScopeTypes.Months:
                     return new string[] { "месяц", "месяца", "месяцев" };
 
-                case PeriodTypes.Days:
+                case ScopeTypes.Days:
                     return new string[] { "день", "дня", "дней" };
 
-                case PeriodTypes.Hours:
+                case ScopeTypes.Hours:
                     return new string[] { "час", "часа", "часов" };
 
-                case PeriodTypes.Minutes:
+                case ScopeTypes.Minutes:
                     return new string[] { "минута", "минуты", "минут" };
 
-                case PeriodTypes.Seconds:
+                case ScopeTypes.Seconds:
                     return new string[] { "секунда", "секунды", "секунд" };
+
+                case ScopeTypes.Men:
+                    return new string[] { "человек", "человека", "человек" };
 
                 default:
                     return null;

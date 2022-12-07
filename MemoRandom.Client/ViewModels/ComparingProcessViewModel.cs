@@ -241,9 +241,9 @@ namespace MemoRandom.Client.ViewModels
             var previousPeriodGone = previousActor.DeathDate.Subtract(previousActor.BirthDate);
             int previousDaysGone = _commonDataController.GetYearsAndDaysConsideredLeaps(previousActor.BirthDate, previousActor.DeathDate).Item2;
             control.PreviousHumanFullYearsTextBlock.Text = "Прожито: " + previousActor.FullYearsLived + " " +
-                                                           _commonDataController.GetFinalText(previousActor.FullYearsLived, PeriodTypes.Years) +
+                                                           _commonDataController.GetFinalText(previousActor.FullYearsLived, ScopeTypes.Years) +
                                                            " " + previousDaysGone + " " +
-                                                           _commonDataController.GetFinalText(previousDaysGone, PeriodTypes.Days) +
+                                                           _commonDataController.GetFinalText(previousDaysGone, ScopeTypes.Days) +
                                                            " " + string.Format($"{previousPeriodGone.Hours:D2}:" +
                                                                                $"{previousPeriodGone.Minutes:D2}");
         }
@@ -285,9 +285,9 @@ namespace MemoRandom.Client.ViewModels
             var nextPeriodLeft = nextActor.DeathDate.Subtract(nextActor.BirthDate);
             int nextDaysLeft = _commonDataController.GetYearsAndDaysConsideredLeaps(nextActor.BirthDate, nextActor.DeathDate).Item2;
             control.NextHumanFullYearsTextBlock.Text = "Прожито: " + nextActor.FullYearsLived + " " +
-                                                       _commonDataController.GetFinalText(nextActor.FullYearsLived, PeriodTypes.Years) +
+                                                       _commonDataController.GetFinalText(nextActor.FullYearsLived, ScopeTypes.Years) +
                                                        " " + nextDaysLeft + " " +
-                                                       _commonDataController.GetFinalText(nextDaysLeft, PeriodTypes.Days) +
+                                                       _commonDataController.GetFinalText(nextDaysLeft, ScopeTypes.Days) +
                                                        " " + string.Format($"{nextPeriodLeft.Hours:D2}:" +
                                                                            $"{nextPeriodLeft.Minutes:D2}");
         }
@@ -354,7 +354,7 @@ namespace MemoRandom.Client.ViewModels
                                                      $"{nextPeriodLeft.Milliseconds:D3}"); // Миллисекунды
 
                     control.RestDaysToNextHuman.Text = "Осталось: " + nextDaysLeft + " " +
-                                                       _commonDataController.GetFinalText(nextDaysLeft, PeriodTypes.Days) +
+                                                       _commonDataController.GetFinalText(nextDaysLeft, ScopeTypes.Days) +
                                                        " " + nextTimeLeft;
 
                     // Вычисляем время до момента его ухода
@@ -395,7 +395,7 @@ namespace MemoRandom.Client.ViewModels
                                                      $"{previousPeriodGone.Milliseconds:D3}");
                 control.SpentDaysFromPreviousHuman.Text = "Прошло: " +
                                                           previousDaysGone.ToString() + " " +
-                                                          _commonDataController.GetFinalText(previousDaysGone, PeriodTypes.Days) +
+                                                          _commonDataController.GetFinalText(previousDaysGone, ScopeTypes.Days) +
                                                           " " + previousTimeGone;
             }
             #endregion
@@ -421,7 +421,7 @@ namespace MemoRandom.Client.ViewModels
                                                      $"{nextPeriodLeft.Milliseconds:D3}"); // Миллисекунды
 
                     control.RestDaysToNextHuman.Text = "Осталось: " + nextDaysLeft + " " +
-                                                       _commonDataController.GetFinalText(nextDaysLeft, PeriodTypes.Days) +
+                                                       _commonDataController.GetFinalText(nextDaysLeft, ScopeTypes.Days) +
                                                        " " + nextTimeLeft;
 
                     // Вычисляем время до момента его ухода
@@ -465,8 +465,8 @@ namespace MemoRandom.Client.ViewModels
                                      $"{currentPos.Milliseconds:D3}");
 
             string resultString = "Прошло: " +
-                                  y + " " + _commonDataController.GetFinalText(y, PeriodTypes.Years) + ", " +
-                                  d + " " + _commonDataController.GetFinalText(d, PeriodTypes.Days) + ", " +
+                                  y + " " + _commonDataController.GetFinalText(y, ScopeTypes.Years) + ", " +
+                                  d + " " + _commonDataController.GetFinalText(d, ScopeTypes.Days) + ", " +
                                   time;
 
             return resultString;

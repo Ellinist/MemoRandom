@@ -315,9 +315,9 @@ namespace MemoRandom.Client.Common.Implementations
         /// Формирование текстов для отображения прожитых периодов (лет, месяцев, дней, часов, минут, секунд) в соответствии с числом
         /// </summary>
         /// <param name="i"></param>
-        public string GetFinalText(int i, PeriodTypes type)
+        public string GetFinalText(int i, ScopeTypes type)
         {
-            var periodValues = Periods.GetPeriodValues(type);
+            var periodValues = Scopes.GetPeriodValues(type);
             string result = "";
             int t1, t2;
             t1 = i % 10;
