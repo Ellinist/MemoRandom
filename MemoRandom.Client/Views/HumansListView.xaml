@@ -568,6 +568,12 @@
                             <WpfPlot x:Name="HumansChart"/>
                         </GroupBox>
 
+                        <GroupBox Grid.Row="0" Grid.Column="1"
+                                  Header="Популяция">
+
+                            <WpfPlot x:Name="PopulationChart"/>
+                        </GroupBox>
+
                         <GroupBox Grid.Row="1" Grid.Column="1"
                                   Header="Test">
 

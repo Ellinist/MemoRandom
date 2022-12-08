@@ -18,6 +18,7 @@ using MemoRandom.Client.Common.Interfaces;
 using MemoRandom.Client.Common.Enums;
 using ScottPlot;
 using System.Security;
+using ScottPlot.Statistics;
 
 namespace MemoRandom.Client.ViewModels
 {
@@ -58,6 +59,7 @@ namespace MemoRandom.Client.ViewModels
         private string _oldestYears;
 
         private WpfPlot _mainPlot;
+        private WpfPlot _populationPlot;
         private WpfPlot _secondPlot;
         #endregion
 
@@ -311,6 +313,16 @@ namespace MemoRandom.Client.ViewModels
             {
                 _mainPlot = value;
                 RaisePropertyChanged(nameof(MainPlot));
+            }
+        }
+
+        public WpfPlot PopulationPlot
+        {
+            get => _populationPlot;
+            set
+            {
+                _populationPlot = value;
+                RaisePropertyChanged(nameof(PopulationPlot));
             }
         }
 
@@ -570,9 +582,10 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void HumansListView_Loaded(WpfPlot plot, WpfPlot plot2)
+        public void HumansListView_Loaded(WpfPlot plot, WpfPlot plot2, WpfPlot plot3)
         {
             MainPlot = plot;
+            PopulationPlot = plot3;
             SecondPlot = plot2;
             
             CalculateAnalitics();
@@ -609,6 +622,7 @@ namespace MemoRandom.Client.ViewModels
 
 
             #region Штатный график
+            MainPlot.Plot.Clear();
             var plt = MainPlot.Plot;
 
             var re = CommonDataController.HumansList.GroupBy(x => x.DeathReasonId);
@@ -643,7 +657,7 @@ namespace MemoRandom.Client.ViewModels
             pie.SliceLabels = labelsArray;
             plt.Legend();
             pie.Explode = true;
-            pie.ShowValues = true;
+            //pie.ShowValues = true;
             //pie.ShowLabels = true;
             //pie.DonutSize = .6;
             pie.ShowPercentages = true;
@@ -653,6 +667,7 @@ namespace MemoRandom.Client.ViewModels
 
 
             #region Дополнительный график
+            SecondPlot.Plot.Clear();
             var plt2 = SecondPlot.Plot;
 
             // generate sample heights are based on https://ourworldindata.org/human-height
@@ -673,6 +688,36 @@ namespace MemoRandom.Client.ViewModels
             plt2.SetAxisLimits(yMin: 0);
 
             SecondPlot.Refresh();
+            #endregion
+
+            #region Еще один график - по популяции - с ним надо поработать тщательнее
+            // The population plot makes it easy to display populations as bar graphs, box - and - whisker plots, scattered values,
+            // or box plots and data points side-by - side.The population plot is different than using a box plot
+            // with an error bar in that you pass your original data into the population plot and it determines the standard deviation,
+            // standard error, quartiles, mean, median, outliers, etc., and you get to determine how to display these values.
+
+            // https://scottplot.net/cookbook/4.1/category/plottable-population/#population-plot
+
+            PopulationPlot.Plot.Clear();
+            var plt3 = PopulationPlot.Plot;
+            // create sample data to represent test scores
+            Random rand2 = new Random(0);
+            double[] scores = DataGen.RandomNormal(rand2, 35, 85, 5);
+
+            // First, create a Population object from your test scores
+            var pop = new Population(scores);
+
+            // You can access population statistics as public fields
+            plt3.Title($"Mean: {pop.mean} +/- {pop.stdErr}");
+
+            // You can plot a population
+            plt3.AddPopulation(pop);
+
+            // improve the style of the plot
+            plt3.XAxis.Ticks(true);
+            plt3.XAxis.Grid(false);
+
+            PopulationPlot.Refresh();
             #endregion
         }
 
