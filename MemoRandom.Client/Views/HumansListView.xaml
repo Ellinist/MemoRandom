@@ -562,8 +562,17 @@
                             </StackPanel>
                         </GroupBox>
 
-                        <WpfPlot Grid.Row="1" Grid.Column="0"
-                                 x:Name="HumansChart"/>
+                        <GroupBox Grid.Row="1" Grid.Column="0"
+                                  Header="Статистика">
+                            
+                            <WpfPlot x:Name="HumansChart"/>
+                        </GroupBox>
+
+                        <GroupBox Grid.Row="1" Grid.Column="1"
+                                  Header="Test">
+
+                            <WpfPlot x:Name="TestChart"/>
+                        </GroupBox>
                     </Grid>
                 </TabItem>
             </TabControl>

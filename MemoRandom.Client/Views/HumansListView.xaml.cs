@@ -66,7 +66,7 @@ namespace MemoRandom.Client.Views
         /// <param name="e"></param>
         private void HumansListView_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
-            _vm.HumansListView_Loaded(HumansChart);
+            _vm.HumansListView_Loaded(HumansChart, TestChart);
         }
 
 

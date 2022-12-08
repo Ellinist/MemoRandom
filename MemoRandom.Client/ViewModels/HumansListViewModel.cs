@@ -56,6 +56,9 @@ namespace MemoRandom.Client.ViewModels
         private string _earliestYears;
         private string _averageYears;
         private string _oldestYears;
+
+        private WpfPlot _mainPlot;
+        private WpfPlot _secondPlot;
         #endregion
 
         #region PROPS
@@ -298,6 +301,26 @@ namespace MemoRandom.Client.ViewModels
             {
                 _averageYears = value;
                 RaisePropertyChanged(nameof(AverageYears));
+            }
+        }
+
+        public WpfPlot MainPlot
+        {
+            get => _mainPlot;
+            set
+            {
+                _mainPlot = value;
+                RaisePropertyChanged(nameof(MainPlot));
+            }
+        }
+
+        public WpfPlot SecondPlot
+        {
+            get => _secondPlot;
+            set
+            {
+                _secondPlot = value;
+                RaisePropertyChanged(nameof(SecondPlot));
             }
         }
         #endregion
@@ -547,49 +570,12 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void HumansListView_Loaded(WpfPlot plot/*object sender, RoutedEventArgs e*/)
+        public void HumansListView_Loaded(WpfPlot plot, WpfPlot plot2)
         {
+            MainPlot = plot;
+            SecondPlot = plot2;
+            
             CalculateAnalitics();
-
-            var plt = plot.Plot;
-            
-            var re = CommonDataController.HumansList.GroupBy(x => x.DeathReasonId);
-            var t = re.ToList();
-            double[] resultArray = new double[t.Count];
-            string[] labelsArray = new string[t.Count];
-
-            int counter = 0;
-            foreach (var item in re)
-            {
-                var s = item.Key;
-                if(s == Guid.Empty)
-                {
-                    //var ss = PlainReasonsList.FirstOrDefault(x => x.ReasonId == s);
-                    var sss = item.Count();
-                    resultArray[counter] = sss;
-                    labelsArray[counter] = "Нет данных";
-                }
-                else
-                {
-                    var ss = PlainReasonsList.FirstOrDefault(x => x.ReasonId == s);
-                    var sss = item.Count();
-                    resultArray[counter] = sss;
-                    labelsArray[counter] = ss.ReasonName;
-                }
-                counter++;
-            }
-            
-
-            //double[] values = { 778, 283, 184, 76, 43 };
-            var pie = plt.AddPie(resultArray);
-            pie.SliceLabels = labelsArray;
-            plt.Legend();
-            pie.Explode = true;
-            pie.ShowValues = true;
-            //pie.ShowLabels = true;
-            pie.ShowPercentages = true;
-
-            plot.Refresh();
         }
 
         /// <summary>
@@ -618,8 +604,78 @@ namespace MemoRandom.Client.ViewModels
                           maxHuman.FirstName[0..1] + "." +
                          (maxHuman.Patronymic != string.Empty ? (maxHuman.Patronymic[0..1] + ".") : string.Empty);
             OldestYears = _commonDataController.GetFinalText(MaximumAge, ScopeTypes.Years);
+
+
+
+
+            #region Штатный график
+            var plt = MainPlot.Plot;
+
+            var re = CommonDataController.HumansList.GroupBy(x => x.DeathReasonId);
+            var t = re.ToList();
+            double[] resultArray = new double[t.Count];
+            string[] labelsArray = new string[t.Count];
+
+            int counter = 0;
+            foreach (var item in re)
+            {
+                var s = item.Key;
+                if (s == Guid.Empty)
+                {
+                    //var ss = PlainReasonsList.FirstOrDefault(x => x.ReasonId == s);
+                    var sss = item.Count();
+                    resultArray[counter] = sss;
+                    labelsArray[counter] = "Нет данных";
+                }
+                else
+                {
+                    var ss = PlainReasonsList.FirstOrDefault(x => x.ReasonId == s);
+                    var sss = item.Count();
+                    resultArray[counter] = sss;
+                    labelsArray[counter] = ss.ReasonName;
+                }
+                counter++;
+            }
+
+
+            //double[] values = { 778, 283, 184, 76, 43 };
+            var pie = plt.AddPie(resultArray);
+            pie.SliceLabels = labelsArray;
+            plt.Legend();
+            pie.Explode = true;
+            pie.ShowValues = true;
+            //pie.ShowLabels = true;
+            //pie.DonutSize = .6;
+            pie.ShowPercentages = true;
+
+            MainPlot.Refresh();
+            #endregion
+
+
+            #region Дополнительный график
+            var plt2 = SecondPlot.Plot;
+
+            // generate sample heights are based on https://ourworldindata.org/human-height
+            Random rand = new(0);
+            double[] values = DataGen.RandomNormal(rand, pointCount: 1234, mean: 178.4, stdDev: 7.6);
+
+            // create a histogram
+            (double[] counts, double[] binEdges) = ScottPlot.Statistics.Common.Histogram(values, min: 140, max: 220, binSize: 1);
+            double[] leftEdges = binEdges.Take(binEdges.Length - 1).ToArray();
+
+            // display the histogram counts as a bar plot
+            var bar = plt2.AddBar(values: counts, positions: leftEdges);
+            bar.BarWidth = 1;
+
+            // customize the plot style
+            plt2.YAxis.Label("Count (#)");
+            plt2.XAxis.Label("Height (cm)");
+            plt2.SetAxisLimits(yMin: 0);
+
+            SecondPlot.Refresh();
+            #endregion
         }
-                                
+
 
         /// <summary>
         /// Обработчик закрытия окна
