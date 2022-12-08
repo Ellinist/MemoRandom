@@ -666,16 +666,28 @@ namespace MemoRandom.Client.ViewModels
             #endregion
 
 
+            #region Это для двух графиков - ниже
+            double[] scores2 = new double[CommonDataController.HumansList.Count];
+            for (int j = 0; j < CommonDataController.HumansList.Count; j++)
+            {
+                scores2[j] = CommonDataController.HumansList[j].FullYearsLived;
+            }
+            var pop2 = new Population(scores2);
+            #endregion
+
             #region Дополнительный график
             SecondPlot.Plot.Clear();
             var plt2 = SecondPlot.Plot;
 
             // generate sample heights are based on https://ourworldindata.org/human-height
-            Random rand = new(0);
-            double[] values = DataGen.RandomNormal(rand, pointCount: 1234, mean: 178.4, stdDev: 7.6);
+            //Random rand = new(0);
+            //double[] values = DataGen.RandomNormal(rand, pointCount: 1234, mean: 178.4, stdDev: 7.6);
 
             // create a histogram
-            (double[] counts, double[] binEdges) = ScottPlot.Statistics.Common.Histogram(values, min: 140, max: 220, binSize: 1);
+            //(double[] counts, double[] binEdges) = ScottPlot.Statistics.Common.Histogram(values, min: 140, max: 220, binSize: 1);
+            //double[] leftEdges = binEdges.Take(binEdges.Length - 1).ToArray();
+
+            (double[] counts, double[] binEdges) = ScottPlot.Statistics.Common.Histogram(scores2, min: 0, max: 110, binSize: 2);
             double[] leftEdges = binEdges.Take(binEdges.Length - 1).ToArray();
 
             // display the histogram counts as a bar plot
@@ -698,24 +710,58 @@ namespace MemoRandom.Client.ViewModels
 
             // https://scottplot.net/cookbook/4.1/category/plottable-population/#population-plot
 
+            // Описание параметров класса Population
+            //public double[] values { get; private set; }
+            //public double[] sortedValues { get; private set; }
+            //public double min { get; private set; }
+            //public double max { get; private set; }
+            //public double median { get; private set; }
+            //public double sum { get; private set; }
+            //public int count { get; private set; }
+            //public double mean { get; private set; }
+            //public double stDev { get; private set; }
+            //public double plus3stDev { get; private set; }
+            //public double minus3stDev { get; private set; }
+            //public double plus2stDev { get; private set; }
+            //public double minus2stDev { get; private set; }
+            //public double stdErr { get; private set; }
+            //public double Q1 { get; private set; }
+            //public double Q3 { get; private set; }
+            //public double IQR { get; private set; }
+            //public double[] lowOutliers { get; private set; }
+            //public double[] highOutliers { get; private set; }
+            //public double maxNonOutlier { get; private set; }
+            //public double minNonOutlier { get; private set; }
+            //public int n { get { return values.Length; } }
+            //public double span { get { return sortedValues.Last() - sortedValues.First(); } }
+
             PopulationPlot.Plot.Clear();
             var plt3 = PopulationPlot.Plot;
             // create sample data to represent test scores
-            Random rand2 = new Random(0);
-            double[] scores = DataGen.RandomNormal(rand2, 35, 85, 5);
+            //Random rand2 = new Random(0);
+            //double[] scores = DataGen.RandomNormal(rand2, 35, 85, 5);
 
             // First, create a Population object from your test scores
-            var pop = new Population(scores);
+            //var pop = new Population(scores);
 
             // You can access population statistics as public fields
-            plt3.Title($"Mean: {pop.mean} +/- {pop.stdErr}");
+            //plt3.Title($"Mean: {pop.mean} +/- {pop.stdErr}");
+            plt3.Title($"Mean: {pop2.mean} +/- {pop2.stdErr} and {pop2.stDev}");
+
+            var p1 = pop2.min;
+            var p2 = pop2.max;
+            var p3 = pop2.median; // Медиана
+            var p4 = pop2.mean; // Видимо, среднее значение
+            var p5 = pop2.stdErr; // Стандартная ошибка
+            var p6 = pop2.stDev; // Стандартное отклонение (девиация)
 
             // You can plot a population
-            plt3.AddPopulation(pop);
+            //plt3.AddPopulation(pop);
+            plt3.AddPopulation(pop2);
 
             // improve the style of the plot
             plt3.XAxis.Ticks(true);
-            plt3.XAxis.Grid(false);
+            plt3.XAxis.Grid(true);
 
             PopulationPlot.Refresh();
             #endregion
