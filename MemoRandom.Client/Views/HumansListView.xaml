@@ -448,137 +448,176 @@
                         </StackPanel>
                     </TabItem.Header>
                     <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                        </Grid.RowDefinitions>
-
+                        
+                        <!--Здесь разметка со сплиттерами-->
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
+                            <ColumnDefinition Width="10"/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
 
-                        <GroupBox Grid.Row="0" Grid.Column="0"
-                                  FontSize="20"
-                                  Header="Общие характеристики">
-                            <StackPanel Orientation="Vertical">
+                        <Grid Grid.Column="0">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition Height="10"/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
 
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition Width="50"/>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition/>
-                                    </Grid.ColumnDefinitions>
+                                <GroupBox Grid.Row="0"
+                                          FontSize="20"
+                                          Header="Общие характеристики">
+                                    <StackPanel Orientation="Vertical">
 
-                                    <TextBlock Grid.Column="0"
-                                               Padding="0, 0, 5, 0"
-                                               Text="Количество записей в базе:"
-                                               HorizontalAlignment="Right"/>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition Width="50"/>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition/>
+                                            </Grid.ColumnDefinitions>
 
-                                    <TextBlock Grid.Column="1"
-                                               Text="{Binding HumansQuantity}"/>
+                                            <TextBlock Grid.Column="0"
+                                                       Padding="0, 0, 5, 0"
+                                                       Text="Количество записей в базе:"
+                                                       HorizontalAlignment="Right"/>
 
-                                    <TextBlock Grid.Column="2"
-                                               Padding="5, 0, 5, 0"
-                                               Text="{Binding MenQuantities}"
-                                               HorizontalAlignment="Left"/>
-                                </Grid>
-                                
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition Width="50"/>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition/>
-                                    </Grid.ColumnDefinitions>
+                                            <TextBlock Grid.Column="1"
+                                                       Text="{Binding HumansQuantity}"/>
 
-                                    <TextBlock Grid.Column="0"
-                                               Padding="0, 0, 5, 0"
-                                               Text="Самый ранний уход:"
-                                               HorizontalAlignment="Right"/>
+                                            <TextBlock Grid.Column="2"
+                                                       Padding="5, 0, 5, 0"
+                                                       Text="{Binding MenQuantities}"
+                                                       HorizontalAlignment="Left"/>
+                                        </Grid>
 
-                                    <TextBlock Grid.Column="1"
-                                               Text="{Binding MinimumAge}"/>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition Width="50"/>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition/>
+                                            </Grid.ColumnDefinitions>
 
-                                    <TextBlock Grid.Column="2"
-                                               Padding="5, 0, 5, 0"
-                                               Text="{Binding EarliestYears}"
-                                               HorizontalAlignment="Left"/>
+                                            <TextBlock Grid.Column="0"
+                                                       Padding="0, 0, 5, 0"
+                                                       Text="Самый ранний уход:"
+                                                       HorizontalAlignment="Right"/>
 
-                                    <TextBlock Grid.Column="3"
-                                               Padding="5, 0, 5, 0"
-                                               Text="{Binding EarliestHuman}"
-                                               HorizontalAlignment="Center"/>
-                                </Grid>
-                                
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition Width="50"/>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition/>
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock Grid.Column="0"
-                                               Padding="0, 0, 5, 0"
-                                               Text="Средний возраст:"
-                                               HorizontalAlignment="Right"/>
-                                    
-                                    <TextBlock Grid.Column="1"
-                                               Text="{Binding AverageAge}"/>
+                                            <TextBlock Grid.Column="1"
+                                                       Text="{Binding MinimumAge}"/>
 
-                                    <TextBlock Grid.Column="2"
-                                               Padding="5, 0, 5, 0"
-                                               Text="{Binding AverageYears}"
-                                               HorizontalAlignment="Left"/>
-                                </Grid>
+                                            <TextBlock Grid.Column="2"
+                                                       Padding="5, 0, 5, 0"
+                                                       Text="{Binding EarliestYears}"
+                                                       HorizontalAlignment="Left"/>
 
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition Width="50"/>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition/>
-                                    </Grid.ColumnDefinitions>
+                                            <TextBlock Grid.Column="3"
+                                                       Padding="5, 0, 5, 0"
+                                                       Text="{Binding EarliestHuman}"
+                                                       HorizontalAlignment="Center"/>
+                                        </Grid>
 
-                                    <TextBlock Grid.Column="0"
-                                               Padding="0, 0, 5, 0"
-                                               Text="Самый поздний уход:"
-                                               HorizontalAlignment="Right"/>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition Width="50"/>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Grid.Column="0"
+                                                       Padding="0, 0, 5, 0"
+                                                       Text="Средний возраст:"
+                                                       HorizontalAlignment="Right"/>
 
-                                    <TextBlock Grid.Column="1"
-                                               Text="{Binding MaximumAge}"/>
+                                            <TextBlock Grid.Column="1"
+                                                       Text="{Binding AverageAge}"/>
 
-                                    <TextBlock Grid.Column="2"
-                                               Padding="5, 0, 5, 0"
-                                               Text="{Binding OldestYears}"
-                                               HorizontalAlignment="Left"/>
+                                            <TextBlock Grid.Column="2"
+                                                       Padding="5, 0, 5, 0"
+                                                       Text="{Binding AverageYears}"
+                                                       HorizontalAlignment="Left"/>
+                                        </Grid>
 
-                                    <TextBlock Grid.Column="3"
-                                               Padding="5, 0, 5, 0"
-                                               Text="{Binding OldestHuman}"
-                                               HorizontalAlignment="Center"/>
-                                </Grid>
-                            </StackPanel>
-                        </GroupBox>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition Width="50"/>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition/>
+                                            </Grid.ColumnDefinitions>
 
-                        <GroupBox Grid.Row="1" Grid.Column="0"
-                                  Header="Статистика">
-                            
-                            <WpfPlot x:Name="HumansChart"/>
-                        </GroupBox>
+                                            <TextBlock Grid.Column="0"
+                                                       Padding="0, 0, 5, 0"
+                                                       Text="Самый поздний уход:"
+                                                       HorizontalAlignment="Right"/>
 
-                        <GroupBox Grid.Row="0" Grid.Column="1"
-                                  Header="Популяция">
+                                            <TextBlock Grid.Column="1"
+                                                       Text="{Binding MaximumAge}"/>
 
-                            <WpfPlot x:Name="PopulationChart"/>
-                        </GroupBox>
+                                            <TextBlock Grid.Column="2"
+                                                       Padding="5, 0, 5, 0"
+                                                       Text="{Binding OldestYears}"
+                                                       HorizontalAlignment="Left"/>
 
-                        <GroupBox Grid.Row="1" Grid.Column="1"
-                                  Header="Test">
+                                            <TextBlock Grid.Column="3"
+                                                       Padding="5, 0, 5, 0"
+                                                       Text="{Binding OldestHuman}"
+                                                       HorizontalAlignment="Center"/>
+                                        </Grid>
+                                    </StackPanel>
+                                </GroupBox>
 
-                            <WpfPlot x:Name="TestChart"/>
-                        </GroupBox>
+                                <!--Разделитель строковых зон-->
+                                <GridSplitter Grid.Row="1"
+                                              Background="Coral"
+                                              Height="10"
+                                              HorizontalAlignment="Stretch"
+                                              VerticalAlignment="Center"/>
+
+                                <GroupBox Grid.Row="2"
+                                          Header="Распределение по причинам смерти">
+
+                                    <WpfPlot x:Name="HumansChart"/>
+                                </GroupBox>
+                            </Grid>
+                        </Grid>
+
+                        <!--Разделитель столбцовых зон-->
+                        <GridSplitter Grid.Column="1"
+                                      Background="Coral"
+                                      Width="10"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Stretch"/>
+
+                        <Grid Grid.Column="2">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition Height="10"/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+
+                                <GroupBox Grid.Row="0"
+                                          Header="Распределение">
+
+                                    <WpfPlot x:Name="PopulationChart"/>
+                                </GroupBox>
+
+                                <!--Разделитель строковых зон-->
+                                <GridSplitter Grid.Row="1"
+                                              Background="Coral"
+                                              Height="10"
+                                              HorizontalAlignment="Stretch"
+                                              VerticalAlignment="Center"/>
+
+                                <GroupBox Grid.Row="2"
+                                          Header="Гистограмма">
+
+                                    <WpfPlot x:Name="TestChart"/>
+                                </GroupBox>
+                            </Grid>
+                        </Grid>
                     </Grid>
                 </TabItem>
             </TabControl>
