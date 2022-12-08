@@ -32,12 +32,10 @@ namespace MemoRandom.Client.Views
         /// <param name="e"></param>
         private void DgHumans_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            if (DgHumans.SelectedItem != null)
-            {
-                DgHumans.UpdateLayout();
-                DgHumans.ScrollIntoView(DgHumans.SelectedItem);
-                DgHumans.Focus();
-            }
+            if (DgHumans.SelectedItem == null) return;
+            DgHumans.UpdateLayout();
+            DgHumans.ScrollIntoView(DgHumans.SelectedItem);
+            DgHumans.Focus();
         }
 
         /// <summary>
@@ -54,10 +52,10 @@ namespace MemoRandom.Client.Views
 
         private void DgHumans_LayoutUpdated(object sender, EventArgs e)
         {
-            if (DgHumans.SelectedItem != null)
-            {
-                DgHumans.ScrollIntoView(DgHumans.SelectedItem);
-            }
+            //if (DgHumans.SelectedItem != null)
+            //{
+            //    DgHumans.ScrollIntoView(DgHumans.SelectedItem);
+            //}
         }
 
 
