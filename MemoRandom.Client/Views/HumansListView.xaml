@@ -648,7 +648,7 @@
                                         </Grid>
                                     </GroupBox.Header>
 
-                                    <WpfPlot x:Name="HumansChart"/>
+                                    <WpfPlot x:Name="HumansChart" />
                                 </GroupBox>
                             </Grid>
                         </Grid>
