@@ -513,10 +513,20 @@
                                     <RowDefinition/>
                                 </Grid.RowDefinitions>
 
+                                <!--Style="{StaticResource CenteredHeaderGroupBoxStyle}"-->
                                 <GroupBox Grid.Row="0"
-                                          FontSize="20"
-                                          Style="{StaticResource CenteredHeaderGroupBoxStyle}"
-                                          Header="Общие характеристики">
+                                          FontSize="20">
+                                    <GroupBox.Header>
+                                        <Grid>
+                                            <TextBlock Text="Общие характеристики"
+                                                       Padding="0"
+                                                       FontSize="18"
+                                                       Foreground="White"
+                                                       Height="24"
+                                                       HorizontalAlignment="Center"/>
+                                        </Grid>
+                                    </GroupBox.Header>
+                                    
                                     <StackPanel Orientation="Vertical">
 
                                         <Grid>
@@ -625,10 +635,18 @@
                                               HorizontalAlignment="Stretch"
                                               VerticalAlignment="Center"/>
 
-                                <GroupBox Grid.Row="2"
-                                          Style="{StaticResource CenteredHeaderGroupBoxStyle}"
-                                          FontSize="20"
-                                          Header="Распределение по причинам смерти">
+                                <!--Style="{StaticResource CenteredHeaderGroupBoxStyle}"-->
+                                <GroupBox Grid.Row="2">
+                                    <GroupBox.Header>
+                                        <Grid>
+                                            <TextBlock Text="Распределение по причинам смерти"
+                                                       Padding="0"
+                                                       FontSize="18"
+                                                       Foreground="White"
+                                                       Height="24"
+                                                       HorizontalAlignment="Center"/>
+                                        </Grid>
+                                    </GroupBox.Header>
 
                                     <WpfPlot x:Name="HumansChart"/>
                                 </GroupBox>
@@ -650,10 +668,19 @@
                                     <RowDefinition/>
                                 </Grid.RowDefinitions>
 
-                                <GroupBox Grid.Row="0"
-                                          FontSize="20"
-                                          Style="{StaticResource CenteredHeaderGroupBoxStyle}"
-                                          Header="Распределение">
+                                <!--Style="{StaticResource CenteredHeaderGroupBoxStyle}"-->
+                                <!--Header="Распределение"-->
+                                <GroupBox Grid.Row="0">
+                                    <GroupBox.Header>
+                                        <Grid>
+                                            <TextBlock Text="Распределение"
+                                                       Padding="0"
+                                                       FontSize="18"
+                                                       Foreground="White"
+                                                       Height="24"
+                                                       HorizontalAlignment="Center"/>
+                                        </Grid>
+                                    </GroupBox.Header>
 
                                     <WpfPlot x:Name="PopulationChart"/>
                                 </GroupBox>
@@ -665,10 +692,18 @@
                                               HorizontalAlignment="Stretch"
                                               VerticalAlignment="Center"/>
 
-                                <GroupBox Grid.Row="2"
-                                          FontSize="20"
-                                          Style="{StaticResource CenteredHeaderGroupBoxStyle}"
-                                          Header="Гистограмма">
+                                <!--Style="{StaticResource CenteredHeaderGroupBoxStyle}"-->
+                                <GroupBox Grid.Row="2">
+                                    <GroupBox.Header>
+                                        <Grid>
+                                            <TextBlock Text="Гистограмма"
+                                                       Padding="0"
+                                                       FontSize="18"
+                                                       Foreground="White"
+                                                       Height="24"
+                                                       HorizontalAlignment="Center"/>
+                                        </Grid>
+                                    </GroupBox.Header>
 
                                     <WpfPlot x:Name="TestChart"/>
                                 </GroupBox>
