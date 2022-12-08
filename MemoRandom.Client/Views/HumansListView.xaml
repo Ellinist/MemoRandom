@@ -30,8 +30,8 @@
         <gpConv:CenterBorderGapMaskConverter x:Key="CenterBorderGapMaskConverter"/>
 
         <Style x:Key="CenteredHeaderGroupBoxStyle" TargetType="{x:Type GroupBox}">
-            <Setter Property="BorderBrush" Value="#D5DFE5"/>
-            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="BorderThickness" Value="2"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type GroupBox}">
@@ -501,7 +501,7 @@
                         <!--Здесь разметка со сплиттерами-->
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
-                            <ColumnDefinition Width="10"/>
+                            <ColumnDefinition Width="5"/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
 
@@ -509,7 +509,7 @@
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition/>
-                                    <RowDefinition Height="10"/>
+                                    <RowDefinition Height="5"/>
                                     <RowDefinition/>
                                 </Grid.RowDefinitions>
 
@@ -620,12 +620,14 @@
 
                                 <!--Разделитель строковых зон-->
                                 <GridSplitter Grid.Row="1"
-                                              Background="Coral"
-                                              Height="10"
+                                              Background="DarkBlue"
+                                              Height="5"
                                               HorizontalAlignment="Stretch"
                                               VerticalAlignment="Center"/>
 
                                 <GroupBox Grid.Row="2"
+                                          Style="{StaticResource CenteredHeaderGroupBoxStyle}"
+                                          FontSize="20"
                                           Header="Распределение по причинам смерти">
 
                                     <WpfPlot x:Name="HumansChart"/>
@@ -635,8 +637,8 @@
 
                         <!--Разделитель столбцовых зон-->
                         <GridSplitter Grid.Column="1"
-                                      Background="Coral"
-                                      Width="10"
+                                      Background="DarkBlue"
+                                      Width="5"
                                       HorizontalAlignment="Center"
                                       VerticalAlignment="Stretch"/>
 
@@ -644,11 +646,13 @@
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition/>
-                                    <RowDefinition Height="10"/>
+                                    <RowDefinition Height="5"/>
                                     <RowDefinition/>
                                 </Grid.RowDefinitions>
 
                                 <GroupBox Grid.Row="0"
+                                          FontSize="20"
+                                          Style="{StaticResource CenteredHeaderGroupBoxStyle}"
                                           Header="Распределение">
 
                                     <WpfPlot x:Name="PopulationChart"/>
@@ -656,12 +660,14 @@
 
                                 <!--Разделитель строковых зон-->
                                 <GridSplitter Grid.Row="1"
-                                              Background="Coral"
-                                              Height="10"
+                                              Background="DarkBlue"
+                                              Height="5"
                                               HorizontalAlignment="Stretch"
                                               VerticalAlignment="Center"/>
 
                                 <GroupBox Grid.Row="2"
+                                          FontSize="20"
+                                          Style="{StaticResource CenteredHeaderGroupBoxStyle}"
                                           Header="Гистограмма">
 
                                     <WpfPlot x:Name="TestChart"/>
