@@ -687,7 +687,12 @@ namespace MemoRandom.Client.ViewModels
             //(double[] counts, double[] binEdges) = ScottPlot.Statistics.Common.Histogram(values, min: 140, max: 220, binSize: 1);
             //double[] leftEdges = binEdges.Take(binEdges.Length - 1).ToArray();
 
-            (double[] counts, double[] binEdges) = ScottPlot.Statistics.Common.Histogram(scores2, min: 0, max: 110, binSize: 2);
+            // Параметры статистики для гистограммы
+            // первый - массив возрастов
+            // второй - минимальный учитываемый
+            // третий - максимальный учитываемый
+            // четвертый - принятый шаг по годам
+            (double[] counts, double[] binEdges) = ScottPlot.Statistics.Common.Histogram(scores2, min: 0, max: 110, binSize: 1);
             double[] leftEdges = binEdges.Take(binEdges.Length - 1).ToArray();
 
             // display the histogram counts as a bar plot
@@ -695,8 +700,8 @@ namespace MemoRandom.Client.ViewModels
             bar.BarWidth = 1;
 
             // customize the plot style
-            plt2.YAxis.Label("Count (#)");
-            plt2.XAxis.Label("Height (cm)");
+            plt2.YAxis.Label("Распределение (людей)");
+            plt2.XAxis.Label("Возраст (лет)");
             plt2.SetAxisLimits(yMin: 0);
 
             SecondPlot.Refresh();
@@ -746,7 +751,7 @@ namespace MemoRandom.Client.ViewModels
 
             // You can access population statistics as public fields
             //plt3.Title($"Mean: {pop.mean} +/- {pop.stdErr}");
-            plt3.Title($"Mean: {pop2.mean} +/- {pop2.stdErr} and {pop2.stDev}");
+            plt3.Title($"Среднее: {pop2.mean}, +/- {pop2.stdErr}");
 
             var p1 = pop2.min;
             var p2 = pop2.max;
