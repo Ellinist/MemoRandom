@@ -376,7 +376,7 @@ namespace MemoRandom.Client.ViewModels
             RaisePropertyChanged(nameof(SelectedHuman));
             RaisePropertyChanged(nameof(PersonIndex));
 
-            SetCurrentRecordEvent.Invoke(previousHuman);
+            SetCurrentRecordEvent?.Invoke(previousHuman);
         }
 
         /// <summary>
@@ -625,18 +625,18 @@ namespace MemoRandom.Client.ViewModels
             MainPlot.Plot.Clear();
             var plt = MainPlot.Plot;
 
-            var re = CommonDataController.HumansList.GroupBy(x => x.DeathReasonId);
-            var t = re.ToList();
-            double[] resultArray = new double[t.Count];
-            string[] labelsArray = new string[t.Count];
+            // Получаем список записей, сгруппированных по идентификатору причины смерти
+            var groupedList = CommonDataController.HumansList.GroupBy(x => x.DeathReasonId).ToList();
+            double[] resultArray = new double[groupedList.Count];
+            string[] labelsArray = new string[groupedList.Count];
+            //var tempList = new List<string>();
 
             int counter = 0;
-            foreach (var item in re)
+            foreach (var item in groupedList)
             {
                 var s = item.Key;
                 if (s == Guid.Empty)
                 {
-                    //var ss = PlainReasonsList.FirstOrDefault(x => x.ReasonId == s);
                     var sss = item.Count();
                     resultArray[counter] = sss;
                     labelsArray[counter] = "Нет данных";
@@ -644,15 +644,23 @@ namespace MemoRandom.Client.ViewModels
                 else
                 {
                     var ss = PlainReasonsList.FirstOrDefault(x => x.ReasonId == s);
+                    if (ss.ReasonParentId != Guid.Empty)
+                    {
+                        var ss1 = PlainReasonsList.FirstOrDefault(x => x.ReasonId == ss.ReasonParentId);
+                        // Пока считаю, что всего два вложения
+                        labelsArray[counter] = ss1.ReasonName;
+                    }
+                    else
+                    {
+                        labelsArray[counter] = ss.ReasonName;
+                    }
                     var sss = item.Count();
                     resultArray[counter] = sss;
-                    labelsArray[counter] = ss.ReasonName;
                 }
                 counter++;
             }
 
 
-            //double[] values = { 778, 283, 184, 76, 43 };
             var pie = plt.AddPie(resultArray);
             pie.SliceLabels = labelsArray;
             plt.Legend();
