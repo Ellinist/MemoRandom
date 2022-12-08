@@ -47,13 +47,14 @@ namespace MemoRandom.Client.ViewModels
         private CultureInfo cultureInfo = new CultureInfo("ru-RU");
 
         private int _humansQuantity;
-        private double _averageAge;
+        private int _averageAge;
         private int _minimumAge;
         private int _maximumAge;
         private string _earliestHuman;
         private string _oldestHuman;
         private string _menQuantities;
         private string _earliestYears;
+        private string _averageYears;
         private string _oldestYears;
         #endregion
 
@@ -204,7 +205,7 @@ namespace MemoRandom.Client.ViewModels
         /// <summary>
         /// Средний (прожитый) возраст анализируемых людей
         /// </summary>
-        public double AverageAge
+        public int AverageAge
         {
             get => _averageAge;
             set
@@ -287,6 +288,16 @@ namespace MemoRandom.Client.ViewModels
             {
                 _oldestYears = value;
                 RaisePropertyChanged(nameof(OldestYears));
+            }
+        }
+
+        public string AverageYears
+        {
+            get => _averageYears;
+            set
+            {
+                _averageYears = value;
+                RaisePropertyChanged(nameof(AverageYears));
             }
         }
         #endregion
@@ -541,12 +552,47 @@ namespace MemoRandom.Client.ViewModels
             CalculateAnalitics();
 
             var plt = plot.Plot;
+            
+            var re = CommonDataController.HumansList.GroupBy(x => x.DeathReasonId);
+            var t = re.ToList();
+            double[] resultArray = new double[t.Count];
+            string[] labelsArray = new string[t.Count];
 
-            double[] values = { 778, 283, 184, 76, 43 };
-            plt.AddPie(values);
+            int counter = 0;
+            foreach (var item in re)
+            {
+                var s = item.Key;
+                if(s == Guid.Empty)
+                {
+                    //var ss = PlainReasonsList.FirstOrDefault(x => x.ReasonId == s);
+                    var sss = item.Count();
+                    resultArray[counter] = sss;
+                    labelsArray[counter] = "Нет данных";
+                }
+                else
+                {
+                    var ss = PlainReasonsList.FirstOrDefault(x => x.ReasonId == s);
+                    var sss = item.Count();
+                    resultArray[counter] = sss;
+                    labelsArray[counter] = ss.ReasonName;
+                }
+                counter++;
+            }
+            
+
+            //double[] values = { 778, 283, 184, 76, 43 };
+            var pie = plt.AddPie(resultArray);
+            pie.SliceLabels = labelsArray;
+            plt.Legend();
+            pie.Explode = true;
+            pie.ShowLabels = true;
+
             plot.Refresh();
         }
 
+        /// <summary>
+        /// Калькуляция статистических параметров
+        /// </summary>
         private void CalculateAnalitics()
         {
             HumansQuantity = CommonDataController.HumansList.Count;
@@ -560,7 +606,8 @@ namespace MemoRandom.Client.ViewModels
                            (minHuman.Patronymic != string.Empty ? (minHuman.Patronymic[0..1] + ".") : string.Empty);
             EarliestYears = _commonDataController.GetFinalText(MinimumAge, ScopeTypes.Years);
             
-            AverageAge = CommonDataController.HumansList.Average(x => x.DaysLived);
+            AverageAge = (int)(CommonDataController.HumansList.Average(x => x.DaysLived) / 365);
+            AverageYears = _commonDataController.GetFinalText(AverageAge, ScopeTypes.Years);
 
             var max = CommonDataController.HumansList.Max(x => x.DaysLived);
             var maxHuman = CommonDataController.HumansList.FirstOrDefault(x => x.DaysLived == max);

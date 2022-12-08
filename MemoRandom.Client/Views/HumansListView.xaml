@@ -529,7 +529,7 @@
 
                                     <TextBlock Grid.Column="2"
                                                Padding="5, 0, 5, 0"
-                                               Text="лет"
+                                               Text="{Binding AverageYears}"
                                                HorizontalAlignment="Left"/>
                                 </Grid>
 
