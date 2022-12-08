@@ -585,7 +585,9 @@ namespace MemoRandom.Client.ViewModels
             pie.SliceLabels = labelsArray;
             plt.Legend();
             pie.Explode = true;
-            pie.ShowLabels = true;
+            pie.ShowValues = true;
+            //pie.ShowLabels = true;
+            pie.ShowPercentages = true;
 
             plot.Refresh();
         }
