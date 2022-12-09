@@ -611,12 +611,16 @@ namespace MemoRandom.Client.ViewModels
             for (int q = 0; q < CommonDataController.HumansList.Count; q++)
             {
                 var reasonId = CommonDataController.HumansList[q].DeathReasonId; // Id причины
-                OnceAgain(); // Вызываем локуальную рекурсивную функцию
+                OnceAgain(); // Вызываем локальную рекурсивную функцию
 
                 void OnceAgain() // Локальная функция рекурсивная - поиск главного родителя
                 {
                     var reason = PlainReasonsList.FirstOrDefault(x => x.ReasonId == reasonId);
-                    if (reason.ReasonParentId != upperLevelId) // Если есть родитель
+                    if(reason == null) // Ситуация, когда человек не связан с причиной смерти
+                    {
+                        headerIdsList.Add(Guid.Empty);
+                    }
+                    else if (reason.ReasonParentId != upperLevelId) // Если есть родитель
                     {
                         reasonId = reason.ReasonParentId;
                         OnceAgain(); // Рекурсия
