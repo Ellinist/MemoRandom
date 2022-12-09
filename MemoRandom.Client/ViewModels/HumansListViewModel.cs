@@ -492,6 +492,8 @@ namespace MemoRandom.Client.ViewModels
             }
             PersonIndex = HumansCollection.IndexOf(HumansCollection.FirstOrDefault(x => x.HumanId == formerId));
             RaisePropertyChanged(nameof(PersonIndex));
+
+            CalculateAnalitics();
         }
         #endregion
 
@@ -625,11 +627,33 @@ namespace MemoRandom.Client.ViewModels
             MainPlot.Plot.Clear();
             var plt = MainPlot.Plot;
 
-            // Получаем список записей, сгруппированных по идентификатору причины смерти
-            var groupedList = CommonDataController.HumansList.GroupBy(x => x.DeathReasonId).ToList();
-            double[] resultArray = new double[groupedList.Count];
-            string[] labelsArray = new string[groupedList.Count];
-            //var tempList = new List<string>();
+            // Получим новый список, в котором будут только родительские ReasonID верхнего уровня
+            List<Human> newList = new();
+            for (int q = 0; q < CommonDataController.HumansList.Count; q++)
+            {
+                var reasonId = CommonDataController.HumansList[q].DeathReasonId; // Id причины
+                OnceAgain();
+
+                void OnceAgain() // Локальная функция рекурсивная - поиск главного родителя
+                {
+                    var reason = PlainReasonsList.FirstOrDefault(x => x.ReasonId == reasonId);
+                    if (reason.ReasonParentId != Guid.Empty) // Если есть родитель
+                    {
+                        reasonId = reason.ReasonParentId;
+                        OnceAgain();
+                    }
+                    else // Нет родителя
+                    {
+                        newList.Add(CommonDataController.HumansList[q]);
+                        newList[^1].DeathReasonId = reasonId;
+                    }
+                }
+            }
+
+            var re = newList.GroupBy(x => x.DeathReasonId);
+            var t = re.ToList();
+            double[] resultArray = new double[t.Count];
+            string[] labelsArray = new string[t.Count];
 
             int counter = 0;
             foreach (var item in groupedList)
