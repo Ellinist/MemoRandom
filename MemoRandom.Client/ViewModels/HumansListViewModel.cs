@@ -628,11 +628,11 @@ namespace MemoRandom.Client.ViewModels
             var plt = MainPlot.Plot;
 
             // Получим новый список, в котором будут только родительские ReasonID верхнего уровня
-            List<Human> newList = new();
+            List<Guid> newList = new();
             for (int q = 0; q < CommonDataController.HumansList.Count; q++)
             {
                 var reasonId = CommonDataController.HumansList[q].DeathReasonId; // Id причины
-                OnceAgain();
+                OnceAgain(); // Вызываем локуальную рекурсивную функцию
 
                 void OnceAgain() // Локальная функция рекурсивная - поиск главного родителя
                 {
@@ -640,22 +640,22 @@ namespace MemoRandom.Client.ViewModels
                     if (reason.ReasonParentId != Guid.Empty) // Если есть родитель
                     {
                         reasonId = reason.ReasonParentId;
-                        OnceAgain();
+                        OnceAgain(); // Рекурсия
                     }
                     else // Нет родителя
                     {
-                        newList.Add(CommonDataController.HumansList[q]);
-                        newList[^1].DeathReasonId = reasonId;
+                        newList.Add(CommonDataController.HumansList[q].DeathReasonId);
+                        newList[^1] = reasonId; // Замена текущего Id на Id головного родителя
                     }
                 }
             }
 
-            var re = newList.GroupBy(x => x.DeathReasonId);
+            var re = newList.GroupBy(x => x);
             var t = re.ToList();
             double[] resultArray = new double[t.Count];
             string[] labelsArray = new string[t.Count];
 
-            var groupedList = newList.GroupBy(x => x.DeathReasonId).ToList();
+            var groupedList = newList.GroupBy(x => x).ToList();
             int counter = 0;
             foreach (var item in groupedList)
             {
