@@ -655,6 +655,7 @@ namespace MemoRandom.Client.ViewModels
             double[] resultArray = new double[t.Count];
             string[] labelsArray = new string[t.Count];
 
+            var groupedList = newList.GroupBy(x => x.DeathReasonId).ToList();
             int counter = 0;
             foreach (var item in groupedList)
             {
