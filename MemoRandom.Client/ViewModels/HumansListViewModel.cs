@@ -620,9 +620,6 @@ namespace MemoRandom.Client.ViewModels
                          (maxHuman.Patronymic != string.Empty ? (maxHuman.Patronymic[0..1] + ".") : string.Empty);
             OldestYears = _commonDataController.GetFinalText(MaximumAge, ScopeTypes.Years);
 
-
-
-
             #region Штатный график
             MainPlot.Plot.Clear(); // Очистка графика - на случай изменений на лету
             var plt = MainPlot.Plot;
