@@ -624,11 +624,15 @@ namespace MemoRandom.Client.ViewModels
 
 
             #region Штатный график
-            MainPlot.Plot.Clear();
+            MainPlot.Plot.Clear(); // Очистка графика - на случай изменений на лету
             var plt = MainPlot.Plot;
 
             // Получим новый список, в котором будут только родительские ReasonID верхнего уровня
-            List<Guid> newList = new();
+            #region Создание нового списка, в котором будут только родительские ReasonID верхнего уровня
+            
+            Guid upperLevelId = Guid.Empty; // Этот параметр можно менять
+            
+            List<Guid> headerIdsList = new();
             for (int q = 0; q < CommonDataController.HumansList.Count; q++)
             {
                 var reasonId = CommonDataController.HumansList[q].DeathReasonId; // Id причины
@@ -637,56 +641,41 @@ namespace MemoRandom.Client.ViewModels
                 void OnceAgain() // Локальная функция рекурсивная - поиск главного родителя
                 {
                     var reason = PlainReasonsList.FirstOrDefault(x => x.ReasonId == reasonId);
-                    if (reason.ReasonParentId != Guid.Empty) // Если есть родитель
+                    if (reason.ReasonParentId != upperLevelId) // Если есть родитель
                     {
                         reasonId = reason.ReasonParentId;
                         OnceAgain(); // Рекурсия
                     }
                     else // Нет родителя
                     {
-                        newList.Add(CommonDataController.HumansList[q].DeathReasonId);
-                        newList[^1] = reasonId; // Замена текущего Id на Id головного родителя
+                        headerIdsList.Add(CommonDataController.HumansList[q].DeathReasonId);
+                        headerIdsList[^1] = reasonId; // Замена текущего Id на Id головного родителя
                     }
                 }
             }
+            #endregion
 
-            var re = newList.GroupBy(x => x);
-            var t = re.ToList();
-            double[] resultArray = new double[t.Count];
-            string[] labelsArray = new string[t.Count];
+            var groupedList = headerIdsList.GroupBy(x => x).ToList();
+            double[] valuesArray = new double[groupedList.Count];
+            string[] labelsArray = new string[groupedList.Count];
 
-            var groupedList = newList.GroupBy(x => x).ToList();
             int counter = 0;
             foreach (var item in groupedList)
             {
-                var s = item.Key;
-                if (s == Guid.Empty)
+                if (item.Key == Guid.Empty)
                 {
-                    var sss = item.Count();
-                    resultArray[counter] = sss;
-                    labelsArray[counter] = "Нет данных";
+                    valuesArray[counter] = item.Count(); // Количество записей с одинаковым пустым Id причины
+                    labelsArray[counter] = "Нет данных"; // Нет привязки - нет информации
                 }
                 else
                 {
-                    var ss = PlainReasonsList.FirstOrDefault(x => x.ReasonId == s);
-                    if (ss.ReasonParentId != Guid.Empty)
-                    {
-                        var ss1 = PlainReasonsList.FirstOrDefault(x => x.ReasonId == ss.ReasonParentId);
-                        // Пока считаю, что всего два вложения
-                        labelsArray[counter] = ss1.ReasonName;
-                    }
-                    else
-                    {
-                        labelsArray[counter] = ss.ReasonName;
-                    }
-                    var sss = item.Count();
-                    resultArray[counter] = sss;
+                    valuesArray[counter] = item.Count();
+                    labelsArray[counter] = PlainReasonsList.FirstOrDefault(x => x.ReasonId == item.Key).ReasonName;
                 }
                 counter++;
             }
 
-
-            var pie = plt.AddPie(resultArray);
+            var pie = plt.AddPie(valuesArray);
             pie.SliceLabels = labelsArray;
             plt.Legend();
             pie.Explode = true;
