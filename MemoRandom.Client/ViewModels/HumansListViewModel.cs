@@ -30,7 +30,7 @@ namespace MemoRandom.Client.ViewModels
         public event Action<Human> SetCurrentRecordEvent;
 
         #region PRIVATE FIELDS
-        private string _humansViewTitle = "Начало";
+        private string _humansViewTitle = "День уходящий не вернуть! Не торопись пройти свой путь!";
         private int _personIndex;
         private int _previousIndex = 0; // Индекс предыдущего выбранного узла в списке
         private Human _selectedHuman;
@@ -598,28 +598,6 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private void CalculateAnalitics()
         {
-            HumansQuantity = CommonDataController.HumansList.Count;
-            MenQuantities = _commonDataController.GetFinalText(HumansQuantity, ScopeTypes.Men);
-
-            var min = CommonDataController.HumansList.Min(x => x.DaysLived);
-            var minHuman = CommonDataController.HumansList.FirstOrDefault(x => x.DaysLived == min);
-            MinimumAge = minHuman.FullYearsLived;
-            EarliestHuman = minHuman.LastName + " " +
-                            minHuman.FirstName[0..1] + "." +
-                           (minHuman.Patronymic != string.Empty ? (minHuman.Patronymic[0..1] + ".") : string.Empty);
-            EarliestYears = _commonDataController.GetFinalText(MinimumAge, ScopeTypes.Years);
-            
-            AverageAge = (int)(CommonDataController.HumansList.Average(x => x.DaysLived) / 365);
-            AverageYears = _commonDataController.GetFinalText(AverageAge, ScopeTypes.Years);
-
-            var max = CommonDataController.HumansList.Max(x => x.DaysLived);
-            var maxHuman = CommonDataController.HumansList.FirstOrDefault(x => x.DaysLived == max);
-            MaximumAge = maxHuman.FullYearsLived;
-            OldestHuman = maxHuman.LastName + " " +
-                          maxHuman.FirstName[0..1] + "." +
-                         (maxHuman.Patronymic != string.Empty ? (maxHuman.Patronymic[0..1] + ".") : string.Empty);
-            OldestYears = _commonDataController.GetFinalText(MaximumAge, ScopeTypes.Years);
-
             #region Штатный график
             MainPlot.Plot.Clear(); // Очистка графика - на случай изменений на лету
             var plt = MainPlot.Plot;
@@ -652,7 +630,7 @@ namespace MemoRandom.Client.ViewModels
             }
             #endregion
 
-            var groupedList = headerIdsList.GroupBy(x => x).ToList();
+            var groupedList = headerIdsList.GroupBy(x => x).ToList(); // Группировка по Id причины
             double[] valuesArray = new double[groupedList.Count];
             string[] labelsArray = new string[groupedList.Count];
 
@@ -788,6 +766,31 @@ namespace MemoRandom.Client.ViewModels
             plt3.XAxis.Grid(true);
 
             PopulationPlot.Refresh();
+            #endregion
+
+            #region Общие статистические данные
+            HumansQuantity = CommonDataController.HumansList.Count;
+            MenQuantities = _commonDataController.GetFinalText(HumansQuantity, ScopeTypes.Men);
+
+            var min = CommonDataController.HumansList.Min(x => x.DaysLived);
+            var minHuman = CommonDataController.HumansList.FirstOrDefault(x => x.DaysLived == min);
+            MinimumAge = minHuman.FullYearsLived;
+            EarliestHuman = minHuman.LastName + " " +
+                            minHuman.FirstName[0..1] + "." +
+                           (minHuman.Patronymic != string.Empty ? (minHuman.Patronymic[0..1] + ".") : string.Empty);
+            EarliestYears = _commonDataController.GetFinalText(MinimumAge, ScopeTypes.Years);
+
+            //AverageAge = (int)(CommonDataController.HumansList.Average(x => x.DaysLived) / 365);
+            AverageAge = (int)p4;
+            AverageYears = _commonDataController.GetFinalText(AverageAge, ScopeTypes.Years);
+
+            var max = CommonDataController.HumansList.Max(x => x.DaysLived);
+            var maxHuman = CommonDataController.HumansList.FirstOrDefault(x => x.DaysLived == max);
+            MaximumAge = maxHuman.FullYearsLived;
+            OldestHuman = maxHuman.LastName + " " +
+                          maxHuman.FirstName[0..1] + "." +
+                         (maxHuman.Patronymic != string.Empty ? (maxHuman.Patronymic[0..1] + ".") : string.Empty);
+            OldestYears = _commonDataController.GetFinalText(MaximumAge, ScopeTypes.Years);
             #endregion
         }
 

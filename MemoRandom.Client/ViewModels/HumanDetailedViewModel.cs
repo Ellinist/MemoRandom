@@ -113,6 +113,10 @@ namespace MemoRandom.Client.ViewModels
             set
             {
                 _birthDate = value;
+
+                (int years, int days) = _commonDataController.GetYearsAndDaysConsideredLeaps(_birthDate, DeathDate);
+                FullYearsLived = years;
+
                 RaisePropertyChanged();
             }
         }
@@ -152,6 +156,10 @@ namespace MemoRandom.Client.ViewModels
             set
             {
                 _deathDate = value;
+
+                (int years, int days) = _commonDataController.GetYearsAndDaysConsideredLeaps(BirthDate, _deathDate);
+                FullYearsLived = years;
+
                 RaisePropertyChanged();
             }
         }
@@ -527,6 +535,9 @@ namespace MemoRandom.Client.ViewModels
                 HumanComments     = human.HumanComments;
                 DeathReasonId     = human.DeathReasonId;
                 TargetImageSource = (BitmapSource)_commonDataController.GetHumanImage(CommonDataController.CurrentHuman); // Загружаем изображение
+
+                (int years, int days) = _commonDataController.GetYearsAndDaysConsideredLeaps(BirthDate, DeathDate);
+                FullYearsLived = years;
             }
             else // Создание нового человека
             {

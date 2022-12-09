@@ -257,7 +257,13 @@
 
             <!--Расширенный комментарий-->
             <Grid Grid.Column="1">
-                <GroupBox Margin="2, 2, 5, 2"
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="80"/>
+                </Grid.RowDefinitions>    
+                
+                <GroupBox Grid.Row="0"
+                          Margin="2, 2, 5, 2"
                           Style="{StaticResource MahApps.Styles.GroupBox}"
                           Header="Расширенный комментарий">
                     <TextBox Padding="3, 0, 1, 0"
@@ -268,6 +274,26 @@
                              AcceptsReturn="True"
                              HorizontalContentAlignment="Left"/>
                 </GroupBox>
+
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0"
+                               FontSize="20"
+                               FontWeight="Bold"
+                               Padding="0, 0, 5, 0"
+                               HorizontalAlignment="Right"
+                               Text="Прожитые годы:"/>
+
+                    <TextBlock Grid.Column="1"
+                               FontSize="20"
+                               FontWeight="Bold"
+                               Foreground="Blue"
+                               Text="{Binding FullYearsLived}"/>
+                </Grid>
             </Grid>
         </Grid>
 
