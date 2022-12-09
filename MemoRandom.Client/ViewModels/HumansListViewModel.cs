@@ -582,8 +582,10 @@ namespace MemoRandom.Client.ViewModels
         /// <summary>
         /// Загрузка окна со списком людей
         /// </summary>
-        /// <param name="sender"></param>
         /// <param name="e"></param>
+        /// <param name="plot"></param>
+        /// <param name="plot2"></param>
+        /// <param name="plot3"></param>
         public void HumansListView_Loaded(WpfPlot plot, WpfPlot plot2, WpfPlot plot3)
         {
             MainPlot = plot;
