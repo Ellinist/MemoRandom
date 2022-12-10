@@ -125,7 +125,7 @@ namespace MemoRandom.Client.ViewModels
 
             // ВНИМАНИЕ! Все остальные данные будут меняться и зависят от текущего времени
             // Но! Прежде вычисляем стартовые позиции и вспомогательные данные
-            var orderedList = CommonDataController.HumansList.OrderBy(x => x.FullYearsLived).ToList(); // Упорядоченный по возрасту список людей
+            var orderedList = CommonDataController.HumansList.OrderBy(x => x.DaysLived).ToList(); // Упорядоченный по возрасту список людей
 
             var startSpan = DateTime.Now.Subtract(comparedHumanData.BirthDate); // Стартовый диапазон анализируемого человека
 
