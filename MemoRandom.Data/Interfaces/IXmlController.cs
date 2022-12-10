@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MemoRandom.Data.DtoModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,7 +13,12 @@ namespace MemoRandom.Data.Interfaces
     public interface IXmlController
     {
         #region Блок работы со справочником причин смерти
-
+        /// <summary>
+        /// Добавление причины с общий список
+        /// </summary>
+        /// <param name="reason"></param>
+        /// <returns></returns>
+        bool AddReasonToList(DtoReason reason);
         #endregion
     }
 }

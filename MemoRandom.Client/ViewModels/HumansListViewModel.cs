@@ -20,6 +20,8 @@ using ScottPlot;
 using System.Security;
 using ScottPlot.Statistics;
 using MemoRandom.Data.Interfaces;
+using System.IO;
+using System.Xml;
 
 namespace MemoRandom.Client.ViewModels
 {
@@ -556,7 +558,17 @@ namespace MemoRandom.Client.ViewModels
 
         private void SaveXml()
         {
+            // Пока временно (без применения интерфейсов) прямо здесь
 
+            using (Stream stream = File.Create(@"D:\Test.xml"))
+            {
+                XmlWriterSettings settings = new XmlWriterSettings();
+                settings.Indent = true;
+                using (XmlWriter writer = XmlWriter.Create(stream, settings))
+                {
+                    writer.WriteStartElement("Test");
+                }
+            }
         }
 
         /// <summary>
