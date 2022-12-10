@@ -1,30 +1,28 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 
-namespace MemoRandom.Data.DbModels
+namespace MemoRandom.Data.DtoModels
 {
     /// <summary>
-    /// Класс причины смерти для хранения в БД
+    /// Класс причины смерти для хранения в XML-файле
     /// </summary>
-    public class DbReason
+    [Serializable]
+    public class DtoReason
     {
         /// <summary>
         /// Идентификатор причины
         /// </summary>
-        [Key]
-        [Required]
-        public Guid ReasonId { get; set; }
-        
+        public string ReasonId { get; set; }
+
         /// <summary>
         /// Название причины смерти - лучше сокращенно
         /// </summary>
         public string ReasonName { get; set; }
-        
+
         /// <summary>
         /// Краткое описание причины смерти (комментарий)
         /// </summary>
         public string ReasonComment { get; set; }
-        
+
         /// <summary>
         /// Подробное описание причины смерти
         /// </summary>
@@ -33,18 +31,6 @@ namespace MemoRandom.Data.DbModels
         /// <summary>
         /// Идентификтор родительской причины (узла)
         /// </summary>
-        [Required]
-        public Guid ReasonParentId { get; set; }
-
-
-
-
-
-        #region CTOR
-        public DbReason()
-        {
-
-        }
-        #endregion
+        public string ReasonParentId { get; set; }
     }
 }

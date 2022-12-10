@@ -19,6 +19,7 @@ using MemoRandom.Client.Common.Enums;
 using ScottPlot;
 using System.Security;
 using ScottPlot.Statistics;
+using MemoRandom.Data.Interfaces;
 
 namespace MemoRandom.Client.ViewModels
 {
@@ -44,6 +45,8 @@ namespace MemoRandom.Client.ViewModels
         private readonly ILogger _logger; // Экземпляр журнала
         private readonly IContainer _container; // Контейнер
         private readonly ICommonDataController _commonDataController;
+        // Временно - потом уйти на общий контроллер
+        private readonly IXmlController _xmlController;
 
         private CultureInfo cultureInfo = new CultureInfo("ru-RU");
 
@@ -531,6 +534,8 @@ namespace MemoRandom.Client.ViewModels
         public DelegateCommand AddNewHumanCommand { get; private set; }
 
         public DelegateCommand CategoriesCommand { get; private set; }
+
+        public DelegateCommand SaveXmlCommand { get; private set; }
         #endregion
 
         /// <summary>
@@ -545,6 +550,13 @@ namespace MemoRandom.Client.ViewModels
             CategoriesCommand    = new DelegateCommand(CategoriesOpen);
             ComparedHumansOpenCommand = new DelegateCommand(ComparedHumansOpen);
             DynamicShowCommand   = new DelegateCommand(DynamicShow);
+
+            SaveXmlCommand = new DelegateCommand(SaveXml);
+        }
+
+        private void SaveXml()
+        {
+
         }
 
         /// <summary>
@@ -839,11 +851,14 @@ namespace MemoRandom.Client.ViewModels
         /// <param name="msSqlController"></param>
         /// <exception cref="ArgumentNullException"></exception>
         public HumansListViewModel(ILogger logger, IContainer container,
-                                   ICommonDataController commonDataController)
+                                   ICommonDataController commonDataController,
+                                   IXmlController xmlController)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _container = container ?? throw new ArgumentNullException(nameof(container));
             _commonDataController = commonDataController ?? throw new ArgumentNullException(nameof(commonDataController));
+
+            _xmlController = xmlController ?? throw new ArgumentNullException(nameof(xmlController));
 
             InitializeCommands();
 

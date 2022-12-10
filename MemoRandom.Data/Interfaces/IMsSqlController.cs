@@ -20,12 +20,6 @@ namespace MemoRandom.Data.Interfaces
         bool SetPaths(string fileName, string filePath, string imagesFilePath, string serverName);
 
         #region Блок работы со справочником причин смерти
-        ///// <summary>
-        ///// Получение древовидной коллекции списка причин смерти
-        ///// </summary>
-        ///// <returns></returns>
-        //List<Reason> GetReasons();
-
         List<DbReason> GetReasons();
 
         /// <summary>

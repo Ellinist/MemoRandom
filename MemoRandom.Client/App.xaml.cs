@@ -49,6 +49,7 @@ namespace MemoRandom.Client
             #region Контроллеры работы с внешними хранилищами информации
             // Регистрация интерфейса работы с базой данных MS SQL SERVER
             containerRegistry.RegisterSingleton<IMsSqlController, MsSqlController>();
+            containerRegistry.RegisterSingleton<IXmlController, XmlController>();
             #endregion
         }
     }
