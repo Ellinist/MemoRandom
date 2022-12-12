@@ -17,11 +17,12 @@ using MemoRandom.Client.Common.Models;
 using MemoRandom.Client.Common.Interfaces;
 using MemoRandom.Client.Common.Enums;
 using ScottPlot;
-using System.Security;
+
 using ScottPlot.Statistics;
 using MemoRandom.Data.Interfaces;
 using System.IO;
 using System.Xml;
+using Ookii.Dialogs.Wpf;
 
 namespace MemoRandom.Client.ViewModels
 {
@@ -559,15 +560,16 @@ namespace MemoRandom.Client.ViewModels
         private void SaveXml()
         {
             // Пока временно (без применения интерфейсов) прямо здесь
-
-            using (Stream stream = File.Create(@"D:\Test.xml"))
+            VistaSaveFileDialog fd = new()
             {
-                XmlWriterSettings settings = new XmlWriterSettings();
-                settings.Indent = true;
-                using (XmlWriter writer = XmlWriter.Create(stream, settings))
-                {
-                    writer.WriteStartElement("Test");
-                }
+                Title = "Выбор файла для сохранения"
+            };
+
+            if (fd.ShowDialog() == true)
+            {
+                var t = fd.FileName;
+
+                _commonDataController.SaveData(t); // Вызов сохранения
             }
         }
 

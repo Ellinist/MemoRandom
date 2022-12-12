@@ -15,6 +15,7 @@ using System.Windows.Media.Imaging;
 using NLog;
 using MemoRandom.Client.Common.Enums;
 using System.Windows.Controls;
+using MemoRandom.Data.DtoModels;
 
 namespace MemoRandom.Client.Common.Implementations
 {
@@ -23,6 +24,7 @@ namespace MemoRandom.Client.Common.Implementations
         #region PRIVATE FIELDS
         private readonly ILogger _logger;
         private readonly IMsSqlController _msSqlController;
+        private readonly IXmlController _xmlController;
         private readonly IMapper _mapper;
         #endregion
 
@@ -59,6 +61,35 @@ namespace MemoRandom.Client.Common.Implementations
         #endregion
 
         #region IMPLEMENTATION
+        /// <summary>
+        /// Временно - потом все перобразовать
+        /// </summary>
+        /// <param name="filePath"></param>
+        public void SaveData(string filePath)
+        {
+            List<DtoReason> dtoReasons = new();
+            for (int i = 0; i < PlainReasonsList.Count; i++)
+            {
+                DtoReason reason = new()
+                {
+                    ReasonId = PlainReasonsList[i].ReasonId.ToString(),
+                    ReasonName = PlainReasonsList[i].ReasonName,
+                    ReasonComment = PlainReasonsList[i].ReasonComment,
+                    ReasonDescription = PlainReasonsList[i].ReasonDescription,
+                    ReasonParentId = PlainReasonsList[i].ReasonParentId.ToString()
+                };
+                dtoReasons.Add(reason);
+            }
+
+            //_xmlController.SaveReasonsToFile(dtoReasons, filePath);
+
+            _xmlController.ReadReasonsFromFile(filePath);
+        }
+
+
+
+
+
         /// <summary>
         /// Чтение общей информации из внешнего хранилища
         /// </summary>
@@ -379,11 +410,13 @@ namespace MemoRandom.Client.Common.Implementations
 
         #region CTOR
         public CommonDataController(IMsSqlController msSqlController,
+                                    IXmlController xmlController,
                                     ILogger logger,
                                     IMapper mapper)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _msSqlController = msSqlController ?? throw new ArgumentNullException(nameof(msSqlController));
+            _xmlController = xmlController ?? throw new ArgumentNullException(nameof(xmlController));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
         #endregion

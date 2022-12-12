@@ -13,6 +13,10 @@ namespace MemoRandom.Data.Interfaces
     public interface IXmlController
     {
         #region Блок работы со справочником причин смерти
+        bool SaveReasonsToFile(List<DtoReason> reasons, string filePath);
+
+        List<DtoReason> ReadReasonsFromFile(string filePath);
+
         /// <summary>
         /// Добавление причины с общий список
         /// </summary>

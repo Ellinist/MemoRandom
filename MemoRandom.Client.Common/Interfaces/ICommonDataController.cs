@@ -1,12 +1,16 @@
 ﻿using MemoRandom.Client.Common.Enums;
 using MemoRandom.Client.Common.Models;
 using System;
+using System.Collections.Generic;
+using System.Windows.Documents;
 using System.Windows.Media.Imaging;
 
 namespace MemoRandom.Client.Common.Interfaces
 {
     public interface ICommonDataController
     {
+        void SaveData(string filePath);
+
         /// <summary>
         /// Чтение общей информации из внешнего хранилища
         /// </summary>
