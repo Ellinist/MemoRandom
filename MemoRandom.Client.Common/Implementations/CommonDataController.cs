@@ -81,9 +81,27 @@ namespace MemoRandom.Client.Common.Implementations
                 dtoReasons.Add(reason);
             }
 
-            //_xmlController.SaveReasonsToFile(dtoReasons, filePath);
+            // Вызов метода сохранения справочника (плоский)
+            _xmlController.SaveReasonsToFile(dtoReasons, filePath);
 
-            _xmlController.ReadReasonsFromFile(filePath);
+            //#region Чтение из файла - потом структуру переделать
+            //PlainReasonsList.Clear(); // Чистим плоский список
+            //ReasonsCollection.Clear(); // Чистим иерархическую коллекцию
+            //var res = _xmlController.ReadReasonsFromFile(filePath);
+            //foreach(var item in res) // Формируем плоский список
+            //{
+            //    Reason reason = new()
+            //    {
+            //        ReasonId = Guid.Parse(item.ReasonId),
+            //        ReasonName = item.ReasonName,
+            //        ReasonComment = item.ReasonComment,
+            //        ReasonDescription = item.ReasonDescription,
+            //        ReasonParentId = Guid.Parse(item.ReasonParentId)
+            //    };
+            //    PlainReasonsList.Add(reason);
+            //}
+            //FormObservableCollection(PlainReasonsList, null); // Формируем иерархическую коллекцию
+            //#endregion
         }
 
 

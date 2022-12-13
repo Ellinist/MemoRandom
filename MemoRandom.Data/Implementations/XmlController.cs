@@ -43,58 +43,50 @@ namespace MemoRandom.Data.Implementations
         public List<DtoReason> ReadReasonsFromFile(string filePath)
         {
             List<DtoReason> reasons = new();
-            XDocument xDocument = XDocument.Load(filePath);
+            XDocument xml = XDocument.Load(filePath);
 
-            var xmlList = (from s in xDocument.Descendants("Reason") select new
+            List<DtoReason> list = new();
+            DtoReason dtoReason = new();
+            foreach(var node in xml.DescendantNodes())
             {
-                id = s.Descendants("ReasonId").SingleOrDefault(),
-                name = s.Descendants("ReasonName").SingleOrDefault()
-            }).ToList();
+                if(node is XElement)
+                {
+                    var xElement = (XElement)node;
 
-            foreach (var item in xmlList)
-            {
-                var d = item.id;
-                var dd = item.name;
+                    if (xElement.Name == "Reasons") continue;
+                    if (xElement.Name == "Reason") continue;
+                    if (xElement.Name == "ReasonID")
+                    {
+                        dtoReason.ReasonId = xElement.Value;
+                        continue;
+                    }
+                    if (xElement.Name == "ReasonName")
+                    {
+                        dtoReason.ReasonName = xElement.Value;
+                        continue;
+                    }
+                    if (xElement.Name == "ReasonComment")
+                    {
+                        dtoReason.ReasonComment = xElement.Value;
+                        continue;
+                    }
+                    if (xElement.Name == "ReasonDescription")
+                    {
+                        dtoReason.ReasonDescription = xElement.Value;
+                        continue;
+                    }
+                    if (xElement.Name == "ParentReasonID")
+                    {
+                        dtoReason.ReasonParentId = xElement.Value;
+                        list.Add(dtoReason);
+                        dtoReason = new();
+                    }
+                }
             }
 
-            //var rr = xDocument.Elements("Reasons");
+            var r = 0;
 
-            //var pp = rr.Nodes().ToList();
-
-            //foreach (var item in pp)
-            //{
-            //    //var g = item.Annotation;
-            //}
-
-
-            //foreach (var item in rr)
-            //{
-            //    var z = item.Name;
-
-            //    var x = item.Elements("Reason");
-
-            //    foreach (var ii in x)
-            //    {
-            //        var zz = ii.Name;
-            //        var zzz = ii;
-            //        var xxx = ii.Element(zz);
-            //        var ccc = ii.Attribute("ReasonId");
-
-
-
-
-
-            //        var q1 = ii.Element("ReasonId").Value;
-            //        var q2 = ii.Element("ReasonName").Value;
-            //        var q3 = ii.Element("ReasonComment").Value;
-
-            //        //reas.ReasonId = ii.Element("ReasonId").Value;
-            //        //reas.ReasonName = ii.Element("ReasonName").Value;
-            //        //reas.ReasonComment = ii.Element("ReasonComment").Value;
-            //    }
-            //}
-
-            return null;
+            return list;
         }
 
         public bool AddReasonToList(DtoReason reason)
