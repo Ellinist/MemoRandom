@@ -28,6 +28,13 @@ namespace MemoRandom.Client.ViewModels
         private static string _storageFilePath;   // Имя папки, где хранится информация
         private static string _storageImagesPath; // Имя папки, где хранятся изображения
 
+        #region Настройки по файлам XML
+        private static readonly string _xmlReasonsFile = "ReasonsFile";
+        private static readonly string _xmlCategoriesFile = "CategoriesFile";
+        private static readonly string _xmlComparedHumansFile = "ComparedHumansFile";
+        private static readonly string _xmlHumansFile = "HumansFile";
+        #endregion
+
         private static readonly string _dbConfigName    = "MsDbConfig"; // Конфигурация БД
         private static readonly string _dbFolderName    = "MsDbFolder"; // Конфигурация папки с БД
         private static readonly string _imageFolderName = "ImagePathConfig"; // Конфигурация папки с изображениями
@@ -208,81 +215,8 @@ namespace MemoRandom.Client.ViewModels
             {
                 _commonDataController.ReadDataFromRepository();
                 ButtonsVisibility.Invoke();   // Чтение данных выполнено - кнопки делаем видимыми
-                //var reasonsResult        = _msSqlController.GetReasons();
-                //var categoriesResult     = _msSqlController.GetCategories();
-                //var comparedHumansResult = _msSqlController.GetComparedHumans();
-                //if (/*reasonsResult != null &&*/ categoriesResult != null/* && comparedHumansResult != null*/)
-                //{
-                //    //Reasons.PlainReasonsList = reasonsResult; // Заносим плоский список в статический класс
-                //    //FormObservableCollection(Reasons.PlainReasonsList, null); // Формируем иерархическую коллекцию
-                //    //Categories.AgeCategories = categoriesResult; // Задаем статический список категорий
-
-                    
-
-                //    //ComparedHumans.ComparedHumansList = comparedHumansResult; // Задаем список людей для сравнения
-                    
-                //}
-                ////else if(reasonsResult == null)
-                ////{
-                ////    MessageBox.Show("Чтение справочника причин смерти не удалось!", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
-                ////}
-                //else
-                //{
-                //    MessageBox.Show("Чтение возрастных категорий не удалось!", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
-                //}
             });
         }
-
-        ///// <summary>
-        ///// Формирование иерархической коллекции
-        ///// </summary>
-        ///// <param name="reasons">Плоский список</param>
-        ///// <param name="headReason">Головной элемент (экземпляр класса)</param>
-        //private static void FormObservableCollection(List<Reason> reasons, Reason headReason)
-        //{
-        //    foreach (var reason in reasons)
-        //    {
-        //        if (reason.ReasonParentId == Guid.Empty) // Случай корневых узлов
-        //        {
-        //            Reason rsn = new()
-        //            {
-        //                ReasonParentId    = reason.ReasonParentId,
-        //                ReasonId          = reason.ReasonId,
-        //                ReasonName        = reason.ReasonName,
-        //                ReasonComment     = reason.ReasonComment,
-        //                ReasonDescription = reason.ReasonDescription
-        //            };
-        //            CommonDataController.ReasonsCollection.Add(rsn);
-
-        //            // Проверка на наличие дочерних узлов
-        //            var daughters = CommonDataController.PlainReasonsList.FindAll(x => x.ReasonParentId == rsn.ReasonId);
-        //            if (daughters.Count != 0) // Если дочерние узлы найдены
-        //            {
-        //                FormObservableCollection(daughters, rsn); // Вызываем рекурсивно
-        //            }
-        //        }
-        //        else if (headReason != null)// Случай вложенных узлов
-        //        {
-        //            Reason rsn = new()
-        //            {
-        //                ReasonId          = reason.ReasonId,
-        //                ReasonName        = reason.ReasonName,
-        //                ReasonComment     = reason.ReasonComment,
-        //                ReasonDescription = reason.ReasonDescription,
-        //                ReasonParentId    = headReason.ReasonId,
-        //                ReasonParent      = headReason
-        //            };
-        //            headReason.ReasonChildren.Add(rsn);
-
-        //            // Проверка на наличие дочерних узлов
-        //            var daughters = CommonDataController.PlainReasonsList.FindAll(x => x.ReasonParentId == rsn.ReasonId);
-        //            if (daughters.Count != 0) // Если дочерние узлы найдены
-        //            {
-        //                FormObservableCollection(daughters, rsn); // Вызываем рекурсивно
-        //            }
-        //        }
-        //    }
-        //}
 
         /// <summary>
         /// Освобождение ресурсов
