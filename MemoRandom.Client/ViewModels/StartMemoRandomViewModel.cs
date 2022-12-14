@@ -29,10 +29,10 @@ namespace MemoRandom.Client.ViewModels
         private static string _storageImagesPath; // Имя папки, где хранятся изображения
 
         #region Настройки по файлам XML
-        private static readonly string _xmlReasonsFile = "ReasonsFile";
-        private static readonly string _xmlCategoriesFile = "CategoriesFile";
+        private static readonly string _xmlReasonsFile        = "ReasonsFile";
+        private static readonly string _xmlCategoriesFile     = "CategoriesFile";
         private static readonly string _xmlComparedHumansFile = "ComparedHumansFile";
-        private static readonly string _xmlHumansFile = "HumansFile";
+        private static readonly string _xmlHumansFile         = "HumansFile";
         #endregion
 
         private static readonly string _dbConfigName    = "MsDbConfig"; // Конфигурация БД
