@@ -62,7 +62,7 @@ namespace MemoRandom.Client.Common.Implementations
 
         #region IMPLEMENTATION
         /// <summary>
-        /// Временно - потом все перобразовать
+        /// Временно - потом все преобразовать
         /// </summary>
         /// <param name="filePath"></param>
         public void SaveXmlData(string filePath)
