@@ -88,7 +88,7 @@ namespace MemoRandom.Client.Common.Implementations
             //PlainReasonsList.Clear(); // Чистим плоский список
             //ReasonsCollection.Clear(); // Чистим иерархическую коллекцию
             //var res = _xmlController.ReadReasonsFromFile(filePath);
-            //foreach(var item in res) // Формируем плоский список
+            //foreach (var item in res) // Формируем плоский список
             //{
             //    Reason reason = new()
             //    {

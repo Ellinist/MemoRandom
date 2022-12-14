@@ -18,24 +18,47 @@ namespace MemoRandom.Data.Implementations
             XmlWriterSettings settings = new XmlWriterSettings();
             settings.Indent = true;
 
-            XDocument xDocument = new XDocument();
-            XElement upElement = new XElement("Reasons");
+            XDocument xml = new XDocument();
 
-            for (int i = 0; i < reasons.Count; i++)
+            #region Тестирование новой схемы
+            XElement root = new XElement("Reasons");
+            for(int i = 0; i < reasons.Count; i++)
             {
-                XElement secElement = new XElement("Reason",
-                                      new XElement("ReasonID", reasons[i].ReasonId),
-                                      new XElement("ReasonName", reasons[i].ReasonName),
-                                      new XElement("ReasonComment", reasons[i].ReasonComment),
-                                      new XElement("ReasonDescription", reasons[i].ReasonDescription),
-                                      new XElement("ParentReasonID", reasons[i].ReasonParentId));
+                XElement reason = new XElement("Reason");
+                XAttribute id = new XAttribute("id", $"{reasons[i].ReasonId}");
+                XElement name = new XElement("name", $"{reasons[i].ReasonName}");
+                XElement comment = new XElement("comment", $"{reasons[i].ReasonComment}");
+                XElement description = new XElement("description", $"{reasons[i].ReasonDescription}");
+                XElement parent = new XElement("parent", $"{reasons[i].ReasonParentId}");
 
-                upElement.Add(secElement);
+                reason.Add(id);
+                reason.Add(name);
+                reason.Add(comment);
+                reason.Add(description);
+                reason.Add(parent);
+
+                root.Add(reason);
             }
+            xml.Add(root);
+            #endregion
 
-            xDocument.Add(upElement);
+            //XElement upElement = new XElement("Reasons");
 
-            xDocument.Save(filePath);
+            //for (int i = 0; i < reasons.Count; i++)
+            //{
+            //    XElement secElement = new XElement("Reason",
+            //                          new XElement("ReasonID", reasons[i].ReasonId),
+            //                          new XElement("ReasonName", reasons[i].ReasonName),
+            //                          new XElement("ReasonComment", reasons[i].ReasonComment),
+            //                          new XElement("ReasonDescription", reasons[i].ReasonDescription),
+            //                          new XElement("ParentReasonID", reasons[i].ReasonParentId));
+
+            //    upElement.Add(secElement);
+            //}
+
+            //xml.Add(upElement);
+
+            xml.Save(filePath);
 
             return true;
         }
@@ -45,7 +68,29 @@ namespace MemoRandom.Data.Implementations
             List<DtoReason> reasons = new();
             XDocument xml = XDocument.Load(filePath);
 
+            #region Тестирование
             List<DtoReason> list = new();
+
+            var root = xml.Element("Reasons");
+            // Красивый вариант - вместо того, что ниже
+            foreach (XElement item in root.Elements("Reason"))
+            {
+                DtoReason reason = new()
+                {
+                    ReasonId          = item.Element("ReasonID").Value,
+                    ReasonName        = item.Element("ReasonName").Value,
+                    ReasonComment     = item.Element("ReasonComment").Value,
+                    ReasonDescription = item.Element("ReasonDescription").Value,
+                    ReasonParentId    = item.Element("ParentReasonID").Value
+                };
+                reasons.Add(reason);
+            }
+            return reasons;
+
+
+
+            #endregion
+
             DtoReason dtoReason = new();
             foreach(var node in xml.DescendantNodes())
             {
