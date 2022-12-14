@@ -22,14 +22,15 @@ namespace MemoRandom.Data.Implementations
 
             #region Тестирование новой схемы
             XElement root = new XElement("Reasons");
-            for(int i = 0; i < reasons.Count; i++)
+
+            foreach (var item in reasons)
             {
-                XElement reason = new XElement("Reason");
-                XAttribute id = new XAttribute("id", $"{reasons[i].ReasonId}");
-                XElement name = new XElement("name", $"{reasons[i].ReasonName}");
-                XElement comment = new XElement("comment", $"{reasons[i].ReasonComment}");
-                XElement description = new XElement("description", $"{reasons[i].ReasonDescription}");
-                XElement parent = new XElement("parent", $"{reasons[i].ReasonParentId}");
+                XElement reason      = new XElement("Reason");
+                XAttribute id        = new XAttribute("id", $"{item.ReasonId}");
+                XElement name        = new XElement("name", $"{item.ReasonName}");
+                XElement comment     = new XElement("comment", $"{item.ReasonComment}");
+                XElement description = new XElement("description", $"{item.ReasonDescription}");
+                XElement parent      = new XElement("parent", $"{item.ReasonParentId}");
 
                 reason.Add(id);
                 reason.Add(name);
@@ -39,9 +40,28 @@ namespace MemoRandom.Data.Implementations
 
                 root.Add(reason);
             }
+
+            //for(int i = 0; i < reasons.Count; i++)
+            //{
+            //    XElement reason      = new XElement("Reason");
+            //    XAttribute id        = new XAttribute("id", $"{reasons[i].ReasonId}");
+            //    XElement name        = new XElement("name", $"{reasons[i].ReasonName}");
+            //    XElement comment     = new XElement("comment", $"{reasons[i].ReasonComment}");
+            //    XElement description = new XElement("description", $"{reasons[i].ReasonDescription}");
+            //    XElement parent      = new XElement("parent", $"{reasons[i].ReasonParentId}");
+
+            //    reason.Add(id);
+            //    reason.Add(name);
+            //    reason.Add(comment);
+            //    reason.Add(description);
+            //    reason.Add(parent);
+
+            //    root.Add(reason);
+            //}
             xml.Add(root);
             #endregion
 
+            #region Старый код - просто на память
             //XElement upElement = new XElement("Reasons");
 
             //for (int i = 0; i < reasons.Count; i++)
@@ -57,6 +77,7 @@ namespace MemoRandom.Data.Implementations
             //}
 
             //xml.Add(upElement);
+            #endregion
 
             xml.Save(filePath);
 
@@ -68,70 +89,43 @@ namespace MemoRandom.Data.Implementations
             List<DtoReason> reasons = new();
             XDocument xml = XDocument.Load(filePath);
 
-            #region Тестирование
-            List<DtoReason> list = new();
-
-            var root = xml.Element("Reasons");
-            // Красивый вариант - вместо того, что ниже
-            foreach (XElement item in root.Elements("Reason"))
+            XElement? root = xml.Element("Reasons");
+            if(root != null)
             {
-                DtoReason reason = new()
+                foreach(XElement reason in root.Elements("Reason"))
                 {
-                    ReasonId          = item.Element("ReasonID").Value,
-                    ReasonName        = item.Element("ReasonName").Value,
-                    ReasonComment     = item.Element("ReasonComment").Value,
-                    ReasonDescription = item.Element("ReasonDescription").Value,
-                    ReasonParentId    = item.Element("ParentReasonID").Value
-                };
-                reasons.Add(reason);
-            }
-            return reasons;
-
-
-
-            #endregion
-
-            DtoReason dtoReason = new();
-            foreach(var node in xml.DescendantNodes())
-            {
-                if(node is XElement)
-                {
-                    var xElement = (XElement)node;
-
-                    if (xElement.Name == "Reasons") continue;
-                    if (xElement.Name == "Reason") continue;
-                    if (xElement.Name == "ReasonID")
+                    DtoReason rsn = new DtoReason()
                     {
-                        dtoReason.ReasonId = xElement.Value;
-                        continue;
-                    }
-                    if (xElement.Name == "ReasonName")
-                    {
-                        dtoReason.ReasonName = xElement.Value;
-                        continue;
-                    }
-                    if (xElement.Name == "ReasonComment")
-                    {
-                        dtoReason.ReasonComment = xElement.Value;
-                        continue;
-                    }
-                    if (xElement.Name == "ReasonDescription")
-                    {
-                        dtoReason.ReasonDescription = xElement.Value;
-                        continue;
-                    }
-                    if (xElement.Name == "ParentReasonID")
-                    {
-                        dtoReason.ReasonParentId = xElement.Value;
-                        list.Add(dtoReason);
-                        dtoReason = new();
-                    }
+                        ReasonId          = reason.Attribute("id").Value,
+                        ReasonName        = reason.Element("name").Value,
+                        ReasonComment     = reason.Element("comment").Value,
+                        ReasonDescription = reason.Element("description").Value,
+                        ReasonParentId    = reason.Element("parent").Value
+                    };
+                    reasons.Add(rsn);
                 }
             }
 
-            var r = 0;
+            return reasons;
+            #region Старый красивый код, но уже устарел
+            //List<DtoReason> list = new();
 
-            return list;
+            //var root = xml.Element("Reasons");
+            //// Красивый вариант - вместо того, что ниже
+            //foreach (XElement item in root.Elements("Reason"))
+            //{
+            //    DtoReason reason = new()
+            //    {
+            //        ReasonId          = item.Element("ReasonID").Value,
+            //        ReasonName        = item.Element("ReasonName").Value,
+            //        ReasonComment     = item.Element("ReasonComment").Value,
+            //        ReasonDescription = item.Element("ReasonDescription").Value,
+            //        ReasonParentId    = item.Element("ParentReasonID").Value
+            //    };
+            //    reasons.Add(reason);
+            //}
+            //return reasons;
+            #endregion
         }
 
         public bool AddReasonToList(DtoReason reason)

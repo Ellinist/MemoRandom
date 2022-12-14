@@ -65,7 +65,7 @@ namespace MemoRandom.Client.Common.Implementations
         /// Временно - потом все перобразовать
         /// </summary>
         /// <param name="filePath"></param>
-        public void SaveData(string filePath)
+        public void SaveXmlData(string filePath)
         {
             List<DtoReason> dtoReasons = new();
             for (int i = 0; i < PlainReasonsList.Count; i++)
@@ -104,7 +104,14 @@ namespace MemoRandom.Client.Common.Implementations
             //#endregion
         }
 
+        /// <summary>
+        /// Временно - читаем все из файла
+        /// </summary>
+        /// <param name="filePath"></param>
+        public void ReadXmlData(string filePath)
+        {
 
+        }
 
 
 

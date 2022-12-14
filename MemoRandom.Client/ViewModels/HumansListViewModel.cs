@@ -569,7 +569,7 @@ namespace MemoRandom.Client.ViewModels
             {
                 var t = fd.FileName;
 
-                _commonDataController.SaveData(t); // Вызов сохранения
+                _commonDataController.SaveXmlData(t); // Вызов сохранения
             }
         }
 

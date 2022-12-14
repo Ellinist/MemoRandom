@@ -9,7 +9,8 @@ namespace MemoRandom.Client.Common.Interfaces
 {
     public interface ICommonDataController
     {
-        void SaveData(string filePath);
+        void SaveXmlData(string filePath);
+        void ReadXmlData(string filePath);
 
         /// <summary>
         /// Чтение общей информации из внешнего хранилища
