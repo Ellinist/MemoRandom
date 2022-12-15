@@ -85,11 +85,11 @@ namespace MemoRandom.Client.Common.Implementations
             {
                 DtoReason reason = new()
                 {
-                    ReasonId = PlainReasonsList[i].ReasonId.ToString(),
+                    ReasonId = PlainReasonsList[i].ReasonId,
                     ReasonName = PlainReasonsList[i].ReasonName,
                     ReasonComment = PlainReasonsList[i].ReasonComment,
                     ReasonDescription = PlainReasonsList[i].ReasonDescription,
-                    ReasonParentId = PlainReasonsList[i].ReasonParentId.ToString()
+                    ReasonParentId = PlainReasonsList[i].ReasonParentId
                 };
                 dtoReasons.Add(reason);
             }
@@ -107,7 +107,7 @@ namespace MemoRandom.Client.Common.Implementations
             {
                 DtoCategory category = new()
                 {
-                    CategoryId = AgeCategories[i].CategoryId.ToString(),
+                    CategoryId = AgeCategories[i].CategoryId,
                     CategoryName = AgeCategories[i].CategoryName,
                     StartAge = AgeCategories[i].StartAge.ToString(),
                     StopAge = AgeCategories[i].StopAge.ToString(),
@@ -128,7 +128,7 @@ namespace MemoRandom.Client.Common.Implementations
             {
                 DtoComparedHuman comparedHuman = new()
                 {
-                    ComparedHumanId = ComparedHumansCollection[i].ComparedHumanId.ToString(),
+                    ComparedHumanId = ComparedHumansCollection[i].ComparedHumanId,
                     ComparedHumanFullName = ComparedHumansCollection[i].ComparedHumanFullName,
                     ComparedHumanBirthDate = ComparedHumansCollection[i].ComparedHumanBirthDate,
                     IsComparedHumanConsidered = ComparedHumansCollection[i].IsComparedHumanConsidered
@@ -148,7 +148,7 @@ namespace MemoRandom.Client.Common.Implementations
             {
                 DtoHuman human = new()
                 {
-                    HumanId = HumansList[i].HumanId.ToString(),
+                    HumanId = HumansList[i].HumanId,
                     FirstName = HumansList[i].FirstName,
                     LastName = HumansList[i].LastName,
                     Patronymic = HumansList[i].Patronymic,
@@ -159,7 +159,7 @@ namespace MemoRandom.Client.Common.Implementations
                     DeathCountry = HumansList[i].DeathCountry,
                     DeathPlace = HumansList[i].DeathPlace,
                     ImageFile = HumansList[i].ImageFile,
-                    DeathReasonId = HumansList[i].DeathReasonId.ToString(),
+                    DeathReasonId = HumansList[i].DeathReasonId,
                     HumanComments = HumansList[i].HumanComments,
                     DaysLived = HumansList[i].DaysLived,
                     FullYearsLived = HumansList[i].FullYearsLived
@@ -190,11 +190,11 @@ namespace MemoRandom.Client.Common.Implementations
             {
                 Reason reason = new()
                 {
-                    ReasonId = Guid.Parse(item.ReasonId),
+                    ReasonId = item.ReasonId,
                     ReasonName = item.ReasonName,
                     ReasonComment = item.ReasonComment,
                     ReasonDescription = item.ReasonDescription,
-                    ReasonParentId = Guid.Parse(item.ReasonParentId)
+                    ReasonParentId = item.ReasonParentId
                 };
                 PlainReasonsList.Add(reason);
             }
@@ -210,7 +210,7 @@ namespace MemoRandom.Client.Common.Implementations
             {
                 Category cat = new()
                 {
-                    CategoryId = Guid.Parse(category.CategoryId),
+                    CategoryId = category.CategoryId,
                     CategoryName = category.CategoryName,
                     StartAge = int.Parse(category.StartAge),
                     StopAge = int.Parse(category.StopAge),
@@ -234,9 +234,9 @@ namespace MemoRandom.Client.Common.Implementations
             {
                 ComparedHuman comp = new()
                 {
-                    ComparedHumanId = Guid.Parse(item.ComparedHumanId),
-                    ComparedHumanFullName = item.ComparedHumanFullName,
-                    ComparedHumanBirthDate = item.ComparedHumanBirthDate,
+                    ComparedHumanId           = item.ComparedHumanId,
+                    ComparedHumanFullName     = item.ComparedHumanFullName,
+                    ComparedHumanBirthDate    = item.ComparedHumanBirthDate,
                     IsComparedHumanConsidered = item.IsComparedHumanConsidered
                 };
                 ComparedHumansCollection.Add(comp);
@@ -252,7 +252,7 @@ namespace MemoRandom.Client.Common.Implementations
             {
                 Human human = new()
                 {
-                    HumanId = Guid.Parse(hum.HumanId),
+                    HumanId = hum.HumanId,
                     FirstName = hum.FirstName,
                     LastName = hum.LastName,
                     Patronymic = hum.Patronymic,
@@ -263,7 +263,7 @@ namespace MemoRandom.Client.Common.Implementations
                     DeathCountry = hum.DeathCountry,
                     DeathPlace = hum.DeathPlace,
                     ImageFile = hum.ImageFile,
-                    DeathReasonId = Guid.Parse(hum.DeathReasonId),
+                    DeathReasonId = hum.DeathReasonId,
                     HumanComments = hum.HumanComments,
                     DaysLived = hum.DaysLived,
                     FullYearsLived = hum.FullYearsLived
@@ -281,11 +281,11 @@ namespace MemoRandom.Client.Common.Implementations
 
             DtoReason dtoReason = new()
             {
-                ReasonId = rsn.ReasonId.ToString(),
+                ReasonId = rsn.ReasonId,
                 ReasonName = rsn.ReasonName,
                 ReasonComment = rsn.ReasonComment,
                 ReasonDescription = rsn.ReasonDescription,
-                ReasonParentId = rsn.ReasonParentId.ToString()
+                ReasonParentId = rsn.ReasonParentId
             };
 
             _xmlController.AddReasonToList(dtoReason, combinedPath);
@@ -299,11 +299,11 @@ namespace MemoRandom.Client.Common.Implementations
 
             DtoReason dtoReason = new()
             {
-                ReasonId = reason.ReasonId.ToString(),
+                ReasonId = reason.ReasonId,
                 ReasonName = reason.ReasonName,
                 ReasonComment = reason.ReasonComment,
                 ReasonDescription = reason.ReasonDescription,
-                ReasonParentId = reason.ReasonParentId.ToString()
+                ReasonParentId = reason.ReasonParentId
             };
 
             _xmlController.ChangeReasonInFile(dtoReason, combinedPath);

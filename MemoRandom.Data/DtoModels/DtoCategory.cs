@@ -16,7 +16,7 @@ namespace MemoRandom.Data.DtoModels
         /// <summary>
         /// Идентификатор категории
         /// </summary>
-        public string CategoryId { get; set; }
+        public Guid CategoryId { get; set; }
 
         /// <summary>
         /// Название категории

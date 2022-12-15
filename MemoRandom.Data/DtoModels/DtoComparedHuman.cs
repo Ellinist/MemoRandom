@@ -16,7 +16,7 @@ namespace MemoRandom.Data.DtoModels
         /// <summary>
         /// Идентификатор человека для сравнения
         /// </summary>
-        public string ComparedHumanId { get; set; }
+        public Guid ComparedHumanId { get; set; }
 
         /// <summary>
         /// Полное название человека для сравнения

@@ -12,7 +12,7 @@ namespace MemoRandom.Data.DtoModels
     [Serializable]
     public class DtoHuman
     {
-        public string HumanId { get; set; }
+        public Guid HumanId { get; set; }
 
         public string FirstName { get; set; }
 
@@ -34,7 +34,7 @@ namespace MemoRandom.Data.DtoModels
 
         public string ImageFile { get; set; }
 
-        public string DeathReasonId { get; set; }
+        public Guid DeathReasonId { get; set; }
 
         public string HumanComments { get; set; }
 

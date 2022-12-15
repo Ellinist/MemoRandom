@@ -20,26 +20,28 @@ namespace MemoRandom.Data.Implementations
         /// <returns></returns>
         public bool SaveReasonsToFile(List<DtoReason> reasons, string filePath)
         {
-            XmlWriterSettings settings = new XmlWriterSettings();
-            settings.Indent = true;
-
-            XDocument xmlReasons = new();
+            XDocument xmlReasons = new(); // Создаем нвоый документ
             XElement root = new("Reasons"); // Корневой элемент причин смерти
 
-            foreach (var item in reasons)
+            foreach (var item in reasons) // В цикле для всех причин смерти
             {
-                XElement reason      = new XElement("Reason");
-                XAttribute id        = new XAttribute("id", $"{item.ReasonId}");
+                XElement reason      = new XElement("Reason"); // Заголовок причины
+                XAttribute id        = new XAttribute("id", $"{item.ReasonId}"); // И ее атрибут
+
+                #region Создание вложенных элементов причины смерти
                 XElement name        = new XElement("name", $"{item.ReasonName}");
                 XElement comment     = new XElement("comment", $"{item.ReasonComment}");
                 XElement description = new XElement("description", $"{item.ReasonDescription}");
                 XElement parent      = new XElement("parent", $"{item.ReasonParentId}");
+                #endregion
 
+                #region Добавление к заголовку его атрибута и дочерних элементов
                 reason.Add(id);
                 reason.Add(name);
                 reason.Add(comment);
                 reason.Add(description);
                 reason.Add(parent);
+                #endregion
 
                 root.Add(reason);
             }
@@ -57,27 +59,31 @@ namespace MemoRandom.Data.Implementations
         /// <returns></returns>
         public List<DtoReason> ReadReasonsFromFile(string filePath)
         {
-            List<DtoReason> reasons = new();
-            XDocument xmlReasons = XDocument.Load(filePath);
+            List<DtoReason> reasons = new(); // Создание списка DTO данных по причинам смерти
+            XDocument xmlReasons = XDocument.Load(filePath); // Чтение из файла
 
-            XElement? root = xmlReasons.Element("Reasons");
-            if (root != null)
+            XElement? root = xmlReasons.Element("Reasons"); // Чтение корневого элемента
+            if (root != null) // Если элемент существует
             {
-                foreach (XElement reason in root.Elements("Reason"))
+                foreach (XElement reason in root.Elements("Reason")) // В цикле по всем вложенным элементам с типом "Reason"
                 {
-                    DtoReason rsn = new DtoReason()
+                    DtoReason rsn = new() // Создаем новый DTO-объект
                     {
-                        ReasonId = reason.Attribute("id").Value,
-                        ReasonName = reason.Element("name").Value,
-                        ReasonComment = reason.Element("comment").Value,
+                        ReasonId          = Guid.Parse(reason.Attribute("id").Value),
+                        ReasonName        = reason.Element("name").Value,
+                        ReasonComment     = reason.Element("comment").Value,
                         ReasonDescription = reason.Element("description").Value,
-                        ReasonParentId = reason.Element("parent").Value
+                        ReasonParentId    = Guid.Parse(reason.Element("parent").Value)
                     };
                     reasons.Add(rsn);
                 }
-            }
 
-            return reasons;
+                return reasons;
+            }
+            else
+            {
+                return null; // Если корневого элемента нет, то возвращаем null
+            }
         }
 
         public bool AddReasonToList(DtoReason reason, string filePath)
@@ -112,7 +118,7 @@ namespace MemoRandom.Data.Implementations
             if (root != null)
             {
                 var l = root.Elements("Reason");
-                var r1 = l.FirstOrDefault(x => x.Attribute("id").Value == rsn.ReasonId);
+                var r1 = l.FirstOrDefault(x => Guid.Parse(x.Attribute("id").Value) == rsn.ReasonId);
                 if(r1 != null)
                 {
                     var name = r1.Element("name");
@@ -182,6 +188,11 @@ namespace MemoRandom.Data.Implementations
             return true;
         }
 
+        /// <summary>
+        /// Чтение категорий возрастов из XML-файла
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
         public List<DtoCategory> ReadCategoriesFromFile(string filePath)
         {
             List<DtoCategory> categories = new();
@@ -192,13 +203,13 @@ namespace MemoRandom.Data.Implementations
             {
                 foreach (XElement category in root.Elements("Category"))
                 {
-                    DtoCategory cat = new DtoCategory()
+                    DtoCategory cat = new()
                     {
-                        CategoryId = category.Attribute("id").Value,
+                        CategoryId   = Guid.Parse(category.Attribute("id").Value),
                         CategoryName = category.Element("name").Value,
-                        StartAge = category.Element("startage").Value,
-                        StopAge = category.Element("stopage").Value,
-                        StringColor = category.Element("color").Value
+                        StartAge     = category.Element("startage").Value,
+                        StopAge      = category.Element("stopage").Value,
+                        StringColor  = category.Element("color").Value
                     };
                     categories.Add(cat);
                 }
@@ -217,10 +228,10 @@ namespace MemoRandom.Data.Implementations
             foreach (var item in comparedHumans)
             {
                 XElement comparedHuman = new XElement("ComparedHuman");
-                XAttribute id = new XAttribute("id", $"{item.ComparedHumanId}");
-                XElement name = new XElement("name", $"{item.ComparedHumanFullName}");
-                XElement birthdate = new XElement("birthdate", $"{item.ComparedHumanBirthDate}");
-                XElement considered = new XElement("isconsidered", $"{item.IsComparedHumanConsidered}");
+                XAttribute id          = new XAttribute("id", $"{item.ComparedHumanId}");
+                XElement name          = new XElement("name", $"{item.ComparedHumanFullName}");
+                XElement birthdate     = new XElement("birthdate", $"{item.ComparedHumanBirthDate}");
+                XElement considered    = new XElement("isconsidered", $"{item.IsComparedHumanConsidered}");
 
                 comparedHuman.Add(id);
                 comparedHuman.Add(name);
@@ -236,6 +247,11 @@ namespace MemoRandom.Data.Implementations
             return true;
         }
 
+        /// <summary>
+        /// Чтение людей для сравнения из XML-файла
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
         public List<DtoComparedHuman> ReadComparedHumansFromFile(string filePath)
         {
             List<DtoComparedHuman> comparedHumans = new();
@@ -246,11 +262,11 @@ namespace MemoRandom.Data.Implementations
             {
                 foreach (XElement comparedHuman in root.Elements("ComparedHuman"))
                 {
-                    DtoComparedHuman ch = new DtoComparedHuman()
+                    DtoComparedHuman ch = new()
                     {
-                        ComparedHumanId = comparedHuman.Attribute("id").Value,
-                        ComparedHumanFullName = comparedHuman.Element("name").Value,
-                        ComparedHumanBirthDate = DateTime.Parse(comparedHuman.Element("birthdate").Value),
+                        ComparedHumanId           = Guid.Parse(comparedHuman.Attribute("id").Value),
+                        ComparedHumanFullName     = comparedHuman.Element("name").Value,
+                        ComparedHumanBirthDate    = DateTime.Parse(comparedHuman.Element("birthdate").Value),
                         IsComparedHumanConsidered = bool.Parse(comparedHuman.Element("isconsidered").Value)
                     };
                     comparedHumans.Add(ch);
@@ -323,20 +339,20 @@ namespace MemoRandom.Data.Implementations
                 {
                     DtoHuman human = new DtoHuman()
                     {
-                        HumanId = hum.Attribute("id").Value,
-                        FirstName = hum.Element("firstname").Value,
-                        LastName = hum.Element("lastname").Value,
-                        Patronymic = hum.Element("patronymic").Value,
-                        BirthDate = DateTime.Parse(hum.Element("birthdate").Value),
-                        BirthCountry = hum.Element("birthcountry").Value,
-                        BirthPlace = hum.Element("birthplace").Value,
-                        DeathDate = DateTime.Parse(hum.Element("deathdate").Value),
-                        DeathCountry = hum.Element("deathcountry").Value,
-                        DeathPlace = hum.Element("deathplace").Value,
-                        ImageFile = hum.Element("image").Value,
-                        DeathReasonId = hum.Element("deathreason").Value,
-                        HumanComments = hum.Element("comments").Value,
-                        DaysLived = double.Parse(hum.Element("dayslived").Value),
+                        HumanId        = Guid.Parse(hum.Attribute("id").Value),
+                        FirstName      = hum.Element("firstname").Value,
+                        LastName       = hum.Element("lastname").Value,
+                        Patronymic     = hum.Element("patronymic").Value,
+                        BirthDate      = DateTime.Parse(hum.Element("birthdate").Value),
+                        BirthCountry   = hum.Element("birthcountry").Value,
+                        BirthPlace     = hum.Element("birthplace").Value,
+                        DeathDate      = DateTime.Parse(hum.Element("deathdate").Value),
+                        DeathCountry   = hum.Element("deathcountry").Value,
+                        DeathPlace     = hum.Element("deathplace").Value,
+                        ImageFile      = hum.Element("image").Value,
+                        DeathReasonId  = Guid.Parse(hum.Element("deathreason").Value),
+                        HumanComments  = hum.Element("comments").Value,
+                        DaysLived      = double.Parse(hum.Element("dayslived").Value),
                         FullYearsLived = int.Parse(hum.Element("fullyears").Value)
                     };
                     humans.Add(human);

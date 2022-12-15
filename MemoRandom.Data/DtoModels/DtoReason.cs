@@ -11,7 +11,7 @@ namespace MemoRandom.Data.DtoModels
         /// <summary>
         /// Идентификатор причины
         /// </summary>
-        public string ReasonId { get; set; }
+        public Guid ReasonId { get; set; }
 
         /// <summary>
         /// Название причины смерти - лучше сокращенно
@@ -31,6 +31,6 @@ namespace MemoRandom.Data.DtoModels
         /// <summary>
         /// Идентификтор родительской причины (узла)
         /// </summary>
-        public string ReasonParentId { get; set; }
+        public Guid ReasonParentId { get; set; }
     }
 }
