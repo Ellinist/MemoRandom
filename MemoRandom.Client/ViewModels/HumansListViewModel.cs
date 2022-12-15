@@ -570,6 +570,7 @@ namespace MemoRandom.Client.ViewModels
         {
             _commonDataController.ReadXmlData();
             RaisePropertyChanged();
+            RaisePropertyChanged(nameof(HumansCollection)); // Без этого список не обновляется
         }
 
         /// <summary>

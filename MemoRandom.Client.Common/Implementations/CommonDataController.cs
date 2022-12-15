@@ -80,19 +80,7 @@ namespace MemoRandom.Client.Common.Implementations
             var basepath = ConfigurationManager.AppSettings["ReasonsFile"];
             string combinedPath = Path.Combine(xmlFolder, basepath);
 
-            List<DtoReason> dtoReasons = new();
-            for (int i = 0; i < PlainReasonsList.Count; i++)
-            {
-                DtoReason reason = new()
-                {
-                    ReasonId = PlainReasonsList[i].ReasonId,
-                    ReasonName = PlainReasonsList[i].ReasonName,
-                    ReasonComment = PlainReasonsList[i].ReasonComment,
-                    ReasonDescription = PlainReasonsList[i].ReasonDescription,
-                    ReasonParentId = PlainReasonsList[i].ReasonParentId
-                };
-                dtoReasons.Add(reason);
-            }
+            List<DtoReason> dtoReasons = _mapper.Map<List<Reason>, List<DtoReason>>(PlainReasonsList);
 
             // Вызов метода сохранения справочника (плоский)
             _xmlController.SaveReasonsToFile(dtoReasons, combinedPath);
@@ -102,19 +90,7 @@ namespace MemoRandom.Client.Common.Implementations
             basepath = ConfigurationManager.AppSettings["CategoriesFile"];
             combinedPath = Path.Combine(xmlFolder, basepath);
 
-            List<DtoCategory> dtoCategories = new();
-            for (int i = 0; i < AgeCategories.Count; i++)
-            {
-                DtoCategory category = new()
-                {
-                    CategoryId = AgeCategories[i].CategoryId,
-                    CategoryName = AgeCategories[i].CategoryName,
-                    StartAge = AgeCategories[i].StartAge.ToString(),
-                    StopAge = AgeCategories[i].StopAge.ToString(),
-                    StringColor = AgeCategories[i].StringColor
-                };
-                dtoCategories.Add(category);
-            }
+            List<DtoCategory> dtoCategories = _mapper.Map<ObservableCollection<Category>, List<DtoCategory>>(AgeCategories);
 
             _xmlController.SaveCategoriesToFile(dtoCategories, combinedPath);
             #endregion
@@ -123,18 +99,7 @@ namespace MemoRandom.Client.Common.Implementations
             basepath = ConfigurationManager.AppSettings["ComparedHumansFile"];
             combinedPath = Path.Combine(xmlFolder, basepath);
 
-            List<DtoComparedHuman> dtoComparedHumans = new();
-            for (int i = 0; i < ComparedHumansCollection.Count; i++)
-            {
-                DtoComparedHuman comparedHuman = new()
-                {
-                    ComparedHumanId = ComparedHumansCollection[i].ComparedHumanId,
-                    ComparedHumanFullName = ComparedHumansCollection[i].ComparedHumanFullName,
-                    ComparedHumanBirthDate = ComparedHumansCollection[i].ComparedHumanBirthDate,
-                    IsComparedHumanConsidered = ComparedHumansCollection[i].IsComparedHumanConsidered
-                };
-                dtoComparedHumans.Add(comparedHuman);
-            }
+            List<DtoComparedHuman> dtoComparedHumans = _mapper.Map<ObservableCollection<ComparedHuman>, List<DtoComparedHuman>>(ComparedHumansCollection);
 
             _xmlController.SaveComparedHumansToFile(dtoComparedHumans, combinedPath);
             #endregion
@@ -143,29 +108,7 @@ namespace MemoRandom.Client.Common.Implementations
             basepath = ConfigurationManager.AppSettings["HumansFile"];
             combinedPath = Path.Combine(xmlFolder, basepath);
 
-            List<DtoHuman> dtoHumans = new();
-            for (int i = 0; i < HumansList.Count; i++)
-            {
-                DtoHuman human = new()
-                {
-                    HumanId = HumansList[i].HumanId,
-                    FirstName = HumansList[i].FirstName,
-                    LastName = HumansList[i].LastName,
-                    Patronymic = HumansList[i].Patronymic,
-                    BirthDate = HumansList[i].BirthDate,
-                    BirthCountry = HumansList[i].BirthCountry,
-                    BirthPlace = HumansList[i].BirthPlace,
-                    DeathDate = HumansList[i].DeathDate,
-                    DeathCountry = HumansList[i].DeathCountry,
-                    DeathPlace = HumansList[i].DeathPlace,
-                    ImageFile = HumansList[i].ImageFile,
-                    DeathReasonId = HumansList[i].DeathReasonId,
-                    HumanComments = HumansList[i].HumanComments,
-                    DaysLived = HumansList[i].DaysLived,
-                    FullYearsLived = HumansList[i].FullYearsLived
-                };
-                dtoHumans.Add(human);
-            }
+            List<DtoHuman> dtoHumans = _mapper.Map<ObservableCollection<Human>, List<DtoHuman>>(HumansList);
 
             _xmlController.SaveHumansToFile(dtoHumans, combinedPath);
             #endregion
@@ -185,40 +128,20 @@ namespace MemoRandom.Client.Common.Implementations
             #region Чтение причин смерти из файла - потом структуру переделать
             PlainReasonsList.Clear(); // Чистим плоский список
             ReasonsCollection.Clear(); // Чистим иерархическую коллекцию
+
             var reasonsResult = _xmlController.ReadReasonsFromFile(combinedPath);
-            foreach (var item in reasonsResult) // Формируем плоский список
-            {
-                Reason reason = new()
-                {
-                    ReasonId = item.ReasonId,
-                    ReasonName = item.ReasonName,
-                    ReasonComment = item.ReasonComment,
-                    ReasonDescription = item.ReasonDescription,
-                    ReasonParentId = item.ReasonParentId
-                };
-                PlainReasonsList.Add(reason);
-            }
+            // Преобразование через маппер
+            PlainReasonsList = _mapper.Map<List<DtoReason>, List<Reason>>(reasonsResult);
             FormObservableCollection(PlainReasonsList, null); // Формируем иерархическую коллекцию
             #endregion
 
             #region Чтение возрастных категорий
             basepath = ConfigurationManager.AppSettings["CategoriesFile"];
             combinedPath = Path.Combine(xmlFolder, basepath);
-            var categoriesResult = _xmlController.ReadCategoriesFromFile(combinedPath);
+            
             AgeCategories.Clear();
-            foreach (var category in categoriesResult)
-            {
-                Category cat = new()
-                {
-                    CategoryId = category.CategoryId,
-                    CategoryName = category.CategoryName,
-                    StartAge = int.Parse(category.StartAge),
-                    StopAge = int.Parse(category.StopAge),
-                    StringColor = category.StringColor,
-                };
-                AgeCategories.Add(cat);
-            }
-
+            var categoriesResult = _xmlController.ReadCategoriesFromFile(combinedPath);
+            AgeCategories = _mapper.Map<List<DtoCategory>, ObservableCollection<Category>>(categoriesResult);
             foreach (var item in AgeCategories) // Преобразование строк в цвет
             {
                 item.CategoryColor = (Color)ColorConverter.ConvertFromString(item.StringColor)!;
@@ -228,48 +151,19 @@ namespace MemoRandom.Client.Common.Implementations
             #region Чтение людей для сравнения
             basepath = ConfigurationManager.AppSettings["ComparedHumansFile"];
             combinedPath = Path.Combine(xmlFolder, basepath);
-            var comparedHumansResult = _xmlController.ReadComparedHumansFromFile(combinedPath);
+            
             ComparedHumansCollection.Clear();
-            foreach (var item in comparedHumansResult)
-            {
-                ComparedHuman comp = new()
-                {
-                    ComparedHumanId           = item.ComparedHumanId,
-                    ComparedHumanFullName     = item.ComparedHumanFullName,
-                    ComparedHumanBirthDate    = item.ComparedHumanBirthDate,
-                    IsComparedHumanConsidered = item.IsComparedHumanConsidered
-                };
-                ComparedHumansCollection.Add(comp);
-            }
+            var comparedHumansResult = _xmlController.ReadComparedHumansFromFile(combinedPath);
+            ComparedHumansCollection = _mapper.Map<List<DtoComparedHuman>, ObservableCollection<ComparedHuman>>(comparedHumansResult);
             #endregion
 
             #region Чтение людей
             basepath = ConfigurationManager.AppSettings["HumansFile"];
             combinedPath = Path.Combine(xmlFolder, basepath);
-            var humansResult = _xmlController.ReadHumansFromFile(combinedPath);
+            
             HumansList.Clear();
-            foreach (var hum in humansResult)
-            {
-                Human human = new()
-                {
-                    HumanId = hum.HumanId,
-                    FirstName = hum.FirstName,
-                    LastName = hum.LastName,
-                    Patronymic = hum.Patronymic,
-                    BirthDate = hum.BirthDate,
-                    BirthCountry = hum.BirthCountry,
-                    BirthPlace = hum.BirthPlace,
-                    DeathDate = hum.DeathDate,
-                    DeathCountry = hum.DeathCountry,
-                    DeathPlace = hum.DeathPlace,
-                    ImageFile = hum.ImageFile,
-                    DeathReasonId = hum.DeathReasonId,
-                    HumanComments = hum.HumanComments,
-                    DaysLived = hum.DaysLived,
-                    FullYearsLived = hum.FullYearsLived
-                };
-                HumansList.Add(human);
-            }
+            var humansResult = _xmlController.ReadHumansFromFile(combinedPath);
+            HumansList = _mapper.Map<List<DtoHuman>, ObservableCollection<Human>>(humansResult);
             #endregion
         }
 
