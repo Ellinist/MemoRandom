@@ -155,6 +155,8 @@ namespace MemoRandom.Client.ViewModels
         {
             if (sender is Window window)
             {
+                _commonDataController.SetFilesPaths(); // Здесь добавить проверку на выполняемость метода
+
                 SetInitialPaths(); // Начальная инициализация БД (или любой другой фигни) и путей
                 ReadStartData();
 

@@ -27,6 +27,11 @@ namespace MemoRandom.Client.Common.Implementations
         private readonly IMsSqlController _msSqlController;
         private readonly IXmlController _xmlController;
         private readonly IMapper _mapper;
+
+        private string _reasonsFilePath;
+        private string _categoriesFilePath;
+        private string _comparedHumansFilePath;
+        private string _humansFilePath;
         #endregion
 
         #region PROPS
@@ -62,55 +67,58 @@ namespace MemoRandom.Client.Common.Implementations
         #endregion
 
         #region IMPLEMENTATION
+        public void SetFilesPaths()
+        {
+            // Получаем папку, где установлено приложение
+            var xmlFolder = AppDomain.CurrentDomain.BaseDirectory;
+            // Проверяем, существует ли папка, где хранятся данные
+            if (!Directory.Exists(xmlFolder))
+            {
+                Directory.CreateDirectory(xmlFolder); // Если не существует, то создаем
+            }
+
+            var basepath = ConfigurationManager.AppSettings["ReasonsFile"];
+            _reasonsFilePath = Path.Combine(xmlFolder, basepath);
+
+            basepath = ConfigurationManager.AppSettings["CategoriesFile"];
+            _categoriesFilePath = Path.Combine(xmlFolder, basepath);
+
+            basepath = ConfigurationManager.AppSettings["ComparedHumansFile"];
+            _comparedHumansFilePath = Path.Combine(xmlFolder, basepath);
+
+            basepath = ConfigurationManager.AppSettings["HumansFile"];
+            _humansFilePath = Path.Combine(xmlFolder, basepath);
+        }
+
         /// <summary>
         /// Временно - потом все преобразовать
         /// </summary>
         /// <param name="filePath"></param>
         public void SaveXmlData()
         {
-            // Проверяем, существует ли папка, где хранятся данные
-            var xmlFolder = AppDomain.CurrentDomain.BaseDirectory;
-            if (!Directory.Exists(xmlFolder))
-            {
-                Directory.CreateDirectory(xmlFolder);
-            }
-
             #region Для причин
-            // Получаем папку, где установлено приложение
-            var basepath = ConfigurationManager.AppSettings["ReasonsFile"];
-            string combinedPath = Path.Combine(xmlFolder, basepath);
-
             List<DtoReason> dtoReasons = _mapper.Map<List<Reason>, List<DtoReason>>(PlainReasonsList);
 
             // Вызов метода сохранения справочника (плоский)
-            _xmlController.SaveReasonsToFile(dtoReasons, combinedPath);
+            _xmlController.SaveReasonsToFile(dtoReasons, _reasonsFilePath);
             #endregion
 
             #region Для категорий
-            basepath = ConfigurationManager.AppSettings["CategoriesFile"];
-            combinedPath = Path.Combine(xmlFolder, basepath);
-
             List<DtoCategory> dtoCategories = _mapper.Map<ObservableCollection<Category>, List<DtoCategory>>(AgeCategories);
 
-            _xmlController.SaveCategoriesToFile(dtoCategories, combinedPath);
+            _xmlController.SaveCategoriesToFile(dtoCategories, _categoriesFilePath);
             #endregion
 
             #region Для людей для сравнения
-            basepath = ConfigurationManager.AppSettings["ComparedHumansFile"];
-            combinedPath = Path.Combine(xmlFolder, basepath);
-
             List<DtoComparedHuman> dtoComparedHumans = _mapper.Map<ObservableCollection<ComparedHuman>, List<DtoComparedHuman>>(ComparedHumansCollection);
 
-            _xmlController.SaveComparedHumansToFile(dtoComparedHumans, combinedPath);
+            _xmlController.SaveComparedHumansToFile(dtoComparedHumans, _comparedHumansFilePath);
             #endregion
 
             #region Для людей
-            basepath = ConfigurationManager.AppSettings["HumansFile"];
-            combinedPath = Path.Combine(xmlFolder, basepath);
-
             List<DtoHuman> dtoHumans = _mapper.Map<ObservableCollection<Human>, List<DtoHuman>>(HumansList);
 
-            _xmlController.SaveHumansToFile(dtoHumans, combinedPath);
+            _xmlController.SaveHumansToFile(dtoHumans, _humansFilePath);
             #endregion
         }
 
@@ -120,27 +128,19 @@ namespace MemoRandom.Client.Common.Implementations
         /// <param name="filePath"></param>
         public void ReadXmlData()
         {
-            var xmlFolder = AppDomain.CurrentDomain.BaseDirectory;
-            // Получаем папку, где установлено приложение
-            var basepath = ConfigurationManager.AppSettings["ReasonsFile"];
-            string combinedPath = Path.Combine(xmlFolder, basepath);
-
             #region Чтение причин смерти из файла - потом структуру переделать
             PlainReasonsList.Clear(); // Чистим плоский список
             ReasonsCollection.Clear(); // Чистим иерархическую коллекцию
 
-            var reasonsResult = _xmlController.ReadReasonsFromFile(combinedPath);
+            var reasonsResult = _xmlController.ReadReasonsFromFile(_reasonsFilePath);
             // Преобразование через маппер
             PlainReasonsList = _mapper.Map<List<DtoReason>, List<Reason>>(reasonsResult);
             FormObservableCollection(PlainReasonsList, null); // Формируем иерархическую коллекцию
             #endregion
 
             #region Чтение возрастных категорий
-            basepath = ConfigurationManager.AppSettings["CategoriesFile"];
-            combinedPath = Path.Combine(xmlFolder, basepath);
-            
             AgeCategories.Clear();
-            var categoriesResult = _xmlController.ReadCategoriesFromFile(combinedPath);
+            var categoriesResult = _xmlController.ReadCategoriesFromFile(_categoriesFilePath);
             AgeCategories = _mapper.Map<List<DtoCategory>, ObservableCollection<Category>>(categoriesResult);
             foreach (var item in AgeCategories) // Преобразование строк в цвет
             {
@@ -149,30 +149,20 @@ namespace MemoRandom.Client.Common.Implementations
             #endregion
 
             #region Чтение людей для сравнения
-            basepath = ConfigurationManager.AppSettings["ComparedHumansFile"];
-            combinedPath = Path.Combine(xmlFolder, basepath);
-            
             ComparedHumansCollection.Clear();
-            var comparedHumansResult = _xmlController.ReadComparedHumansFromFile(combinedPath);
+            var comparedHumansResult = _xmlController.ReadComparedHumansFromFile(_comparedHumansFilePath);
             ComparedHumansCollection = _mapper.Map<List<DtoComparedHuman>, ObservableCollection<ComparedHuman>>(comparedHumansResult);
             #endregion
 
             #region Чтение людей
-            basepath = ConfigurationManager.AppSettings["HumansFile"];
-            combinedPath = Path.Combine(xmlFolder, basepath);
-            
             HumansList.Clear();
-            var humansResult = _xmlController.ReadHumansFromFile(combinedPath);
+            var humansResult = _xmlController.ReadHumansFromFile(_humansFilePath);
             HumansList = _mapper.Map<List<DtoHuman>, ObservableCollection<Human>>(humansResult);
             #endregion
         }
 
         public void AddReasonToFile(Reason rsn)
         {
-            var xmlFolder = AppDomain.CurrentDomain.BaseDirectory;
-            var basepath = ConfigurationManager.AppSettings["ReasonsFile"];
-            var combinedPath = Path.Combine(xmlFolder, basepath);
-
             DtoReason dtoReason = new()
             {
                 ReasonId = rsn.ReasonId,
@@ -182,15 +172,11 @@ namespace MemoRandom.Client.Common.Implementations
                 ReasonParentId = rsn.ReasonParentId
             };
 
-            _xmlController.AddReasonToList(dtoReason, combinedPath);
+            _xmlController.AddReasonToList(dtoReason, _reasonsFilePath);
         }
 
         public void ChangeReason(Reason reason)
         {
-            var xmlFolder = AppDomain.CurrentDomain.BaseDirectory;
-            var basepath = ConfigurationManager.AppSettings["ReasonsFile"];
-            var combinedPath = Path.Combine(xmlFolder, basepath);
-
             DtoReason dtoReason = new()
             {
                 ReasonId = reason.ReasonId,
@@ -200,16 +186,12 @@ namespace MemoRandom.Client.Common.Implementations
                 ReasonParentId = reason.ReasonParentId
             };
 
-            _xmlController.ChangeReasonInFile(dtoReason, combinedPath);
+            _xmlController.ChangeReasonInFile(dtoReason, _reasonsFilePath);
         }
 
         public void DeleteReason(Guid id)
         {
-            var xmlFolder = AppDomain.CurrentDomain.BaseDirectory;
-            var basepath = ConfigurationManager.AppSettings["ReasonsFile"];
-            var combinedPath = Path.Combine(xmlFolder, basepath);
-
-            _xmlController.DeleteReasonInFile(id.ToString(), combinedPath);
+            _xmlController.DeleteReasonInFile(id.ToString(), _reasonsFilePath);
         }
 
 
