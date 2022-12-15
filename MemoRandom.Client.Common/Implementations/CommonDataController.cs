@@ -69,25 +69,21 @@ namespace MemoRandom.Client.Common.Implementations
         #region IMPLEMENTATION
         public void SetFilesPaths()
         {
-            // Получаем папку, где установлено приложение
-            var xmlFolder = AppDomain.CurrentDomain.BaseDirectory;
+            // Получаем папку, где установлено приложение и добавляем папку хранения XML-файлов
+            var xmlFolder = AppDomain.CurrentDomain.BaseDirectory + @"\Data";
             // Проверяем, существует ли папка, где хранятся данные
             if (!Directory.Exists(xmlFolder))
             {
                 Directory.CreateDirectory(xmlFolder); // Если не существует, то создаем
             }
 
-            var basepath = ConfigurationManager.AppSettings["ReasonsFile"];
-            _reasonsFilePath = Path.Combine(xmlFolder, basepath);
+            _reasonsFilePath = Path.Combine(xmlFolder, ConfigurationManager.AppSettings["ReasonsFile"]);
 
-            basepath = ConfigurationManager.AppSettings["CategoriesFile"];
-            _categoriesFilePath = Path.Combine(xmlFolder, basepath);
+            _categoriesFilePath = Path.Combine(xmlFolder, ConfigurationManager.AppSettings["CategoriesFile"]);
 
-            basepath = ConfigurationManager.AppSettings["ComparedHumansFile"];
-            _comparedHumansFilePath = Path.Combine(xmlFolder, basepath);
+            _comparedHumansFilePath = Path.Combine(xmlFolder, ConfigurationManager.AppSettings["ComparedHumansFile"]);
 
-            basepath = ConfigurationManager.AppSettings["HumansFile"];
-            _humansFilePath = Path.Combine(xmlFolder, basepath);
+            _humansFilePath = Path.Combine(xmlFolder, ConfigurationManager.AppSettings["HumansFile"]);
         }
 
         /// <summary>

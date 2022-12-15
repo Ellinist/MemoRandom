@@ -20,7 +20,7 @@ namespace MemoRandom.Data.Implementations
         /// <returns></returns>
         public bool SaveReasonsToFile(List<DtoReason> reasons, string filePath)
         {
-            XDocument xmlReasons = new(); // Создаем нвоый документ
+            XDocument xmlReasons = new(); // Создаем новый документ
             XElement root = new("Reasons"); // Корневой элемент причин смерти
 
             foreach (var item in reasons) // В цикле для всех причин смерти
