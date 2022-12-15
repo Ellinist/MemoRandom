@@ -15,7 +15,10 @@
                     <MenuItem Header="Категории" Command="{Binding CategoriesCommand}"/>
                     <MenuItem Header="Дополнительно" Command="{Binding ComparedHumansOpenCommand}"/>
                     <MenuItem Header="Сравнение" Command="{Binding DynamicShowCommand}"/>
+                </MenuItem>
+                <MenuItem Header="Временно">
                     <MenuItem Header="Сохранить XML" Command="{Binding SaveXmlCommand}"/>
+                    <MenuItem Header="Прочитать XML" Command="{Binding ReadXmlCommand}"/>
                 </MenuItem>
                 <MenuItem Header="О программе" Command="{Binding StartAboutCommand}"/>
             </Menu>

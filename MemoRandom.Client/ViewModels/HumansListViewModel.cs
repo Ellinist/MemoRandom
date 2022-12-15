@@ -539,6 +539,7 @@ namespace MemoRandom.Client.ViewModels
         public DelegateCommand CategoriesCommand { get; private set; }
 
         public DelegateCommand SaveXmlCommand { get; private set; }
+        public DelegateCommand ReadXmlCommand { get; private set; }
         #endregion
 
         /// <summary>
@@ -555,23 +556,18 @@ namespace MemoRandom.Client.ViewModels
             DynamicShowCommand   = new DelegateCommand(DynamicShow);
 
             SaveXmlCommand = new DelegateCommand(SaveXml);
+            ReadXmlCommand = new DelegateCommand(ReadXml);
         }
 
         private void SaveXml()
         {
             _commonDataController.SaveXmlData(); // Вызов сохранения
-            //// Пока временно (без применения интерфейсов) прямо здесь
-            //VistaSaveFileDialog fd = new()
-            //{
-            //    Title = "Выбор файла для сохранения"
-            //};
+        }
 
-            //if (fd.ShowDialog() == true)
-            //{
-            //    var t = fd.FileName;
-
-            //    _commonDataController.SaveXmlData(t); // Вызов сохранения
-            //}
+        private void ReadXml()
+        {
+            _commonDataController.ReadXmlData();
+            RaisePropertyChanged();
         }
 
         /// <summary>

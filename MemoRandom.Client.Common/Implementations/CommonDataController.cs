@@ -169,45 +169,108 @@ namespace MemoRandom.Client.Common.Implementations
 
             _xmlController.SaveHumansToFile(dtoHumans, combinedPath);
             #endregion
-
-
-
-
-
-
-
-
-
-
-
-
-            //#region Чтение из файла - потом структуру переделать
-            //PlainReasonsList.Clear(); // Чистим плоский список
-            //ReasonsCollection.Clear(); // Чистим иерархическую коллекцию
-            //var res = _xmlController.ReadReasonsFromFile(filePath);
-            //foreach (var item in res) // Формируем плоский список
-            //{
-            //    Reason reason = new()
-            //    {
-            //        ReasonId = Guid.Parse(item.ReasonId),
-            //        ReasonName = item.ReasonName,
-            //        ReasonComment = item.ReasonComment,
-            //        ReasonDescription = item.ReasonDescription,
-            //        ReasonParentId = Guid.Parse(item.ReasonParentId)
-            //    };
-            //    PlainReasonsList.Add(reason);
-            //}
-            //FormObservableCollection(PlainReasonsList, null); // Формируем иерархическую коллекцию
-            //#endregion
         }
 
         /// <summary>
         /// Временно - читаем все из файла
         /// </summary>
         /// <param name="filePath"></param>
-        public void ReadXmlData(string filePath)
+        public void ReadXmlData()
         {
+            var xmlFolder = AppDomain.CurrentDomain.BaseDirectory;
+            // Получаем папку, где установлено приложение
+            var basepath = ConfigurationManager.AppSettings["ReasonsFile"];
+            string combinedPath = Path.Combine(xmlFolder, basepath);
 
+            #region Чтение причин смерти из файла - потом структуру переделать
+            PlainReasonsList.Clear(); // Чистим плоский список
+            ReasonsCollection.Clear(); // Чистим иерархическую коллекцию
+            var reasonsResult = _xmlController.ReadReasonsFromFile(combinedPath);
+            foreach (var item in reasonsResult) // Формируем плоский список
+            {
+                Reason reason = new()
+                {
+                    ReasonId = Guid.Parse(item.ReasonId),
+                    ReasonName = item.ReasonName,
+                    ReasonComment = item.ReasonComment,
+                    ReasonDescription = item.ReasonDescription,
+                    ReasonParentId = Guid.Parse(item.ReasonParentId)
+                };
+                PlainReasonsList.Add(reason);
+            }
+            FormObservableCollection(PlainReasonsList, null); // Формируем иерархическую коллекцию
+            #endregion
+
+            #region Чтение возрастных категорий
+            basepath = ConfigurationManager.AppSettings["CategoriesFile"];
+            combinedPath = Path.Combine(xmlFolder, basepath);
+            var categoriesResult = _xmlController.ReadCategoriesFromFile(combinedPath);
+            AgeCategories.Clear();
+            foreach (var category in categoriesResult)
+            {
+                Category cat = new()
+                {
+                    CategoryId = Guid.Parse(category.CategoryId),
+                    CategoryName = category.CategoryName,
+                    StartAge = int.Parse(category.StartAge),
+                    StopAge = int.Parse(category.StopAge),
+                    StringColor = category.StringColor,
+                };
+                AgeCategories.Add(cat);
+            }
+
+            foreach (var item in AgeCategories) // Преобразование строк в цвет
+            {
+                item.CategoryColor = (Color)ColorConverter.ConvertFromString(item.StringColor)!;
+            }
+            #endregion
+
+            #region Чтение людей для сравнения
+            basepath = ConfigurationManager.AppSettings["ComparedHumansFile"];
+            combinedPath = Path.Combine(xmlFolder, basepath);
+            var comparedHumansResult = _xmlController.ReadComparedHumansFromFile(combinedPath);
+            ComparedHumansCollection.Clear();
+            foreach (var item in comparedHumansResult)
+            {
+                ComparedHuman comp = new()
+                {
+                    ComparedHumanId = Guid.Parse(item.ComparedHumanId),
+                    ComparedHumanFullName = item.ComparedHumanFullName,
+                    ComparedHumanBirthDate = item.ComparedHumanBirthDate,
+                    IsComparedHumanConsidered = item.IsComparedHumanConsidered
+                };
+                ComparedHumansCollection.Add(comp);
+            }
+            #endregion
+
+            #region Чтение людей
+            basepath = ConfigurationManager.AppSettings["HumansFile"];
+            combinedPath = Path.Combine(xmlFolder, basepath);
+            var humansResult = _xmlController.ReadHumansFromFile(combinedPath);
+            HumansList.Clear();
+            foreach (var hum in humansResult)
+            {
+                Human human = new()
+                {
+                    HumanId = Guid.Parse(hum.HumanId),
+                    FirstName = hum.FirstName,
+                    LastName = hum.LastName,
+                    Patronymic = hum.Patronymic,
+                    BirthDate = hum.BirthDate,
+                    BirthCountry = hum.BirthCountry,
+                    BirthPlace = hum.BirthPlace,
+                    DeathDate = hum.DeathDate,
+                    DeathCountry = hum.DeathCountry,
+                    DeathPlace = hum.DeathPlace,
+                    ImageFile = hum.ImageFile,
+                    DeathReasonId = Guid.Parse(hum.DeathReasonId),
+                    HumanComments = hum.HumanComments,
+                    DaysLived = hum.DaysLived,
+                    FullYearsLived = hum.FullYearsLived
+                };
+                HumansList.Add(human);
+            }
+            #endregion
         }
 
 

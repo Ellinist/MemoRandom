@@ -39,14 +39,20 @@ namespace MemoRandom.Data.Interfaces
 
         #region Блок работы с категориями возрастов
         bool SaveCategoriesToFile(List<DtoCategory> categories, string filePath);
+
+        List<DtoCategory> ReadCategoriesFromFile(string filePath);
         #endregion
 
         #region Блок работы с людьми для сравнения
         bool SaveComparedHumansToFile(List<DtoComparedHuman> comparedHumans, string filePath);
+
+        List<DtoComparedHuman> ReadComparedHumansFromFile(string filePath);
         #endregion
 
         #region Блок работы с людьми
         bool SaveHumansToFile(List<DtoHuman> humans, string filePath);
+
+        List<DtoHuman> ReadHumansFromFile(string filePath);
         #endregion
     }
 }

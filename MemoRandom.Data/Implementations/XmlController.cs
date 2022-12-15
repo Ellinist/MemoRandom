@@ -1,5 +1,6 @@
 ﻿using MemoRandom.Data.DtoModels;
 using MemoRandom.Data.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Linq;
@@ -56,9 +57,9 @@ namespace MemoRandom.Data.Implementations
         public List<DtoReason> ReadReasonsFromFile(string filePath)
         {
             List<DtoReason> reasons = new();
-            XDocument xml = XDocument.Load(filePath);
+            XDocument xmlReasons = XDocument.Load(filePath);
 
-            XElement? root = xml.Element("Reasons");
+            XElement? root = xmlReasons.Element("Reasons");
             if (root != null)
             {
                 foreach (XElement reason in root.Elements("Reason"))
@@ -121,6 +122,31 @@ namespace MemoRandom.Data.Implementations
 
             return true;
         }
+
+        public List<DtoCategory> ReadCategoriesFromFile(string filePath)
+        {
+            List<DtoCategory> categories = new();
+            XDocument xmlCategories = XDocument.Load(filePath);
+
+            XElement? root = xmlCategories.Element("Categories");
+            if (root != null)
+            {
+                foreach (XElement category in root.Elements("Category"))
+                {
+                    DtoCategory cat = new DtoCategory()
+                    {
+                        CategoryId = category.Attribute("id").Value,
+                        CategoryName = category.Element("name").Value,
+                        StartAge = category.Element("startage").Value,
+                        StopAge = category.Element("stopage").Value,
+                        StringColor = category.Element("color").Value
+                    };
+                    categories.Add(cat);
+                }
+            }
+
+            return categories;
+        }
         #endregion
 
         #region Блок работы с людьми для сравнения
@@ -149,6 +175,30 @@ namespace MemoRandom.Data.Implementations
             xmlComparedHumans.Save(filePath);
 
             return true;
+        }
+
+        public List<DtoComparedHuman> ReadComparedHumansFromFile(string filePath)
+        {
+            List<DtoComparedHuman> comparedHumans = new();
+            XDocument xmlComparedHumans = XDocument.Load(filePath);
+
+            XElement? root = xmlComparedHumans.Element("ComparedHumans");
+            if (root != null)
+            {
+                foreach (XElement comparedHuman in root.Elements("ComparedHuman"))
+                {
+                    DtoComparedHuman ch = new DtoComparedHuman()
+                    {
+                        ComparedHumanId = comparedHuman.Attribute("id").Value,
+                        ComparedHumanFullName = comparedHuman.Element("name").Value,
+                        ComparedHumanBirthDate = DateTime.Parse(comparedHuman.Element("birthdate").Value),
+                        IsComparedHumanConsidered = bool.Parse(comparedHuman.Element("isconsidered").Value)
+                    };
+                    comparedHumans.Add(ch);
+                }
+            }
+
+            return comparedHumans;
         }
         #endregion
 
@@ -200,6 +250,41 @@ namespace MemoRandom.Data.Implementations
             xmlHumans.Save(filePath);
 
             return true;
+        }
+
+        public List<DtoHuman> ReadHumansFromFile(string filePath)
+        {
+            List<DtoHuman> humans = new();
+            XDocument xmlHumans = XDocument.Load(filePath);
+
+            XElement? root = xmlHumans.Element("Humans");
+            if (root != null)
+            {
+                foreach (XElement hum in root.Elements("Human"))
+                {
+                    DtoHuman human = new DtoHuman()
+                    {
+                        HumanId = hum.Attribute("id").Value,
+                        FirstName = hum.Element("firstname").Value,
+                        LastName = hum.Element("lastname").Value,
+                        Patronymic = hum.Element("patronymic").Value,
+                        BirthDate = DateTime.Parse(hum.Element("birthdate").Value),
+                        BirthCountry = hum.Element("birthcountry").Value,
+                        BirthPlace = hum.Element("birthplace").Value,
+                        DeathDate = DateTime.Parse(hum.Element("deathdate").Value),
+                        DeathCountry = hum.Element("deathcountry").Value,
+                        DeathPlace = hum.Element("deathplace").Value,
+                        ImageFile = hum.Element("image").Value,
+                        DeathReasonId = hum.Element("deathreason").Value,
+                        HumanComments = hum.Element("comments").Value,
+                        DaysLived = double.Parse(hum.Element("dayslived").Value),
+                        FullYearsLived = int.Parse(hum.Element("fullyears").Value)
+                    };
+                    humans.Add(human);
+                }
+            }
+
+            return humans;
         }
         #endregion
     }
