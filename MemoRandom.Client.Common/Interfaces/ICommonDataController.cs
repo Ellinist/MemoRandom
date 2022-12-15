@@ -9,7 +9,7 @@ namespace MemoRandom.Client.Common.Interfaces
 {
     public interface ICommonDataController
     {
-        void SaveXmlData(string filePath);
+        void SaveXmlData();
         void ReadXmlData(string filePath);
 
         /// <summary>

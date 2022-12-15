@@ -26,12 +26,12 @@ namespace MemoRandom.Data.DtoModels
         /// <summary>
         /// С какого возраста действует категория
         /// </summary>
-        public int StartAge { get; set; }
+        public string StartAge { get; set; }
 
         /// <summary>
         /// До какого возраста действует категория
         /// </summary>
-        public int StopAge { get; set; }
+        public string StopAge { get; set; }
 
         /// <summary>
         /// Цвет категории

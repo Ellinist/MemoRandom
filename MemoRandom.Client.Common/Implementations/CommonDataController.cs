@@ -16,6 +16,7 @@ using NLog;
 using MemoRandom.Client.Common.Enums;
 using System.Windows.Controls;
 using MemoRandom.Data.DtoModels;
+using System.Configuration;
 
 namespace MemoRandom.Client.Common.Implementations
 {
@@ -65,8 +66,20 @@ namespace MemoRandom.Client.Common.Implementations
         /// Временно - потом все преобразовать
         /// </summary>
         /// <param name="filePath"></param>
-        public void SaveXmlData(string filePath)
+        public void SaveXmlData()
         {
+            // Проверяем, существует ли папка, где хранятся данные
+            var xmlFolder = AppDomain.CurrentDomain.BaseDirectory;
+            if (!Directory.Exists(xmlFolder))
+            {
+                Directory.CreateDirectory(xmlFolder);
+            }
+
+            #region Для причин
+            // Получаем папку, где установлено приложение
+            var basepath = ConfigurationManager.AppSettings["ReasonsFile"];
+            string combinedPath = Path.Combine(xmlFolder, basepath);
+
             List<DtoReason> dtoReasons = new();
             for (int i = 0; i < PlainReasonsList.Count; i++)
             {
@@ -82,7 +95,91 @@ namespace MemoRandom.Client.Common.Implementations
             }
 
             // Вызов метода сохранения справочника (плоский)
-            _xmlController.SaveReasonsToFile(dtoReasons, filePath);
+            _xmlController.SaveReasonsToFile(dtoReasons, combinedPath);
+            #endregion
+
+            #region Для категорий
+            basepath = ConfigurationManager.AppSettings["CategoriesFile"];
+            combinedPath = Path.Combine(xmlFolder, basepath);
+
+            List<DtoCategory> dtoCategories = new();
+            for (int i = 0; i < AgeCategories.Count; i++)
+            {
+                DtoCategory category = new()
+                {
+                    CategoryId = AgeCategories[i].CategoryId.ToString(),
+                    CategoryName = AgeCategories[i].CategoryName,
+                    StartAge = AgeCategories[i].StartAge.ToString(),
+                    StopAge = AgeCategories[i].StopAge.ToString(),
+                    StringColor = AgeCategories[i].StringColor
+                };
+                dtoCategories.Add(category);
+            }
+
+            _xmlController.SaveCategoriesToFile(dtoCategories, combinedPath);
+            #endregion
+
+            #region Для людей для сравнения
+            basepath = ConfigurationManager.AppSettings["ComparedHumansFile"];
+            combinedPath = Path.Combine(xmlFolder, basepath);
+
+            List<DtoComparedHuman> dtoComparedHumans = new();
+            for (int i = 0; i < ComparedHumansCollection.Count; i++)
+            {
+                DtoComparedHuman comparedHuman = new()
+                {
+                    ComparedHumanId = ComparedHumansCollection[i].ComparedHumanId.ToString(),
+                    ComparedHumanFullName = ComparedHumansCollection[i].ComparedHumanFullName,
+                    ComparedHumanBirthDate = ComparedHumansCollection[i].ComparedHumanBirthDate,
+                    IsComparedHumanConsidered = ComparedHumansCollection[i].IsComparedHumanConsidered
+                };
+                dtoComparedHumans.Add(comparedHuman);
+            }
+
+            _xmlController.SaveComparedHumansToFile(dtoComparedHumans, combinedPath);
+            #endregion
+
+            #region Для людей
+            basepath = ConfigurationManager.AppSettings["HumansFile"];
+            combinedPath = Path.Combine(xmlFolder, basepath);
+
+            List<DtoHuman> dtoHumans = new();
+            for (int i = 0; i < HumansList.Count; i++)
+            {
+                DtoHuman human = new()
+                {
+                    HumanId = HumansList[i].HumanId.ToString(),
+                    FirstName = HumansList[i].FirstName,
+                    LastName = HumansList[i].LastName,
+                    Patronymic = HumansList[i].Patronymic,
+                    BirthDate = HumansList[i].BirthDate,
+                    BirthCountry = HumansList[i].BirthCountry,
+                    BirthPlace = HumansList[i].BirthPlace,
+                    DeathDate = HumansList[i].DeathDate,
+                    DeathCountry = HumansList[i].DeathCountry,
+                    DeathPlace = HumansList[i].DeathPlace,
+                    ImageFile = HumansList[i].ImageFile,
+                    DeathReasonId = HumansList[i].DeathReasonId.ToString(),
+                    HumanComments = HumansList[i].HumanComments,
+                    DaysLived = HumansList[i].DaysLived,
+                    FullYearsLived = HumansList[i].FullYearsLived
+                };
+                dtoHumans.Add(human);
+            }
+
+            _xmlController.SaveHumansToFile(dtoHumans, combinedPath);
+            #endregion
+
+
+
+
+
+
+
+
+
+
+
 
             //#region Чтение из файла - потом структуру переделать
             //PlainReasonsList.Clear(); // Чистим плоский список

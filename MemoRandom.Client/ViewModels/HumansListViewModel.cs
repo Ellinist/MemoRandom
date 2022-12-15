@@ -559,18 +559,19 @@ namespace MemoRandom.Client.ViewModels
 
         private void SaveXml()
         {
-            // Пока временно (без применения интерфейсов) прямо здесь
-            VistaSaveFileDialog fd = new()
-            {
-                Title = "Выбор файла для сохранения"
-            };
+            _commonDataController.SaveXmlData(); // Вызов сохранения
+            //// Пока временно (без применения интерфейсов) прямо здесь
+            //VistaSaveFileDialog fd = new()
+            //{
+            //    Title = "Выбор файла для сохранения"
+            //};
 
-            if (fd.ShowDialog() == true)
-            {
-                var t = fd.FileName;
+            //if (fd.ShowDialog() == true)
+            //{
+            //    var t = fd.FileName;
 
-                _commonDataController.SaveXmlData(t); // Вызов сохранения
-            }
+            //    _commonDataController.SaveXmlData(t); // Вызов сохранения
+            //}
         }
 
         /// <summary>

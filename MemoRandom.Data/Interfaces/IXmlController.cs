@@ -46,7 +46,7 @@ namespace MemoRandom.Data.Interfaces
         #endregion
 
         #region Блок работы с людьми
-        //bool SaveHumansToFile(List<DtoHuman> humans, string filePath);
+        bool SaveHumansToFile(List<DtoHuman> humans, string filePath);
         #endregion
     }
 }
