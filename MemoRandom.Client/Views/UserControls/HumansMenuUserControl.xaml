@@ -19,6 +19,7 @@
                 <MenuItem Header="Временно">
                     <MenuItem Header="Сохранить XML" Command="{Binding SaveXmlCommand}"/>
                     <MenuItem Header="Прочитать XML" Command="{Binding ReadXmlCommand}"/>
+                    <MenuItem Header="Изменение причины" Command="{Binding AddReasonCommand}"/>
                 </MenuItem>
                 <MenuItem Header="О программе" Command="{Binding StartAboutCommand}"/>
             </Menu>

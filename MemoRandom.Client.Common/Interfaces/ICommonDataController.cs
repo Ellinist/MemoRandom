@@ -11,6 +11,16 @@ namespace MemoRandom.Client.Common.Interfaces
     {
         void SaveXmlData();
         void ReadXmlData();
+        void AddReasonToFile(Reason rsn);
+        void ChangeReason(Reason reason);
+
+
+
+
+
+
+
+
 
         /// <summary>
         /// Чтение общей информации из внешнего хранилища

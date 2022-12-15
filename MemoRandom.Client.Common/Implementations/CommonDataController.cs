@@ -273,6 +273,41 @@ namespace MemoRandom.Client.Common.Implementations
             #endregion
         }
 
+        public void AddReasonToFile(Reason rsn)
+        {
+            var xmlFolder = AppDomain.CurrentDomain.BaseDirectory;
+            var basepath = ConfigurationManager.AppSettings["ReasonsFile"];
+            var combinedPath = Path.Combine(xmlFolder, basepath);
+
+            DtoReason dtoReason = new()
+            {
+                ReasonId = rsn.ReasonId.ToString(),
+                ReasonName = rsn.ReasonName,
+                ReasonComment = rsn.ReasonComment,
+                ReasonDescription = rsn.ReasonDescription,
+                ReasonParentId = rsn.ReasonParentId.ToString()
+            };
+
+            _xmlController.AddReasonToList(dtoReason, combinedPath);
+        }
+
+        public void ChangeReason(Reason reason)
+        {
+            var xmlFolder = AppDomain.CurrentDomain.BaseDirectory;
+            var basepath = ConfigurationManager.AppSettings["ReasonsFile"];
+            var combinedPath = Path.Combine(xmlFolder, basepath);
+
+            DtoReason dtoReason = new()
+            {
+                ReasonId = reason.ReasonId.ToString(),
+                ReasonName = reason.ReasonName,
+                ReasonComment = reason.ReasonComment,
+                ReasonDescription = reason.ReasonDescription,
+                ReasonParentId = reason.ReasonParentId.ToString()
+            };
+
+            _xmlController.ChangeReasonInFile(dtoReason, combinedPath);
+        }
 
 
         /// <summary>

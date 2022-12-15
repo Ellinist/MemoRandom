@@ -2,6 +2,7 @@
 using MemoRandom.Data.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 
@@ -79,11 +80,53 @@ namespace MemoRandom.Data.Implementations
             return reasons;
         }
 
-        public bool AddReasonToList(DtoReason reason)
+        public bool AddReasonToList(DtoReason reason, string filePath)
         {
+            XDocument xmlReasons = XDocument.Load(filePath);
+            XElement? root = xmlReasons.Element("Reasons");
+            if (root != null)
+            {
+                XElement rsn = new XElement("Reason");
+                XAttribute id = new XAttribute("id", $"{reason.ReasonId}");
+                XElement name = new XElement("name", $"{reason.ReasonName}");
+                XElement comment = new XElement("comment", $"{reason.ReasonComment}");
+                XElement description = new XElement("description", $"{reason.ReasonDescription}");
+                XElement parent = new XElement("parent", $"{reason.ReasonParentId}");
 
+                rsn.Add(id);
+                rsn.Add(name);
+                rsn.Add(comment);
+                rsn.Add(description);
+                rsn.Add(parent);
 
+                root.Add(rsn);
+            }
+            xmlReasons.Save(filePath);
             return true;
+        }
+
+        public void ChangeReasonInFile(DtoReason rsn, string filePath)
+        {
+            XDocument xmlReasons = XDocument.Load(filePath);
+            XElement? root = xmlReasons.Element("Reasons");
+            if (root != null)
+            {
+                var l = root.Elements("Reason");
+                var r1 = l.FirstOrDefault(x => x.Attribute("id").Value == rsn.ReasonId);
+                if(r1 != null)
+                {
+                    var name = r1.Element("name");
+                    name.Value = rsn.ReasonName;
+                    var comment = r1.Element("comment");
+                    comment.Value = rsn.ReasonComment;
+                    var description = r1.Element("description");
+                    description.Value = rsn.ReasonDescription;
+
+                    xmlReasons.Save(filePath);
+                }
+
+                //r1.Element("name") = rsn.ReasonName;
+            }
         }
         #endregion
 

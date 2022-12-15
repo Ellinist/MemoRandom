@@ -540,6 +540,7 @@ namespace MemoRandom.Client.ViewModels
 
         public DelegateCommand SaveXmlCommand { get; private set; }
         public DelegateCommand ReadXmlCommand { get; private set; }
+        public DelegateCommand AddReasonCommand { get; private set; }
         #endregion
 
         /// <summary>
@@ -557,6 +558,7 @@ namespace MemoRandom.Client.ViewModels
 
             SaveXmlCommand = new DelegateCommand(SaveXml);
             ReadXmlCommand = new DelegateCommand(ReadXml);
+            AddReasonCommand = new DelegateCommand(AddReason);
         }
 
         private void SaveXml()
@@ -568,6 +570,32 @@ namespace MemoRandom.Client.ViewModels
         {
             _commonDataController.ReadXmlData();
             RaisePropertyChanged();
+        }
+
+        /// <summary>
+        /// Тестовый метод добавления причины
+        /// </summary>
+        private void AddReason()
+        {
+            //Reason rsn = new()
+            //{
+            //    ReasonId = Guid.NewGuid(),
+            //    ReasonName = "TestReason",
+            //    ReasonComment = "TestComment",
+            //    ReasonDescription = "TestDescription",
+            //    ReasonParentId = Guid.Empty
+            //};
+
+
+            //_commonDataController.AddReasonToFile(rsn);
+            
+            var rs = PlainReasonsList.FirstOrDefault(x => x.ReasonId == Guid.Parse("250f4559-04dc-45b3-bdb4-21068750dd26"));
+
+            rs.ReasonName = "New reason name";
+            rs.ReasonComment = "new reason comment";
+            rs.ReasonDescription = "new reason description";
+
+            _commonDataController.ChangeReason(rs);
         }
 
         /// <summary>

@@ -34,7 +34,9 @@ namespace MemoRandom.Data.Interfaces
         /// </summary>
         /// <param name="reason"></param>
         /// <returns></returns>
-        bool AddReasonToList(DtoReason reason);
+        bool AddReasonToList(DtoReason reason, string filePath);
+
+        void ChangeReasonInFile(DtoReason reason, string filePath);
         #endregion
 
         #region Блок работы с категориями возрастов
