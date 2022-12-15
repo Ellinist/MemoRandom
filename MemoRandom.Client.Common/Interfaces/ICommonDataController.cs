@@ -13,6 +13,7 @@ namespace MemoRandom.Client.Common.Interfaces
         void ReadXmlData();
         void AddReasonToFile(Reason rsn);
         void ChangeReason(Reason reason);
+        void DeleteReason(Guid id);
 
 
 

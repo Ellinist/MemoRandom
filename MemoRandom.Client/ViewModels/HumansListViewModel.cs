@@ -591,11 +591,13 @@ namespace MemoRandom.Client.ViewModels
             
             var rs = PlainReasonsList.FirstOrDefault(x => x.ReasonId == Guid.Parse("250f4559-04dc-45b3-bdb4-21068750dd26"));
 
-            rs.ReasonName = "New reason name";
-            rs.ReasonComment = "new reason comment";
-            rs.ReasonDescription = "new reason description";
+            //rs.ReasonName = "New reason name";
+            //rs.ReasonComment = "new reason comment";
+            //rs.ReasonDescription = "new reason description";
 
-            _commonDataController.ChangeReason(rs);
+            //_commonDataController.ChangeReason(rs);
+
+            _commonDataController.DeleteReason(rs.ReasonId);
         }
 
         /// <summary>

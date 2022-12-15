@@ -309,6 +309,15 @@ namespace MemoRandom.Client.Common.Implementations
             _xmlController.ChangeReasonInFile(dtoReason, combinedPath);
         }
 
+        public void DeleteReason(Guid id)
+        {
+            var xmlFolder = AppDomain.CurrentDomain.BaseDirectory;
+            var basepath = ConfigurationManager.AppSettings["ReasonsFile"];
+            var combinedPath = Path.Combine(xmlFolder, basepath);
+
+            _xmlController.DeleteReasonInFile(id.ToString(), combinedPath);
+        }
+
 
         /// <summary>
         /// Чтение общей информации из внешнего хранилища

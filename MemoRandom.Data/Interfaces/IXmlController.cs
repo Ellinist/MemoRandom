@@ -37,6 +37,8 @@ namespace MemoRandom.Data.Interfaces
         bool AddReasonToList(DtoReason reason, string filePath);
 
         void ChangeReasonInFile(DtoReason reason, string filePath);
+
+        void DeleteReasonInFile(string id, string filePath);
         #endregion
 
         #region Блок работы с категориями возрастов

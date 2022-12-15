@@ -128,6 +128,22 @@ namespace MemoRandom.Data.Implementations
                 //r1.Element("name") = rsn.ReasonName;
             }
         }
+
+        public void DeleteReasonInFile(string id, string filePath)
+        {
+            XDocument xmlReasons = XDocument.Load(filePath);
+            XElement? root = xmlReasons.Element("Reasons");
+            if (root != null)
+            {
+                var l = root.Elements("Reason");
+                var r1 = l.FirstOrDefault(x => x.Attribute("id").Value == id);
+                if(r1 != null)
+                {
+                    r1.Remove();
+                    xmlReasons.Save(filePath);
+                }
+            }
+        }
         #endregion
 
         #region Блок работы с категориями возрастов
