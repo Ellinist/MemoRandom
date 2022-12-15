@@ -89,7 +89,6 @@ namespace MemoRandom.Client.Common.Implementations
         /// <summary>
         /// Временно - потом все преобразовать
         /// </summary>
-        /// <param name="filePath"></param>
         public void SaveXmlData()
         {
             #region Для причин
