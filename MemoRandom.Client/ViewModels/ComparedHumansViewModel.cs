@@ -187,7 +187,8 @@ namespace MemoRandom.Client.ViewModels
 
                 await Task.Run(() =>
                 {
-                    var result = _commonDataController.UpdateComparedHumanInRepository(SelectedHuman);
+                    //var result = _commonDataController.UpdateComparedHumanInRepository(SelectedHuman);
+                    var result = _commonDataController.UpdateComparedHuman(SelectedHuman);
                     if (!result)
                     {
                         MessageBox.Show("Не удалось обновить человека для сравнения", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -207,7 +208,8 @@ namespace MemoRandom.Client.ViewModels
 
                 await Task.Run(() =>
                 {
-                    var result = _commonDataController.UpdateComparedHumanInRepository(compHuman);
+                    //var result = _commonDataController.UpdateComparedHumanInRepository(compHuman);
+                    var result = _commonDataController.UpdateComparedHuman(compHuman);
                     if (!result)
                     {
                         MessageBox.Show("Не удалось добавить человека для сравнения!", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -228,7 +230,8 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private void DeleteComparedHuman()
         {
-            var result = _commonDataController.DeleteComparedHumanInRepository(SelectedHuman);
+            //var result = _commonDataController.DeleteComparedHumanInRepository(SelectedHuman);
+            var result = _commonDataController.DeleteComparedHuman(SelectedHuman.ComparedHumanId);
             if (!result)
             {
                 MessageBox.Show("Не удалось удалить человека для сравнения!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);

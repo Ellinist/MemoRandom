@@ -3,7 +3,6 @@ using MemoRandom.Data.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics.Metrics;
 using System.Linq;
 using AutoMapper;
 using MemoRandom.Data.DbModels;
@@ -14,7 +13,6 @@ using System.IO;
 using System.Windows.Media.Imaging;
 using NLog;
 using MemoRandom.Client.Common.Enums;
-using System.Windows.Controls;
 using MemoRandom.Data.DtoModels;
 using System.Configuration;
 
@@ -32,6 +30,7 @@ namespace MemoRandom.Client.Common.Implementations
         private string _categoriesFilePath;
         private string _comparedHumansFilePath;
         private string _humansFilePath;
+        private string _imageFolder;
         #endregion
 
         #region PROPS
@@ -67,24 +66,266 @@ namespace MemoRandom.Client.Common.Implementations
         #endregion
 
         #region IMPLEMENTATION
-        public void SetFilesPaths()
+        /// <summary>
+        /// Установка путей доступа к файлам хранения информации
+        /// </summary>
+        public bool SetFilesPaths()
         {
+            bool success = true;
             // Получаем папку, где установлено приложение и добавляем папку хранения XML-файлов
             var xmlFolder = AppDomain.CurrentDomain.BaseDirectory + @"\Data";
-            // Проверяем, существует ли папка, где хранятся данные
-            if (!Directory.Exists(xmlFolder))
+            var imageFolder = AppDomain.CurrentDomain.BaseDirectory + @"\Image";
+
+            try
             {
-                Directory.CreateDirectory(xmlFolder); // Если не существует, то создаем
+                // Проверяем, существует ли папка, где хранятся данные
+                if (!Directory.Exists(xmlFolder))
+                {
+                    Directory.CreateDirectory(xmlFolder); // Если не существует, то создаем
+                }
+
+                if (!Directory.Exists(imageFolder))
+                {
+                    Directory.CreateDirectory(imageFolder);
+                }
+
+                // Путь к файлу хранения причин смерти
+                _reasonsFilePath = Path.Combine(xmlFolder, ConfigurationManager.AppSettings["ReasonsFile"]);
+                // Путь к файлу хранения возрастных категорий
+                _categoriesFilePath = Path.Combine(xmlFolder, ConfigurationManager.AppSettings["CategoriesFile"]);
+                // Путь к файлу хранения списка людей для сравнения
+                _comparedHumansFilePath = Path.Combine(xmlFolder, ConfigurationManager.AppSettings["ComparedHumansFile"]);
+                // Путь к файлу хранения основного списка людей
+                _humansFilePath = Path.Combine(xmlFolder, ConfigurationManager.AppSettings["HumansFile"]);
+
+                _imageFolder = Path.Combine(imageFolder);
+            }
+            catch (Exception ex)
+            {
+                success = false;
+                _logger.Error($"Неудачная установка путей к файлам: {ex.HResult}");
             }
 
-            _reasonsFilePath = Path.Combine(xmlFolder, ConfigurationManager.AppSettings["ReasonsFile"]);
-
-            _categoriesFilePath = Path.Combine(xmlFolder, ConfigurationManager.AppSettings["CategoriesFile"]);
-
-            _comparedHumansFilePath = Path.Combine(xmlFolder, ConfigurationManager.AppSettings["ComparedHumansFile"]);
-
-            _humansFilePath = Path.Combine(xmlFolder, ConfigurationManager.AppSettings["HumansFile"]);
+            return success;
         }
+
+        /// <summary>
+        /// Чтение информации из XML-файлов
+        /// </summary>
+        public bool ReadXmlData()
+        {
+            bool success = true; // Флаг успешности операции чтения файлов
+
+            try
+            {
+                #region Чтение причин смерти из файла
+                PlainReasonsList.Clear(); // Чистим плоский список
+                ReasonsCollection.Clear(); // Чистим иерархическую коллекцию
+                var reasonsResult = _xmlController.ReadReasonsFromFile(_reasonsFilePath);
+                PlainReasonsList = _mapper.Map<List<DtoReason>, List<Reason>>(reasonsResult);
+                FormObservableCollection(PlainReasonsList, null); // Формируем иерархическую коллекцию
+                #endregion
+
+                #region Чтение возрастных категорий
+                AgeCategories.Clear(); // Чистим список категорий
+                var categoriesResult = _xmlController.ReadCategoriesFromFile(_categoriesFilePath);
+                AgeCategories = _mapper.Map<List<DtoCategory>, ObservableCollection<Category>>(categoriesResult);
+                foreach (var item in AgeCategories) // Преобразование строк в цвет
+                {
+                    item.CategoryColor = (Color)ColorConverter.ConvertFromString(item.StringColor)!;
+                }
+                #endregion
+
+                #region Чтение людей для сравнения
+                ComparedHumansCollection.Clear(); // Чистим список людей для сравнения
+                var comparedHumansResult = _xmlController.ReadComparedHumansFromFile(_comparedHumansFilePath);
+                ComparedHumansCollection = _mapper.Map<List<DtoComparedHuman>, ObservableCollection<ComparedHuman>>(comparedHumansResult);
+                #endregion
+
+                #region Чтение основного списка людей
+                HumansList.Clear(); // Чистим основной список людей
+                var humansResult = _xmlController.ReadHumansFromFile(_humansFilePath);
+                HumansList = _mapper.Map<List<DtoHuman>, ObservableCollection<Human>>(humansResult);
+                #endregion
+            }
+            catch (Exception ex)
+            {
+                success = false;
+                _logger.Error($"Неудачное чтение информации из XML-файлов: {ex.HResult}");
+            }
+
+            return success;
+        }
+
+        /// <summary>
+        /// Добавление причины в список
+        /// </summary>
+        /// <param name="reason"></param>
+        public bool AddReasonToFile(Reason reason)
+        {
+            bool success = true; // Флаг успешности операции добавления причины смерти в файл
+
+            try
+            {
+                var dtoReason = _mapper.Map<Reason, DtoReason>(reason);
+                _xmlController.AddReasonToList(dtoReason, _reasonsFilePath);
+            }
+            catch (Exception ex)
+            {
+                success = false;
+                _logger.Error($"Ошибка добавления причины смерти {ex.HResult}");
+            }
+
+            return success;
+        }
+
+        /// <summary>
+        /// Изменение причины в списке
+        /// </summary>
+        /// <param name="reason"></param>
+        /// <returns></returns>
+        public bool ChangeReasonInFile(Reason reason)
+        {
+            bool success = true;
+
+            try
+            {
+                var dtoReason = _mapper.Map<Reason, DtoReason>(reason);
+                _xmlController.ChangeReasonInFile(dtoReason, _reasonsFilePath);
+            }
+            catch (Exception ex)
+            {
+                success = false;
+                _logger.Error($"Ошибка изменения причины смерти {ex.HResult}");
+            }
+            
+            return success;
+        }
+
+        /// <summary>
+        /// Удаление причины и всех ее дочерних узлов (если таковые есть)
+        /// </summary>
+        /// <param name="guidList"></param>
+        /// <returns></returns>
+        public bool DeleteReasonAndDaughtersInFile(List<Guid> guidList)
+        {
+            bool success = true;
+
+            try
+            {
+                foreach (var id in guidList)
+                {
+                    _xmlController.DeleteReasonInFile(id.ToString(), _reasonsFilePath);
+                }
+            }
+            catch (Exception ex)
+            {
+                success = false;
+                _logger.Error($"Ошибка удаления причины смерти {ex.HResult}");
+            }
+
+            return success;
+        }
+
+        /// <summary>
+        /// Обновление/добавление категории в файле
+        /// </summary>
+        /// <param name="category"></param>
+        /// <returns></returns>
+        public bool UpdateCategoriesInFile(Category category)
+        {
+            bool success = true;
+
+            var dtoCategory = _mapper.Map<Category, DtoCategory>(category);
+            _xmlController.UpdateCategoryInFile(dtoCategory, _categoriesFilePath);
+            //DbCategory dbCategory = _mapper.Map<DbCategory>(category);
+            //return _msSqlController.UpdateCategories(dbCategory);
+
+            return success;
+        }
+
+        /// <summary>
+        /// Удаление категории в файле
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public bool DeleteCategoryInFile(Guid id)
+        {
+            bool success = true;
+
+            _xmlController.DeleteCategoryInFile(id.ToString(), _categoriesFilePath);
+
+            return success;
+        }
+
+        /// <summary>
+        /// Обновление/добавление человека для сравнения
+        /// </summary>
+        /// <param name="comparedHuman"></param>
+        /// <returns></returns>
+        public bool UpdateComparedHuman(ComparedHuman comparedHuman)
+        {
+            bool success = true;
+
+            DtoComparedHuman dtoComparedHuman = _mapper.Map<ComparedHuman, DtoComparedHuman>(comparedHuman);
+            _xmlController.UpdateComparedHumanInFile(dtoComparedHuman, _comparedHumansFilePath);
+            //DbComparedHuman dbComparedHuman = _mapper.Map<DbComparedHuman>(comparedHuman);
+            //return _msSqlController.UpdateComparedHuman(dbComparedHuman);
+
+            return success;
+        }
+
+        /// <summary>
+        /// Удаление человека для сравнения
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public bool DeleteComparedHuman(Guid id)
+        {
+            bool success = true;
+
+            _xmlController.DeleteComparedHumanInFile(id.ToString(), _comparedHumansFilePath);
+
+            return success;
+        }
+
+        /// <summary>
+        /// Обновление/добавление человека из основного списка людей
+        /// </summary>
+        /// <param name="human"></param>
+        /// <returns></returns>
+        public bool UpdateHuman(Human human, BitmapImage humanImage)
+        {
+            bool success = true;
+
+            DtoHuman dtoHuman = _mapper.Map<Human, DtoHuman>(human);
+            _xmlController.UpdateHumanInFile(dtoHuman, _humansFilePath);
+
+            if (humanImage != null)
+            {
+                SaveImageToFile(humanImage, human); // Сохраняем изображение
+            }
+
+            return success;
+        }
+
+        public bool DeleteHuman(Human human, string imageFile)
+        {
+            bool success = true;
+
+            _xmlController.DeleteHumanInFile(human.HumanId.ToString(), _humansFilePath);
+
+            if (imageFile != string.Empty)
+            {
+                if (!DeleteImageFile(imageFile))
+                {
+                    success = false; // Если файл изображения удалить не удалось
+                }
+            }
+
+            return success;
+        }
+
 
         /// <summary>
         /// Временно - потом все преобразовать
@@ -117,77 +358,9 @@ namespace MemoRandom.Client.Common.Implementations
             #endregion
         }
 
-        /// <summary>
-        /// Временно - читаем все из файла
-        /// </summary>
-        /// <param name="filePath"></param>
-        public void ReadXmlData()
-        {
-            #region Чтение причин смерти из файла - потом структуру переделать
-            PlainReasonsList.Clear(); // Чистим плоский список
-            ReasonsCollection.Clear(); // Чистим иерархическую коллекцию
 
-            var reasonsResult = _xmlController.ReadReasonsFromFile(_reasonsFilePath);
-            // Преобразование через маппер
-            PlainReasonsList = _mapper.Map<List<DtoReason>, List<Reason>>(reasonsResult);
-            FormObservableCollection(PlainReasonsList, null); // Формируем иерархическую коллекцию
-            #endregion
 
-            #region Чтение возрастных категорий
-            AgeCategories.Clear();
-            var categoriesResult = _xmlController.ReadCategoriesFromFile(_categoriesFilePath);
-            AgeCategories = _mapper.Map<List<DtoCategory>, ObservableCollection<Category>>(categoriesResult);
-            foreach (var item in AgeCategories) // Преобразование строк в цвет
-            {
-                item.CategoryColor = (Color)ColorConverter.ConvertFromString(item.StringColor)!;
-            }
-            #endregion
 
-            #region Чтение людей для сравнения
-            ComparedHumansCollection.Clear();
-            var comparedHumansResult = _xmlController.ReadComparedHumansFromFile(_comparedHumansFilePath);
-            ComparedHumansCollection = _mapper.Map<List<DtoComparedHuman>, ObservableCollection<ComparedHuman>>(comparedHumansResult);
-            #endregion
-
-            #region Чтение людей
-            HumansList.Clear();
-            var humansResult = _xmlController.ReadHumansFromFile(_humansFilePath);
-            HumansList = _mapper.Map<List<DtoHuman>, ObservableCollection<Human>>(humansResult);
-            #endregion
-        }
-
-        public void AddReasonToFile(Reason rsn)
-        {
-            DtoReason dtoReason = new()
-            {
-                ReasonId = rsn.ReasonId,
-                ReasonName = rsn.ReasonName,
-                ReasonComment = rsn.ReasonComment,
-                ReasonDescription = rsn.ReasonDescription,
-                ReasonParentId = rsn.ReasonParentId
-            };
-
-            _xmlController.AddReasonToList(dtoReason, _reasonsFilePath);
-        }
-
-        public void ChangeReason(Reason reason)
-        {
-            DtoReason dtoReason = new()
-            {
-                ReasonId = reason.ReasonId,
-                ReasonName = reason.ReasonName,
-                ReasonComment = reason.ReasonComment,
-                ReasonDescription = reason.ReasonDescription,
-                ReasonParentId = reason.ReasonParentId
-            };
-
-            _xmlController.ChangeReasonInFile(dtoReason, _reasonsFilePath);
-        }
-
-        public void DeleteReason(Guid id)
-        {
-            _xmlController.DeleteReasonInFile(id.ToString(), _reasonsFilePath);
-        }
 
 
         /// <summary>
@@ -222,26 +395,26 @@ namespace MemoRandom.Client.Common.Implementations
             return successResult;
         }
 
-        /// <summary>
-        /// Обновление (добавление) категории во внешнее хранилище
-        /// </summary>
-        /// <param name="category"></param>
-        /// <returns></returns>
-        public bool UpdateCategoriesInRepository(Category category)
-        {
-            DbCategory dbCategory = _mapper.Map<DbCategory>(category);
-            return _msSqlController.UpdateCategories(dbCategory);
-        }
+        ///// <summary>
+        ///// Обновление (добавление) категории во внешнее хранилище
+        ///// </summary>
+        ///// <param name="category"></param>
+        ///// <returns></returns>
+        //public bool UpdateCategoriesInRepository(Category category)
+        //{
+        //    DbCategory dbCategory = _mapper.Map<DbCategory>(category);
+        //    return _msSqlController.UpdateCategories(dbCategory);
+        //}
 
-        /// <summary>
-        /// Удаление выбранной категории во внешнем хранилище
-        /// </summary>
-        /// <param name="category"></param>
-        /// <returns></returns>
-        public bool DeleteCategoryInRepository(Category category)
-        {
-            return _msSqlController.DeleteCategory(category.CategoryId);
-        }
+        ///// <summary>
+        ///// Удаление выбранной категории во внешнем хранилище
+        ///// </summary>
+        ///// <param name="category"></param>
+        ///// <returns></returns>
+        //public bool DeleteCategoryInRepository(Category category)
+        //{
+        //    return _msSqlController.DeleteCategory(category.CategoryId);
+        //}
 
         /// <summary>
         /// Обновление иерархической коллекции причин смерти
@@ -321,7 +494,10 @@ namespace MemoRandom.Client.Common.Implementations
             // Читаем файл изображения, если выбранный человек существует и у него есть изображение
             if (currentHuman == null || currentHuman.ImageFile == string.Empty) return null;
 
-            string combinedImagePath = Path.Combine(_msSqlController.GetImageFolder(), currentHuman.ImageFile);
+            //string combinedImagePath = Path.Combine(_msSqlController.GetImageFolder(), currentHuman.ImageFile);
+            string combinedImagePath = Path.Combine(_imageFolder, currentHuman.ImageFile);
+            if (!File.Exists(combinedImagePath)) return null;
+
             using Stream stream = File.OpenRead(combinedImagePath);
             BitmapImage image = new BitmapImage();
             image.BeginInit();
@@ -340,7 +516,8 @@ namespace MemoRandom.Client.Common.Implementations
         /// <param name="humanImage"></param>
         private void SaveImageToFile(BitmapSource humanImage, Human human)
         {
-            string combinedImagePath = Path.Combine(_msSqlController.GetImageFolder(), human.ImageFile);
+            //string combinedImagePath = Path.Combine(_msSqlController.GetImageFolder(), human.ImageFile);
+            string combinedImagePath = Path.Combine(_imageFolder, human.ImageFile);
 
             JpegBitmapEncoder encoder = new JpegBitmapEncoder();
             encoder.Frames.Add(BitmapFrame.Create(humanImage));

@@ -9,12 +9,83 @@ namespace MemoRandom.Client.Common.Interfaces
 {
     public interface ICommonDataController
     {
-        void SetFilesPaths();
+        /// <summary>
+        /// Установка путей доступа к файлам хранения информации
+        /// </summary>
+        bool SetFilesPaths();
+
+        /// <summary>
+        /// Чтение информации из XML-файлов
+        /// </summary>
+        bool ReadXmlData();
+
+        #region Работа с причинами смерти
+        /// <summary>
+        /// Добавление причины в список
+        /// </summary>
+        /// <param name="reason"></param>
+        bool AddReasonToFile(Reason reason);
+
+        /// <summary>
+        /// Изменение причины в списке
+        /// </summary>
+        /// <param name="reason"></param>
+        /// <returns></returns>
+        bool ChangeReasonInFile(Reason reason);
+        
+        /// <summary>
+        /// Удаление причины и всех ее дочерних узлов (если таковые есть)
+        /// </summary>
+        /// <param name="guidList"></param>
+        /// <returns></returns>
+        bool DeleteReasonAndDaughtersInFile(List<Guid> guidList);
+        #endregion
+
+        #region Работа с возрастными категориями
+        /// <summary>
+        /// Обновление/добавление категории в файле
+        /// </summary>
+        /// <param name="category"></param>
+        /// <returns></returns>
+        bool UpdateCategoriesInFile(Category category);
+
+        /// <summary>
+        /// Удаление категории в файле
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        bool DeleteCategoryInFile(Guid id);
+        #endregion
+
+        #region Работа с людьми для сравнения
+        /// <summary>
+        /// Обновление/добавление человека для сравнения
+        /// </summary>
+        /// <param name="comparedHuman"></param>
+        /// <returns></returns>
+        bool UpdateComparedHuman(ComparedHuman comparedHuman);
+
+        /// <summary>
+        /// Удаление человека для сравнения
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        bool DeleteComparedHuman(Guid id);
+        #endregion
+
+        #region Работа с основным списком людей
+        /// <summary>
+        /// Обновление/добавление человека из основного списка людей
+        /// </summary>
+        /// <param name="human"></param>
+        /// <returns></returns>
+        bool UpdateHuman(Human human, BitmapImage humanImage);
+        bool DeleteHuman(Human human, string imageFile);
+        #endregion
+
+
         void SaveXmlData();
-        void ReadXmlData();
-        void AddReasonToFile(Reason rsn);
-        void ChangeReason(Reason reason);
-        void DeleteReason(Guid id);
+        
 
 
 
@@ -30,19 +101,19 @@ namespace MemoRandom.Client.Common.Interfaces
         /// <returns></returns>
         bool ReadDataFromRepository();
 
-        /// <summary>
-        /// Обновление (или добавление) категории во внешнее хранилище
-        /// </summary>
-        /// <param name="category"></param>
-        /// <returns></returns>
-        bool UpdateCategoriesInRepository(Category category);
+        ///// <summary>
+        ///// Обновление (или добавление) категории во внешнее хранилище
+        ///// </summary>
+        ///// <param name="category"></param>
+        ///// <returns></returns>
+        //bool UpdateCategoriesInRepository(Category category);
 
-        /// <summary>
-        /// Удаление выбранной категории во внешнем хранилище
-        /// </summary>
-        /// <param name="category"></param>
-        /// <returns></returns>
-        bool DeleteCategoryInRepository(Category category);
+        ///// <summary>
+        ///// Удаление выбранной категории во внешнем хранилище
+        ///// </summary>
+        ///// <param name="category"></param>
+        ///// <returns></returns>
+        //bool DeleteCategoryInRepository(Category category);
 
         /// <summary>
         /// Обновление (добавление) человека для сравнения во внешнем хранилище

@@ -252,7 +252,8 @@ namespace MemoRandom.Client.ViewModels
 
                 await Task.Run(() =>
                 {
-                    var result = _commonDataController.UpdateCategoriesInRepository(SelectedCategory);
+                    //var result = _commonDataController.UpdateCategoriesInRepository(SelectedCategory);
+                    var result = _commonDataController.UpdateCategoriesInFile(SelectedCategory);
                     if (!result)
                     {
                         MessageBox.Show("Не удалось обновить категорию", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -278,7 +279,8 @@ namespace MemoRandom.Client.ViewModels
 
                 await Task.Run(() =>
                 {
-                    var result = _commonDataController.UpdateCategoriesInRepository(category);
+                    //var result = _commonDataController.UpdateCategoriesInRepository(category);
+                    var result = _commonDataController.UpdateCategoriesInFile(category);
                     if (!result)
                     {
                         MessageBox.Show("Не удалось добавить категорию", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -324,7 +326,9 @@ namespace MemoRandom.Client.ViewModels
         {
             if (SelectedCategory == null) return; // Здесь можно еще уведомление дать
 
-            if (!await Task.Run(() => _commonDataController.DeleteCategoryInRepository(SelectedCategory)))
+            if (!await Task.Run(() =>
+            _commonDataController.DeleteCategoryInFile(SelectedCategory.CategoryId)         
+            /*_commonDataController.DeleteCategoryInRepository(SelectedCategory)*/))
             {
                 MessageBox.Show("Не получилось удалить выбранную категорию!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;

@@ -155,9 +155,16 @@ namespace MemoRandom.Client.ViewModels
         {
             if (sender is Window window)
             {
-                _commonDataController.SetFilesPaths(); // Здесь добавить проверку на выполняемость метода
+                var success = _commonDataController.SetFilesPaths(); // Проверка на выполняемость метода
 
-                SetInitialPaths(); // Начальная инициализация БД (или любой другой фигни) и путей
+                if (!success) // Если метод установки путей хранения информации неуспешен
+                {
+                    MessageBox.Show("Не удалось установить пути хранения информации!", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+                    window.Close();
+                    return;
+                }
+
+                //SetInitialPaths(); // Начальная инициализация БД (или любой другой фигни) и путей
                 ReadStartData();
 
                 window.Closing += StartMemoRandomViewModel_Closing; // Подписываемся на событие закрытия окна
@@ -213,11 +220,19 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private async void ReadStartData()
         {
+            bool success = true;
+
             await Task.Run(() =>
             {
-                _commonDataController.ReadDataFromRepository();
+                success = _commonDataController.ReadXmlData();
+                //_commonDataController.ReadDataFromRepository();
                 ButtonsVisibility.Invoke();   // Чтение данных выполнено - кнопки делаем видимыми
             });
+
+            if (!success)
+            {
+                MessageBox.Show("Чтение информации из XML-файлов не удалось!", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         /// <summary>
@@ -243,12 +258,14 @@ namespace MemoRandom.Client.ViewModels
         /// <param name="container"></param>
         /// <param name="msSqlController"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public StartMemoRandomViewModel(ILogger logger, IContainer container, IMsSqlController msSqlController,
+        public StartMemoRandomViewModel(ILogger logger,
+                                        IContainer container,
+                                        IMsSqlController msSqlController,
                                         ICommonDataController commonDataController)
         {
-            _logger          = logger ?? throw new ArgumentNullException(nameof(logger));
-            _container       = container ?? throw new ArgumentNullException(nameof(container));
-            _msSqlController = msSqlController ?? throw new ArgumentNullException(nameof(msSqlController));
+            _logger               = logger ?? throw new ArgumentNullException(nameof(logger));
+            _container            = container ?? throw new ArgumentNullException(nameof(container));
+            _msSqlController      = msSqlController ?? throw new ArgumentNullException(nameof(msSqlController));
             _commonDataController = commonDataController ?? throw new ArgumentNullException(nameof(commonDataController));
         }
         #endregion

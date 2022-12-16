@@ -626,7 +626,8 @@ namespace MemoRandom.Client.ViewModels
                 var image = BitmapSourceToBitmapImage(TargetImageSource);
                 await Task.Run(() =>
                 {
-                    result = _commonDataController.UpdateHumanInRepository(CommonDataController.CurrentHuman, image);
+                    //result = _commonDataController.UpdateHumanInRepository(CommonDataController.CurrentHuman, image);
+                    result = _commonDataController.UpdateHuman(CommonDataController.CurrentHuman, image);
                 });
                 if(result) CloseAction(); // Закрываем окно
             }

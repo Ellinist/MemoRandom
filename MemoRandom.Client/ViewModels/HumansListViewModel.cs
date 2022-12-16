@@ -20,9 +20,6 @@ using ScottPlot;
 
 using ScottPlot.Statistics;
 using MemoRandom.Data.Interfaces;
-using System.IO;
-using System.Xml;
-using Ookii.Dialogs.Wpf;
 
 namespace MemoRandom.Client.ViewModels
 {
@@ -140,8 +137,17 @@ namespace MemoRandom.Client.ViewModels
                     RaisePropertyChanged(nameof(SelectedHuman));
 
                     // Изменение изображения
-                    ImageSource = _commonDataController.GetHumanImage(CommonDataController.CurrentHuman);
-                    RaisePropertyChanged(nameof(ImageSource));
+                    var imageResult = _commonDataController.GetHumanImage(CommonDataController.CurrentHuman);
+                    if (imageResult != null)
+                    {
+                        ImageSource = imageResult;
+                        RaisePropertyChanged(nameof(ImageSource));
+                    }
+                    else
+                    {
+                        ImageSource = null;
+                        RaisePropertyChanged(nameof(ImageSource));
+                    }
 
                     // Изменение текста прожитых лет
                     SetFullYearsText(SelectedHuman);
@@ -486,7 +492,8 @@ namespace MemoRandom.Client.ViewModels
             {
                 await Task.Run(() =>
                 {
-                    _commonDataController.DeleteHumanInRepository(SelectedHuman, SelectedHuman.ImageFile); // Удаление во внешнем хранилище
+                    _commonDataController.DeleteHuman(SelectedHuman, SelectedHuman.ImageFile);
+                    //_commonDataController.DeleteHumanInRepository(SelectedHuman, SelectedHuman.ImageFile); // Удаление во внешнем хранилище
                 });
 
                 CommonDataController.HumansList.Remove(SelectedHuman); // Удаление в списке
@@ -561,6 +568,9 @@ namespace MemoRandom.Client.ViewModels
             AddReasonCommand = new DelegateCommand(AddReason);
         }
 
+        /// <summary>
+        /// Временно
+        /// </summary>
         private void SaveXml()
         {
             _commonDataController.SaveXmlData(); // Вызов сохранения
@@ -590,7 +600,7 @@ namespace MemoRandom.Client.ViewModels
 
             //_commonDataController.AddReasonToFile(rsn);
             
-            var rs = PlainReasonsList.FirstOrDefault(x => x.ReasonId == Guid.Parse("250f4559-04dc-45b3-bdb4-21068750dd26"));
+            //var rs = PlainReasonsList.FirstOrDefault(x => x.ReasonId == Guid.Parse("250f4559-04dc-45b3-bdb4-21068750dd26"));
 
             //rs.ReasonName = "New reason name";
             //rs.ReasonComment = "new reason comment";
@@ -598,7 +608,7 @@ namespace MemoRandom.Client.ViewModels
 
             //_commonDataController.ChangeReason(rs);
 
-            _commonDataController.DeleteReason(rs.ReasonId);
+            //_commonDataController.DeleteReasonAndDaughters(rs.ReasonId);
         }
 
         /// <summary>
