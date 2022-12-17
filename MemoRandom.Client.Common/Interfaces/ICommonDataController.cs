@@ -84,7 +84,7 @@ namespace MemoRandom.Client.Common.Interfaces
         #endregion
 
 
-        void SaveXmlData();
+        //void SaveXmlData();
         
 
 

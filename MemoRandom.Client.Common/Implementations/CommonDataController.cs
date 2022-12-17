@@ -284,7 +284,7 @@ namespace MemoRandom.Client.Common.Implementations
             try
             {
                 var dtoComparedHuman = _mapper.Map<ComparedHuman, DtoComparedHuman>(comparedHuman);
-                success = _xmlController.UpdateComparedHumanInFile(dtoComparedHuman, _comparedHumansFilePath);
+                _xmlController.UpdateComparedHumanInFile(dtoComparedHuman, _comparedHumansFilePath);
             }
             catch (Exception ex)
             {
@@ -306,7 +306,7 @@ namespace MemoRandom.Client.Common.Implementations
 
             try
             {
-                success = _xmlController.DeleteComparedHumanInFile(id.ToString(), _comparedHumansFilePath);
+                _xmlController.DeleteComparedHumanInFile(id.ToString(), _comparedHumansFilePath);
             }
             catch (Exception ex)
             {
@@ -355,36 +355,36 @@ namespace MemoRandom.Client.Common.Implementations
         }
 
 
-        /// <summary>
-        /// Временно - потом все преобразовать
-        /// </summary>
-        public void SaveXmlData()
-        {
-            #region Для причин
-            List<DtoReason> dtoReasons = _mapper.Map<List<Reason>, List<DtoReason>>(PlainReasonsList);
+        ///// <summary>
+        ///// Временно - потом все преобразовать
+        ///// </summary>
+        //public void SaveXmlData()
+        //{
+        //    #region Для причин
+        //    List<DtoReason> dtoReasons = _mapper.Map<List<Reason>, List<DtoReason>>(PlainReasonsList);
 
-            // Вызов метода сохранения справочника (плоский)
-            _xmlController.SaveReasonsToFile(dtoReasons, _reasonsFilePath);
-            #endregion
+        //    // Вызов метода сохранения справочника (плоский)
+        //    _xmlController.SaveReasonsToFile(dtoReasons, _reasonsFilePath);
+        //    #endregion
 
-            #region Для категорий
-            List<DtoCategory> dtoCategories = _mapper.Map<ObservableCollection<Category>, List<DtoCategory>>(AgeCategories);
+        //    #region Для категорий
+        //    List<DtoCategory> dtoCategories = _mapper.Map<ObservableCollection<Category>, List<DtoCategory>>(AgeCategories);
 
-            _xmlController.SaveCategoriesToFile(dtoCategories, _categoriesFilePath);
-            #endregion
+        //    _xmlController.SaveCategoriesToFile(dtoCategories, _categoriesFilePath);
+        //    #endregion
 
-            #region Для людей для сравнения
-            List<DtoComparedHuman> dtoComparedHumans = _mapper.Map<ObservableCollection<ComparedHuman>, List<DtoComparedHuman>>(ComparedHumansCollection);
+        //    #region Для людей для сравнения
+        //    List<DtoComparedHuman> dtoComparedHumans = _mapper.Map<ObservableCollection<ComparedHuman>, List<DtoComparedHuman>>(ComparedHumansCollection);
 
-            _xmlController.SaveComparedHumansToFile(dtoComparedHumans, _comparedHumansFilePath);
-            #endregion
+        //    _xmlController.SaveComparedHumansToFile(dtoComparedHumans, _comparedHumansFilePath);
+        //    #endregion
 
-            #region Для людей
-            List<DtoHuman> dtoHumans = _mapper.Map<ObservableCollection<Human>, List<DtoHuman>>(HumansList);
+        //    #region Для людей
+        //    List<DtoHuman> dtoHumans = _mapper.Map<ObservableCollection<Human>, List<DtoHuman>>(HumansList);
 
-            _xmlController.SaveHumansToFile(dtoHumans, _humansFilePath);
-            #endregion
-        }
+        //    _xmlController.SaveHumansToFile(dtoHumans, _humansFilePath);
+        //    #endregion
+        //}
 
 
 

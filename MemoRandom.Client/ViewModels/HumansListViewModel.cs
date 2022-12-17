@@ -545,7 +545,7 @@ namespace MemoRandom.Client.ViewModels
 
         public DelegateCommand CategoriesCommand { get; private set; }
 
-        public DelegateCommand SaveXmlCommand { get; private set; }
+        //public DelegateCommand SaveXmlCommand { get; private set; }
         public DelegateCommand ReadXmlCommand { get; private set; }
         public DelegateCommand AddReasonCommand { get; private set; }
         #endregion
@@ -563,18 +563,18 @@ namespace MemoRandom.Client.ViewModels
             ComparedHumansOpenCommand = new DelegateCommand(ComparedHumansOpen);
             DynamicShowCommand   = new DelegateCommand(DynamicShow);
 
-            SaveXmlCommand = new DelegateCommand(SaveXml);
+            //SaveXmlCommand = new DelegateCommand(SaveXml);
             ReadXmlCommand = new DelegateCommand(ReadXml);
             AddReasonCommand = new DelegateCommand(AddReason);
         }
 
-        /// <summary>
-        /// Временно
-        /// </summary>
-        private void SaveXml()
-        {
-            _commonDataController.SaveXmlData(); // Вызов сохранения
-        }
+        ///// <summary>
+        ///// Временно
+        ///// </summary>
+        //private void SaveXml()
+        //{
+        //    _commonDataController.SaveXmlData(); // Вызов сохранения
+        //}
 
         private void ReadXml()
         {
