@@ -29,7 +29,7 @@ namespace MemoRandom.Data.DtoModels
         public string ReasonDescription { get; set; }
 
         /// <summary>
-        /// Идентификтор родительской причины (узла)
+        /// Идентификатор родительской причины (узла)
         /// </summary>
         public Guid ReasonParentId { get; set; }
     }

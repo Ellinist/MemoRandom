@@ -1,10 +1,8 @@
-﻿using MemoRandom.Data.DbModels;
-using MemoRandom.Data.DtoModels;
+﻿using MemoRandom.Data.DtoModels;
 using MemoRandom.Data.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml;
 using System.Xml.Linq;
 
 namespace MemoRandom.Data.Implementations
@@ -22,18 +20,18 @@ namespace MemoRandom.Data.Implementations
             List<DtoReason> reasons = new(); // Создание списка DTO данных по причинам смерти
             XDocument xmlReasons = XDocument.Load(filePath); // Чтение из файла
 
-            XElement? root = xmlReasons.Element("Reasons"); // Чтение корневого элемента
+            XElement root = xmlReasons.Element("Reasons"); // Чтение корневого элемента
             if (root != null) // Если элемент существует
             {
-                foreach (XElement reason in root.Elements("Reason")) // В цикле по всем вложенным элементам с типом "Reason"
+                foreach (var reason in root.Elements("Reason")) // В цикле по всем вложенным элементам с типом "Reason"
                 {
                     DtoReason rsn = new() // Создаем новый DTO-объект
                     {
-                        ReasonId          = Guid.Parse(reason.Attribute("id").Value),
-                        ReasonName        = reason.Element("name").Value,
-                        ReasonComment     = reason.Element("comment").Value,
-                        ReasonDescription = reason.Element("description").Value,
-                        ReasonParentId    = Guid.Parse(reason.Element("parent").Value)
+                        ReasonId          = Guid.Parse(reason.Attribute("id")!.Value),
+                        ReasonName        = reason.Element("name")!.Value,
+                        ReasonComment     = reason.Element("comment")!.Value,
+                        ReasonDescription = reason.Element("description")!.Value,
+                        ReasonParentId    = Guid.Parse(reason.Element("parent")!.Value)
                     };
                     reasons.Add(rsn);
                 }
@@ -52,10 +50,10 @@ namespace MemoRandom.Data.Implementations
         /// <param name="reason"></param>
         /// <param name="filePath"></param>
         /// <returns></returns>
-        public bool AddReasonToList(DtoReason reason, string filePath)
+        public void AddReasonToList(DtoReason reason, string filePath)
         {
             XDocument xmlReasons = XDocument.Load(filePath);
-            XElement? root = xmlReasons.Element("Reasons");
+            XElement root = xmlReasons.Element("Reasons");
             if (root != null)
             {
                 XElement rsn         = new XElement("Reason");
@@ -74,7 +72,6 @@ namespace MemoRandom.Data.Implementations
                 root.Add(rsn);
             }
             xmlReasons.Save(filePath);
-            return true;
         }
 
         /// <summary>
@@ -85,20 +82,17 @@ namespace MemoRandom.Data.Implementations
         public void ChangeReasonInFile(DtoReason rsn, string filePath)
         {
             XDocument xmlReasons = XDocument.Load(filePath);
-            XElement? root = xmlReasons.Element("Reasons");
+            XElement root = xmlReasons.Element("Reasons");
             if (root != null)
             {
-                var l = root.Elements("Reason");
-                var r1 = l.FirstOrDefault(x => Guid.Parse(x.Attribute("id").Value) == rsn.ReasonId);
-                if(r1 != null)
+                var rootElements = root.Elements("Reason");
+                var element = rootElements.FirstOrDefault(x => Guid.Parse(x.Attribute("id")!.Value) == rsn.ReasonId);
+                if (element != null)
                 {
-                    var name          = r1.Element("name");
-                    name.Value        = rsn.ReasonName;
-                    var comment       = r1.Element("comment");
-                    comment.Value     = rsn.ReasonComment;
-                    var description   = r1.Element("description");
-                    description.Value = rsn.ReasonDescription;
-
+                    element.Element("name")!.Value = rsn.ReasonName;
+                    element.Element("comment")!.Value = rsn.ReasonComment;
+                    element.Element("description")!.Value = rsn.ReasonDescription;
+                    
                     xmlReasons.Save(filePath);
                 }
             }

@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ComparedHumans>
+  <ComparedHuman id="50c36a83-1062-4c8b-a92f-a04271818bc0">
+    <name>Голиней Л.Т.</name>
+    <birthdate>06.04.1939 12:00:00</birthdate>
+    <isconsidered>True</isconsidered>
+  </ComparedHuman>
+  <ComparedHuman id="f8fb74bb-128f-4c70-9e18-2ac4a97a118d">
+    <name>Дашкевич П.Н.</name>
+    <birthdate>28.07.1955 12:00:00</birthdate>
+    <isconsidered>True</isconsidered>
+  </ComparedHuman>
+  <ComparedHuman id="acf80b27-2613-4e44-a5e0-74ac98734c68">
+    <name>Курдин С.Р.</name>
+    <birthdate>03.07.1956 12:00:00</birthdate>
+    <isconsidered>True</isconsidered>
+  </ComparedHuman>
+  <ComparedHuman id="17d3459c-6712-41a3-bb46-ddf7888aaae2">
+    <name>Ротарь Н.И.</name>
+    <birthdate>13.03.1963 12:00:00</birthdate>
+    <isconsidered>True</isconsidered>
+  </ComparedHuman>
+  <ComparedHuman id="86d5a566-777f-4d7a-95d4-d472d58cb33c">
+    <name>Голиней В.Н.</name>
+    <birthdate>30.05.1963 18:00:00</birthdate>
+    <isconsidered>True</isconsidered>
+  </ComparedHuman>
+  <ComparedHuman id="f42624a0-6e62-4767-bab3-df676b548e5a">
+    <name>Прохоров В.В.</name>
+    <birthdate>23.05.1966 12:00:00</birthdate>
+    <isconsidered>True</isconsidered>
+  </ComparedHuman>
+  <ComparedHuman id="645159f9-50b5-46d4-852f-4f78a1259758">
+    <name>Крылов Ф.В.</name>
+    <birthdate>02.08.1967 12:00:00</birthdate>
+    <isconsidered>True</isconsidered>
+  </ComparedHuman>
+  <ComparedHuman id="f27bbdfa-ad86-4edd-982d-57772c55b476">
+    <name>Голиней С.В.</name>
+    <birthdate>16.12.1969 12:00:00</birthdate>
+    <isconsidered>True</isconsidered>
+  </ComparedHuman>
+  <ComparedHuman id="0d00c687-2862-4210-8886-d01864b20446">
+    <name>Ефимов Ю.В.</name>
+    <birthdate>13.07.1972 12:00:00</birthdate>
+    <isconsidered>True</isconsidered>
+  </ComparedHuman>
+  <ComparedHuman id="959b9e71-862e-44f1-82ea-2e8a6a0f84e6">
+    <name>Ильин Е.А.</name>
+    <birthdate>02.12.1981 12:00:00</birthdate>
+    <isconsidered>True</isconsidered>
+  </ComparedHuman>
+  <ComparedHuman id="98a364cb-0d47-4359-a52c-bcc808fdba6a">
+    <name>Голиней Е.В.</name>
+    <birthdate>24.05.1999 21:15:00</birthdate>
+    <isconsidered>True</isconsidered>
+  </ComparedHuman>
+</ComparedHumans>

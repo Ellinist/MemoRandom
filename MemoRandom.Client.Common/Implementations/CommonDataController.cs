@@ -74,7 +74,7 @@ namespace MemoRandom.Client.Common.Implementations
             bool success = true;
             // Получаем папку, где установлено приложение и добавляем папку хранения XML-файлов
             var xmlFolder = AppDomain.CurrentDomain.BaseDirectory + @"\Data";
-            var imageFolder = AppDomain.CurrentDomain.BaseDirectory + @"\Image";
+            var imageFolder = AppDomain.CurrentDomain.BaseDirectory + @"\Images";
 
             try
             {
@@ -90,13 +90,13 @@ namespace MemoRandom.Client.Common.Implementations
                 }
 
                 // Путь к файлу хранения причин смерти
-                _reasonsFilePath = Path.Combine(xmlFolder, ConfigurationManager.AppSettings["ReasonsFile"]);
+                _reasonsFilePath = Path.Combine(xmlFolder, ConfigurationManager.AppSettings["ReasonsFile"]!);
                 // Путь к файлу хранения возрастных категорий
-                _categoriesFilePath = Path.Combine(xmlFolder, ConfigurationManager.AppSettings["CategoriesFile"]);
+                _categoriesFilePath = Path.Combine(xmlFolder, ConfigurationManager.AppSettings["CategoriesFile"]!);
                 // Путь к файлу хранения списка людей для сравнения
-                _comparedHumansFilePath = Path.Combine(xmlFolder, ConfigurationManager.AppSettings["ComparedHumansFile"]);
+                _comparedHumansFilePath = Path.Combine(xmlFolder, ConfigurationManager.AppSettings["ComparedHumansFile"]!);
                 // Путь к файлу хранения основного списка людей
-                _humansFilePath = Path.Combine(xmlFolder, ConfigurationManager.AppSettings["HumansFile"]);
+                _humansFilePath = Path.Combine(xmlFolder, ConfigurationManager.AppSettings["HumansFile"]!);
 
                 _imageFolder = Path.Combine(imageFolder);
             }
@@ -236,10 +236,16 @@ namespace MemoRandom.Client.Common.Implementations
         {
             bool success = true;
 
-            var dtoCategory = _mapper.Map<Category, DtoCategory>(category);
-            _xmlController.UpdateCategoryInFile(dtoCategory, _categoriesFilePath);
-            //DbCategory dbCategory = _mapper.Map<DbCategory>(category);
-            //return _msSqlController.UpdateCategories(dbCategory);
+            try
+            {
+                var dtoCategory = _mapper.Map<Category, DtoCategory>(category);
+                _xmlController.UpdateCategoryInFile(dtoCategory, _categoriesFilePath);
+            }
+            catch (Exception ex)
+            {
+                success = false;
+                _logger.Error($"Ошибка обновления возрастной категории {ex.HResult}");
+            }
 
             return success;
         }
@@ -253,7 +259,15 @@ namespace MemoRandom.Client.Common.Implementations
         {
             bool success = true;
 
-            _xmlController.DeleteCategoryInFile(id.ToString(), _categoriesFilePath);
+            try
+            {
+                _xmlController.DeleteCategoryInFile(id.ToString(), _categoriesFilePath);
+            }
+            catch (Exception ex)
+            {
+                success = false;
+                _logger.Error($"Ошибка удаления возрастной категории {ex.HResult}");
+            }
 
             return success;
         }
@@ -267,10 +281,16 @@ namespace MemoRandom.Client.Common.Implementations
         {
             bool success = true;
 
-            DtoComparedHuman dtoComparedHuman = _mapper.Map<ComparedHuman, DtoComparedHuman>(comparedHuman);
-            _xmlController.UpdateComparedHumanInFile(dtoComparedHuman, _comparedHumansFilePath);
-            //DbComparedHuman dbComparedHuman = _mapper.Map<DbComparedHuman>(comparedHuman);
-            //return _msSqlController.UpdateComparedHuman(dbComparedHuman);
+            try
+            {
+                var dtoComparedHuman = _mapper.Map<ComparedHuman, DtoComparedHuman>(comparedHuman);
+                success = _xmlController.UpdateComparedHumanInFile(dtoComparedHuman, _comparedHumansFilePath);
+            }
+            catch (Exception ex)
+            {
+                success = false;
+                _logger.Error($"Ошибка обновления человека для сравнения {ex.HResult}");
+            }
 
             return success;
         }
@@ -284,7 +304,15 @@ namespace MemoRandom.Client.Common.Implementations
         {
             bool success = true;
 
-            _xmlController.DeleteComparedHumanInFile(id.ToString(), _comparedHumansFilePath);
+            try
+            {
+                success = _xmlController.DeleteComparedHumanInFile(id.ToString(), _comparedHumansFilePath);
+            }
+            catch (Exception ex)
+            {
+                success = false;
+                _logger.Error($"Ошибка удаления человека для сравнения {ex.HResult}");
+            }
 
             return success;
         }
@@ -496,7 +524,7 @@ namespace MemoRandom.Client.Common.Implementations
 
             //string combinedImagePath = Path.Combine(_msSqlController.GetImageFolder(), currentHuman.ImageFile);
             string combinedImagePath = Path.Combine(_imageFolder, currentHuman.ImageFile);
-            if (!File.Exists(combinedImagePath)) return null;
+            //if (!File.Exists(combinedImagePath)) return null;
 
             using Stream stream = File.OpenRead(combinedImagePath);
             BitmapImage image = new BitmapImage();

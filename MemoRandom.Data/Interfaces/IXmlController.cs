@@ -1,9 +1,5 @@
 ﻿using MemoRandom.Data.DtoModels;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MemoRandom.Data.Interfaces
 {
@@ -35,7 +31,7 @@ namespace MemoRandom.Data.Interfaces
         /// <param name="reason"></param>
         /// <param name="filePath"></param>
         /// <returns></returns>
-        bool AddReasonToList(DtoReason reason, string filePath);
+        void AddReasonToList(DtoReason reason, string filePath);
 
         /// <summary>
         /// Изменение причины в файле
