@@ -2,7 +2,6 @@
 using MemoRandom.Client.Common.Models;
 using System;
 using System.Collections.Generic;
-using System.Windows.Documents;
 using System.Windows.Media.Imaging;
 
 namespace MemoRandom.Client.Common.Interfaces

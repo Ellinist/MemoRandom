@@ -28,16 +28,6 @@ namespace MemoRandom.Client.ViewModels
         private static string _storageFilePath;   // Имя папки, где хранится информация
         private static string _storageImagesPath; // Имя папки, где хранятся изображения
 
-        #region Настройки по файлам XML
-        private static readonly string _xmlReasonsFile        = "ReasonsFile";
-        private static readonly string _xmlCategoriesFile     = "CategoriesFile";
-        private static readonly string _xmlComparedHumansFile = "ComparedHumansFile";
-        private static readonly string _xmlHumansFile         = "HumansFile";
-        #endregion
-
-        private static readonly string _dbConfigName    = "MsDbConfig"; // Конфигурация БД
-        private static readonly string _dbFolderName    = "MsDbFolder"; // Конфигурация папки с БД
-        private static readonly string _imageFolderName = "ImagePathConfig"; // Конфигурация папки с изображениями
         private string _startViewTitleDefault           = "Memo-Random"; // Дефолтный заголовок стартового окна
         private string _reasonsButtonName               = "Справочник";
         private string _humansButtonName                = "Memo-Random";
@@ -164,7 +154,6 @@ namespace MemoRandom.Client.ViewModels
                     return;
                 }
 
-                //SetInitialPaths(); // Начальная инициализация БД (или любой другой фигни) и путей
                 ReadStartData();
 
                 window.Closing += StartMemoRandomViewModel_Closing; // Подписываемся на событие закрытия окна
@@ -194,28 +183,6 @@ namespace MemoRandom.Client.ViewModels
         }
 
         /// <summary>
-        /// Метод инициализации базы данных и папок хранения БД и изображений
-        /// </summary>
-        private void SetInitialPaths()
-        {
-            _storageFileName = ConfigurationManager.AppSettings[_dbConfigName]; // Получение имени файла хранилища информации
-            if (_storageFileName == null) return; // Если в файле конфигурации нет имени хранилища, то выходим (ничего не делаем)
-            _storageFilePath = ConfigurationManager.AppSettings[_dbFolderName]; // Получаем имя папки, в которой лежит хранилище
-            if (_storageFilePath == null) return; // Если в файле конфигурации нет имени папки, то выходим (ничего не делаем)
-            _storageImagesPath = ConfigurationManager.AppSettings[_imageFolderName]; // Имя папки с изображениями
-            if(_storageImagesPath == null) return; // Если в файле конфигурации нет имени папки, то выходим (ничего не делаем)
-
-            #region Вместо интерфейса вызова БД можно использовать интерфейс работы с XML-файлами
-            // ВНИМАНИЕ! В параметрах есть имя сервера - только для работы с БД
-            var res = _msSqlController.SetPaths(_storageFileName, _storageFilePath, _storageImagesPath, @"Kotarius\KotariusServer");
-            if (!res)
-            {
-                MessageBox.Show("Ошибка установки соединения с хранилищем информации!", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            #endregion
-        }
-
-        /// <summary>
         /// Чтение справочника причин смерти и справочника возрастных категорий
         /// </summary>
         private async void ReadStartData()
@@ -225,7 +192,6 @@ namespace MemoRandom.Client.ViewModels
             await Task.Run(() =>
             {
                 success = _commonDataController.ReadXmlData();
-                //_commonDataController.ReadDataFromRepository();
                 ButtonsVisibility.Invoke();   // Чтение данных выполнено - кнопки делаем видимыми
             });
 
@@ -257,6 +223,7 @@ namespace MemoRandom.Client.ViewModels
         /// <param name="logger"></param>
         /// <param name="container"></param>
         /// <param name="msSqlController"></param>
+        /// <param name="commonDataController"></param>
         /// <exception cref="ArgumentNullException"></exception>
         public StartMemoRandomViewModel(ILogger logger,
                                         IContainer container,

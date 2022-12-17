@@ -88,7 +88,7 @@ namespace MemoRandom.Client.ViewModels
                 panel.Children.Add(control);
 
                 // Каждый человек для сравнения в своем потоке
-                Task task = new Task(() =>
+                Task task = new(() =>
                 {
                     ProgressMethod(comparedHumanData);
                 }, token); // Передаем токен остановки

@@ -1,8 +1,6 @@
 ﻿using MemoRandom.Client.Common.Implementations;
 using MemoRandom.Client.Common.Interfaces;
 using MemoRandom.Client.Common.Models;
-using MemoRandom.Data.DbModels;
-using MemoRandom.Data.Interfaces;
 using Prism.Commands;
 using Prism.Mvvm;
 using System;
@@ -159,14 +157,14 @@ namespace MemoRandom.Client.ViewModels
         public DelegateCommand DeleteComparedHumanCommand { get; private set; }
         #endregion
 
-        private bool newFlag = false;
+        private bool _newFlag = false;
 
         /// <summary>
         /// Команда добавления нового человека для сравнения
         /// </summary>
         private void NewComparedHuman()
         {
-            newFlag = true;
+            _newFlag = true;
             ComparedHumanId = Guid.NewGuid();
             ComparedHumanFullName = "Введите полное имя";
             ComparedHumanBirthDate = DateTime.Now.AddYears(-50);
@@ -177,11 +175,11 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private async void SaveComparedHuman()
         {
-            if (!newFlag) // Существующая запись человека дял сравнения
+            if (!_newFlag) // Существующая запись человека дял сравнения
             {
                 #region Обновление выбранного для сравнения человека
-                SelectedHuman.ComparedHumanFullName = ComparedHumanFullName;
-                SelectedHuman.ComparedHumanBirthDate = ComparedHumanBirthDate;
+                SelectedHuman.ComparedHumanFullName     = ComparedHumanFullName;
+                SelectedHuman.ComparedHumanBirthDate    = ComparedHumanBirthDate;
                 SelectedHuman.IsComparedHumanConsidered = IsConsidered;
                 #endregion
 
@@ -200,9 +198,9 @@ namespace MemoRandom.Client.ViewModels
             {
                 ComparedHuman compHuman = new()
                 {
-                    ComparedHumanId = ComparedHumanId,
-                    ComparedHumanFullName = ComparedHumanFullName,
-                    ComparedHumanBirthDate = ComparedHumanBirthDate,
+                    ComparedHumanId           = ComparedHumanId,
+                    ComparedHumanFullName     = ComparedHumanFullName,
+                    ComparedHumanBirthDate    = ComparedHumanBirthDate,
                     IsComparedHumanConsidered = IsConsidered
                 };
 
@@ -222,7 +220,7 @@ namespace MemoRandom.Client.ViewModels
                 SelectedIndex = ComparedHumansCollection.IndexOf(compHuman);
             }
 
-            newFlag = false;
+            _newFlag = false;
         }
 
         /// <summary>
@@ -230,7 +228,6 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private void DeleteComparedHuman()
         {
-            //var result = _commonDataController.DeleteComparedHumanInRepository(SelectedHuman);
             var result = _commonDataController.DeleteComparedHuman(SelectedHuman.ComparedHumanId);
             if (!result)
             {

@@ -12,15 +12,10 @@
             <Menu Background="Transparent">
                 <MenuItem Header="Справочник" Command="{Binding SettingsMenuCommand}"/>
                 <MenuItem Header="Аналитика">
-                    <MenuItem Header="Категории" Command="{Binding CategoriesCommand}"/>
-                    <MenuItem Header="Дополнительно" Command="{Binding ComparedHumansOpenCommand}"/>
-                    <MenuItem Header="Сравнение" Command="{Binding DynamicShowCommand}"/>
+                    <MenuItem Header="Возрастные категории" Command="{Binding CategoriesCommand}"/>
+                    <MenuItem Header="Люди для сравнения" Command="{Binding ComparedHumansOpenCommand}"/>
+                    <MenuItem Header="Кого мы пережили" Command="{Binding DynamicShowCommand}"/>
                 </MenuItem>
-                <!--<MenuItem Header="Временно">
-                    <MenuItem Header="Сохранить XML" Command="{Binding SaveXmlCommand}"/>
-                    <MenuItem Header="Прочитать XML" Command="{Binding ReadXmlCommand}"/>
-                    <MenuItem Header="Изменение причины" Command="{Binding AddReasonCommand}"/>
-                </MenuItem>-->
                 <MenuItem Header="О программе" Command="{Binding StartAboutCommand}"/>
             </Menu>
         </StackPanel>

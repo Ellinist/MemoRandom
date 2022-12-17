@@ -7,6 +7,9 @@ using System.Xml.Linq;
 
 namespace MemoRandom.Data.Implementations
 {
+    /// <summary>
+    /// XML-контроллер
+    /// </summary>
     public class XmlController : IXmlController
     {
         #region Блок работы со справочником причин смерти

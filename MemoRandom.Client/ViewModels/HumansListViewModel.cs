@@ -45,10 +45,6 @@ namespace MemoRandom.Client.ViewModels
         private readonly ILogger _logger; // Экземпляр журнала
         private readonly IContainer _container; // Контейнер
         private readonly ICommonDataController _commonDataController;
-        // Временно - потом уйти на общий контроллер
-        private readonly IXmlController _xmlController;
-
-        private CultureInfo cultureInfo = new CultureInfo("ru-RU");
 
         private int _humansQuantity;
         private int _averageAge;
@@ -356,7 +352,6 @@ namespace MemoRandom.Client.ViewModels
         /// <param name="selectedHuman"></param>
         private void SetFullYearsText(Human selectedHuman)
         {
-            //int years = (int)Math.Floor(selectedHuman.FullYearsLived); // Считаем число полных лет
             int years = selectedHuman.FullYearsLived; // Считаем число полных лет
             _yearsText.Clear();
 
@@ -445,7 +440,7 @@ namespace MemoRandom.Client.ViewModels
             {
                 HumanDeathReasonName = currentReason.ReasonName;
             }
-            CalculateAnalitics();
+            CalculateAnalytics();
         }
 
         /// <summary>
@@ -469,7 +464,7 @@ namespace MemoRandom.Client.ViewModels
             {
                 HumanDeathReasonName = currentReason.ReasonName;
             }
-            CalculateAnalitics();
+            CalculateAnalytics();
         }
 
         public void DgHumans_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -506,7 +501,7 @@ namespace MemoRandom.Client.ViewModels
             PersonIndex = HumansCollection.IndexOf(HumansCollection.FirstOrDefault(x => x.HumanId == formerId));
             RaisePropertyChanged(nameof(PersonIndex));
 
-            CalculateAnalitics();
+            CalculateAnalytics();
         }
         #endregion
 
@@ -544,10 +539,6 @@ namespace MemoRandom.Client.ViewModels
         public DelegateCommand AddNewHumanCommand { get; private set; }
 
         public DelegateCommand CategoriesCommand { get; private set; }
-
-        //public DelegateCommand SaveXmlCommand { get; private set; }
-        public DelegateCommand ReadXmlCommand { get; private set; }
-        public DelegateCommand AddReasonCommand { get; private set; }
         #endregion
 
         /// <summary>
@@ -562,53 +553,6 @@ namespace MemoRandom.Client.ViewModels
             CategoriesCommand    = new DelegateCommand(CategoriesOpen);
             ComparedHumansOpenCommand = new DelegateCommand(ComparedHumansOpen);
             DynamicShowCommand   = new DelegateCommand(DynamicShow);
-
-            //SaveXmlCommand = new DelegateCommand(SaveXml);
-            ReadXmlCommand = new DelegateCommand(ReadXml);
-            AddReasonCommand = new DelegateCommand(AddReason);
-        }
-
-        ///// <summary>
-        ///// Временно
-        ///// </summary>
-        //private void SaveXml()
-        //{
-        //    _commonDataController.SaveXmlData(); // Вызов сохранения
-        //}
-
-        private void ReadXml()
-        {
-            _commonDataController.ReadXmlData();
-            RaisePropertyChanged();
-            RaisePropertyChanged(nameof(HumansCollection)); // Без этого список не обновляется
-        }
-
-        /// <summary>
-        /// Тестовый метод добавления причины
-        /// </summary>
-        private void AddReason()
-        {
-            //Reason rsn = new()
-            //{
-            //    ReasonId = Guid.NewGuid(),
-            //    ReasonName = "TestReason",
-            //    ReasonComment = "TestComment",
-            //    ReasonDescription = "TestDescription",
-            //    ReasonParentId = Guid.Empty
-            //};
-
-
-            //_commonDataController.AddReasonToFile(rsn);
-            
-            //var rs = PlainReasonsList.FirstOrDefault(x => x.ReasonId == Guid.Parse("250f4559-04dc-45b3-bdb4-21068750dd26"));
-
-            //rs.ReasonName = "New reason name";
-            //rs.ReasonComment = "new reason comment";
-            //rs.ReasonDescription = "new reason description";
-
-            //_commonDataController.ChangeReason(rs);
-
-            //_commonDataController.DeleteReasonAndDaughters(rs.ReasonId);
         }
 
         /// <summary>
@@ -656,13 +600,13 @@ namespace MemoRandom.Client.ViewModels
             PopulationPlot = plot3;
             SecondPlot = plot2;
             
-            CalculateAnalitics();
+            CalculateAnalytics();
         }
 
         /// <summary>
         /// Калькуляция статистических параметров
         /// </summary>
-        private void CalculateAnalitics()
+        private void CalculateAnalytics()
         {
             #region Штатный график
             MainPlot.Plot.Clear(); // Очистка графика - на случай изменений на лету
@@ -732,7 +676,6 @@ namespace MemoRandom.Client.ViewModels
             MainPlot.Refresh();
             #endregion
 
-
             #region Это для двух графиков - ниже
             double[] scores2 = new double[CommonDataController.HumansList.Count];
             for (int j = 0; j < CommonDataController.HumansList.Count; j++)
@@ -746,27 +689,12 @@ namespace MemoRandom.Client.ViewModels
             SecondPlot.Plot.Clear();
             var plt2 = SecondPlot.Plot;
 
-            // generate sample heights are based on https://ourworldindata.org/human-height
-            //Random rand = new(0);
-            //double[] values = DataGen.RandomNormal(rand, pointCount: 1234, mean: 178.4, stdDev: 7.6);
-
-            // create a histogram
-            //(double[] counts, double[] binEdges) = ScottPlot.Statistics.Common.Histogram(values, min: 140, max: 220, binSize: 1);
-            //double[] leftEdges = binEdges.Take(binEdges.Length - 1).ToArray();
-
-            // Параметры статистики для гистограммы
-            // первый - массив возрастов
-            // второй - минимальный учитываемый
-            // третий - максимальный учитываемый
-            // четвертый - принятый шаг по годам
             (double[] counts, double[] binEdges) = ScottPlot.Statistics.Common.Histogram(scores2, min: 0, max: 110, binSize: 1);
             double[] leftEdges = binEdges.Take(binEdges.Length - 1).ToArray();
 
-            // display the histogram counts as a bar plot
             var bar = plt2.AddBar(values: counts, positions: leftEdges);
             bar.BarWidth = 1;
 
-            // customize the plot style
             plt2.YAxis.Label("Распределение (людей)");
             plt2.XAxis.Label("Возраст (лет)");
             plt2.SetAxisLimits(yMin: 0);
@@ -873,7 +801,7 @@ namespace MemoRandom.Client.ViewModels
         public void HumansListView_Closed(object sender, System.EventArgs e)
         {
             Dispose();
-            (sender as Window).Close();
+            (sender as Window)!.Close();
         }
 
         /// <summary>
@@ -895,51 +823,35 @@ namespace MemoRandom.Client.ViewModels
 
 
         #region CTOR
+
         /// <summary>
         /// Конструктор
         /// </summary>
         /// <param name="logger"></param>
         /// <param name="container"></param>
-        /// <param name="msSqlController"></param>
+        /// <param name="commonDataController"></param>
+        /// <param name="xmlController"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public HumansListViewModel(ILogger logger, IContainer container,
-                                   ICommonDataController commonDataController,
-                                   IXmlController xmlController)
+        public HumansListViewModel(ILogger logger,
+                                   IContainer container,
+                                   ICommonDataController commonDataController)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _container = container ?? throw new ArgumentNullException(nameof(container));
             _commonDataController = commonDataController ?? throw new ArgumentNullException(nameof(commonDataController));
-
-            _xmlController = xmlController ?? throw new ArgumentNullException(nameof(xmlController));
 
             InitializeCommands();
 
             if (CategoriesViewModel.ChangeCategory == null)
             {
                 // Делегат обновления списка людей при изменении категорий
-                CategoriesViewModel.ChangeCategory = new Action(() =>
+                CategoriesViewModel.ChangeCategory = () =>
                 {
-                    //TODO Здесь думать, чтобы не обращаться к БД многократно
-                    //HumansCollection = Humans.GetHumans();
                     SortHumansCollection();
                     RaisePropertyChanged(nameof(HumansCollection));
-                });
+                };
             }
         }
         #endregion
     }
 }
-
-
-
-//private BitmapImage ConvertFromByteArray(byte[] array)
-//{
-//    if (array == null) return null;
-
-//    BitmapImage myBitmapImage = new BitmapImage();
-//    myBitmapImage.BeginInit();
-//    myBitmapImage.StreamSource = new MemoryStream(array);
-//    myBitmapImage.DecodePixelWidth = 200;
-//    myBitmapImage.EndInit();
-//    return myBitmapImage;
-//}
