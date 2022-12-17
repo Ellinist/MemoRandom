@@ -118,45 +118,6 @@ namespace MemoRandom.Data.Implementations
                 }
             }
         }
-
-        ///// <summary>
-        ///// Временно - Сохранение всех причин смерти в файле XML
-        ///// Пока что временно - а там посмотрим
-        ///// </summary>
-        ///// <param name="reasons"></param>
-        ///// <param name="filePath"></param>
-        ///// <returns></returns>
-        //public void SaveReasonsToFile(List<DtoReason> reasons, string filePath)
-        //{
-        //    XDocument xmlReasons = new(); // Создаем новый документ
-        //    XElement root = new("Reasons"); // Корневой элемент причин смерти
-
-        //    foreach (var item in reasons) // В цикле для всех причин смерти
-        //    {
-        //        XElement reason = new XElement("Reason"); // Заголовок причины
-        //        XAttribute id = new XAttribute("id", $"{item.ReasonId}"); // И ее атрибут
-
-        //        #region Создание вложенных элементов причины смерти
-        //        XElement name = new XElement("name", $"{item.ReasonName}");
-        //        XElement comment = new XElement("comment", $"{item.ReasonComment}");
-        //        XElement description = new XElement("description", $"{item.ReasonDescription}");
-        //        XElement parent = new XElement("parent", $"{item.ReasonParentId}");
-        //        #endregion
-
-        //        #region Добавление к заголовку его атрибута и дочерних элементов
-        //        reason.Add(id);
-        //        reason.Add(name);
-        //        reason.Add(comment);
-        //        reason.Add(description);
-        //        reason.Add(parent);
-        //        #endregion
-
-        //        root.Add(reason);
-        //    }
-
-        //    xmlReasons.Add(root);
-        //    xmlReasons.Save(filePath);
-        //}
         #endregion
 
         #region Блок работы с категориями возрастов
@@ -254,39 +215,6 @@ namespace MemoRandom.Data.Implementations
                 }
             }
         }
-
-        ///// <summary>
-        ///// Временно - Сохранение списка категорий в файле XML
-        ///// </summary>
-        ///// <param name="categories"></param>
-        ///// <param name="filePath"></param>
-        ///// <returns></returns>
-        //public void SaveCategoriesToFile(List<DtoCategory> categories, string filePath)
-        //{
-        //    XDocument xmlCategories = new();
-        //    XElement root = new("Categories"); // Корневой элемент категорий
-
-        //    foreach (var item in categories)
-        //    {
-        //        XElement category = new XElement("Category");
-        //        XAttribute id     = new XAttribute("id", $"{item.CategoryId}");
-        //        XElement name     = new XElement("name", $"{item.CategoryName}");
-        //        XElement startage = new XElement("startage", $"{item.StartAge}");
-        //        XElement stopage  = new XElement("stopage", $"{item.StopAge}");
-        //        XElement color    = new XElement("color", $"{item.StringColor}");
-
-        //        category.Add(id);
-        //        category.Add(name);
-        //        category.Add(startage);
-        //        category.Add(stopage);
-        //        category.Add(color);
-
-        //        root.Add(category);
-        //    }
-
-        //    xmlCategories.Add(root);
-        //    xmlCategories.Save(filePath);
-        //}
         #endregion
 
         #region Блок работы с людьми для сравнения
@@ -380,39 +308,6 @@ namespace MemoRandom.Data.Implementations
                 }
             }
         }
-
-        ///// <summary>
-        ///// Временно - Сохранение всех людей для сравнения в файле
-        ///// </summary>
-        ///// <param name="comparedHumans"></param>
-        ///// <param name="filePath"></param>
-        ///// <returns></returns>
-        //public bool SaveComparedHumansToFile(List<DtoComparedHuman> comparedHumans, string filePath)
-        //{
-        //    XDocument xmlComparedHumans = new();
-        //    XElement root = new("ComparedHumans"); // Корневой элемент людей для сравнения
-
-        //    foreach (var item in comparedHumans)
-        //    {
-        //        XElement comparedHuman = new XElement("ComparedHuman");
-        //        XAttribute id          = new XAttribute("id", $"{item.ComparedHumanId}");
-        //        XElement name          = new XElement("name", $"{item.ComparedHumanFullName}");
-        //        XElement birthdate     = new XElement("birthdate", $"{item.ComparedHumanBirthDate}");
-        //        XElement considered    = new XElement("isconsidered", $"{item.IsComparedHumanConsidered}");
-
-        //        comparedHuman.Add(id);
-        //        comparedHuman.Add(name);
-        //        comparedHuman.Add(birthdate);
-        //        comparedHuman.Add(considered);
-
-        //        root.Add(comparedHuman);
-        //    }
-
-        //    xmlComparedHumans.Add(root);
-        //    xmlComparedHumans.Save(filePath);
-
-        //    return true;
-        //}
         #endregion
 
         #region Блок работы с людьми
@@ -455,6 +350,11 @@ namespace MemoRandom.Data.Implementations
             return humans;
         }
 
+        /// <summary>
+        /// Обновление/добавление человека из основного списка людей
+        /// </summary>
+        /// <param name="human"></param>
+        /// <param name="filePath"></param>
         public void UpdateHumanInFile(DtoHuman human, string filePath)
         {
             XDocument xmlHumans = XDocument.Load(filePath);
@@ -522,6 +422,11 @@ namespace MemoRandom.Data.Implementations
             }
         }
 
+        /// <summary>
+        /// Удаление человека из основного списка людей
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="filePath"></param>
         public void DeleteHumanInFile(string id, string filePath)
         {
             var xmlHumans = XDocument.Load(filePath);
@@ -537,119 +442,6 @@ namespace MemoRandom.Data.Implementations
                 }
             }
         }
-
-
-
-        ///// <summary>
-        ///// Временно - Сохранение всего основного списка людей в файле
-        ///// </summary>
-        ///// <param name="humans"></param>
-        ///// <param name="filePath"></param>
-        ///// <returns></returns>
-        //public bool SaveHumansToFile(List<DtoHuman> humans, string filePath)
-        //{
-        //    XDocument xmlHumans = new();
-        //    XElement root = new("Humans"); // Корневой элемент людей
-
-        //    foreach (var item in humans)
-        //    {
-        //        XElement human        = new XElement("Human");
-        //        XAttribute id         = new XAttribute("id", $"{item.HumanId}");
-        //        XElement firstname    = new XElement("firstname", $"{item.FirstName}");
-        //        XElement lastname     = new XElement("lastname", $"{item.LastName}");
-        //        XElement patronymic   = new XElement("patronymic", $"{item.Patronymic}");
-        //        XElement birthdate    = new XElement("birthdate", $"{item.BirthDate}");
-        //        XElement birthcountry = new XElement("birthcountry", $"{item.BirthCountry}");
-        //        XElement birthplace   = new XElement("birthplace", $"{item.BirthPlace}");
-        //        XElement deathdate    = new XElement("deathdate", $"{item.DeathDate}");
-        //        XElement deathcountry = new XElement("deathcountry", item.DeathCountry);
-        //        XElement deathplace   = new XElement("deathplace", item.DeathPlace);
-        //        XElement image        = new XElement("image", item.ImageFile);
-        //        XElement deathreason  = new XElement("deathreason", item.DeathReasonId);
-        //        XElement comments     = new XElement("comments", $"{item.HumanComments}");
-        //        XElement dayslived    = new XElement("dayslived", $"{item.DaysLived}");
-        //        XElement fullyears    = new XElement("fullyears", item.FullYearsLived);
-
-        //        human.Add(id);
-        //        human.Add(firstname);
-        //        human.Add(lastname);
-        //        human.Add(patronymic);
-        //        human.Add(birthdate);
-        //        human.Add(birthcountry);
-        //        human.Add(birthplace);
-        //        human.Add(deathdate);
-        //        human.Add(deathcountry);
-        //        human.Add(deathplace);
-        //        human.Add(image);
-        //        human.Add(deathreason);
-        //        human.Add(comments);
-        //        human.Add(dayslived);
-        //        human.Add(fullyears);
-
-        //        root.Add(human);
-        //    }
-
-        //    xmlHumans.Add(root);
-        //    xmlHumans.Save(filePath);
-
-        //    return true;
-        //}
         #endregion
     }
 }
-
-#region Старый код - просто на память
-//XElement upElement = new XElement("Reasons");
-
-//for (int i = 0; i < reasons.Count; i++)
-//{
-//    XElement secElement = new XElement("Reason",
-//                          new XElement("ReasonID", reasons[i].ReasonId),
-//                          new XElement("ReasonName", reasons[i].ReasonName),
-//                          new XElement("ReasonComment", reasons[i].ReasonComment),
-//                          new XElement("ReasonDescription", reasons[i].ReasonDescription),
-//                          new XElement("ParentReasonID", reasons[i].ReasonParentId));
-
-//    upElement.Add(secElement);
-//}
-
-//xml.Add(upElement);
-#endregion
-
-//for(int i = 0; i < reasons.Count; i++)
-//{
-//    XElement reason      = new XElement("Reason");
-//    XAttribute id        = new XAttribute("id", $"{reasons[i].ReasonId}");
-//    XElement name        = new XElement("name", $"{reasons[i].ReasonName}");
-//    XElement comment     = new XElement("comment", $"{reasons[i].ReasonComment}");
-//    XElement description = new XElement("description", $"{reasons[i].ReasonDescription}");
-//    XElement parent      = new XElement("parent", $"{reasons[i].ReasonParentId}");
-
-//    reason.Add(id);
-//    reason.Add(name);
-//    reason.Add(comment);
-//    reason.Add(description);
-//    reason.Add(parent);
-
-//    root.Add(reason);
-//}
-
-#region Старый красивый код, но уже устарел
-//List<DtoReason> list = new();
-
-//var root = xml.Element("Reasons");
-//// Красивый вариант - вместо того, что ниже
-//foreach (XElement item in root.Elements("Reason"))
-//{
-//    DtoReason reason = new()
-//    {
-//        ReasonId          = item.Element("ReasonID").Value,
-//        ReasonName        = item.Element("ReasonName").Value,
-//        ReasonComment     = item.Element("ReasonComment").Value,
-//        ReasonDescription = item.Element("ReasonDescription").Value,
-//        ReasonParentId    = item.Element("ParentReasonID").Value
-//    };
-//    reasons.Add(reason);
-//}
-//return reasons;
-#endregion

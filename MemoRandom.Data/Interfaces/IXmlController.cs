@@ -16,15 +16,6 @@ namespace MemoRandom.Data.Interfaces
         /// <returns></returns>
         List<DtoReason> ReadReasonsFromFile(string filePath);
 
-        ///// <summary>
-        ///// Сохранение всех причин смерти в файле XML
-        ///// Пока что временно - а там посмотрим
-        ///// </summary>
-        ///// <param name="reasons"></param>
-        ///// <param name="filePath"></param>
-        ///// <returns></returns>
-        //void SaveReasonsToFile(List<DtoReason> reasons, string filePath);
-
         /// <summary>
         /// Добавление причины с общий список
         /// </summary>
@@ -71,14 +62,6 @@ namespace MemoRandom.Data.Interfaces
         /// <param name="filePath"></param>
         /// <returns></returns>
         void DeleteCategoryInFile(string id, string filePath);
-
-        ///// <summary>
-        ///// Временно - Сохранение всех категории в файле
-        ///// </summary>
-        ///// <param name="categories"></param>
-        ///// <param name="filePath"></param>
-        ///// <returns></returns>
-        //void SaveCategoriesToFile(List<DtoCategory> categories, string filePath);
         #endregion
 
         #region Блок работы с людьми для сравнения
@@ -104,14 +87,6 @@ namespace MemoRandom.Data.Interfaces
         /// <param name="filePath"></param>
         /// <returns></returns>
         void DeleteComparedHumanInFile(string id, string filePath);
-
-        ///// <summary>
-        ///// Временно - Сохранение всех людей для сравнения в файле
-        ///// </summary>
-        ///// <param name="comparedHumans"></param>
-        ///// <param name="filePath"></param>
-        ///// <returns></returns>
-        //bool SaveComparedHumansToFile(List<DtoComparedHuman> comparedHumans, string filePath);
         #endregion
 
         #region Блок работы с людьми
@@ -122,17 +97,19 @@ namespace MemoRandom.Data.Interfaces
         /// <returns></returns>
         List<DtoHuman> ReadHumansFromFile(string filePath);
 
+        /// <summary>
+        /// Обновление/добавление человека из основного списка людей
+        /// </summary>
+        /// <param name="human"></param>
+        /// <param name="filePath"></param>
         void UpdateHumanInFile(DtoHuman human, string filePath);
 
+        /// <summary>
+        /// Удаление человека из основного списка людей
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="filePath"></param>
         void DeleteHumanInFile(string id, string filePath);
-
-        ///// <summary>
-        ///// Временно - Сохранение всего основного списка людей в файле
-        ///// </summary>
-        ///// <param name="humans"></param>
-        ///// <param name="filePath"></param>
-        ///// <returns></returns>
-        //bool SaveHumansToFile(List<DtoHuman> humans, string filePath);
         #endregion
     }
 }
