@@ -74,6 +74,7 @@ namespace MemoRandom.Client.Common.Implementations
             bool success = true;
             // Получаем папку, где установлено приложение и добавляем папку хранения XML-файлов
             var xmlFolder = AppDomain.CurrentDomain.BaseDirectory + @"\Data";
+            // Получаем папку, где установлено приложение и добавляем папку хранения изображений
             var imageFolder = AppDomain.CurrentDomain.BaseDirectory + @"\Images";
 
             try
@@ -257,7 +258,7 @@ namespace MemoRandom.Client.Common.Implementations
         /// <returns></returns>
         public bool DeleteCategoryInFile(Guid id)
         {
-            bool success = true;
+            var success = true;
 
             try
             {
@@ -279,7 +280,7 @@ namespace MemoRandom.Client.Common.Implementations
         /// <returns></returns>
         public bool UpdateComparedHuman(ComparedHuman comparedHuman)
         {
-            bool success = true;
+            var success = true;
 
             try
             {
@@ -302,7 +303,7 @@ namespace MemoRandom.Client.Common.Implementations
         /// <returns></returns>
         public bool DeleteComparedHuman(Guid id)
         {
-            bool success = true;
+            var success = true;
 
             try
             {
@@ -321,17 +322,26 @@ namespace MemoRandom.Client.Common.Implementations
         /// Обновление/добавление человека из основного списка людей
         /// </summary>
         /// <param name="human"></param>
+        /// <param name="humanImage"></param>
         /// <returns></returns>
         public bool UpdateHuman(Human human, BitmapImage humanImage)
         {
-            bool success = true;
+            var success = true;
 
-            DtoHuman dtoHuman = _mapper.Map<Human, DtoHuman>(human);
-            _xmlController.UpdateHumanInFile(dtoHuman, _humansFilePath);
-
-            if (humanImage != null)
+            try
             {
-                SaveImageToFile(humanImage, human); // Сохраняем изображение
+                var dtoHuman = _mapper.Map<Human, DtoHuman>(human);
+                _xmlController.UpdateHumanInFile(dtoHuman, _humansFilePath);
+
+                if (humanImage != null)
+                {
+                    SaveImageToFile(humanImage, human); // Сохраняем изображение
+                }
+            }
+            catch (Exception ex)
+            {
+                success = false;
+                _logger.Error($"Ошибка обновления/добавления человека из основного списка {ex.HResult}");
             }
 
             return success;
@@ -341,107 +351,58 @@ namespace MemoRandom.Client.Common.Implementations
         {
             bool success = true;
 
-            _xmlController.DeleteHumanInFile(human.HumanId.ToString(), _humansFilePath);
-
-            if (imageFile != string.Empty)
+            try
             {
-                if (!DeleteImageFile(imageFile))
+                _xmlController.DeleteHumanInFile(human.HumanId.ToString(), _humansFilePath);
+
+                if (imageFile != string.Empty)
                 {
-                    success = false; // Если файл изображения удалить не удалось
+                    if (!DeleteImageFile(imageFile))
+                    {
+                        success = false; // Если файл изображения удалить не удалось
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                success = false;
+                _logger.Error($"Ошибка удаления человека из основного списка {ex.HResult}");
+            }
+            
 
             return success;
         }
 
-
         ///// <summary>
-        ///// Временно - потом все преобразовать
+        ///// Чтение общей информации из внешнего хранилища
         ///// </summary>
-        //public void SaveXmlData()
-        //{
-        //    #region Для причин
-        //    List<DtoReason> dtoReasons = _mapper.Map<List<Reason>, List<DtoReason>>(PlainReasonsList);
-
-        //    // Вызов метода сохранения справочника (плоский)
-        //    _xmlController.SaveReasonsToFile(dtoReasons, _reasonsFilePath);
-        //    #endregion
-
-        //    #region Для категорий
-        //    List<DtoCategory> dtoCategories = _mapper.Map<ObservableCollection<Category>, List<DtoCategory>>(AgeCategories);
-
-        //    _xmlController.SaveCategoriesToFile(dtoCategories, _categoriesFilePath);
-        //    #endregion
-
-        //    #region Для людей для сравнения
-        //    List<DtoComparedHuman> dtoComparedHumans = _mapper.Map<ObservableCollection<ComparedHuman>, List<DtoComparedHuman>>(ComparedHumansCollection);
-
-        //    _xmlController.SaveComparedHumansToFile(dtoComparedHumans, _comparedHumansFilePath);
-        //    #endregion
-
-        //    #region Для людей
-        //    List<DtoHuman> dtoHumans = _mapper.Map<ObservableCollection<Human>, List<DtoHuman>>(HumansList);
-
-        //    _xmlController.SaveHumansToFile(dtoHumans, _humansFilePath);
-        //    #endregion
-        //}
-
-
-
-
-
-
-        /// <summary>
-        /// Чтение общей информации из внешнего хранилища
-        /// </summary>
-        /// <returns></returns>
-        public bool ReadDataFromRepository()
-        {
-            bool successResult = true;
-
-            #region Чтение причин смерти и формирование плоского и иерархического списков
-            PlainReasonsList = _mapper.Map<List<DbReason>, List<Reason>>(_msSqlController.GetReasons());
-            FormObservableCollection(PlainReasonsList, null);
-            #endregion
-
-            #region Чтение списка категорий
-            AgeCategories = _mapper.Map<List<DbCategory>, ObservableCollection<Category>>(_msSqlController.GetCategories());
-            foreach (var item in AgeCategories) // Преобразование строк в цвет
-            {
-                item.CategoryColor = (Color)ColorConverter.ConvertFromString(item.StringColor)!;
-            }
-            #endregion
-
-            #region Чтение списка людей для сравнения
-            ComparedHumansCollection = _mapper.Map<List<DbComparedHuman>, ObservableCollection<ComparedHuman>>(_msSqlController.GetComparedHumans());
-            #endregion
-
-            #region Чтение списка людей
-            HumansList = _mapper.Map<List<DbHuman>, ObservableCollection<Human>>(_msSqlController.GetHumans());
-            #endregion
-
-            return successResult;
-        }
-
-        ///// <summary>
-        ///// Обновление (добавление) категории во внешнее хранилище
-        ///// </summary>
-        ///// <param name="category"></param>
         ///// <returns></returns>
-        //public bool UpdateCategoriesInRepository(Category category)
+        //public bool ReadDataFromRepository()
         //{
-        //    DbCategory dbCategory = _mapper.Map<DbCategory>(category);
-        //    return _msSqlController.UpdateCategories(dbCategory);
-        //}
+        //    bool successResult = true;
 
-        ///// <summary>
-        ///// Удаление выбранной категории во внешнем хранилище
-        ///// </summary>
-        ///// <param name="category"></param>
-        ///// <returns></returns>
-        //public bool DeleteCategoryInRepository(Category category)
-        //{
-        //    return _msSqlController.DeleteCategory(category.CategoryId);
+        //    #region Чтение причин смерти и формирование плоского и иерархического списков
+        //    PlainReasonsList = _mapper.Map<List<DbReason>, List<Reason>>(_msSqlController.GetReasons());
+        //    FormObservableCollection(PlainReasonsList, null);
+        //    #endregion
+
+        //    #region Чтение списка категорий
+        //    AgeCategories = _mapper.Map<List<DbCategory>, ObservableCollection<Category>>(_msSqlController.GetCategories());
+        //    foreach (var item in AgeCategories) // Преобразование строк в цвет
+        //    {
+        //        item.CategoryColor = (Color)ColorConverter.ConvertFromString(item.StringColor)!;
+        //    }
+        //    #endregion
+
+        //    #region Чтение списка людей для сравнения
+        //    ComparedHumansCollection = _mapper.Map<List<DbComparedHuman>, ObservableCollection<ComparedHuman>>(_msSqlController.GetComparedHumans());
+        //    #endregion
+
+        //    #region Чтение списка людей
+        //    HumansList = _mapper.Map<List<DbHuman>, ObservableCollection<Human>>(_msSqlController.GetHumans());
+        //    #endregion
+
+        //    return successResult;
         //}
 
         /// <summary>
@@ -453,63 +414,64 @@ namespace MemoRandom.Client.Common.Implementations
             FormObservableCollection(PlainReasonsList, null);
         }
 
-        /// <summary>
-        /// Обновление (добавление) человека для сравнения во внешнем хранилище
-        /// </summary>
-        /// <param name="comparedHuman"></param>
-        /// <returns></returns>
-        public bool UpdateComparedHumanInRepository(ComparedHuman comparedHuman)
-        {
-            DbComparedHuman dbComparedHuman = _mapper.Map<DbComparedHuman>(comparedHuman);
-            return _msSqlController.UpdateComparedHuman(dbComparedHuman);
-        }
+        ///// <summary>
+        ///// Обновление (добавление) человека для сравнения во внешнем хранилище
+        ///// </summary>
+        ///// <param name="comparedHuman"></param>
+        ///// <returns></returns>
+        //public bool UpdateComparedHumanInRepository(ComparedHuman comparedHuman)
+        //{
+        //    DbComparedHuman dbComparedHuman = _mapper.Map<DbComparedHuman>(comparedHuman);
+        //    return _msSqlController.UpdateComparedHuman(dbComparedHuman);
+        //}
 
-        /// <summary>
-        /// Удаление человека для сравнения во внешнем хранилище
-        /// </summary>
-        /// <returns></returns>
-        public bool DeleteComparedHumanInRepository(ComparedHuman comparedHuman)
-        {
-            return _msSqlController.DeleteComparedHuman(comparedHuman.ComparedHumanId);
-        }
+        ///// <summary>
+        ///// Удаление человека для сравнения во внешнем хранилище
+        ///// </summary>
+        ///// <returns></returns>
+        //public bool DeleteComparedHumanInRepository(ComparedHuman comparedHuman)
+        //{
+        //    return _msSqlController.DeleteComparedHuman(comparedHuman.ComparedHumanId);
+        //}
 
-        /// <summary>
-        /// Обновление (добавление) человека во внешнем хранилище
-        /// </summary>
-        /// <param name="human"></param>
-        /// <returns></returns>
-        public bool UpdateHumanInRepository(Human human, BitmapImage humanImage)
-        {
-            DbHuman updatedHuman = _mapper.Map<DbHuman>(human);
+        ///// <summary>
+        ///// Обновление (добавление) человека во внешнем хранилище
+        ///// </summary>
+        ///// <param name="human"></param>
+        ///// <param name="humanImage"></param>
+        ///// <returns></returns>
+        //public bool UpdateHumanInRepository(Human human, BitmapImage humanImage)
+        //{
+        //    DbHuman updatedHuman = _mapper.Map<DbHuman>(human);
 
-            _msSqlController.UpdateHumans(updatedHuman);
+        //    _msSqlController.UpdateHumans(updatedHuman);
 
-            if (humanImage != null)
-            {
-                SaveImageToFile(humanImage, human); // Сохраняем изображение
-            }
+        //    if (humanImage != null)
+        //    {
+        //        SaveImageToFile(humanImage, human); // Сохраняем изображение
+        //    }
 
-            return true;
-        }
+        //    return true;
+        //}
 
-        /// <summary>
-        /// Удаление человека из внешнего хранилища
-        /// </summary>
-        /// <param name="human"></param>
-        /// <param name="imageFile"></param>
-        /// <returns></returns>
-        public bool DeleteHumanInRepository(Human human, string imageFile)
-        {
-            bool success = _msSqlController.DeleteHuman(human.HumanId);
-            if (imageFile != string.Empty)
-            {
-                if (!DeleteImageFile(imageFile))
-                {
-                    success = false; // Если файл изображения удалить не удалось
-                }
-            }
-            return success;
-        }
+        ///// <summary>
+        ///// Удаление человека из внешнего хранилища
+        ///// </summary>
+        ///// <param name="human"></param>
+        ///// <param name="imageFile"></param>
+        ///// <returns></returns>
+        //public bool DeleteHumanInRepository(Human human, string imageFile)
+        //{
+        //    bool success = _msSqlController.DeleteHuman(human.HumanId);
+        //    if (imageFile != string.Empty)
+        //    {
+        //        if (!DeleteImageFile(imageFile))
+        //        {
+        //            success = false; // Если файл изображения удалить не удалось
+        //        }
+        //    }
+        //    return success;
+        //}
         #endregion
 
         /// <summary>
@@ -522,9 +484,7 @@ namespace MemoRandom.Client.Common.Implementations
             // Читаем файл изображения, если выбранный человек существует и у него есть изображение
             if (currentHuman == null || currentHuman.ImageFile == string.Empty) return null;
 
-            //string combinedImagePath = Path.Combine(_msSqlController.GetImageFolder(), currentHuman.ImageFile);
             string combinedImagePath = Path.Combine(_imageFolder, currentHuman.ImageFile);
-            //if (!File.Exists(combinedImagePath)) return null;
 
             using Stream stream = File.OpenRead(combinedImagePath);
             BitmapImage image = new BitmapImage();
@@ -544,7 +504,6 @@ namespace MemoRandom.Client.Common.Implementations
         /// <param name="humanImage"></param>
         private void SaveImageToFile(BitmapSource humanImage, Human human)
         {
-            //string combinedImagePath = Path.Combine(_msSqlController.GetImageFolder(), human.ImageFile);
             string combinedImagePath = Path.Combine(_imageFolder, human.ImageFile);
 
             JpegBitmapEncoder encoder = new JpegBitmapEncoder();
@@ -638,8 +597,7 @@ namespace MemoRandom.Client.Common.Implementations
         /// </summary>
         public static void RearrangeCollection()
         {
-            List<Category> rearrangeCollection = new();
-            rearrangeCollection = AgeCategories.OrderBy(x => x.StartAge).ToList();
+            var rearrangeCollection = AgeCategories.OrderBy(x => x.StartAge).ToList();
             AgeCategories.Clear();
             foreach (var item in rearrangeCollection)
             {
@@ -651,13 +609,13 @@ namespace MemoRandom.Client.Common.Implementations
         /// Формирование текстов для отображения прожитых периодов (лет, месяцев, дней, часов, минут, секунд) в соответствии с числом
         /// </summary>
         /// <param name="i"></param>
+        /// <param name="type"></param>
         public string GetFinalText(int i, ScopeTypes type)
         {
             var periodValues = Scopes.GetPeriodValues(type);
             string result = "";
-            int t1, t2;
-            t1 = i % 10;
-            t2 = i % 100;
+            var t1 = i % 10;
+            var t2 = i % 100;
             if (t1 == 1 && t2 != 11)
             {
                 result = periodValues[0];
