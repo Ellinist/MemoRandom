@@ -10,6 +10,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Configuration\**" />
+    <EmbeddedResource Remove="Configuration\**" />
+    <None Remove="Configuration\**" />
+    <Page Remove="Configuration\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Resources\Fonts\ArianaVioleta-dz2K.ttf" />
     <None Remove="Resources\Fonts\Casanova.ttf" />
     <None Remove="Resources\Fonts\DeutschGothic.ttf" />
@@ -78,10 +85,6 @@
     <Content Include="Resources\Pictures\EllinistAbout.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Configuration\" />
   </ItemGroup>
 
 </Project>
