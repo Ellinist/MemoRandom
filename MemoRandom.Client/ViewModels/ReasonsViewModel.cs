@@ -12,7 +12,6 @@ using MemoRandom.Data.Interfaces;
 using System.Collections.Generic;
 using MemoRandom.Client.Common.Interfaces;
 using MemoRandom.Client.Common.Implementations;
-using MemoRandom.Data.DbModels;
 using MemoRandom.Client.Common.Models;
 
 namespace MemoRandom.Client.ViewModels
@@ -23,7 +22,6 @@ namespace MemoRandom.Client.ViewModels
         private string   _reasonsViewTitle = "Справочник причин смерти";
         private readonly ILogger _logger; // Экземпляр журнала
         private readonly IEventAggregator _eventAggregator;
-        private readonly IMsSqlController _dbController;
         private readonly ICommonDataController _commonDataController;
         private bool     _cancelButtonEnabled     = false; // Для кнопки отмены
         private bool     _deleteButtonEnabled     = false; // Для кнопки удаления
@@ -584,12 +582,12 @@ namespace MemoRandom.Client.ViewModels
         /// <param name="dbController"></param>
         /// <param name="reasonsHelper"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public ReasonsViewModel(ILogger logger, IEventAggregator eventAggregator, IMsSqlController dbController,
+        public ReasonsViewModel(ILogger logger,
+                                IEventAggregator eventAggregator,
                                 ICommonDataController commonDataController)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
-            _dbController = dbController ?? throw new ArgumentNullException(nameof(dbController));
             _commonDataController = commonDataController ?? throw new ArgumentNullException(nameof(commonDataController));
 
             InitializeCommands();
@@ -597,20 +595,3 @@ namespace MemoRandom.Client.ViewModels
         #endregion
     }
 }
-
-
-
-
-
-//Task.Factory.StartNew(() =>
-//{
-//    //var result = _dbController.GetReasonsList();
-
-//    //Dispatcher.CurrentDispatcher.Invoke(() =>
-//    //{
-//    //    ReasonsList = result;
-//    //    RaisePropertyChanged(nameof(ReasonsList));
-//    //});
-//});
-//ReasonsList = _dbController.GetReasonsList();
-//RaisePropertyChanged(nameof(ReasonsList));

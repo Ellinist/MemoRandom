@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using AutoMapper;
-using MemoRandom.Data.DbModels;
 using MemoRandom.Client.Common.Models;
 using System.Windows.Media;
 using Human = MemoRandom.Client.Common.Models.Human;
@@ -22,7 +21,6 @@ namespace MemoRandom.Client.Common.Implementations
     {
         #region PRIVATE FIELDS
         private readonly ILogger _logger;
-        private readonly IMsSqlController _msSqlController;
         private readonly IXmlController _xmlController;
         private readonly IMapper _mapper;
 
@@ -373,38 +371,6 @@ namespace MemoRandom.Client.Common.Implementations
             return success;
         }
 
-        ///// <summary>
-        ///// Чтение общей информации из внешнего хранилища
-        ///// </summary>
-        ///// <returns></returns>
-        //public bool ReadDataFromRepository()
-        //{
-        //    bool successResult = true;
-
-        //    #region Чтение причин смерти и формирование плоского и иерархического списков
-        //    PlainReasonsList = _mapper.Map<List<DbReason>, List<Reason>>(_msSqlController.GetReasons());
-        //    FormObservableCollection(PlainReasonsList, null);
-        //    #endregion
-
-        //    #region Чтение списка категорий
-        //    AgeCategories = _mapper.Map<List<DbCategory>, ObservableCollection<Category>>(_msSqlController.GetCategories());
-        //    foreach (var item in AgeCategories) // Преобразование строк в цвет
-        //    {
-        //        item.CategoryColor = (Color)ColorConverter.ConvertFromString(item.StringColor)!;
-        //    }
-        //    #endregion
-
-        //    #region Чтение списка людей для сравнения
-        //    ComparedHumansCollection = _mapper.Map<List<DbComparedHuman>, ObservableCollection<ComparedHuman>>(_msSqlController.GetComparedHumans());
-        //    #endregion
-
-        //    #region Чтение списка людей
-        //    HumansList = _mapper.Map<List<DbHuman>, ObservableCollection<Human>>(_msSqlController.GetHumans());
-        //    #endregion
-
-        //    return successResult;
-        //}
-
         /// <summary>
         /// Обновление иерархической коллекции причин смерти
         /// </summary>
@@ -413,65 +379,6 @@ namespace MemoRandom.Client.Common.Implementations
             ReasonsCollection.Clear();
             FormObservableCollection(PlainReasonsList, null);
         }
-
-        ///// <summary>
-        ///// Обновление (добавление) человека для сравнения во внешнем хранилище
-        ///// </summary>
-        ///// <param name="comparedHuman"></param>
-        ///// <returns></returns>
-        //public bool UpdateComparedHumanInRepository(ComparedHuman comparedHuman)
-        //{
-        //    DbComparedHuman dbComparedHuman = _mapper.Map<DbComparedHuman>(comparedHuman);
-        //    return _msSqlController.UpdateComparedHuman(dbComparedHuman);
-        //}
-
-        ///// <summary>
-        ///// Удаление человека для сравнения во внешнем хранилище
-        ///// </summary>
-        ///// <returns></returns>
-        //public bool DeleteComparedHumanInRepository(ComparedHuman comparedHuman)
-        //{
-        //    return _msSqlController.DeleteComparedHuman(comparedHuman.ComparedHumanId);
-        //}
-
-        ///// <summary>
-        ///// Обновление (добавление) человека во внешнем хранилище
-        ///// </summary>
-        ///// <param name="human"></param>
-        ///// <param name="humanImage"></param>
-        ///// <returns></returns>
-        //public bool UpdateHumanInRepository(Human human, BitmapImage humanImage)
-        //{
-        //    DbHuman updatedHuman = _mapper.Map<DbHuman>(human);
-
-        //    _msSqlController.UpdateHumans(updatedHuman);
-
-        //    if (humanImage != null)
-        //    {
-        //        SaveImageToFile(humanImage, human); // Сохраняем изображение
-        //    }
-
-        //    return true;
-        //}
-
-        ///// <summary>
-        ///// Удаление человека из внешнего хранилища
-        ///// </summary>
-        ///// <param name="human"></param>
-        ///// <param name="imageFile"></param>
-        ///// <returns></returns>
-        //public bool DeleteHumanInRepository(Human human, string imageFile)
-        //{
-        //    bool success = _msSqlController.DeleteHuman(human.HumanId);
-        //    if (imageFile != string.Empty)
-        //    {
-        //        if (!DeleteImageFile(imageFile))
-        //        {
-        //            success = false; // Если файл изображения удалить не удалось
-        //        }
-        //    }
-        //    return success;
-        //}
         #endregion
 
         /// <summary>
@@ -485,6 +392,8 @@ namespace MemoRandom.Client.Common.Implementations
             if (currentHuman == null || currentHuman.ImageFile == string.Empty) return null;
 
             string combinedImagePath = Path.Combine(_imageFolder, currentHuman.ImageFile);
+
+            if (!File.Exists(combinedImagePath)) return null;
 
             using Stream stream = File.OpenRead(combinedImagePath);
             BitmapImage image = new BitmapImage();
@@ -529,7 +438,7 @@ namespace MemoRandom.Client.Common.Implementations
 
             try
             {
-                string combinedImagePath = Path.Combine(_msSqlController.GetImageFolder(), fileName);
+                string combinedImagePath = Path.Combine(_imageFolder, fileName);
                 File.Delete(combinedImagePath);
             }
             catch (Exception ex)
@@ -672,13 +581,19 @@ namespace MemoRandom.Client.Common.Implementations
 
 
         #region CTOR
-        public CommonDataController(IMsSqlController msSqlController,
-                                    IXmlController xmlController,
+        /// <summary>
+        /// Конструктор
+        /// </summary>
+        /// <param name="msSqlController"></param>
+        /// <param name="xmlController"></param>
+        /// <param name="logger"></param>
+        /// <param name="mapper"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        public CommonDataController(IXmlController xmlController,
                                     ILogger logger,
                                     IMapper mapper)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _msSqlController = msSqlController ?? throw new ArgumentNullException(nameof(msSqlController));
             _xmlController = xmlController ?? throw new ArgumentNullException(nameof(xmlController));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }

@@ -35,7 +35,6 @@ namespace MemoRandom.Client.ViewModels
         
         private readonly ILogger _logger; // Экземпляр журнала
         private readonly IContainer _container; // Контейнер
-        private readonly IMsSqlController _msSqlController;
         private readonly ICommonDataController _commonDataController;
         #endregion
 
@@ -227,12 +226,10 @@ namespace MemoRandom.Client.ViewModels
         /// <exception cref="ArgumentNullException"></exception>
         public StartMemoRandomViewModel(ILogger logger,
                                         IContainer container,
-                                        IMsSqlController msSqlController,
                                         ICommonDataController commonDataController)
         {
             _logger               = logger ?? throw new ArgumentNullException(nameof(logger));
             _container            = container ?? throw new ArgumentNullException(nameof(container));
-            _msSqlController      = msSqlController ?? throw new ArgumentNullException(nameof(msSqlController));
             _commonDataController = commonDataController ?? throw new ArgumentNullException(nameof(commonDataController));
         }
         #endregion

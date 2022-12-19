@@ -6,7 +6,6 @@
                  xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
                  xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
                  xmlns:models="clr-namespace:MemoRandom.Client.Common.Models;assembly=MemoRandom.Client.Common"
-                 xmlns:rsn="clr-namespace:MemoRandom.Data.DbModels;assembly=MemoRandom.Data"
                  xmlns:local="clr-namespace:MemoRandom.Client.Views"
                  Icon="pack://application:,,,/Resources/Icons/humanInfoIcon.ico"
                  mc:Ignorable="d"
@@ -14,7 +13,6 @@
                  WindowState="Maximized"
                  Title="Редактирование или добавление клиента" Height="680" Width="1200"
                  Loaded="DetailedView_Loaded">
-    <!--LocationChanged="DetailesView_LocationChanged"-->
 
     <mah:MetroWindow.Resources>
         <Style x:Key="FontCharacteristics">
