@@ -8,7 +8,6 @@ using Prism.Commands;
 using Prism.Events;
 using System.Windows;
 using System.Windows.Threading;
-using MemoRandom.Data.Interfaces;
 using System.Collections.Generic;
 using MemoRandom.Client.Common.Interfaces;
 using MemoRandom.Client.Common.Implementations;

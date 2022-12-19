@@ -11,15 +11,12 @@ using System.Windows.Media.Imaging;
 using System.Windows;
 using System.Text;
 using System.Collections.ObjectModel;
-using System.Globalization;
 using MemoRandom.Client.Common.Implementations;
 using MemoRandom.Client.Common.Models;
 using MemoRandom.Client.Common.Interfaces;
 using MemoRandom.Client.Common.Enums;
 using ScottPlot;
-
 using ScottPlot.Statistics;
-using MemoRandom.Data.Interfaces;
 
 namespace MemoRandom.Client.ViewModels
 {
