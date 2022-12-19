@@ -7,7 +7,6 @@ using System.Linq;
 using AutoMapper;
 using MemoRandom.Client.Common.Models;
 using System.Windows.Media;
-using Human = MemoRandom.Client.Common.Models.Human;
 using System.IO;
 using System.Windows.Media.Imaging;
 using NLog;
