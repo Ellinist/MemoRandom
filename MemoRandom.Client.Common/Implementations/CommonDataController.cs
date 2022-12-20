@@ -72,7 +72,7 @@ namespace MemoRandom.Client.Common.Implementations
             // Получаем папку, где установлено приложение и добавляем папку хранения XML-файлов
             var xmlFolder = AppDomain.CurrentDomain.BaseDirectory + @"\Data";
             // Получаем папку, где установлено приложение и добавляем папку хранения изображений
-            var imageFolder = AppDomain.CurrentDomain.BaseDirectory + @"\Images";
+            var imageFolder = AppDomain.CurrentDomain.BaseDirectory + @"\Data\Images";
 
             try
             {
