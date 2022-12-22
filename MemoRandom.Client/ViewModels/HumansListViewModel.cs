@@ -523,6 +523,9 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         public DelegateCommand ComparedHumansOpenCommand { get; private set; }
 
+        /// <summary>
+        /// Команда вызова окна динамического отображения прогресса
+        /// </summary>
         public DelegateCommand DynamicShowCommand { get; private set; }
 
         /// <summary>
@@ -530,14 +533,14 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         public DelegateCommand SettingsMenuCommand { get; private set; }
         
-        public DelegateCommand HumansListMenuCommand { get; private set; }
-        
-        public DelegateCommand StartMenuCommand { get; private set; }
-        
+        /// <summary>
+        /// Команда вызова окна "О программе"
+        /// </summary>
         public DelegateCommand StartAboutCommand { get; private set; }
-        
-        public DelegateCommand AddNewHumanCommand { get; private set; }
 
+        /// <summary>
+        /// Команда вызова окна создания и редактирования возрастных категорий
+        /// </summary>
         public DelegateCommand CategoriesCommand { get; private set; }
         #endregion
 
