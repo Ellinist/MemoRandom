@@ -436,6 +436,7 @@ namespace MemoRandom.Client.ViewModels
             if (currentReason != null)
             {
                 HumanDeathReasonName = currentReason.ReasonName;
+                RaisePropertyChanged(nameof(HumanDeathReasonName));
             }
             CalculateAnalytics();
         }
@@ -460,6 +461,7 @@ namespace MemoRandom.Client.ViewModels
             if (currentReason != null)
             {
                 HumanDeathReasonName = currentReason.ReasonName;
+                RaisePropertyChanged(nameof(HumanDeathReasonName));
             }
             CalculateAnalytics();
         }

@@ -216,7 +216,7 @@
                                         <DataGridTextColumn Header="Причина смерти"
                                                             IsReadOnly="True"
                                                             Width="150"
-                                                            Binding="{Binding HumanDeathReasonName}"/>
+                                                            Binding="{Binding Path=HumanDeathReasonName}"/>
                                         <DataGridTextColumn Header="Страна смерти"
                                                             IsReadOnly="True"
                                                             Binding="{Binding Path=DeathCountry}"/>
