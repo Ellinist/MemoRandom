@@ -145,17 +145,17 @@ namespace MemoRandom.Client.ViewModels
                     // Изменение текста прожитых лет
                     SetFullYearsText(SelectedHuman);
 
-                    // Название причины смерти
-                    var res = PlainReasonsList.FirstOrDefault(x => x.ReasonId == SelectedHuman.DeathReasonId);
-                    if(res != null)
-                    {
-                        HumanDeathReasonName = res.ReasonName;
-                        RaisePropertyChanged(nameof(HumanDeathReasonName));
-                    }
-                    else
-                    {
-                        HumanDeathReasonName = string.Empty;
-                    }
+                    //// Название причины смерти
+                    //var res = PlainReasonsList.FirstOrDefault(x => x.ReasonId == SelectedHuman.DeathReasonId);
+                    //if(res != null)
+                    //{
+                    //    HumanDeathReasonName = res.ReasonName;
+                    //    RaisePropertyChanged(nameof(HumanDeathReasonName));
+                    //}
+                    //else
+                    //{
+                    //    HumanDeathReasonName = string.Empty;
+                    //}
                 }
             }
         }
@@ -627,7 +627,7 @@ namespace MemoRandom.Client.ViewModels
             // Получим новый список, в котором будут только родительские ReasonID верхнего уровня
             #region Создание нового списка, в котором будут только родительские ReasonID верхнего уровня
             
-            Guid upperLevelId = Guid.Empty; // Этот параметр можно менять
+            var upperLevelId = Guid.Empty; // Этот параметр можно менять
             
             List<Guid> headerIdsList = new();
             for (int q = 0; q < CommonDataController.HumansList.Count; q++)

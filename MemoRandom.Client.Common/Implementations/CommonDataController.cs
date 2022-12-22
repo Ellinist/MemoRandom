@@ -145,6 +145,22 @@ namespace MemoRandom.Client.Common.Implementations
                 HumansList.Clear(); // Чистим основной список людей
                 var humansResult = _xmlController.ReadHumansFromFile(_humansFilePath);
                 HumansList = _mapper.Map<List<DtoHuman>, ObservableCollection<Human>>(humansResult);
+                foreach (var human in HumansList)
+                {
+                    var res = PlainReasonsList.FirstOrDefault(x => x.ReasonId == human.DeathReasonId);
+                    human.HumanDeathReasonName = res.ReasonName;
+                }
+                //// Название причины смерти
+                //var res = PlainReasonsList.FirstOrDefault(x => x.ReasonId == SelectedHuman.DeathReasonId);
+                //if(res != null)
+                //{
+                //    HumanDeathReasonName = res.ReasonName;
+                //    RaisePropertyChanged(nameof(HumanDeathReasonName));
+                //}
+                //else
+                //{
+                //    HumanDeathReasonName = string.Empty;
+                //}
                 #endregion
             }
             catch (Exception ex)

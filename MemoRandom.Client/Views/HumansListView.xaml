@@ -28,6 +28,7 @@
 
         <conv:RowHumansColorConverter x:Key="RowColorConverter"/>
         <gpConv:CenterBorderGapMaskConverter x:Key="CenterBorderGapMaskConverter"/>
+        <gpConv:DeathReasonNameConverter x:Key="ReasonNameConverter"/>
 
         <Style x:Key="CenteredHeaderGroupBoxStyle" TargetType="{x:Type GroupBox}">
             <Setter Property="BorderBrush" Value="Black"/>
@@ -212,6 +213,10 @@
                                                             IsReadOnly="True"
                                                             Width="150"
                                                             Binding="{Binding Path=DeathDate, StringFormat='dd MMMM yyyy',ConverterCulture='ru-RU', Mode=OneWay}"/>
+                                        <DataGridTextColumn Header="Причина смерти"
+                                                            IsReadOnly="True"
+                                                            Width="150"
+                                                            Binding="{Binding HumanDeathReasonName}"/>
                                         <DataGridTextColumn Header="Страна смерти"
                                                             IsReadOnly="True"
                                                             Binding="{Binding Path=DeathCountry}"/>
@@ -344,7 +349,7 @@
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
 
-                                <Grid Grid.Row="0">
+                                <Grid Grid.Row="0" DataContext="{Binding ElementName=DgHumans, Path=SelectedValue}">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="4*"/>
                                         <ColumnDefinition Width="7*"/>
@@ -356,6 +361,7 @@
                                            HorizontalAlignment="Right"
                                            FontSize="20"/>
                                     <Label Grid.Column="1"
+                                           
                                            Content="{Binding Path=HumanDeathReasonName}"
                                            HorizontalAlignment="Left"
                                            FontSize="20"/>

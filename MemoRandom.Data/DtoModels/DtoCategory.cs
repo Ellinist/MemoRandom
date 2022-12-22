@@ -5,7 +5,7 @@ namespace MemoRandom.Data.DtoModels
     /// <summary>
     /// Класс категории возрастного периода для хранения в XML-файле
     /// </summary>
-    [Serializable]
+    //[Serializable]
     public class DtoCategory
     {
         /// <summary>

@@ -22,6 +22,7 @@ namespace MemoRandom.Client.Common.Models
         private string _deathPlace;
         private string _imageFile;
         private Guid _deathReasonId;
+        private string _humanDeathReasonName;
         private string _humanComments;
         private double _daysLived;
         private int _fullYearsLived;
@@ -182,6 +183,19 @@ namespace MemoRandom.Client.Common.Models
             {
                 _deathReasonId = value;
                 RaisePropertyChanged(nameof(DeathReasonId));
+            }
+        }
+
+        /// <summary>
+        /// Это свойство будет использовано только внутри программы - во внешнем хранилище его нет
+        /// </summary>
+        public string HumanDeathReasonName
+        {
+            get => _humanDeathReasonName;
+            set
+            {
+                _humanDeathReasonName = value;
+                RaisePropertyChanged(nameof(HumanDeathReasonName));
             }
         }
 
