@@ -525,6 +525,9 @@ namespace MemoRandom.Client.ViewModels
 
         public DelegateCommand DynamicShowCommand { get; private set; }
 
+        /// <summary>
+        /// Команда вызова окна справочника причин смерти
+        /// </summary>
         public DelegateCommand SettingsMenuCommand { get; private set; }
         
         public DelegateCommand HumansListMenuCommand { get; private set; }
@@ -543,6 +546,7 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private void InitializeCommands()
         {
+            SettingsMenuCommand  = new DelegateCommand(SettingsViewOpen);
             AddHumanCommand      = new DelegateCommand(AddHuman);
             EditHumanDataCommand = new DelegateCommand(EditHumanData);
             DeleteHumanCommand   = new DelegateCommand(DeleteHuman);
@@ -550,6 +554,14 @@ namespace MemoRandom.Client.ViewModels
             CategoriesCommand    = new DelegateCommand(CategoriesOpen);
             ComparedHumansOpenCommand = new DelegateCommand(ComparedHumansOpen);
             DynamicShowCommand   = new DelegateCommand(DynamicShow);
+        }
+
+        /// <summary>
+        /// Открытие окна справочника причин смерти
+        /// </summary>
+        private void SettingsViewOpen()
+        {
+            _container.Resolve<ReasonsView>().ShowDialog();
         }
 
         /// <summary>
