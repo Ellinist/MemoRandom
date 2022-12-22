@@ -27,7 +27,7 @@ namespace MemoRandom.Client.Converters
                 var o = CommonDataController.AgeCategories.FirstOrDefault(x => x.CategoryColor == currentCategory.CategoryColor);
 
                 if (o == null) return Colors.White.ToString(); // Если цвет не задан, то белый
-                return o.CategoryColor.ToString();
+                return o.CategoryColor;
             }
 
             return Colors.White.ToString();

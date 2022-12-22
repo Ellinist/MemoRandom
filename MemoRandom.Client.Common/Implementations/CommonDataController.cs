@@ -128,10 +128,11 @@ namespace MemoRandom.Client.Common.Implementations
                 AgeCategories.Clear(); // Чистим список категорий
                 var categoriesResult = _xmlController.ReadCategoriesFromFile(_categoriesFilePath);
                 AgeCategories = _mapper.Map<List<DtoCategory>, ObservableCollection<Category>>(categoriesResult);
-                foreach (var item in AgeCategories) // Преобразование строк в цвет
-                {
-                    item.CategoryColor = (Color)ColorConverter.ConvertFromString(item.StringColor)!;
-                }
+                //foreach (var item in AgeCategories) // Преобразование строк в цвет
+                //{
+                //    //item.CategoryColor = (Color)ColorConverter.ConvertFromString(item.StringColor)!;
+                //    item.StringColor = (Color)ColorConverter.ConvertFromString(item.StringColor)!;
+                //}
                 #endregion
 
                 #region Чтение людей для сравнения

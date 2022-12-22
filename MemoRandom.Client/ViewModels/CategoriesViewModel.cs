@@ -34,7 +34,7 @@ namespace MemoRandom.Client.ViewModels
         private int _periodTo;
         private int _selectedComboIndex;
         private Category _selectedCategory;
-        private object _selectedComboColor;
+        private string _selectedPickerColor;
         #endregion
 
         #region PROPS
@@ -140,15 +140,11 @@ namespace MemoRandom.Client.ViewModels
                 if (value == null) return;
                 _selectedCategory = value;
 
-                CategoryId = SelectedCategory.CategoryId;
+                CategoryId   = SelectedCategory.CategoryId;
                 CategoryName = SelectedCategory.CategoryName;
-                PeriodFrom = SelectedCategory.StartAge;
-                PeriodTo = SelectedCategory.StopAge;
-                // Устанавливаем индекс списка выбора цвета на позицию выбранного в таблице цвета
-                SelectedComboIndex = typeof(Colors).GetProperties()
-                                                   .Select(p => p.GetValue(null)).ToList()
-                                                   .FindIndex(x => (Color)x == _selectedCategory.CategoryColor);
-                
+                PeriodFrom   = SelectedCategory.StartAge;
+                PeriodTo     = SelectedCategory.StopAge;
+                SelectedPickerColor = SelectedCategory.CategoryColor;
                 RaisePropertyChanged(nameof(SelectedCategory));
             }
         }
@@ -167,41 +163,23 @@ namespace MemoRandom.Client.ViewModels
         }
 
         /// <summary>
-        /// Индекс цвета в списке выбора
+        /// Выбранный в пикере цвет
         /// </summary>
-        public int SelectedComboIndex
+        public string SelectedPickerColor
         {
-            get => _selectedComboIndex;
+            get => _selectedPickerColor;
             set
             {
-                _selectedComboIndex = value;
-                RaisePropertyChanged(nameof(SelectedComboIndex));
-            }
-        }
-
-        /// <summary>
-        /// Выбранный в списке цвет
-        /// </summary>
-        public object SelectedComboColor
-        {
-            get => _selectedComboColor;
-            set
-            {
-                if(value != null)
-                {
-                    _selectedComboColor = value;
-                    var selectedItem = (PropertyInfo)value;
-                    SelectedColor = (Color)selectedItem.GetValue(null, null);
-
-                    RaisePropertyChanged(nameof(SelectedComboColor));
-                }
+                _selectedPickerColor = value;
+                SelectedColor = value;
+                RaisePropertyChanged(nameof(SelectedPickerColor));
             }
         }
 
         /// <summary>
         /// Выбранный цвет
         /// </summary>
-        private Color SelectedColor { get; set; }
+        private string SelectedColor { get; set; }
         #endregion
 
         #region COMMANDS
@@ -246,20 +224,14 @@ namespace MemoRandom.Client.ViewModels
                 SelectedCategory.CategoryName  = CategoryName;
                 SelectedCategory.StartAge      = PeriodFrom;
                 SelectedCategory.StopAge       = PeriodTo;
-                SelectedCategory.CategoryColor = SelectedColor;
-                SelectedCategory.StringColor   = SelectedColor.ToString();
+                SelectedCategory.CategoryColor   = SelectedColor;
                 #endregion
 
-                await Task.Run(() =>
+                if (!await Task.Run(() => _commonDataController.UpdateCategoriesInFile(SelectedCategory)))
                 {
-                    //var result = _commonDataController.UpdateCategoriesInRepository(SelectedCategory);
-                    var result = _commonDataController.UpdateCategoriesInFile(SelectedCategory);
-                    if (!result)
-                    {
                         MessageBox.Show("Не удалось обновить категорию", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
                         return;
-                    }
-                });
+                };
 
                 CommonDataController.RearrangeCollection();
                 RaisePropertyChanged(nameof(CategoriesCollection));
@@ -273,20 +245,14 @@ namespace MemoRandom.Client.ViewModels
                     CategoryName  = CategoryName,
                     StartAge      = PeriodFrom,
                     StopAge       = PeriodTo,
-                    CategoryColor = SelectedColor,
-                    StringColor   = SelectedColor.ToString()
+                    CategoryColor   = SelectedColor.ToString()
                 };
 
-                await Task.Run(() =>
+                if (!await Task.Run(() => _commonDataController.UpdateCategoriesInFile(category)))
                 {
-                    //var result = _commonDataController.UpdateCategoriesInRepository(category);
-                    var result = _commonDataController.UpdateCategoriesInFile(category);
-                    if (!result)
-                    {
-                        MessageBox.Show("Не удалось добавить категорию", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
-                        return;
-                    }
-                });
+                    MessageBox.Show("Не удалось добавить категорию", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
 
                 CommonDataController.AgeCategories.Add(category);
                 CommonDataController.RearrangeCollection();
@@ -326,9 +292,7 @@ namespace MemoRandom.Client.ViewModels
         {
             if (SelectedCategory == null) return; // Здесь можно еще уведомление дать
 
-            if (!await Task.Run(() =>
-            _commonDataController.DeleteCategoryInFile(SelectedCategory.CategoryId)         
-            /*_commonDataController.DeleteCategoryInRepository(SelectedCategory)*/))
+            if (!await Task.Run(() => _commonDataController.DeleteCategoryInFile(SelectedCategory.CategoryId)))
             {
                 MessageBox.Show("Не получилось удалить выбранную категорию!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -336,7 +300,6 @@ namespace MemoRandom.Client.ViewModels
 
             CommonDataController.AgeCategories.Remove(SelectedCategory);
             RaisePropertyChanged(nameof(CategoriesCollection));
-            SelectedIndex = 0;
         }
 
         /// <summary>
@@ -349,16 +312,10 @@ namespace MemoRandom.Client.ViewModels
             CategoriesCollection = CommonDataController.AgeCategories;
             if(CategoriesCollection.Count == 0) return;
 
-            SelectedIndex = 0;
-
-            CategoryName = SelectedCategory.CategoryName;
-            PeriodFrom   = SelectedCategory.StartAge;
-            PeriodTo     = SelectedCategory.StopAge;
-            
-            // Устанавливаем индекс списка выбора цвета на позицию выбранного в таблице цвета
-            SelectedComboIndex = typeof(Colors).GetProperties()
-                                               .Select(p => p.GetValue(null)).ToList()
-                                               .FindIndex(x => (Color)x == SelectedCategory.CategoryColor);
+            SelectedCategory = CategoriesCollection[0];
+            CategoryName     = SelectedCategory.CategoryName;
+            PeriodFrom       = SelectedCategory.StartAge;
+            PeriodTo         = SelectedCategory.StopAge;
 
             RaisePropertyChanged(nameof(CategoriesCollection));
         }
@@ -389,8 +346,6 @@ namespace MemoRandom.Client.ViewModels
         public CategoriesViewModel(ICommonDataController commonDataController)
         {
             _commonDataController = commonDataController ?? throw new ArgumentNullException(nameof(commonDataController));
-
-            ColorsList = typeof(Colors).GetProperties(); // Получаем список свойств с цветами
 
             InitCommands();
         }

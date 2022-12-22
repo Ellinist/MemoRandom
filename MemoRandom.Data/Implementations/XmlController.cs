@@ -145,7 +145,7 @@ namespace MemoRandom.Data.Implementations
                         CategoryName = category.Element("name")!.Value,
                         StartAge     = category.Element("startage")!.Value,
                         StopAge      = category.Element("stopage")!.Value,
-                        StringColor  = category.Element("color")!.Value
+                        CategoryColor  = category.Element("color")!.Value
                     };
                     categories.Add(cat);
                 }
@@ -173,7 +173,7 @@ namespace MemoRandom.Data.Implementations
                     element.Element("name")!.Value     = category.CategoryName;
                     element.Element("startage")!.Value = category.StartAge;
                     element.Element("stopage")!.Value  = category.StopAge;
-                    element.Element("color")!.Value    = category.StringColor;
+                    element.Element("color")!.Value    = category.CategoryColor;
                 }
                 else
                 {
@@ -182,7 +182,7 @@ namespace MemoRandom.Data.Implementations
                     XElement name     = new XElement("name", $"{category.CategoryName}");
                     XElement startage = new XElement("startage", $"{category.StartAge}");
                     XElement stopage  = new XElement("stopage", $"{category.StopAge}");
-                    XElement color    = new XElement("color", $"{category.StringColor}");
+                    XElement color    = new XElement("color", $"{category.CategoryColor}");
 
                     cat.Add(id);
                     cat.Add(name);

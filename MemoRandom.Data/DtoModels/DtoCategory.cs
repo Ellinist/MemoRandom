@@ -31,6 +31,6 @@ namespace MemoRandom.Data.DtoModels
         /// <summary>
         /// Цвет категории
         /// </summary>
-        public string StringColor { get; set; }
+        public string CategoryColor { get; set; }
     }
 }

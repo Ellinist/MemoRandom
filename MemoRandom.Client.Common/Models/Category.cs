@@ -25,8 +25,9 @@ namespace MemoRandom.Client.Common.Models
         /// </summary>
         public int StopAge { get; set; }
 
-        public Color CategoryColor { get; set; }
-
-        public string StringColor { get; set; }
+        /// <summary>
+        /// Цвет, соответствующий возрастной категории
+        /// </summary>
+        public string CategoryColor { get; set; }
     }
 }

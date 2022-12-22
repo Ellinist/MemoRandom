@@ -6,6 +6,7 @@
                  xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
                  xmlns:conv="clr-namespace:MemoRandom.Client.Converters"
                  xmlns:local="clr-namespace:MemoRandom.Client.Views"
+                 xmlns:xceed="http://schemas.xceed.com/wpf/xaml/toolkit"
                  mc:Ignorable="d"
                  Title="{Binding CategoriesTitle}"
                  Height="450" MinHeight="450" MaxHeight="450"
@@ -223,6 +224,26 @@
                         </ComboBox.ItemTemplate>
                     </ComboBox>
                 </Grid>
+
+                <Grid Margin="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0"
+                               Padding="0, 0, 5, 0"
+                               Style="{StaticResource TextBlockFontSize}"
+                               HorizontalAlignment="Right"
+                               Text="Цвет 2:"/>
+
+                    <xceed:ColorPicker Grid.Column="1"
+                                       x:Name="CategoriesPicker"
+                                       SelectedColor="{Binding SelectedPickerColor}">
+                        
+                    </xceed:ColorPicker>
+                </Grid>
+                      
             </StackPanel>
             
             <!--Кнопки добавления, сохранения и удаления-->
