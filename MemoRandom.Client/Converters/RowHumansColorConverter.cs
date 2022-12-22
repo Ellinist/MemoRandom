@@ -27,7 +27,6 @@ namespace MemoRandom.Client.Converters
             var o = CommonDataController.AgeCategories.FirstOrDefault(x => x.StartAge <= currentHuman.FullYearsLived &&
                                                                            x.StopAge + 1 > currentHuman.FullYearsLived);
 
-            //return o == null ? Colors.White.ToString() : o.CategoryColor.ToString();
             return o == null ? Colors.White.ToString() : o.CategoryColor;
         }
 

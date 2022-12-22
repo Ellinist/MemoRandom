@@ -8,6 +8,7 @@
                  xmlns:models="clr-namespace:MemoRandom.Client.Common.Models;assembly=MemoRandom.Client.Common"
                  xmlns:local="clr-namespace:MemoRandom.Client.Views"
                  Icon="pack://application:,,,/Resources/Icons/humanInfoIcon.ico"
+                 xmlns:xceed="http://schemas.xceed.com/wpf/xaml/toolkit"
                  mc:Ignorable="d"
                  x:Name="DetailesView"
                  WindowState="Maximized"
@@ -37,8 +38,8 @@
         <!--Блок работы с основными текстовыми данными-->
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
+                <ColumnDefinition Width="1.2*"/>
+                <ColumnDefinition Width="3*"/>
             </Grid.ColumnDefinitions>
 
             <GroupBox Grid.Column="0"
@@ -167,7 +168,17 @@
                                             Culture="ru-RU"
                                             VerticalAlignment="Center"
                                             SelectedDateTime="{Binding DeathDate}"/>
-                        
+                        <!--<xceed:DateTimePicker Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2"
+                                              FontSize="17"
+                                              FontWeight="Bold"
+                                              TimeFormat="LongDate"
+                                              HorizontalAlignment="Left"
+                                              
+                                              CalendarWidth="400"
+                                              CultureInfo="ru-RU"
+                                              Value="{Binding DeathDate}"
+                                              />-->
+
                         <!--Страна смерти-->
                         <TextBlock Grid.Row="7" Grid.Column="0"
                                Margin="0"
