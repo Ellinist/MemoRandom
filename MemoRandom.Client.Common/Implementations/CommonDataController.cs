@@ -148,19 +148,8 @@ namespace MemoRandom.Client.Common.Implementations
                 foreach (var human in HumansList)
                 {
                     var res = PlainReasonsList.FirstOrDefault(x => x.ReasonId == human.DeathReasonId);
-                    human.HumanDeathReasonName = res.ReasonName;
+                    human.HumanDeathReasonName = (res != null) ? res.ReasonName : string.Empty;
                 }
-                //// Название причины смерти
-                //var res = PlainReasonsList.FirstOrDefault(x => x.ReasonId == SelectedHuman.DeathReasonId);
-                //if(res != null)
-                //{
-                //    HumanDeathReasonName = res.ReasonName;
-                //    RaisePropertyChanged(nameof(HumanDeathReasonName));
-                //}
-                //else
-                //{
-                //    HumanDeathReasonName = string.Empty;
-                //}
                 #endregion
             }
             catch (Exception ex)
