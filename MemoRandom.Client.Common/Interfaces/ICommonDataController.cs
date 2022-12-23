@@ -38,6 +38,8 @@ namespace MemoRandom.Client.Common.Interfaces
         /// <param name="guidList"></param>
         /// <returns></returns>
         bool DeleteReasonAndDaughtersInFile(List<Guid> guidList);
+
+        void FormObservableCollection(List<Reason> reasons, Reason headReason);
         #endregion
 
         #region Работа с возрастными категориями

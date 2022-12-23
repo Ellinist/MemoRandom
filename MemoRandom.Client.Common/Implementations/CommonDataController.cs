@@ -460,7 +460,7 @@ namespace MemoRandom.Client.Common.Implementations
         /// </summary>
         /// <param name="reasons">Плоский список</param>
         /// <param name="headReason">Головной элемент (экземпляр класса)</param>
-        private void FormObservableCollection(List<Reason> reasons, Reason headReason)
+        public void FormObservableCollection(List<Reason> reasons, Reason headReason)
         {
             foreach (var reason in reasons)
             {

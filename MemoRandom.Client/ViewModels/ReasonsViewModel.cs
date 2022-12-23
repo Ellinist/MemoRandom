@@ -407,16 +407,6 @@ namespace MemoRandom.Client.ViewModels
 
                 await Task.Run(() =>
                 {
-                    //DbReason changedReason = new()
-                    //{
-                    //    ReasonId = SelectedReason.ReasonId,
-                    //    ReasonName = SelectedReason.ReasonName,
-                    //    ReasonComment = SelectedReason.ReasonComment,
-                    //    ReasonDescription = SelectedReason.ReasonDescription,
-                    //    ReasonParentId = SelectedReason.ReasonParentId
-                    //};
-
-                    //var result = _dbController.UpdateReasonInList(changedReason);
                     var result = _commonDataController.ChangeReasonInFile(SelectedReason);
 
                     Dispatcher.CurrentDispatcher.Invoke(() =>
@@ -451,9 +441,17 @@ namespace MemoRandom.Client.ViewModels
             {
                 if(obj != null)
                 {
-                    //_transferredReason.ReasonParent = obj as Reason; // Выбранный узел теперь родитель
-                    //_transferredReason.ReasonParentId = (obj as Reason).ReasonId; // И его ID как родителя
-                    //RaisePropertyChanged(nameof(ReasonsCollection));
+                    //var reas = PlainReasonsList.FirstOrDefault(x => x.ReasonId == _transferredReason.ReasonId);
+
+                    //reas.ReasonParent = obj as Reason;
+                    //reas.ReasonParentId = (obj as Reason).ReasonId;
+
+                    //ReasonsCollection.Clear();
+                    //_commonDataController.FormObservableCollection(PlainReasonsList, null);
+
+                    ////_transferredReason.ReasonParent = obj as Reason; // Выбранный узел теперь родитель
+                    ////_transferredReason.ReasonParentId = (obj as Reason).ReasonId; // И его ID как родителя
+                    //RaisePropertyChanged();
 
 
                     InformationVisibility = Visibility.Hidden;
@@ -633,9 +631,7 @@ namespace MemoRandom.Client.ViewModels
         /// <param name="e"></param>
         public void ReasonsView_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
-            //PlainReasonsList = CommonDataController.PlainReasonsList;
-            //ReasonsCollection = CommonDataController.ReasonsCollection;
-            //RaisePropertyChanged();
+
         }
 
 
