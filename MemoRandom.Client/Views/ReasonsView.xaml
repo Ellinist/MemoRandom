@@ -50,44 +50,72 @@
             </Grid.ColumnDefinitions>
 
             <!--Дерево причин смерти-->
-            <Border Grid.Row="0" Grid.Column="0"
+            <Border Grid.Column="0"
                     Margin="5, 5, 0, 5"
                     BorderBrush="Black" BorderThickness="2">
-                <ScrollViewer CanContentScroll="True"
-                              HorizontalScrollBarVisibility="Auto"
-                              VerticalScrollBarVisibility="Auto">
-                    <TreeView x:Name="ReasonsTree"
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="40"/>
+                    </Grid.RowDefinitions>
+
+                    <ScrollViewer Grid.Row="0"
+                                  CanContentScroll="True"
+                                  HorizontalScrollBarVisibility="Auto"
+                                  VerticalScrollBarVisibility="Auto">
+                        <TreeView x:Name="ReasonsTree"
+                              AllowDrop="True"
+                              
                               Style="{StaticResource MahApps.Styles.TreeView}"
                               ItemsSource="{Binding ReasonsCollection, Mode=TwoWay, NotifyOnSourceUpdated=True}">
-                        <TreeView.Resources>
-                            <HierarchicalDataTemplate DataType="{x:Type models:Reason}" ItemsSource="{Binding ReasonChildren}">
-                                <TextBlock Text="{Binding Path=ReasonName}"/>
-                            </HierarchicalDataTemplate>
-                        </TreeView.Resources>
-                        <TreeView.ItemContainerStyle>
-                            <Style TargetType="TreeViewItem">
-                                <Setter Property="IsSelected" Value="{Binding IsSelected}"/>
-                                <Setter Property="FontSize" Value="18"/>
-                                <Setter Property="FontWeight" Value="Bold"/>
-                                <Setter Property="IsExpanded" Value="True"/>
-                            </Style>
-                        </TreeView.ItemContainerStyle>
-                        <b:Interaction.Triggers>
+                            <TreeView.Resources>
+                                <HierarchicalDataTemplate DataType="{x:Type models:Reason}" ItemsSource="{Binding ReasonChildren}">
+                                    <TextBlock Text="{Binding Path=ReasonName}"/>
+                                </HierarchicalDataTemplate>
+                            </TreeView.Resources>
+                            <TreeView.ItemContainerStyle>
+                                <Style TargetType="TreeViewItem">
+                                    <Setter Property="IsSelected" Value="{Binding IsSelected}"/>
+                                    <Setter Property="FontSize" Value="18"/>
+                                    <Setter Property="FontWeight" Value="Bold"/>
+                                    <Setter Property="IsExpanded" Value="True"/>
+                                </Style>
+                            </TreeView.ItemContainerStyle>
+                            <b:Interaction.Triggers>
 
-                            <!--Команда выбора узла-->
-                            <b:EventTrigger EventName="SelectedItemChanged">
-                                <b:InvokeCommandAction Command="{Binding SelectNodeCommand}"
+                                <!--Команда выбора узла-->
+                                <b:EventTrigger EventName="SelectedItemChanged">
+                                    <b:InvokeCommandAction Command="{Binding SelectNodeCommand}"
                                                        CommandParameter="{Binding ElementName=ReasonsTree, Path=SelectedItem}"/>
-                            </b:EventTrigger>
+                                </b:EventTrigger>
 
-                            <!--Команда отмены выбора - клик на свободном поле-->
-                            <b:EventTrigger EventName="MouseDown">
-                                <b:InvokeCommandAction Command="{Binding EmptyClickCommand}"/>
-                            </b:EventTrigger>
-                        </b:Interaction.Triggers>
-                    </TreeView>
-                </ScrollViewer>
+                                <!--Команда отмены выбора - клик на свободном поле-->
+                                <b:EventTrigger EventName="MouseDown">
+                                    <b:InvokeCommandAction Command="{Binding EmptyClickCommand}"/>
+                                </b:EventTrigger>
+                            </b:Interaction.Triggers>
+                        </TreeView>
+                    </ScrollViewer>
+
+                    <TextBlock Grid.Row="1"
+                               Text="Выберите узел для переноса"
+                               FontSize="20"
+                               FontWeight="Bold"
+                               HorizontalAlignment="Center"
+                               Foreground="Red"
+                               Visibility="{Binding InformationVisibility}"/>
+
+                    <Button Grid.Row="2"
+                            Style="{StaticResource ButtonStyle}"
+                            Content="Перенести"
+                            Command="{Binding MoveNodeCommand}"
+                            CommandParameter="{Binding ElementName=ReasonsTree, Path=SelectedItem}"/>
+                </Grid>
             </Border>
+            
+            
 
             <!--Разделитель-->
             <GridSplitter Grid.Column="1"

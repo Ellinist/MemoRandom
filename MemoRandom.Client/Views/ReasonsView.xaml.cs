@@ -1,5 +1,10 @@
 ﻿using MahApps.Metro.Controls;
 using MemoRandom.Client.ViewModels;
+using System.Windows.Input;
+using System.Windows;
+using System.Windows.Media;
+using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
+using System.Windows.Controls;
 
 namespace MemoRandom.Client.Views
 {
@@ -8,6 +13,11 @@ namespace MemoRandom.Client.Views
     /// </summary>
     public partial class ReasonsView : MetroWindow
     {
+
+
+
+
+
         #region CTOR
         /// <summary>
         /// Конструктор

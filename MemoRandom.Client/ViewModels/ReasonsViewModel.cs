@@ -263,9 +263,40 @@ namespace MemoRandom.Client.ViewModels
         /// Команда получения данных
         /// </summary>
         public DelegateCommand LoadCommand { get; private set; }
+
+        /// <summary>
+        /// Команда переноса узла со всеми дочерними узлами
+        /// </summary>
+        public DelegateCommand<object> MoveNodeCommand { get; private set; }
         #endregion
 
+
+        public Visibility InformationVisibility { get; set; } = Visibility.Hidden;
+        private bool _transferFlag = false;
+        private Reason _transferredReason;
         #region Блок отработки команд
+        private void OnMoveNodeCommand(object obj)
+        {
+            if(obj == null)
+            {
+                MessageBox.Show("Узел для переноса не выбран", "Предупреждение!", MessageBoxButton.OK, MessageBoxImage.Hand);
+                return;
+            }
+            else
+            {
+                InformationVisibility = Visibility.Visible;
+                RaisePropertyChanged(nameof(InformationVisibility));
+                _transferFlag = true; // Да, еще видимость этой кнопки также надо сделать управляемой
+
+                _transferredReason = obj as Reason;
+
+                CancelButtonEnabled     = false; // Кнопка отмены недоступна
+                ChangeSaveButtonEnabled = false; // Кнопка редактирования/сохранения недоступна
+                AddSaveButtonEnabled    = false; // Кнопка добавления/изменения недоступна
+                DeleteButtonEnabled     = false;
+            }
+        }
+
         /// <summary>
         /// Команда добавления записи в справочник причин смерти
         /// </summary>
@@ -416,20 +447,42 @@ namespace MemoRandom.Client.ViewModels
         /// <param name="obj"></param>
         private void OnSelectNodeCommand(object obj)
         {
-            if (obj == null)
+            if (_transferFlag) // Перенос узла
             {
-                DeleteButtonEnabled     = false; // При нулевом узле удалять нечего - кнопка недоступна
-                ChangeSaveButtonEnabled = false; // При нулевом узле нечего редактировать - кнопка недоступна
-                SetEmptyFields(); // Очищаем поля окна
+                if(obj != null)
+                {
+                    //_transferredReason.ReasonParent = obj as Reason; // Выбранный узел теперь родитель
+                    //_transferredReason.ReasonParentId = (obj as Reason).ReasonId; // И его ID как родителя
+                    //RaisePropertyChanged(nameof(ReasonsCollection));
+
+
+                    InformationVisibility = Visibility.Hidden;
+                    RaisePropertyChanged(nameof(InformationVisibility));
+                    _transferFlag = false;
+                    // Потом поковыряться - надо правильно расставлять приоритеты
+                    //CancelButtonEnabled     = true; // Кнопка отмены недоступна
+                    //ChangeSaveButtonEnabled = true; // Кнопка редактирования/сохранения недоступна
+                    AddSaveButtonEnabled = true; // Кнопка добавления/изменения недоступна
+                                                 //DeleteButtonEnabled     = true;
+                }
             }
-            else
+            else // Обычная работа (без переноса узлов)
             {
-                DeleteButtonEnabled     = true; // Узел выбран - кнопка удаления доступна
-                ChangeSaveButtonEnabled = true; // Узел выбран - кнопка редактирования/сохранения доступна
-                SelectedReason          = obj as Reason;
-                ReasonName              = SelectedReason?.ReasonName;
-                ReasonComment           = SelectedReason?.ReasonComment;
-                ReasonDescription       = SelectedReason?.ReasonDescription;
+                if (obj == null)
+                {
+                    DeleteButtonEnabled     = false; // При нулевом узле удалять нечего - кнопка недоступна
+                    ChangeSaveButtonEnabled = false; // При нулевом узле нечего редактировать - кнопка недоступна
+                    SetEmptyFields(); // Очищаем поля окна
+                }
+                else
+                {
+                    DeleteButtonEnabled     = true; // Узел выбран - кнопка удаления доступна
+                    ChangeSaveButtonEnabled = true; // Узел выбран - кнопка редактирования/сохранения доступна
+                    SelectedReason = obj as Reason;
+                    ReasonName = SelectedReason?.ReasonName;
+                    ReasonComment = SelectedReason?.ReasonComment;
+                    ReasonDescription = SelectedReason?.ReasonDescription;
+                }
             }
         }
 
@@ -460,7 +513,6 @@ namespace MemoRandom.Client.ViewModels
                 List<Guid> result = new List<Guid>();
                 DeletingDaughters(selectedNode, result);
 
-                //var res = _dbController.DeleteReasonInList(result);
                 var res = _commonDataController.DeleteReasonAndDaughtersInFile(result);
                 if (!res)
                 {
@@ -474,6 +526,7 @@ namespace MemoRandom.Client.ViewModels
             SetEmptyFields(); // Очищаем поля окна
             DeleteButtonEnabled = false; // Удаление выполнено - кнопка удаления становится недоступной
             ChangeSaveButtonEnabled = false; // Удаление выполнено - кнопка редактирования становится недоступной
+
         }
         
         /// <summary>
@@ -507,13 +560,32 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private void OnEmptyClickCommand()
         {
-            CancelButtonEnabled     = false;     // Кнопка отмены недоступна - нечего отменять
-            ChangeSaveButtonEnabled = false; // Кнопка редактирования/сохранения недоступна - нечего редактировать
+            if (_transferFlag) // Перенос узла в корень
+            {
+                //_transferredReason.ReasonParent = null;
+                //_transferredReason.ReasonParentId = Guid.Empty;
+                //RaisePropertyChanged(nameof(ReasonsCollection));
 
-            if (SelectedReason == null) return;
 
-            SelectedReason.IsSelected = false;
-            SelectedReason            = null;
+                InformationVisibility = Visibility.Hidden;
+                RaisePropertyChanged(nameof(InformationVisibility));
+                _transferFlag = false;
+                // Потом поковыряться - надо правильно расставлять приоритеты
+                //CancelButtonEnabled     = true; // Кнопка отмены недоступна
+                //ChangeSaveButtonEnabled = true; // Кнопка редактирования/сохранения недоступна
+                AddSaveButtonEnabled    = true; // Кнопка добавления/изменения недоступна
+                //DeleteButtonEnabled     = true;
+            }
+            else // Обычный клик на пустом месте
+            {
+                CancelButtonEnabled     = false; // Кнопка отмены недоступна - нечего отменять
+                ChangeSaveButtonEnabled = false; // Кнопка редактирования/сохранения недоступна - нечего редактировать
+
+                if (SelectedReason == null) return;
+
+                SelectedReason.IsSelected = false;
+                SelectedReason = null;
+            }
         }
         
         /// <summary>
@@ -551,6 +623,7 @@ namespace MemoRandom.Client.ViewModels
             CancelCommand     = new DelegateCommand<object>(OnCancelCommand);
             EmptyClickCommand = new DelegateCommand(OnEmptyClickCommand);
             ChangeCommand     = new DelegateCommand(OnChangeCommand);
+            MoveNodeCommand   = new DelegateCommand<object>(OnMoveNodeCommand);
         }
 
         /// <summary>
