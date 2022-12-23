@@ -441,17 +441,18 @@ namespace MemoRandom.Client.ViewModels
             {
                 if(obj != null)
                 {
-                    //var reas = PlainReasonsList.FirstOrDefault(x => x.ReasonId == _transferredReason.ReasonId);
+                    // Здесь добавить проверки на возможность переносов - например, на самого себя, на узел ниже и т.д.
+                    var reas = PlainReasonsList.FirstOrDefault(x => x.ReasonId == _transferredReason.ReasonId);
 
-                    //reas.ReasonParent = obj as Reason;
-                    //reas.ReasonParentId = (obj as Reason).ReasonId;
+                    reas.ReasonParent = obj as Reason;
+                    reas.ReasonParentId = (obj as Reason).ReasonId;
 
-                    //ReasonsCollection.Clear();
-                    //_commonDataController.FormObservableCollection(PlainReasonsList, null);
+                    ReasonsCollection.Clear();
+                    _commonDataController.FormObservableCollection(PlainReasonsList, null);
 
-                    ////_transferredReason.ReasonParent = obj as Reason; // Выбранный узел теперь родитель
-                    ////_transferredReason.ReasonParentId = (obj as Reason).ReasonId; // И его ID как родителя
-                    //RaisePropertyChanged();
+                    //_transferredReason.ReasonParent = obj as Reason; // Выбранный узел теперь родитель
+                    //_transferredReason.ReasonParentId = (obj as Reason).ReasonId; // И его ID как родителя
+                    RaisePropertyChanged(nameof(ReasonsCollection));
 
 
                     InformationVisibility = Visibility.Hidden;
