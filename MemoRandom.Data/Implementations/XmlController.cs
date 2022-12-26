@@ -48,6 +48,43 @@ namespace MemoRandom.Data.Implementations
         }
 
         /// <summary>
+        /// Полное пересохранение справочника причин смерти - на случай перемещения узлов
+        /// </summary>
+        /// <param name="reasons"></param>
+        /// <param name="filePath"></param>
+        public void SaveReasonsToFile(List<DtoReason> reasons, string filePath)
+        {
+            XDocument xmlReasons = new(); // Создаем новый документ
+            XElement root = new("Reasons"); // Корневой элемент причин смерти
+
+            foreach (var item in reasons) // В цикле для всех причин смерти
+            {
+                XElement reason = new XElement("Reason"); // Заголовок причины
+                XAttribute id = new XAttribute("id", $"{item.ReasonId}"); // И ее атрибут
+
+                #region Создание вложенных элементов причины смерти
+                XElement name = new XElement("name", $"{item.ReasonName}");
+                XElement comment = new XElement("comment", $"{item.ReasonComment}");
+                XElement description = new XElement("description", $"{item.ReasonDescription}");
+                XElement parent = new XElement("parent", $"{item.ReasonParentId}");
+                #endregion
+
+                #region Добавление к заголовку его атрибута и дочерних элементов
+                reason.Add(id);
+                reason.Add(name);
+                reason.Add(comment);
+                reason.Add(description);
+                reason.Add(parent);
+                #endregion
+
+                root.Add(reason);
+            }
+
+            xmlReasons.Add(root);
+            xmlReasons.Save(filePath);
+        }
+
+        /// <summary>
         /// Добавление причины с общий список
         /// </summary>
         /// <param name="reason"></param>

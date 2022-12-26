@@ -161,6 +161,24 @@ namespace MemoRandom.Client.Common.Implementations
             return success;
         }
 
+        public bool SaveReasons()
+        {
+            bool success = true; // Флаг успешности операции
+
+            try
+            {
+                List<DtoReason> dtoReasons = _mapper.Map<List<Reason>, List<DtoReason>>(PlainReasonsList);
+                _xmlController.SaveReasonsToFile(dtoReasons, _reasonsFilePath);
+            }
+            catch (Exception ex)
+            {
+                success = false;
+                _logger.Error($"Ошибка сохранения {ex.HResult}");
+            }
+
+            return success;
+        }
+
         /// <summary>
         /// Добавление причины в список
         /// </summary>

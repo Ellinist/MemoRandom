@@ -16,6 +16,8 @@ namespace MemoRandom.Data.Interfaces
         /// <returns></returns>
         List<DtoReason> ReadReasonsFromFile(string filePath);
 
+        void SaveReasonsToFile(List<DtoReason> reasons, string filePath);
+
         /// <summary>
         /// Добавление причины с общий список
         /// </summary>

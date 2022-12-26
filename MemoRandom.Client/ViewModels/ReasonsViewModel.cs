@@ -435,7 +435,7 @@ namespace MemoRandom.Client.ViewModels
         /// Команда выбора элемента в иерархическом дереве причин смерти
         /// </summary>
         /// <param name="obj"></param>
-        private void OnSelectNodeCommand(object obj)
+        private async void OnSelectNodeCommand(object obj)
         {
             if (_transferFlag) // Перенос узла
             {
@@ -476,6 +476,19 @@ namespace MemoRandom.Client.ViewModels
                     _commonDataController.FormObservableCollection(PlainReasonsList, null);
                     RaisePropertyChanged(nameof(ReasonsCollection));
 
+                    await Task.Run(() =>
+                    {
+                        var result = _commonDataController.SaveReasons();
+
+                        Dispatcher.CurrentDispatcher.Invoke(() =>
+                        {
+                            if (!result)
+                            {
+                                MessageBox.Show("Не удалось обновить данные!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+                            }
+                        });
+                    });
+
 
                     InformationVisibility = Visibility.Hidden;
                     RaisePropertyChanged(nameof(InformationVisibility));
@@ -483,8 +496,8 @@ namespace MemoRandom.Client.ViewModels
                     // Потом поковыряться - надо правильно расставлять приоритеты
                     //CancelButtonEnabled     = true; // Кнопка отмены недоступна
                     //ChangeSaveButtonEnabled = true; // Кнопка редактирования/сохранения недоступна
-                    AddSaveButtonEnabled = true; // Кнопка добавления/изменения недоступна
-                                                 //DeleteButtonEnabled     = true;
+                    //AddSaveButtonEnabled = true; // Кнопка добавления/изменения недоступна
+                    //DeleteButtonEnabled     = true;
                 }
             }
             else // Обычная работа (без переноса узлов)
@@ -579,7 +592,7 @@ namespace MemoRandom.Client.ViewModels
         /// <summary>
         /// Команда обработки снятия выделения узла при клике на пустом месте TreeView
         /// </summary>
-        private void OnEmptyClickCommand()
+        private async void OnEmptyClickCommand()
         {
             if (_transferFlag) // Перенос узла в корень
             {
@@ -592,6 +605,18 @@ namespace MemoRandom.Client.ViewModels
                 _commonDataController.FormObservableCollection(PlainReasonsList, null);
                 RaisePropertyChanged(nameof(ReasonsCollection));
 
+                await Task.Run(() =>
+                {
+                    var result = _commonDataController.SaveReasons();
+
+                    Dispatcher.CurrentDispatcher.Invoke(() =>
+                    {
+                        if (!result)
+                        {
+                            MessageBox.Show("Не удалось обновить данные!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
+                    });
+                });
 
                 InformationVisibility = Visibility.Hidden;
                 RaisePropertyChanged(nameof(InformationVisibility));

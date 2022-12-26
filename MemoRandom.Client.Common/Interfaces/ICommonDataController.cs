@@ -18,6 +18,8 @@ namespace MemoRandom.Client.Common.Interfaces
         /// </summary>
         bool ReadXmlData();
 
+        bool SaveReasons();
+
         #region Работа с причинами смерти
         /// <summary>
         /// Добавление причины в список
