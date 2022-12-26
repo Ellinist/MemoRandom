@@ -583,9 +583,14 @@ namespace MemoRandom.Client.ViewModels
         {
             if (_transferFlag) // Перенос узла в корень
             {
-                //_transferredReason.ReasonParent = null;
-                //_transferredReason.ReasonParentId = Guid.Empty;
-                //RaisePropertyChanged(nameof(ReasonsCollection));
+                var reas = PlainReasonsList.FirstOrDefault(x => x.ReasonId == _transferredReason.ReasonId);
+
+                reas.ReasonParent = null;
+                reas.ReasonParentId = Guid.Empty;
+
+                ReasonsCollection.Clear();
+                _commonDataController.FormObservableCollection(PlainReasonsList, null);
+                RaisePropertyChanged(nameof(ReasonsCollection));
 
 
                 InformationVisibility = Visibility.Hidden;
