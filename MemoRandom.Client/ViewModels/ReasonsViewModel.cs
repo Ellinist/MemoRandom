@@ -444,14 +444,36 @@ namespace MemoRandom.Client.ViewModels
                     // Здесь добавить проверки на возможность переносов - например, на самого себя, на узел ниже и т.д.
                     var reas = PlainReasonsList.FirstOrDefault(x => x.ReasonId == _transferredReason.ReasonId);
 
-                    reas.ReasonParent = obj as Reason;
-                    reas.ReasonParentId = (obj as Reason).ReasonId;
+                    bool matchFlag = false; // Флаг нахождения недопустимой ситуации
+
+                    OnceAgain(obj as Reason);
+
+                    void OnceAgain(Reason rsn) // Рекурсивная проверка узлов
+                    {
+                        if(rsn.ReasonParent != null)
+                        {
+                            if (rsn.ReasonParent.ReasonId == _transferredReason.ReasonId) // Ужасное совпадение
+                            {
+                                MessageBox.Show("Нельзя родительскую причину перенести в ее дочернюю!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                matchFlag = true;
+                            }
+                            else
+                            {
+                                OnceAgain(rsn.ReasonParent);
+                            }
+                        }
+                        else
+                        {
+                            if (!matchFlag)
+                            {
+                                reas.ReasonParent = obj as Reason;
+                                reas.ReasonParentId = (obj as Reason).ReasonId;
+                            }
+                        }
+                    }
 
                     ReasonsCollection.Clear();
                     _commonDataController.FormObservableCollection(PlainReasonsList, null);
-
-                    //_transferredReason.ReasonParent = obj as Reason; // Выбранный узел теперь родитель
-                    //_transferredReason.ReasonParentId = (obj as Reason).ReasonId; // И его ID как родителя
                     RaisePropertyChanged(nameof(ReasonsCollection));
 
 
