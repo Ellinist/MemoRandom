@@ -126,18 +126,13 @@ namespace MemoRandom.Client.Common.Implementations
 
                 #region Чтение возрастных категорий
                 AgeCategories.Clear(); // Чистим список категорий
-                var categoriesResult = _xmlController.ReadCategoriesFromFile(_categoriesFilePath);
+                var categoriesResult = _xmlController.ReadCategoriesFromFile(_categoriesFilePath).OrderBy(x => x.StartAge).ToList();
                 AgeCategories = _mapper.Map<List<DtoCategory>, ObservableCollection<Category>>(categoriesResult);
-                //foreach (var item in AgeCategories) // Преобразование строк в цвет
-                //{
-                //    //item.CategoryColor = (Color)ColorConverter.ConvertFromString(item.StringColor)!;
-                //    item.StringColor = (Color)ColorConverter.ConvertFromString(item.StringColor)!;
-                //}
                 #endregion
 
                 #region Чтение людей для сравнения
                 ComparedHumansCollection.Clear(); // Чистим список людей для сравнения
-                var comparedHumansResult = _xmlController.ReadComparedHumansFromFile(_comparedHumansFilePath);
+                var comparedHumansResult = _xmlController.ReadComparedHumansFromFile(_comparedHumansFilePath).OrderBy(x => x.ComparedHumanBirthDate).ToList();
                 ComparedHumansCollection = _mapper.Map<List<DtoComparedHuman>, ObservableCollection<ComparedHuman>>(comparedHumansResult);
                 #endregion
 
