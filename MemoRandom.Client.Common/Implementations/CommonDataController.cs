@@ -143,7 +143,7 @@ namespace MemoRandom.Client.Common.Implementations
 
                 #region Чтение основного списка людей
                 HumansList.Clear(); // Чистим основной список людей
-                var humansResult = _xmlController.ReadHumansFromFile(_humansFilePath);
+                var humansResult = _xmlController.ReadHumansFromFile(_humansFilePath).OrderBy(x => x.DaysLived).ToList();
                 HumansList = _mapper.Map<List<DtoHuman>, ObservableCollection<Human>>(humansResult);
                 foreach (var human in HumansList)
                 {

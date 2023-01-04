@@ -219,11 +219,9 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private List<Reason> PlainReasonsList
         {
-            //get => Reasons.PlainReasonsList;
             get => CommonDataController.PlainReasonsList;
             set
             {
-                //Reasons.PlainReasonsList = value;
                 CommonDataController.PlainReasonsList = value;
                 RaisePropertyChanged(nameof(PlainReasonsList));
             }
@@ -280,7 +278,6 @@ namespace MemoRandom.Client.ViewModels
             if(obj == null)
             {
                 MessageBox.Show("Узел для переноса не выбран", "Предупреждение!", MessageBoxButton.OK, MessageBoxImage.Hand);
-                return;
             }
             else
             {
@@ -348,16 +345,6 @@ namespace MemoRandom.Client.ViewModels
                 
                 await Task.Run(() =>
                 {
-                    //DbReason addedReason = new()
-                    //{
-                    //    ReasonId = rsn.ReasonId,
-                    //    ReasonName = rsn.ReasonName,
-                    //    ReasonComment = rsn.ReasonComment,
-                    //    ReasonDescription = rsn.ReasonDescription,
-                    //    ReasonParentId = rsn.ReasonParentId
-                    //};
-
-                    //_dbController.AddReasonToList(addedReason); // Записываем изменение во внешнее хранилище
                     var result = _commonDataController.AddReasonToFile(rsn);
                     Dispatcher.CurrentDispatcher.Invoke(() =>
                     {
