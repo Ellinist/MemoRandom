@@ -133,8 +133,8 @@ namespace MemoRandom.Client.ViewModels
             var previousActor = orderedList.LastOrDefault(x  => x.DaysLived < startSpan.TotalDays);  // Пережитый
             
             var nextActor     = orderedList.FirstOrDefault(x => x.DaysLived > startSpan.TotalDays); // Не пережитый
-            Reason previousReason = null;
-            Reason nextReason = null;
+            //Reason previousReason = null;
+            //Reason nextReason = null;
 
             #region Начальный вывод картинок и данных, если они должны быть
             ProgressDispatcher.Invoke(() => // Начальный вывод картинок пережитого и не пережитого игроков
@@ -179,7 +179,9 @@ namespace MemoRandom.Client.ViewModels
                         // Сдвигаем игроков влево
                         // ВНИМАНИЕ! Здесь поставить проверку, а вдруг следующего игрока нет! Обана!
                         previousActor = nextActor; // Предыдущий игрок становится следующим
+                        var prevReason = CommonDataController.PlainReasonsList.FirstOrDefault(x => x.ReasonId == previousActor.DeathReasonId);
                         nextActor = orderedList.FirstOrDefault(x => x.DaysLived > currentTimeLap.TotalDays); // А следующий - вычисляется
+                        var nReason = CommonDataController.PlainReasonsList.FirstOrDefault(x => x.ReasonId == nextActor.DeathReasonId);
                         // И меняем картинки
                         control.PreviousImage.Source = _commonDataController.GetHumanImage(previousActor); // Загружаем картинку пережитого игрока
                         if (nextActor != null)
@@ -187,8 +189,8 @@ namespace MemoRandom.Client.ViewModels
                             control.NextImage.Source = _commonDataController.GetHumanImage(nextActor); // Загружаем картинку еще не пережитого игрока
 
                             // Отображение данных, изменяемых только при смене игроков
-                            ShowPreviousData(control, previousActor, previousReason);
-                            ShowNextData(control, nextActor, nextReason);
+                            ShowPreviousData(control, previousActor, prevReason);
+                            ShowNextData(control, nextActor, nReason);
                         }
                         else
                         {

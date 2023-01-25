@@ -176,7 +176,7 @@ namespace MemoRandom.Client.ViewModels
                         CurrentDateTime = DateTime.Now;
                     });
                 }
-            });
+            }, token);
         }
 
         /// <summary>
