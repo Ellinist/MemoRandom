@@ -85,7 +85,7 @@
             </TextBlock>
 
             <TextBlock Grid.Row="2"
-                       Text="Ellinist Software Studio © 2019-2022"
+                       Text="{Binding CopyRight}"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
                        FontFamily="Times New Roman"

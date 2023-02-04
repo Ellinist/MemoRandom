@@ -1,5 +1,6 @@
 ﻿using Prism.Commands;
 using Prism.Mvvm;
+using System;
 using System.Reflection;
 using System.Windows;
 
@@ -12,6 +13,7 @@ namespace MemoRandom.Client.ViewModels
     {
         private Window _view; // Окно
         private string _programVersion;
+        private string _copyRight = $"Ellinist Software Studio © 2019-{DateTime.Now.Year}";
         
         public string ProgramVersion
         {
@@ -20,6 +22,16 @@ namespace MemoRandom.Client.ViewModels
             {
                 _programVersion = value;
                 RaisePropertyChanged(nameof(ProgramVersion));
+            }
+        }
+
+        public string CopyRight
+        {
+            get => _copyRight;
+            set
+            {
+                _copyRight = value;
+                RaisePropertyChanged(nameof(CopyRight));
             }
         }
 
