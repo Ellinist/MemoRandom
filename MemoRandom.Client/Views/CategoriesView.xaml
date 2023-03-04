@@ -9,6 +9,7 @@
                  xmlns:xceed="http://schemas.xceed.com/wpf/xaml/toolkit"
                  mc:Ignorable="d"
                  Title="{Binding CategoriesTitle}"
+                 WindowStartupLocation="CenterScreen"
                  Height="450" MinHeight="450" MaxHeight="450"
                  Width="1000" MinWidth="1000" MaxWidth="1000">
 
@@ -140,11 +141,13 @@
                     </Grid.ColumnDefinitions>
 
                     <TextBlock Grid.Column="0"
+                               Visibility="Hidden"
                                Padding="0, 0, 5, 0"
                                Style="{StaticResource TextBlockFontSize}"
                                HorizontalAlignment="Right"
                                Text="GUID:"/>
                     <TextBlock Grid.Column="1"
+                               Visibility="Hidden"
                                Text="{Binding CategoryId}"
                                Style="{StaticResource TextBlockFontSize}"/>
                 </Grid>
@@ -196,34 +199,6 @@
                              Text="{Binding PeriodTo}"
                              Style="{StaticResource TextBoxFontSize}"/>
                 </Grid>
-
-                <!--<Grid Margin="2, 2, 2, 2">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="2*"/>
-                    </Grid.ColumnDefinitions>
-
-                    <TextBlock Grid.Column="0"
-                               Padding="0, 0, 5, 0"
-                               Style="{StaticResource TextBlockFontSize}"
-                               HorizontalAlignment="Right"
-                               Text="Цвет:"/>
-
-                    <ComboBox Grid.Column="1"
-                              x:Name="CategoriesCombo"
-                              ItemsSource="{Binding ColorsList}"
-                              SelectedItem="{Binding SelectedComboColor}"
-                              SelectedIndex="{Binding SelectedComboIndex}">
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <Rectangle Fill="{Binding Name}" Width="100" Height="24" Margin="2, 2, 5, 2"/>
-                                    <TextBlock Text="{Binding Name}"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
-                    </ComboBox>
-                </Grid>-->
 
                 <Grid Margin="2">
                     <Grid.ColumnDefinitions>
