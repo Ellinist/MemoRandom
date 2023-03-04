@@ -7,6 +7,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media.Imaging;
 
 namespace MemoRandom.Client.ViewModels
 {
@@ -26,6 +27,8 @@ namespace MemoRandom.Client.ViewModels
         private int _selectedIndex;
         private ComparedHuman _selectedHuman;
         private bool _isConsidered;
+        private bool _newFlag = false;
+        private BitmapSource _comparedHumanImage;
         #endregion
 
         #region PROPS
@@ -43,7 +46,7 @@ namespace MemoRandom.Client.ViewModels
         }
 
         /// <summary>
-        /// Связный список людей для сравнения
+        /// Коллекция людей для сравнения
         /// </summary>
         public ObservableCollection<ComparedHuman> ComparedHumansCollection
         {
@@ -88,7 +91,7 @@ namespace MemoRandom.Client.ViewModels
         }
 
         /// <summary>
-        /// Идентификатор человека длч сравнения
+        /// Идентификатор человека для сравнения
         /// </summary>
         public Guid ComparedHumanId
         {
@@ -138,6 +141,19 @@ namespace MemoRandom.Client.ViewModels
                 RaisePropertyChanged(nameof(IsConsidered));
             }
         }
+
+        /// <summary>
+        /// Изображение человека для сравнения
+        /// </summary>
+        public BitmapSource ComparedHumanImage
+        {
+            get => _comparedHumanImage;
+            set
+            {
+                _comparedHumanImage = value;
+                RaisePropertyChanged(nameof(ComparedHumanImage));
+            }
+        }
         #endregion
 
         #region COMMANDS
@@ -157,7 +173,7 @@ namespace MemoRandom.Client.ViewModels
         public DelegateCommand DeleteComparedHumanCommand { get; private set; }
         #endregion
 
-        private bool _newFlag = false;
+        
 
         /// <summary>
         /// Команда добавления нового человека для сравнения
@@ -206,7 +222,6 @@ namespace MemoRandom.Client.ViewModels
 
                 await Task.Run(() =>
                 {
-                    //var result = _commonDataController.UpdateComparedHumanInRepository(compHuman);
                     var result = _commonDataController.UpdateComparedHuman(compHuman);
                     if (!result)
                     {
@@ -253,6 +268,9 @@ namespace MemoRandom.Client.ViewModels
             RaisePropertyChanged(nameof(ComparedHumansCollection));
         }
 
+        /// <summary>
+        /// Инициализация команд
+        /// </summary>
         private void InitCommands()
         {
             NewComparedHumanCommand = new DelegateCommand(NewComparedHuman);
@@ -269,6 +287,8 @@ namespace MemoRandom.Client.ViewModels
         /// <summary>
         /// Конструктор
         /// </summary>
+        /// <param name="commonDataController"></param>
+        /// <exception cref="ArgumentNullException"></exception>
         public ComparedHumansViewModel(ICommonDataController commonDataController)
         {
             _commonDataController = commonDataController ?? throw new ArgumentNullException(nameof(commonDataController));

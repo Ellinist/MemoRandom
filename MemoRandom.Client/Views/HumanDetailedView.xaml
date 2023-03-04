@@ -168,16 +168,6 @@
                                             Culture="ru-RU"
                                             VerticalAlignment="Center"
                                             SelectedDateTime="{Binding DeathDate}"/>
-                        <!--<xceed:DateTimePicker Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2"
-                                              FontSize="17"
-                                              FontWeight="Bold"
-                                              TimeFormat="LongDate"
-                                              HorizontalAlignment="Left"
-                                              
-                                              CalendarWidth="400"
-                                              CultureInfo="ru-RU"
-                                              Value="{Binding DeathDate}"
-                                              />-->
 
                         <!--Страна смерти-->
                         <TextBlock Grid.Row="7" Grid.Column="0"
