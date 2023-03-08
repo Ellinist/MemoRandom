@@ -213,7 +213,6 @@ namespace MemoRandom.Client.ViewModels
 
 
         #region CTOR
-
         /// <summary>
         /// Конструктор
         /// </summary>

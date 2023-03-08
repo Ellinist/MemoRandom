@@ -10,13 +10,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Configuration\**" />
-    <EmbeddedResource Remove="Configuration\**" />
-    <None Remove="Configuration\**" />
-    <Page Remove="Configuration\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Remove="Resources\Fonts\ArianaVioleta-dz2K.ttf" />
     <None Remove="Resources\Fonts\Casanova.ttf" />
     <None Remove="Resources\Fonts\DeutschGothic.ttf" />
@@ -58,6 +51,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Configuration\categories.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Resources\Icons\humanInfoIcon.ico" />
     <Resource Include="Resources\Icons\mainWindowIcon.ico" />
     <Resource Include="Resources\Icons\reasonsIcon.ico" />

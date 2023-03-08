@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Categories>
+	<Category id="b0e23eea-684d-43d9-8e45-738ba8e7b5b5">
+		<name>Дети</name>
+		<startage>0</startage>
+		<stopage>9</stopage>
+		<color>#FFA0FC12</color>
+	</Category>
+	<Category id="8ee6f5aa-2a22-4d35-9dfb-e997e81e7777">
+		<name>Подростки</name>
+		<startage>10</startage>
+		<stopage>19</stopage>
+		<color>#FFA5F0AC</color>
+	</Category>
+	<Category id="a3c0d73e-24ea-4982-a729-7777310d57fa">
+		<name>Молодые</name>
+		<startage>20</startage>
+		<stopage>29</stopage>
+		<color>#FF8DFAC0</color>
+	</Category>
+	<Category id="848aba83-b466-4a3b-bc89-87f263757714">
+		<name>Взрослые</name>
+		<startage>30</startage>
+		<stopage>39</stopage>
+		<color>#FF9EE6E8</color>
+	</Category>
+	<Category id="4d65c54c-7064-4387-8835-17c628a7d4e4">
+		<name>В расцвете лет</name>
+		<startage>40</startage>
+		<stopage>49</stopage>
+		<color>#FF96BBFF</color>
+	</Category>
+	<Category id="4397563f-7f8e-4f48-9e69-97e36aff0c4f">
+		<name>Предпенсионеры</name>
+		<startage>50</startage>
+		<stopage>59</stopage>
+		<color>#FFEBB2FF</color>
+	</Category>
+	<Category id="37478a3a-bf0a-488a-b103-1b13176d5cbb">
+		<name>Пенсионеры</name>
+		<startage>60</startage>
+		<stopage>69</stopage>
+		<color>#FFD9A498</color>
+	</Category>
+	<Category id="50deebc8-7584-4801-9404-ca9d4099781a">
+		<name>Пожилые</name>
+		<startage>70</startage>
+		<stopage>79</stopage>
+		<color>#FFFFADC9</color>
+	</Category>
+	<Category id="9f59d01b-20d2-486d-92a2-0d67b16a531b">
+		<name>Старые</name>
+		<startage>80</startage>
+		<stopage>89</stopage>
+		<color>#FFFFD6DE</color>
+	</Category>
+	<Category id="09591d85-5e01-4046-8a1a-a2858bbd015c">
+		<name>Могикане</name>
+		<startage>100</startage>
+		<stopage>120</stopage>
+		<color>#FFC4C4C4</color>
+	</Category>
+</Categories>
