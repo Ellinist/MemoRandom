@@ -6,7 +6,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using AutoMapper;
 using MemoRandom.Client.Common.Models;
-using System.Windows.Media;
 using System.IO;
 using System.Windows.Media.Imaging;
 using NLog;
@@ -18,6 +17,13 @@ namespace MemoRandom.Client.Common.Implementations
 {
     public class CommonDataController : ICommonDataController
     {
+        #region CONSTANTS
+        private const string DEFAULT_CONFIGURATION_FOLDER = @"\Configuration";
+        private const string DEFAULT_IMAGES_FOLDER = @"\Configuration\Images";
+        private const string DATA_FOLDER = @"\Data";
+        private const string IMAGES_FOLDER = @"\Data\Images";
+        #endregion
+
         #region PRIVATE FIELDS
         private readonly ILogger _logger;
         private readonly IXmlController _xmlController;
@@ -35,7 +41,8 @@ namespace MemoRandom.Client.Common.Implementations
         private string _defaultComparedHumansFilePath;
         private string _comparedHumansFilePath;
         
-        private string _imageFolder;
+        private string _imagesFolder;
+        private string _defaultImagesFolder;
         #endregion
 
         #region PROPS
@@ -78,10 +85,11 @@ namespace MemoRandom.Client.Common.Implementations
         {
             bool success = true;
             // Получаем папку, где установлено приложение и добавляем папку хранения XML-файлов
-            var defaultXmlFolder = AppDomain.CurrentDomain.BaseDirectory + @"\Configuration";
-            var xmlFolder = AppDomain.CurrentDomain.BaseDirectory + @"\Data";
+            var defaultXmlFolder = AppDomain.CurrentDomain.BaseDirectory + DEFAULT_CONFIGURATION_FOLDER;
+            var xmlFolder = AppDomain.CurrentDomain.BaseDirectory + DATA_FOLDER;
             // Получаем папку, где установлено приложение и добавляем папку хранения изображений
-            var imageFolder = AppDomain.CurrentDomain.BaseDirectory + @"\Data\Images";
+            var defaultImagesFolder = AppDomain.CurrentDomain.BaseDirectory + DEFAULT_IMAGES_FOLDER;
+            var imageFolder = AppDomain.CurrentDomain.BaseDirectory + IMAGES_FOLDER;
 
             try
             {
@@ -112,7 +120,7 @@ namespace MemoRandom.Client.Common.Implementations
                 _defaultHumansFilePath = Path.Combine(defaultXmlFolder, ConfigurationManager.AppSettings["DefaultHumansFile"]!);
                 _humansFilePath = Path.Combine(xmlFolder, ConfigurationManager.AppSettings["HumansFile"]!);
 
-                _imageFolder = Path.Combine(imageFolder);
+                _imagesFolder = Path.Combine(imageFolder);
             }
             catch (Exception ex)
             {
@@ -437,7 +445,7 @@ namespace MemoRandom.Client.Common.Implementations
             // Читаем файл изображения, если выбранный человек существует и у него есть изображение
             if (currentHuman == null || currentHuman.ImageFile == string.Empty) return null;
 
-            string combinedImagePath = Path.Combine(_imageFolder, currentHuman.ImageFile);
+            string combinedImagePath = Path.Combine(_imagesFolder, currentHuman.ImageFile);
 
             if (!File.Exists(combinedImagePath)) return null;
 
@@ -459,7 +467,7 @@ namespace MemoRandom.Client.Common.Implementations
         /// <param name="humanImage"></param>
         private void SaveImageToFile(BitmapSource humanImage, Human human)
         {
-            string combinedImagePath = Path.Combine(_imageFolder, human.ImageFile);
+            string combinedImagePath = Path.Combine(_imagesFolder, human.ImageFile);
 
             JpegBitmapEncoder encoder = new JpegBitmapEncoder();
             encoder.Frames.Add(BitmapFrame.Create(humanImage));
@@ -484,7 +492,7 @@ namespace MemoRandom.Client.Common.Implementations
 
             try
             {
-                string combinedImagePath = Path.Combine(_imageFolder, fileName);
+                string combinedImagePath = Path.Combine(_imagesFolder, fileName);
                 File.Delete(combinedImagePath);
             }
             catch (Exception ex)
