@@ -1,0 +1,207 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Reasons>
+	<Reason id="960be6bf-318a-4ed7-8552-06b6445edb52">
+		<name>Сердце (алкоголь)</name>
+		<comment></comment>
+		<description></description>
+		<parent>7df9cafd-c447-4835-bd5d-4fb030d47646</parent>
+	</Reason>
+	<Reason id="8588346c-ecb6-471a-a913-103bd1d1df7f">
+		<name>Коронавирус</name>
+		<comment></comment>
+		<description></description>
+		<parent>5160ae6b-62dc-45a4-b28a-c3ffda529cce</parent>
+	</Reason>
+	<Reason id="a2ffe7d3-8fd7-4425-999c-15375004a089">
+		<name>Отек мозга</name>
+		<comment></comment>
+		<description></description>
+		<parent>6171db9f-b21a-43dc-8893-245ac42df16d</parent>
+	</Reason>
+	<Reason id="8cab4275-203e-4856-a6de-15694566def8">
+		<name>Самоубийство</name>
+		<comment></comment>
+		<description></description>
+		<parent>ec69635c-b1e3-432a-97b9-541ff8e7dc40</parent>
+	</Reason>
+	<Reason id="751d964d-0aa6-4696-b8f1-1d4c7bbaf8f5">
+		<name>Внутренние болезни</name>
+		<comment></comment>
+		<description></description>
+		<parent>00000000-0000-0000-0000-000000000000</parent>
+	</Reason>
+	<Reason id="6171db9f-b21a-43dc-8893-245ac42df16d">
+		<name>Болезни мозга</name>
+		<comment></comment>
+		<description></description>
+		<parent>751d964d-0aa6-4696-b8f1-1d4c7bbaf8f5</parent>
+	</Reason>
+	<Reason id="f08793a0-bb0b-457a-92cd-3369541a2663">
+		<name>Нет данных</name>
+		<comment></comment>
+		<description></description>
+		<parent>5160ae6b-62dc-45a4-b28a-c3ffda529cce</parent>
+	</Reason>
+	<Reason id="7e527340-98d9-435d-82d3-3b45a7c1ef73">
+		<name>Пневмония</name>
+		<comment></comment>
+		<description></description>
+		<parent>b8c670e9-5946-4fee-badd-699c6a70d9f6</parent>
+	</Reason>
+	<Reason id="74eaf019-c6ab-411b-b4bc-41f4d92ebf55">
+		<name>Инсульт</name>
+		<comment></comment>
+		<description></description>
+		<parent>6171db9f-b21a-43dc-8893-245ac42df16d</parent>
+	</Reason>
+	<Reason id="b1cf07ae-3c84-4d57-90ee-466fc72002a1">
+		<name>Сердечная недостаточность</name>
+		<comment></comment>
+		<description></description>
+		<parent>7df9cafd-c447-4835-bd5d-4fb030d47646</parent>
+	</Reason>
+	<Reason id="7df9cafd-c447-4835-bd5d-4fb030d47646">
+		<name>Заболевания сердца</name>
+		<comment></comment>
+		<description></description>
+		<parent>00000000-0000-0000-0000-000000000000</parent>
+	</Reason>
+	<Reason id="119361e3-699e-49e0-8af2-501948858b5e">
+		<name>Разрыв аорты</name>
+		<comment></comment>
+		<description></description>
+		<parent>7df9cafd-c447-4835-bd5d-4fb030d47646</parent>
+	</Reason>
+	<Reason id="ec69635c-b1e3-432a-97b9-541ff8e7dc40">
+		<name>Физическая травма</name>
+		<comment></comment>
+		<description></description>
+		<parent>00000000-0000-0000-0000-000000000000</parent>
+	</Reason>
+	<Reason id="b8c670e9-5946-4fee-badd-699c6a70d9f6">
+		<name>Болезни легких</name>
+		<comment></comment>
+		<description></description>
+		<parent>751d964d-0aa6-4696-b8f1-1d4c7bbaf8f5</parent>
+	</Reason>
+	<Reason id="8bd033eb-2ed7-480d-baba-6ce117b469a9">
+		<name>Атеросклероз</name>
+		<comment></comment>
+		<description></description>
+		<parent>7df9cafd-c447-4835-bd5d-4fb030d47646</parent>
+	</Reason>
+	<Reason id="ee0fbae3-51d1-4514-b5c0-6dbe6b7af52c">
+		<name>Тромбоэмболия</name>
+		<comment></comment>
+		<description></description>
+		<parent>7df9cafd-c447-4835-bd5d-4fb030d47646</parent>
+	</Reason>
+	<Reason id="c88e4c22-8527-4a39-b667-77e22ce8c3a2">
+		<name>Болезнь Паркинсона</name>
+		<comment></comment>
+		<description></description>
+		<parent>6171db9f-b21a-43dc-8893-245ac42df16d</parent>
+	</Reason>
+	<Reason id="68c9d7a7-bee8-4285-97da-79182f1165b6">
+		<name>Инфаркт</name>
+		<comment></comment>
+		<description></description>
+		<parent>7df9cafd-c447-4835-bd5d-4fb030d47646</parent>
+	</Reason>
+	<Reason id="e0839c30-523d-4b2d-94c0-826f6fff7eac">
+		<name>Амиотрофический боковой склероз</name>
+		<comment></comment>
+		<description></description>
+		<parent>451364d9-0290-43d1-855c-e837ac94335a</parent>
+	</Reason>
+	<Reason id="96f53c40-3a9a-4ab4-830b-934df2b3290e">
+		<name>Менингит</name>
+		<comment></comment>
+		<description></description>
+		<parent>6171db9f-b21a-43dc-8893-245ac42df16d</parent>
+	</Reason>
+	<Reason id="f2b78f2f-d632-4f0c-b7fb-9473101f3c86">
+		<name>Гибель</name>
+		<comment></comment>
+		<description></description>
+		<parent>ec69635c-b1e3-432a-97b9-541ff8e7dc40</parent>
+	</Reason>
+	<Reason id="05e04fef-0422-4fe3-94cd-9f42351548de">
+		<name>Почки</name>
+		<comment></comment>
+		<description></description>
+		<parent>751d964d-0aa6-4696-b8f1-1d4c7bbaf8f5</parent>
+	</Reason>
+	<Reason id="f762e06e-7626-4046-b308-a92ad9969fc5">
+		<name>Печень</name>
+		<comment></comment>
+		<description></description>
+		<parent>751d964d-0aa6-4696-b8f1-1d4c7bbaf8f5</parent>
+	</Reason>
+	<Reason id="89b5d1cf-3d8c-47d7-b182-ac2874d2f435">
+		<name>Наркотики</name>
+		<comment></comment>
+		<description></description>
+		<parent>5160ae6b-62dc-45a4-b28a-c3ffda529cce</parent>
+	</Reason>
+	<Reason id="38125d6b-5785-490e-b6b9-b2eaf67edc98">
+		<name>Язва</name>
+		<comment></comment>
+		<description></description>
+		<parent>751d964d-0aa6-4696-b8f1-1d4c7bbaf8f5</parent>
+	</Reason>
+	<Reason id="8d418db7-8af7-4316-9936-bfeb94e360aa">
+		<name>Лейкемия</name>
+		<comment></comment>
+		<description></description>
+		<parent>b28b9af2-4d49-4b19-97c0-d44ca61e8a7e</parent>
+	</Reason>
+	<Reason id="b28b9af2-4d49-4b19-97c0-d44ca61e8a7e">
+		<name>Онкология</name>
+		<comment></comment>
+		<description></description>
+		<parent>00000000-0000-0000-0000-000000000000</parent>
+	</Reason>
+	<Reason id="190ce7c3-5cd4-4a05-9d6a-e1fa04fc0090">
+		<name>Астма</name>
+		<comment></comment>
+		<description></description>
+		<parent>b8c670e9-5946-4fee-badd-699c6a70d9f6</parent>
+	</Reason>
+	<Reason id="d7bf46ae-3788-4591-b265-e5ef2a8dcd9b">
+		<name>Рак мозга</name>
+		<comment></comment>
+		<description></description>
+		<parent>b28b9af2-4d49-4b19-97c0-d44ca61e8a7e</parent>
+	</Reason>
+	<Reason id="1e1a2079-0be3-4404-a634-e6e133f9f3fd">
+		<name>Инфекция в легких</name>
+		<comment></comment>
+		<description></description>
+		<parent>b8c670e9-5946-4fee-badd-699c6a70d9f6</parent>
+	</Reason>
+	<Reason id="451364d9-0290-43d1-855c-e837ac94335a">
+		<name>Склероз</name>
+		<comment></comment>
+		<description></description>
+		<parent>751d964d-0aa6-4696-b8f1-1d4c7bbaf8f5</parent>
+	</Reason>
+	<Reason id="69819211-7807-4e61-a4cb-d1a76f83fcee">
+		<name>Сепсис</name>
+		<comment></comment>
+		<description></description>
+		<parent>751d964d-0aa6-4696-b8f1-1d4c7bbaf8f5</parent>
+	</Reason>
+	<Reason id="369e88d8-dc28-4014-93c5-7f85bc0bd729">
+		<name>Диабет</name>
+		<comment></comment>
+		<description></description>
+		<parent>751d964d-0aa6-4696-b8f1-1d4c7bbaf8f5</parent>
+	</Reason>
+	<Reason id="5160ae6b-62dc-45a4-b28a-c3ffda529cce">
+		<name>Другое</name>
+		<comment></comment>
+		<description></description>
+		<parent>00000000-0000-0000-0000-000000000000</parent>
+	</Reason>
+</Reasons>

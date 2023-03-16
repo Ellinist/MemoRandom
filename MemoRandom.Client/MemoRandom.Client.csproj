@@ -10,6 +10,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Configuration\defaultcomparedhumans.xml" />
+    <None Remove="Configuration\humans.xml" />
+    <None Remove="Configuration\reasons.xml" />
     <None Remove="Resources\Fonts\ArianaVioleta-dz2K.ttf" />
     <None Remove="Resources\Fonts\Casanova.ttf" />
     <None Remove="Resources\Fonts\DeutschGothic.ttf" />
@@ -51,9 +54,18 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Configuration\categories.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
+    <Content Include="Configuration\categories.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Configuration\defaultcomparedhumans.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Configuration\humans.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Configuration\reasons.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Resource Include="Resources\Icons\humanInfoIcon.ico" />
     <Resource Include="Resources\Icons\mainWindowIcon.ico" />
     <Resource Include="Resources\Icons\reasonsIcon.ico" />
