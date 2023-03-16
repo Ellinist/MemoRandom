@@ -218,7 +218,6 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         /// <param name="logger"></param>
         /// <param name="container"></param>
-        /// <param name="msSqlController"></param>
         /// <param name="commonDataController"></param>
         /// <exception cref="ArgumentNullException"></exception>
         public StartMemoRandomViewModel(ILogger logger,
