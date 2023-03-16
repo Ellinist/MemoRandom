@@ -135,75 +135,39 @@ namespace MemoRandom.Client.Common.Implementations
                 #region Чтение причин смерти из файла
                 PlainReasonsList.Clear(); // Чистим плоский список
                 ReasonsCollection.Clear(); // Чистим иерархическую коллекцию
-                if (File.Exists(_reasonsFilePath))
-                {
-                    #region Пользовательский справочник причин смерти
-                    var reasonsResult = _xmlController.ReadReasonsFromFile(_reasonsFilePath);
-                    PlainReasonsList = _mapper.Map<List<DtoReason>, List<Reason>>(reasonsResult);
-                    #endregion
-                }
-                else
-                {
-                    #region Причины смерти по умолчанию
-                    var reasonsResult = _xmlController.ReadReasonsFromFile(_defaultReasonsFilePath);
-                    PlainReasonsList = _mapper.Map<List<DtoReason>, List<Reason>>(reasonsResult);
-                    #endregion
-                }
+                // Если файла нет, копируем файл по умолчанию
+                if (!File.Exists(_reasonsFilePath)) File.Copy(_defaultReasonsFilePath, _reasonsFilePath);
+
+                var reasonsResult = _xmlController.ReadReasonsFromFile(_reasonsFilePath);
+                PlainReasonsList = _mapper.Map<List<DtoReason>, List<Reason>>(reasonsResult);
                 FormObservableCollection(PlainReasonsList, null); // Формируем иерархическую коллекцию
                 #endregion
 
                 #region Чтение возрастных категорий
                 AgeCategories.Clear(); // Чистим список категорий
-                if (File.Exists(_categoriesFilePath))
-                {
-                    #region Пользовательские категории
-                    var categoriesResult = _xmlController.ReadCategoriesFromFile(_categoriesFilePath).OrderBy(x => x.StartAge).ToList();
-                    AgeCategories = _mapper.Map<List<DtoCategory>, ObservableCollection<Category>>(categoriesResult);
-                    #endregion
-                }
-                else
-                {
-                    #region Категории по умолчанию
-                    var categoriesResult = _xmlController.ReadCategoriesFromFile(_defaultCategoriesFilePath).OrderBy(x => x.StartAge).ToList();
-                    AgeCategories = _mapper.Map<List<DtoCategory>, ObservableCollection<Category>>(categoriesResult);
-                    #endregion
-                }
+                // Если файла нет, копируем файл по умолчанию
+                if (!File.Exists(_categoriesFilePath)) File.Copy(_defaultCategoriesFilePath, _categoriesFilePath);
+
+                var categoriesResult = _xmlController.ReadCategoriesFromFile(_categoriesFilePath).OrderBy(x => x.StartAge).ToList();
+                AgeCategories = _mapper.Map<List<DtoCategory>, ObservableCollection<Category>>(categoriesResult);
                 #endregion
 
                 #region Чтение людей для сравнения
                 ComparedHumansCollection.Clear(); // Чистим список людей для сравнения
-                if (File.Exists(_comparedHumansFilePath))
-                {
-                    #region Пользовательские люди для сравнения
-                    var comparedHumansResult = _xmlController.ReadComparedHumansFromFile(_comparedHumansFilePath).OrderBy(x => x.ComparedHumanBirthDate).ToList();
-                    ComparedHumansCollection = _mapper.Map<List<DtoComparedHuman>, ObservableCollection<ComparedHuman>>(comparedHumansResult);
-                    #endregion
-                }
-                else
-                {
-                    #region Список людей для сравнения по умолчанию
-                    var comparedHumansResult = _xmlController.ReadComparedHumansFromFile(_defaultComparedHumansFilePath).OrderBy(x => x.ComparedHumanBirthDate).ToList();
-                    ComparedHumansCollection = _mapper.Map<List<DtoComparedHuman>, ObservableCollection<ComparedHuman>>(comparedHumansResult);
-                    #endregion
-                }
+                // Если файла нет, копируем файл по умолчанию
+                if (!File.Exists(_comparedHumansFilePath)) File.Copy(_defaultComparedHumansFilePath, _comparedHumansFilePath);
+
+                var comparedHumansResult = _xmlController.ReadComparedHumansFromFile(_comparedHumansFilePath).OrderBy(x => x.ComparedHumanBirthDate).ToList();
+                ComparedHumansCollection = _mapper.Map<List<DtoComparedHuman>, ObservableCollection<ComparedHuman>>(comparedHumansResult);
                 #endregion
 
                 #region Чтение основного списка людей
                 HumansList.Clear(); // Чистим основной список людей
-                if (File.Exists(_humansFilePath))
-                {
-                    #region Пользовательский список людей
-                    var humansResult = _xmlController.ReadHumansFromFile(_humansFilePath).OrderBy(x => x.DaysLived).ToList();
-                    HumansList = _mapper.Map<List<DtoHuman>, ObservableCollection<Human>>(humansResult);
-                    #endregion
-                }
-                else
-                {
-                    #region Список людей по умолчанию
-                    var humansResult = _xmlController.ReadHumansFromFile(_defaultHumansFilePath).OrderBy(x => x.DaysLived).ToList();
-                    HumansList = _mapper.Map<List<DtoHuman>, ObservableCollection<Human>>(humansResult);
-                    #endregion
-                }
+                // Если файла нет, копируем файл по умолчанию
+                if (!File.Exists(_humansFilePath)) File.Copy(_defaultHumansFilePath, _humansFilePath);
+
+                var humansResult = _xmlController.ReadHumansFromFile(_humansFilePath).OrderBy(x => x.DaysLived).ToList();
+                HumansList = _mapper.Map<List<DtoHuman>, ObservableCollection<Human>>(humansResult);
                 foreach (var human in HumansList)
                 {
                     var res = PlainReasonsList.FirstOrDefault(x => x.ReasonId == human.DeathReasonId);
