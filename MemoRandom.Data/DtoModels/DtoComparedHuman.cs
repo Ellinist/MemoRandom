@@ -5,7 +5,6 @@ namespace MemoRandom.Data.DtoModels
     /// <summary>
     /// Класс человека для сравнения при хранении в XML-файле
     /// </summary>
-    [Serializable]
     public class DtoComparedHuman
     {
         /// <summary>
