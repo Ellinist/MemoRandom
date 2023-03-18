@@ -11,8 +11,6 @@ using System.Threading.Tasks;
 using MemoRandom.Client.Common.Interfaces;
 using MemoRandom.Client.Common.Enums;
 using MemoRandom.Client.Common.Models;
-using System.Windows;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace MemoRandom.Client.ViewModels
 {
@@ -133,10 +131,7 @@ namespace MemoRandom.Client.ViewModels
 
             // Получаем информацию о пережитом (если есть) и не пережитом (если есть) человеке - в процессе работы может поменяться
             var previousActor = orderedList.LastOrDefault(x  => x.DaysLived < startSpan.TotalDays);  // Пережитый
-            
             var nextActor     = orderedList.FirstOrDefault(x => x.DaysLived > startSpan.TotalDays); // Не пережитый
-            //Reason previousReason = null;
-            //Reason nextReason = null;
 
             #region Начальный вывод картинок и данных, если они должны быть
             ProgressDispatcher.Invoke(() => // Начальный вывод картинок пережитого и не пережитого игроков
@@ -152,7 +147,7 @@ namespace MemoRandom.Client.ViewModels
                     else
                     {
                         // Отображение данных еще не пережитого игрока, изменяемых только при смене игроков
-                        //ShowNextData(control, nextActor, nextReason);
+                        //TODO Пока не знаю
                     }
 
                     if (nextActor != null)
@@ -368,10 +363,6 @@ namespace MemoRandom.Client.ViewModels
                     // Вычисляем количество секунд, которое должно пройти до достижения возраста пережитого игрока
                     var nextActorSeconds = Math.Floor(nextActorDays * DaysHours * HoursMinutes * MinutesSeconds);
 
-
-
-
-
                     #region Управление прогресс-индикатором
                     control.CurrentProgressBar.Maximum = previousActorSeconds + nextActorSeconds; // Значение максимума прогресс-индикатора
                     control.CurrentProgressBar.Value   = previousActorSeconds; // Значение текущей позиции прогресс-индикатора
@@ -431,11 +422,6 @@ namespace MemoRandom.Client.ViewModels
                     // Вычисляем время до момента его ухода
                     var nextActorDays = (nextActor.DeathDate.Subtract(nextActor.BirthDate) -
                                          currentTime.Subtract(comparedHumanData.BirthDate)).TotalDays + correctionNextDays;
-
-
-
-
-
 
                     #region Управление прогресс-индикатором
                     // Вычисляем количество секунд, которое должно пройти до достижения возраста пережитого игрока
