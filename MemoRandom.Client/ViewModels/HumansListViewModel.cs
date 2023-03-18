@@ -622,6 +622,7 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private void CalculateAnalytics()
         {
+            if (CommonDataController.HumansList.Count == 0) return;
             #region Штатный график
             MainPlot.Plot.Clear(); // Очистка графика - на случай изменений на лету
             var plt = MainPlot.Plot;
