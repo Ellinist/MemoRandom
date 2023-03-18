@@ -6,11 +6,9 @@ using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Media;
 
 namespace MemoRandom.Client.ViewModels
 {
@@ -32,7 +30,6 @@ namespace MemoRandom.Client.ViewModels
         private string _categoryName;
         private int _periodFrom;
         private int _periodTo;
-        private int _selectedComboIndex;
         private Category _selectedCategory;
         private string _selectedPickerColor;
         #endregion

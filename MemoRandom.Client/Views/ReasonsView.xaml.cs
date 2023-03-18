@@ -27,7 +27,6 @@ namespace MemoRandom.Client.Views
         {
             InitializeComponent();
             DataContext = vm;
-            this.Loaded += vm.ReasonsView_Loaded;
         }
         #endregion
     }

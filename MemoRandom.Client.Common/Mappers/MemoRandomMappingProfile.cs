@@ -4,6 +4,9 @@ using MemoRandom.Data.DtoModels;
 
 namespace MemoRandom.Client.Common.Mappers
 {
+    /// <summary>
+    /// Профиль работы с маппером
+    /// </summary>
     public class MemoRandomMappingProfile : Profile
     {
         public MemoRandomMappingProfile()

@@ -38,6 +38,8 @@ namespace MemoRandom.Client.ViewModels
         private string _reasonComment;
         private string _reasonDescription;
         private Reason _selectedReason;
+        private bool _transferFlag = false;
+        private Reason _transferredReason;
         #endregion
 
         #region PROPS
@@ -226,6 +228,8 @@ namespace MemoRandom.Client.ViewModels
                 RaisePropertyChanged(nameof(PlainReasonsList));
             }
         }
+
+        public Visibility InformationVisibility { get; set; } = Visibility.Hidden;
         #endregion
 
         #region COMMANDS
@@ -261,18 +265,17 @@ namespace MemoRandom.Client.ViewModels
         /// Команда получения данных
         /// </summary>
         public DelegateCommand LoadCommand { get; private set; }
-
         /// <summary>
         /// Команда переноса узла со всеми дочерними узлами
         /// </summary>
         public DelegateCommand<object> MoveNodeCommand { get; private set; }
         #endregion
-
-
-        public Visibility InformationVisibility { get; set; } = Visibility.Hidden;
-        private bool _transferFlag = false;
-        private Reason _transferredReason;
+        
         #region Блок отработки команд
+        /// <summary>
+        /// Перенос узла в дереве причин смерти
+        /// </summary>
+        /// <param name="obj"></param>
         private void OnMoveNodeCommand(object obj)
         {
             if(obj == null)
@@ -480,7 +483,7 @@ namespace MemoRandom.Client.ViewModels
                     InformationVisibility = Visibility.Hidden;
                     RaisePropertyChanged(nameof(InformationVisibility));
                     _transferFlag = false;
-                    // Потом поковыряться - надо правильно расставлять приоритеты
+                    //TODO надо правильно расставлять приоритеты
                     //CancelButtonEnabled     = true; // Кнопка отмены недоступна
                     //ChangeSaveButtonEnabled = true; // Кнопка редактирования/сохранения недоступна
                     //AddSaveButtonEnabled = true; // Кнопка добавления/изменения недоступна
@@ -608,11 +611,11 @@ namespace MemoRandom.Client.ViewModels
                 InformationVisibility = Visibility.Hidden;
                 RaisePropertyChanged(nameof(InformationVisibility));
                 _transferFlag = false;
-                // Потом поковыряться - надо правильно расставлять приоритеты
+                //TODO надо правильно расставлять приоритеты
                 //CancelButtonEnabled     = true; // Кнопка отмены недоступна
                 //ChangeSaveButtonEnabled = true; // Кнопка редактирования/сохранения недоступна
-                AddSaveButtonEnabled    = true; // Кнопка добавления/изменения недоступна
                 //DeleteButtonEnabled     = true;
+                AddSaveButtonEnabled = true; // Кнопка добавления/изменения недоступна
             }
             else // Обычный клик на пустом месте
             {
@@ -664,15 +667,6 @@ namespace MemoRandom.Client.ViewModels
             MoveNodeCommand   = new DelegateCommand<object>(OnMoveNodeCommand);
         }
 
-        /// <summary>
-        /// Загрузка окна справочника причин смерти
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        public void ReasonsView_Loaded(object sender, System.Windows.RoutedEventArgs e)
-        {
-
-        }
 
 
 
