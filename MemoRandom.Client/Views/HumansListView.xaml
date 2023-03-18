@@ -292,7 +292,6 @@
                                 </StackPanel>
 
                                 <!--Число полных прожитых лет-->
-                                <!--Content="{Binding Path=FullYears}"-->
                                 <DockPanel Grid.Column="1" Grid.Row="2">
                                     <Label DockPanel.Dock="Top"
                                            Content="{Binding Path=DisplayedYears}"
@@ -641,7 +640,6 @@
                                               HorizontalAlignment="Stretch"
                                               VerticalAlignment="Center"/>
 
-                                <!--Style="{StaticResource CenteredHeaderGroupBoxStyle}"-->
                                 <GroupBox Grid.Row="2">
                                     <GroupBox.Header>
                                         <Grid>

@@ -28,6 +28,10 @@ namespace MemoRandom.Client.ViewModels
         public event Action<Human> SetCurrentRecordEvent;
 
         #region PRIVATE FIELDS
+        private readonly ILogger _logger; // Экземпляр журнала
+        private readonly IContainer _container; // Контейнер
+        private readonly ICommonDataController _commonDataController;
+
         private string _humansViewTitle = "День уходящий не вернуть! Не торопись пройти свой путь!";
         private int _personIndex;
         private int _previousIndex = 0; // Индекс предыдущего выбранного узла в списке
@@ -39,18 +43,14 @@ namespace MemoRandom.Client.ViewModels
         private string _sortMember;
         private string _sortDirection;
 
-        private readonly ILogger _logger; // Экземпляр журнала
-        private readonly IContainer _container; // Контейнер
-        private readonly ICommonDataController _commonDataController;
-
         private int _humansQuantity;
         private int _averageAge;
         private int _minimumAge;
         private int _maximumAge;
-        private string _earliestHuman;
+        private string _youngestHuman;
         private string _oldestHuman;
         private string _menQuantities;
-        private string _earliestYears;
+        private string _youngestYears;
         private string _averageYears;
         private string _oldestYears;
 
@@ -144,18 +144,6 @@ namespace MemoRandom.Client.ViewModels
 
                     // Изменение текста прожитых лет
                     SetFullYearsText(SelectedHuman);
-
-                    //// Название причины смерти
-                    //var res = PlainReasonsList.FirstOrDefault(x => x.ReasonId == SelectedHuman.DeathReasonId);
-                    //if(res != null)
-                    //{
-                    //    HumanDeathReasonName = res.ReasonName;
-                    //    RaisePropertyChanged(nameof(HumanDeathReasonName));
-                    //}
-                    //else
-                    //{
-                    //    HumanDeathReasonName = string.Empty;
-                    //}
                 }
             }
         }
@@ -251,16 +239,22 @@ namespace MemoRandom.Client.ViewModels
             }
         }
 
-        public string EarliestHuman
+        /// <summary>
+        /// Самый молодой в списке людей
+        /// </summary>
+        public string YoungestHuman
         {
-            get => _earliestHuman;
+            get => _youngestHuman;
             set
             {
-                _earliestHuman = value;
-                RaisePropertyChanged(nameof(EarliestHuman));
+                _youngestHuman = value;
+                RaisePropertyChanged(nameof(YoungestHuman));
             }
         }
 
+        /// <summary>
+        /// Самый старый в списке людей
+        /// </summary>
         public string OldestHuman
         {
             get => _oldestHuman;
@@ -271,6 +265,9 @@ namespace MemoRandom.Client.ViewModels
             }
         }
 
+        /// <summary>
+        /// Количество людей в списке
+        /// </summary>
         public string MenQuantities
         {
             get => _menQuantities;
@@ -281,16 +278,22 @@ namespace MemoRandom.Client.ViewModels
             }
         }
 
-        public string EarliestYears
+        /// <summary>
+        /// Число прожитых лет самого молодого в списке человека
+        /// </summary>
+        public string YoungestYears
         {
-            get => _earliestYears;
+            get => _youngestYears;
             set
             {
-                _earliestYears = value;
-                RaisePropertyChanged(nameof(EarliestYears));
+                _youngestYears = value;
+                RaisePropertyChanged(nameof(YoungestYears));
             }
         }
 
+        /// <summary>
+        /// Число прожитых лет самого старого в списке человека
+        /// </summary>
         public string OldestYears
         {
             get => _oldestYears;
@@ -301,6 +304,9 @@ namespace MemoRandom.Client.ViewModels
             }
         }
 
+        /// <summary>
+        /// Средний возраст людей в списке
+        /// </summary>
         public string AverageYears
         {
             get => _averageYears;
@@ -311,6 +317,9 @@ namespace MemoRandom.Client.ViewModels
             }
         }
 
+        /// <summary>
+        /// Штатный график - распределение по причинам смерти
+        /// </summary>
         public WpfPlot MainPlot
         {
             get => _mainPlot;
@@ -321,6 +330,9 @@ namespace MemoRandom.Client.ViewModels
             }
         }
 
+        /// <summary>
+        /// График распределения - вычисление среднего
+        /// </summary>
         public WpfPlot PopulationPlot
         {
             get => _populationPlot;
@@ -331,6 +343,9 @@ namespace MemoRandom.Client.ViewModels
             }
         }
 
+        /// <summary>
+        /// График - гистограмма
+        /// </summary>
         public WpfPlot SecondPlot
         {
             get => _secondPlot;
@@ -466,6 +481,11 @@ namespace MemoRandom.Client.ViewModels
             CalculateAnalytics();
         }
 
+        /// <summary>
+        /// Вызов окна реадктирования выбранного человека двойным щелчком по записи
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public void DgHumans_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             EditHumanData();
@@ -487,7 +507,6 @@ namespace MemoRandom.Client.ViewModels
                 await Task.Run(() =>
                 {
                     _commonDataController.DeleteHuman(SelectedHuman, SelectedHuman.ImageFile);
-                    //_commonDataController.DeleteHumanInRepository(SelectedHuman, SelectedHuman.ImageFile); // Удаление во внешнем хранилище
                 });
 
                 CommonDataController.HumansList.Remove(SelectedHuman); // Удаление в списке
@@ -610,9 +629,9 @@ namespace MemoRandom.Client.ViewModels
         /// <param name="plot3"></param>
         public void HumansListView_Loaded(WpfPlot plot, WpfPlot plot2, WpfPlot plot3)
         {
-            MainPlot = plot;
+            MainPlot       = plot;
             PopulationPlot = plot3;
-            SecondPlot = plot2;
+            SecondPlot     = plot2;
             
             CalculateAnalytics();
         }
@@ -622,8 +641,9 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private void CalculateAnalytics()
         {
-            if (CommonDataController.HumansList.Count == 0) return;
-            #region Штатный график
+            if (CommonDataController.HumansList.Count == 0) return; // Если список пуст, аналитика не нужна
+
+            #region Штатный график - распределение по причинам смерти
             MainPlot.Plot.Clear(); // Очистка графика - на случай изменений на лету
             var plt = MainPlot.Plot;
 
@@ -717,50 +737,9 @@ namespace MemoRandom.Client.ViewModels
             SecondPlot.Refresh();
             #endregion
 
-            #region Еще один график - по популяции - с ним надо поработать тщательнее
-            // The population plot makes it easy to display populations as bar graphs, box - and - whisker plots, scattered values,
-            // or box plots and data points side-by - side.The population plot is different than using a box plot
-            // with an error bar in that you pass your original data into the population plot and it determines the standard deviation,
-            // standard error, quartiles, mean, median, outliers, etc., and you get to determine how to display these values.
-
-            // https://scottplot.net/cookbook/4.1/category/plottable-population/#population-plot
-
-            // Описание параметров класса Population
-            //public double[] values { get; private set; }
-            //public double[] sortedValues { get; private set; }
-            //public double min { get; private set; }
-            //public double max { get; private set; }
-            //public double median { get; private set; }
-            //public double sum { get; private set; }
-            //public int count { get; private set; }
-            //public double mean { get; private set; }
-            //public double stDev { get; private set; }
-            //public double plus3stDev { get; private set; }
-            //public double minus3stDev { get; private set; }
-            //public double plus2stDev { get; private set; }
-            //public double minus2stDev { get; private set; }
-            //public double stdErr { get; private set; }
-            //public double Q1 { get; private set; }
-            //public double Q3 { get; private set; }
-            //public double IQR { get; private set; }
-            //public double[] lowOutliers { get; private set; }
-            //public double[] highOutliers { get; private set; }
-            //public double maxNonOutlier { get; private set; }
-            //public double minNonOutlier { get; private set; }
-            //public int n { get { return values.Length; } }
-            //public double span { get { return sortedValues.Last() - sortedValues.First(); } }
-
+            #region График распределения
             PopulationPlot.Plot.Clear();
             var plt3 = PopulationPlot.Plot;
-            // create sample data to represent test scores
-            //Random rand2 = new Random(0);
-            //double[] scores = DataGen.RandomNormal(rand2, 35, 85, 5);
-
-            // First, create a Population object from your test scores
-            //var pop = new Population(scores);
-
-            // You can access population statistics as public fields
-            //plt3.Title($"Mean: {pop.mean} +/- {pop.stdErr}");
             plt3.Title($"Среднее: {pop2.mean}, +/- {pop2.stdErr}");
 
             var p1 = pop2.min;
@@ -770,28 +749,24 @@ namespace MemoRandom.Client.ViewModels
             var p5 = pop2.stdErr; // Стандартная ошибка
             var p6 = pop2.stDev; // Стандартное отклонение (девиация)
 
-            // You can plot a population
-            //plt3.AddPopulation(pop);
             plt3.AddPopulation(pop2);
-
-            // improve the style of the plot
             plt3.XAxis.Ticks(true);
             plt3.XAxis.Grid(true);
 
             PopulationPlot.Refresh();
             #endregion
 
-            #region Общие статистические данные
+            #region Общие статистические данные - гистограмма
             HumansQuantity = CommonDataController.HumansList.Count;
             MenQuantities = _commonDataController.GetFinalText(HumansQuantity, ScopeTypes.Men);
 
             var min = CommonDataController.HumansList.Min(x => x.DaysLived);
             var minHuman = CommonDataController.HumansList.FirstOrDefault(x => x.DaysLived == min);
             MinimumAge = minHuman.FullYearsLived;
-            EarliestHuman = minHuman.LastName + " " +
+            YoungestHuman = minHuman.LastName + " " +
                             minHuman.FirstName[0..1] + "." +
                            (minHuman.Patronymic != string.Empty ? (minHuman.Patronymic[0..1] + ".") : string.Empty);
-            EarliestYears = _commonDataController.GetFinalText(MinimumAge, ScopeTypes.Years);
+            YoungestYears = _commonDataController.GetFinalText(MinimumAge, ScopeTypes.Years);
 
             //AverageAge = (int)(CommonDataController.HumansList.Average(x => x.DaysLived) / 365);
             AverageAge = (int)p4;
@@ -806,7 +781,6 @@ namespace MemoRandom.Client.ViewModels
             OldestYears = _commonDataController.GetFinalText(MaximumAge, ScopeTypes.Years);
             #endregion
         }
-
 
         /// <summary>
         /// Обработчик закрытия окна
@@ -838,14 +812,12 @@ namespace MemoRandom.Client.ViewModels
 
 
         #region CTOR
-
         /// <summary>
         /// Конструктор
         /// </summary>
         /// <param name="logger"></param>
         /// <param name="container"></param>
         /// <param name="commonDataController"></param>
-        /// <param name="xmlController"></param>
         /// <exception cref="ArgumentNullException"></exception>
         public HumansListViewModel(ILogger logger,
                                    IContainer container,
