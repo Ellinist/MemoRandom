@@ -357,7 +357,7 @@ namespace MemoRandom.Client.ViewModels
         }
         #endregion
 
-        #region Частные методы
+        #region IMPLEMENTATION
         /// <summary>
         /// Формирование текстов для отображения прожитых лет в соответствии с числом
         /// </summary>
@@ -529,68 +529,20 @@ namespace MemoRandom.Client.ViewModels
         {
             MessageBox.Show("Блок в разработке!", "Memo-Random!", MessageBoxButton.OK, MessageBoxImage.Hand);
         }
-        #endregion
-
-        #region Commands
-        /// <summary>
-        /// Команда добавления человека
-        /// </summary>
-        public DelegateCommand AddHumanCommand { get; private set; }
-
-        /// <summary>
-        /// Команда редактирования данных по выбранному человеку
-        /// </summary>
-        public DelegateCommand EditHumanDataCommand { get; private set; }
-        
-        /// <summary>
-        /// Команда удаления выбранного человека
-        /// </summary>
-        public DelegateCommand DeleteHumanCommand { get; private set; }
-
-        /// <summary>
-        /// Отображение дополнительной информации о выбранном человеке
-        /// </summary>
-        public DelegateCommand ShowAdditionInfoCommand { get; private set; }
-
-        /// <summary>
-        /// Команда вызова окна создания людей для сравнения
-        /// </summary>
-        public DelegateCommand ComparedHumansOpenCommand { get; private set; }
-
-        /// <summary>
-        /// Команда вызова окна динамического отображения прогресса
-        /// </summary>
-        public DelegateCommand DynamicShowCommand { get; private set; }
-
-        /// <summary>
-        /// Команда вызова окна справочника причин смерти
-        /// </summary>
-        public DelegateCommand SettingsMenuCommand { get; private set; }
-        
-        /// <summary>
-        /// Команда вызова окна "О программе"
-        /// </summary>
-        public DelegateCommand StartAboutCommand { get; private set; }
-
-        /// <summary>
-        /// Команда вызова окна создания и редактирования возрастных категорий
-        /// </summary>
-        public DelegateCommand CategoriesCommand { get; private set; }
-        #endregion
 
         /// <summary>
         /// Инициализация команд
         /// </summary>
         private void InitializeCommands()
         {
-            SettingsMenuCommand  = new DelegateCommand(SettingsViewOpen);
-            AddHumanCommand      = new DelegateCommand(AddHuman);
+            SettingsMenuCommand = new DelegateCommand(SettingsViewOpen);
+            AddHumanCommand = new DelegateCommand(AddHuman);
             EditHumanDataCommand = new DelegateCommand(EditHumanData);
-            DeleteHumanCommand   = new DelegateCommand(DeleteHuman);
-            StartAboutCommand    = new DelegateCommand(OpenAboutView);
-            CategoriesCommand    = new DelegateCommand(CategoriesOpen);
+            DeleteHumanCommand = new DelegateCommand(DeleteHuman);
+            StartAboutCommand = new DelegateCommand(OpenAboutView);
+            CategoriesCommand = new DelegateCommand(CategoriesOpen);
             ComparedHumansOpenCommand = new DelegateCommand(ComparedHumansOpen);
-            DynamicShowCommand   = new DelegateCommand(DynamicShow);
+            DynamicShowCommand = new DelegateCommand(DynamicShow);
             ShowAdditionInfoCommand = new DelegateCommand(AdditionInfo);
         }
 
@@ -607,7 +559,13 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private void DynamicShow()
         {
-            _container.Resolve<ComparingProcessView>().ShowDialog();
+            // Проверка, есть ли люди в списке людей
+            if (CommonDataController.HumansList.Count == 0)
+            {
+                MessageBox.Show("Список людей пуст!", "Memo-Random!", MessageBoxButton.OK, MessageBoxImage.Stop);
+                return;
+            }
+            _container.Resolve<ComparingProcessView>().ShowDialog(); // Отображение, если есть
         }
 
         /// <summary>
@@ -643,10 +601,10 @@ namespace MemoRandom.Client.ViewModels
         /// <param name="plot3"></param>
         public void HumansListView_Loaded(WpfPlot plot, WpfPlot plot2, WpfPlot plot3)
         {
-            MainPlot       = plot;
+            MainPlot = plot;
             PopulationPlot = plot3;
-            SecondPlot     = plot2;
-            
+            SecondPlot = plot2;
+
             CalculateAnalytics();
         }
 
@@ -663,9 +621,9 @@ namespace MemoRandom.Client.ViewModels
 
             // Получим новый список, в котором будут только родительские ReasonID верхнего уровня
             #region Создание нового списка, в котором будут только родительские ReasonID верхнего уровня
-            
+
             var upperLevelId = Guid.Empty; // Этот параметр можно менять
-            
+
             List<Guid> headerIdsList = new();
             for (int q = 0; q < CommonDataController.HumansList.Count; q++)
             {
@@ -675,7 +633,7 @@ namespace MemoRandom.Client.ViewModels
                 void OnceAgain() // Локальная функция рекурсивная - поиск главного родителя
                 {
                     var reason = PlainReasonsList.FirstOrDefault(x => x.ReasonId == reasonId);
-                    if(reason == null) // Ситуация, когда человек не связан с причиной смерти
+                    if (reason == null) // Ситуация, когда человек не связан с причиной смерти
                     {
                         headerIdsList.Add(Guid.Empty);
                     }
@@ -759,9 +717,9 @@ namespace MemoRandom.Client.ViewModels
             var p1 = pop2.min;
             var p2 = pop2.max;
             var p3 = pop2.median; // Медиана
-            var p4 = pop2.mean; // Видимо, среднее значение
+            var p4 = pop2.mean;   // Видимо, среднее значение
             var p5 = pop2.stdErr; // Стандартная ошибка
-            var p6 = pop2.stDev; // Стандартное отклонение (девиация)
+            var p6 = pop2.stDev;  // Стандартное отклонение (девиация)
 
             plt3.AddPopulation(pop2);
             plt3.XAxis.Ticks(true);
@@ -782,7 +740,6 @@ namespace MemoRandom.Client.ViewModels
                            (minHuman.Patronymic != string.Empty ? (minHuman.Patronymic[0..1] + ".") : string.Empty);
             YoungestYears = _commonDataController.GetFinalText(MinimumAge, ScopeTypes.Years);
 
-            //AverageAge = (int)(CommonDataController.HumansList.Average(x => x.DaysLived) / 365);
             AverageAge = (int)p4;
             AverageYears = _commonDataController.GetFinalText(AverageAge, ScopeTypes.Years);
 
@@ -812,8 +769,57 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         public void Dispose()
         {
-            
+
         }
+        #endregion
+
+        #region Commands
+        /// <summary>
+        /// Команда добавления человека
+        /// </summary>
+        public DelegateCommand AddHumanCommand { get; private set; }
+
+        /// <summary>
+        /// Команда редактирования данных по выбранному человеку
+        /// </summary>
+        public DelegateCommand EditHumanDataCommand { get; private set; }
+        
+        /// <summary>
+        /// Команда удаления выбранного человека
+        /// </summary>
+        public DelegateCommand DeleteHumanCommand { get; private set; }
+
+        /// <summary>
+        /// Отображение дополнительной информации о выбранном человеке
+        /// </summary>
+        public DelegateCommand ShowAdditionInfoCommand { get; private set; }
+
+        /// <summary>
+        /// Команда вызова окна создания людей для сравнения
+        /// </summary>
+        public DelegateCommand ComparedHumansOpenCommand { get; private set; }
+
+        /// <summary>
+        /// Команда вызова окна динамического отображения прогресса
+        /// </summary>
+        public DelegateCommand DynamicShowCommand { get; private set; }
+
+        /// <summary>
+        /// Команда вызова окна справочника причин смерти
+        /// </summary>
+        public DelegateCommand SettingsMenuCommand { get; private set; }
+        
+        /// <summary>
+        /// Команда вызова окна "О программе"
+        /// </summary>
+        public DelegateCommand StartAboutCommand { get; private set; }
+
+        /// <summary>
+        /// Команда вызова окна создания и редактирования возрастных категорий
+        /// </summary>
+        public DelegateCommand CategoriesCommand { get; private set; }
+        #endregion
+
 
 
 

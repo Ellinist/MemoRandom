@@ -13,7 +13,7 @@ namespace MemoRandom.Client.Views
 
         private void ComparingProcessView_Loaded(object sender, RoutedEventArgs e)
         {
-            _vm.SetStackPanel(ProgressStackPanel);
+            _vm.SetStackPanel(ProgressStackPanel, sender);
         }
 
 

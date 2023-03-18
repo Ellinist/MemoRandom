@@ -74,7 +74,7 @@ namespace MemoRandom.Client.ViewModels
             set
             {
                 _lastName = value;
-                RaisePropertyChanged();
+                RaisePropertyChanged(nameof(LastName));
             }
         }
 
@@ -508,6 +508,9 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         public DelegateCommand<object> SelectNodeCommand { get; private set; }
 
+        /// <summary>
+        /// Установка откорректированного изображения основным для человека
+        /// </summary>
         public DelegateCommand<object> SetTargetImageCommand { get; private set; }
         #endregion
 
@@ -616,8 +619,6 @@ namespace MemoRandom.Client.ViewModels
                 };
 
                 CommonDataController.CurrentHuman = human;
-
-                //CommonDataController.HumansList.Add(human); // И добавляем в основной список
             }
 
             bool result = true;
@@ -626,7 +627,6 @@ namespace MemoRandom.Client.ViewModels
                 var image = BitmapSourceToBitmapImage(TargetImageSource);
                 await Task.Run(() =>
                 {
-                    //result = _commonDataController.UpdateHumanInRepository(CommonDataController.CurrentHuman, image);
                     result = _commonDataController.UpdateHuman(CommonDataController.CurrentHuman, image);
                 });
                 if(result) CloseAction(); // Закрываем окно
@@ -712,6 +712,18 @@ namespace MemoRandom.Client.ViewModels
             SetTargetImageCommand = new DelegateCommand<object>(SetTargetImage);
         }
 
+
+
+
+
+
+
+
+
+
+
+
+
         #region CTOR
         /// <summary>
         /// Конструктор
@@ -733,6 +745,7 @@ namespace MemoRandom.Client.ViewModels
 
 
 
+#region For the future
 ///// <summary>
 ///// Преобразование байтового массива в BitmapImage
 ///// </summary>
@@ -772,3 +785,4 @@ namespace MemoRandom.Client.ViewModels
 
 //    return bit;
 //}
+#endregion

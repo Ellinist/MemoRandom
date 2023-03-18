@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 using MemoRandom.Client.Common.Interfaces;
 using MemoRandom.Client.Common.Enums;
 using MemoRandom.Client.Common.Models;
+using System.Windows;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace MemoRandom.Client.ViewModels
 {
@@ -70,7 +72,7 @@ namespace MemoRandom.Client.ViewModels
         /// Формирование прогресс-индикаторов и потоков внутри
         /// </summary>
         /// <param name="panel"></param>
-        public void SetStackPanel(StackPanel panel)
+        public void SetStackPanel(StackPanel panel, object sender)
         {
             var orderedComparedHumansList = CommonDataController.ComparedHumansCollection.Where(x => x.IsComparedHumanConsidered == true);
             // Цикл по всем людям для сравнения
