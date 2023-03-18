@@ -121,7 +121,7 @@ namespace MemoRandom.Client.ViewModels
         /// <param name="e"></param>
         private void StartMemoRandomViewModel_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            var result = MessageBox.Show("Выйти из программы?", "Выход из программы!", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            var result = MessageBox.Show("Выйти из программы?", "Memo-Random!", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)
             {
                 Dispose();
@@ -146,7 +146,7 @@ namespace MemoRandom.Client.ViewModels
 
                 if (!success) // Если метод установки путей хранения информации неуспешен
                 {
-                    MessageBox.Show("Не удалось установить пути хранения информации!", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Не удалось установить пути хранения информации!", "Memo-Random!", MessageBoxButton.OK, MessageBoxImage.Error);
                     window.Close();
                     return;
                 }
@@ -194,7 +194,7 @@ namespace MemoRandom.Client.ViewModels
 
             if (!success)
             {
-                MessageBox.Show("Чтение информации из XML-файлов не удалось!", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Чтение информации из XML-файлов не удалось!", "Memo-Random!", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

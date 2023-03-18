@@ -205,7 +205,7 @@ namespace MemoRandom.Client.ViewModels
                     var result = _commonDataController.UpdateComparedHuman(SelectedHuman);
                     if (!result)
                     {
-                        MessageBox.Show("Не удалось обновить человека для сравнения", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show("Не удалось обновить человека для сравнения", "Memo-Random!", MessageBoxButton.OK, MessageBoxImage.Error);
                         return;
                     }
                 });
@@ -225,7 +225,7 @@ namespace MemoRandom.Client.ViewModels
                     var result = _commonDataController.UpdateComparedHuman(compHuman);
                     if (!result)
                     {
-                        MessageBox.Show("Не удалось добавить человека для сравнения!", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show("Не удалось добавить человека для сравнения!", "Memo-Random!", MessageBoxButton.OK, MessageBoxImage.Error);
                         return;
                     }
                 });
@@ -246,7 +246,7 @@ namespace MemoRandom.Client.ViewModels
             var result = _commonDataController.DeleteComparedHuman(SelectedHuman.ComparedHumanId);
             if (!result)
             {
-                MessageBox.Show("Не удалось удалить человека для сравнения!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Не удалось удалить человека для сравнения!", "Memo-Random!", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 

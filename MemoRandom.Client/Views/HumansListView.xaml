@@ -518,7 +518,6 @@
                                     <RowDefinition/>
                                 </Grid.RowDefinitions>
 
-                                <!--Style="{StaticResource CenteredHeaderGroupBoxStyle}"-->
                                 <GroupBox Grid.Row="0"
                                           FontSize="20">
                                     <GroupBox.Header>
@@ -672,8 +671,6 @@
                                     <RowDefinition/>
                                 </Grid.RowDefinitions>
 
-                                <!--Style="{StaticResource CenteredHeaderGroupBoxStyle}"-->
-                                <!--Header="Распределение"-->
                                 <GroupBox Grid.Row="0">
                                     <GroupBox.Header>
                                         <Grid>
@@ -696,7 +693,6 @@
                                               HorizontalAlignment="Stretch"
                                               VerticalAlignment="Center"/>
 
-                                <!--Style="{StaticResource CenteredHeaderGroupBoxStyle}"-->
                                 <GroupBox Grid.Row="2">
                                     <GroupBox.Header>
                                         <Grid>

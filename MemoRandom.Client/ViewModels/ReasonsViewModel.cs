@@ -277,7 +277,7 @@ namespace MemoRandom.Client.ViewModels
         {
             if(obj == null)
             {
-                MessageBox.Show("Узел для переноса не выбран", "Предупреждение!", MessageBoxButton.OK, MessageBoxImage.Hand);
+                MessageBox.Show("Узел для переноса не выбран", "Memo-Random!", MessageBoxButton.OK, MessageBoxImage.Hand);
             }
             else
             {
@@ -314,7 +314,7 @@ namespace MemoRandom.Client.ViewModels
             {
                 if (string.IsNullOrEmpty(ReasonName))
                 {
-                    MessageBox.Show("Нельзя создать причину смерти с пустым названием!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Нельзя создать причину смерти с пустым названием!", "Memo-Random!", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
                 // Создаем новый экземпляр причины смерти
@@ -350,7 +350,7 @@ namespace MemoRandom.Client.ViewModels
                     {
                         if (!result)
                         {
-                            MessageBox.Show("Не удалось сохранить причину", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+                            MessageBox.Show("Не удалось сохранить причину", "Memo-Random!", MessageBoxButton.OK, MessageBoxImage.Error);
                         }
 
                         FieldsEnabled           = false; // Делаем поля недоступными - пока не выберем узел и не выберем команду
@@ -400,7 +400,7 @@ namespace MemoRandom.Client.ViewModels
                     {
                         if (!result)
                         {
-                            MessageBox.Show("Не удалось обновить данные!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+                            MessageBox.Show("Не удалось обновить данные!", "Memo-Random!", MessageBoxButton.OK, MessageBoxImage.Error);
                         }
                     });
                 });
@@ -441,7 +441,7 @@ namespace MemoRandom.Client.ViewModels
                         {
                             if (rsn.ReasonParent.ReasonId == _transferredReason.ReasonId) // Ужасное совпадение
                             {
-                                MessageBox.Show("Нельзя родительскую причину перенести в ее дочернюю!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                MessageBox.Show("Нельзя родительскую причину перенести в ее дочернюю!", "Memo-Random!", MessageBoxButton.OK, MessageBoxImage.Error);
                                 matchFlag = true;
                             }
                             else
@@ -471,7 +471,7 @@ namespace MemoRandom.Client.ViewModels
                         {
                             if (!result)
                             {
-                                MessageBox.Show("Не удалось обновить данные!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+                                MessageBox.Show("Не удалось обновить данные!", "Memo-Random!", MessageBoxButton.OK, MessageBoxImage.Error);
                             }
                         });
                     });
@@ -537,7 +537,7 @@ namespace MemoRandom.Client.ViewModels
                 var res = _commonDataController.DeleteReasonAndDaughtersInFile(result);
                 if (!res)
                 {
-                    MessageBox.Show("Не удалось удалить причину!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Не удалось удалить причину!", "Memo-Random!", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             });
 
@@ -600,7 +600,7 @@ namespace MemoRandom.Client.ViewModels
                     {
                         if (!result)
                         {
-                            MessageBox.Show("Не удалось обновить данные!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+                            MessageBox.Show("Не удалось обновить данные!", "Memo-Random!", MessageBoxButton.OK, MessageBoxImage.Error);
                         }
                     });
                 });

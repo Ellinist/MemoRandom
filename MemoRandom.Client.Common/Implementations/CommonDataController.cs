@@ -192,6 +192,10 @@ namespace MemoRandom.Client.Common.Implementations
             return success;
         }
 
+        /// <summary>
+        /// Сохранение справочника причин смерти
+        /// </summary>
+        /// <returns></returns>
         public bool SaveReasons()
         {
             bool success = true; // Флаг успешности операции
@@ -399,6 +403,12 @@ namespace MemoRandom.Client.Common.Implementations
             return success;
         }
 
+        /// <summary>
+        /// Удаление человека из списка людей
+        /// </summary>
+        /// <param name="human"></param>
+        /// <param name="imageFile"></param>
+        /// <returns></returns>
         public bool DeleteHuman(Human human, string imageFile)
         {
             bool success = true;

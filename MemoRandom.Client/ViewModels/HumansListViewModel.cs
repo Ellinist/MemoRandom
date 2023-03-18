@@ -496,7 +496,7 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private async void DeleteHuman()
         {
-            var result = MessageBox.Show("Удалить выбранного человека?", "Удаление!", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            var result = MessageBox.Show("Удалить выбранного человека?", "Memo-Random!", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result != MessageBoxResult.Yes) return;
 
             if (_previousIndex == -1) _previousIndex = 0; // Пока так - но надо умнее сделать
@@ -513,13 +513,21 @@ namespace MemoRandom.Client.ViewModels
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Не удалось Удалить!\n Код ошибки в журнале", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Не удалось Удалить!\n Код ошибки в журнале", "Memo-Random!", MessageBoxButton.OK, MessageBoxImage.Error);
                 _logger.Error($"Ошибка: {ex}");
             }
             PersonIndex = HumansCollection.IndexOf(HumansCollection.FirstOrDefault(x => x.HumanId == formerId));
             RaisePropertyChanged(nameof(PersonIndex));
 
             CalculateAnalytics();
+        }
+
+        /// <summary>
+        /// Открытие окна с дополнительной информацией по выбранному человеку
+        /// </summary>
+        private void AdditionInfo()
+        {
+            MessageBox.Show("Блок в разработке!", "Memo-Random!", MessageBoxButton.OK, MessageBoxImage.Hand);
         }
         #endregion
 
@@ -538,6 +546,11 @@ namespace MemoRandom.Client.ViewModels
         /// Команда удаления выбранного человека
         /// </summary>
         public DelegateCommand DeleteHumanCommand { get; private set; }
+
+        /// <summary>
+        /// Отображение дополнительной информации о выбранном человеке
+        /// </summary>
+        public DelegateCommand ShowAdditionInfoCommand { get; private set; }
 
         /// <summary>
         /// Команда вызова окна создания людей для сравнения
@@ -578,6 +591,7 @@ namespace MemoRandom.Client.ViewModels
             CategoriesCommand    = new DelegateCommand(CategoriesOpen);
             ComparedHumansOpenCommand = new DelegateCommand(ComparedHumansOpen);
             DynamicShowCommand   = new DelegateCommand(DynamicShow);
+            ShowAdditionInfoCommand = new DelegateCommand(AdditionInfo);
         }
 
         /// <summary>

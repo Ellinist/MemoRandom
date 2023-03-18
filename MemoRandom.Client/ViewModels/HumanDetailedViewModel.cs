@@ -633,7 +633,7 @@ namespace MemoRandom.Client.ViewModels
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Не удалось выполнить сохранение! Код ошибки в журнале!", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Не удалось выполнить сохранение! Код ошибки в журнале!", "Memo-Random!", MessageBoxButton.OK, MessageBoxImage.Error);
                 _logger.Error($"Ошибка: {ex}");
             }
         }
@@ -696,7 +696,7 @@ namespace MemoRandom.Client.ViewModels
             }
             else
             {
-                MessageBox.Show("Попытка впихнуть невпихуемое!", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Попытка впихнуть невпихуемое!", "Memo-Random!", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
         #endregion

@@ -229,7 +229,7 @@ namespace MemoRandom.Client.ViewModels
 
                 if (!await Task.Run(() => _commonDataController.UpdateCategoriesInFile(SelectedCategory)))
                 {
-                        MessageBox.Show("Не удалось обновить категорию", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show("Не удалось обновить категорию", "Memo-Random!", MessageBoxButton.OK, MessageBoxImage.Error);
                         return;
                 };
 
@@ -250,7 +250,7 @@ namespace MemoRandom.Client.ViewModels
 
                 if (!await Task.Run(() => _commonDataController.UpdateCategoriesInFile(category)))
                 {
-                    MessageBox.Show("Не удалось добавить категорию", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Не удалось добавить категорию", "Memo-Random!", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
 
@@ -269,20 +269,7 @@ namespace MemoRandom.Client.ViewModels
             ////TODO Здесь проверка на валидность начала и конца срока действия категории
             //// Проверять, чтобы конец не был меньше или равен началу - уведомление
             //// Проверять, чтобы не было пересечения с другими категориями - уведомление
-            //var start = CategoriesCollection.FirstOrDefault(x => PeriodFrom >= x.StartAge &&
-            //                                               PeriodFrom <= x.StopAge);
-
-            //if(start == null)
-            //{
-            //    var stop = CategoriesCollection.FirstOrDefault(x => PeriodTo <= x.StopAge &&
-            //                                                  PeriodTo >= x.StartAge);
-
-            //    if (stop == null)
-            //    {
-            //    }
-            //}
-
-            //MessageBox.Show("Пересечение временных диапазонов!", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+            //MessageBox.Show("Пересечение временных диапазонов!", "Memo-Random!", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         /// <summary>
@@ -294,7 +281,7 @@ namespace MemoRandom.Client.ViewModels
 
             if (!await Task.Run(() => _commonDataController.DeleteCategoryInFile(SelectedCategory.CategoryId)))
             {
-                MessageBox.Show("Не получилось удалить выбранную категорию!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Не получилось удалить выбранную категорию!", "Memo-Random!", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
