@@ -17,6 +17,12 @@ namespace MemoRandom.Client.ViewModels
 {
     public class ReasonsViewModel : BindableBase
     {
+        #region CONSTANTS
+        private const string CHANGE_BUTTON = "Изменить";
+        private const string ADD_BUTTON = "Добавить";
+        private const string SAVE_BUTTON = "Сохранить";
+        #endregion
+
         #region PRIVATE FIELDS
         private string   _reasonsViewTitle = "Справочник причин смерти";
         private readonly ILogger _logger; // Экземпляр журнала
@@ -29,9 +35,6 @@ namespace MemoRandom.Client.ViewModels
         private bool     _fieldsEnabled           = false; // Для доступности полей окна
         private bool     _changeMode              = false; // Флаг редактирования записи
         private bool     _addMode                 = false; // Флаг добавления записи
-        private const string CHANGE_BUTTON        = "Изменить";
-        private const string ADD_BUTTON           = "Добавить";
-        private const string SAVE_BUTTON          = "Сохранить";
         private string _saveButtonText            = CHANGE_BUTTON;
         private string _addButtonText             = ADD_BUTTON;
         private string _reasonName;
@@ -381,11 +384,14 @@ namespace MemoRandom.Client.ViewModels
             {
                 var currentReason = PlainReasonsList.FirstOrDefault(x => x.ReasonId == SelectedReason.ReasonId);
                 SelectedReason.ReasonName        = ReasonName;
-                currentReason.ReasonName         = ReasonName;
-                SelectedReason.ReasonComment     = ReasonComment;
-                currentReason.ReasonComment      = ReasonComment;
-                SelectedReason.ReasonDescription = ReasonDescription;
-                currentReason.ReasonDescription  = ReasonDescription;
+                if (currentReason != null)
+                {
+                    currentReason.ReasonName = ReasonName;
+                    SelectedReason.ReasonComment = ReasonComment;
+                    currentReason.ReasonComment = ReasonComment;
+                    SelectedReason.ReasonDescription = ReasonDescription;
+                    currentReason.ReasonDescription = ReasonDescription;
+                }
 
                 FieldsEnabled           = false;
                 SaveButtonText          = CHANGE_BUTTON;
@@ -429,66 +435,63 @@ namespace MemoRandom.Client.ViewModels
         {
             if (_transferFlag) // Перенос узла
             {
-                if(obj != null)
+                if (obj == null) return;
+
+                var reason = PlainReasonsList.FirstOrDefault(x => x.ReasonId == _transferredReason.ReasonId);
+
+                bool matchFlag = false; // Флаг нахождения недопустимой ситуации
+
+                OnceAgain(obj as Reason);
+
+                void OnceAgain(Reason rsn) // Рекурсивная проверка узлов
                 {
-                    // Здесь добавить проверки на возможность переносов - например, на самого себя, на узел ниже и т.д.
-                    var reas = PlainReasonsList.FirstOrDefault(x => x.ReasonId == _transferredReason.ReasonId);
-
-                    bool matchFlag = false; // Флаг нахождения недопустимой ситуации
-
-                    OnceAgain(obj as Reason);
-
-                    void OnceAgain(Reason rsn) // Рекурсивная проверка узлов
+                    if(rsn.ReasonParent != null)
                     {
-                        if(rsn.ReasonParent != null)
+                        if (rsn.ReasonParent.ReasonId == _transferredReason.ReasonId) // Ужасное совпадение
                         {
-                            if (rsn.ReasonParent.ReasonId == _transferredReason.ReasonId) // Ужасное совпадение
-                            {
-                                MessageBox.Show("Нельзя родительскую причину перенести в ее дочернюю!", "Memo-Random!", MessageBoxButton.OK, MessageBoxImage.Error);
-                                matchFlag = true;
-                            }
-                            else
-                            {
-                                OnceAgain(rsn.ReasonParent);
-                            }
+                            MessageBox.Show("Нельзя родительскую причину перенести в ее дочернюю!", "Memo-Random!", MessageBoxButton.OK, MessageBoxImage.Error);
+                            matchFlag = true;
                         }
                         else
                         {
-                            if (!matchFlag)
-                            {
-                                reas.ReasonParent = obj as Reason;
-                                reas.ReasonParentId = (obj as Reason).ReasonId;
-                            }
+                            OnceAgain(rsn.ReasonParent);
                         }
                     }
-
-                    ReasonsCollection.Clear();
-                    _commonDataController.FormObservableCollection(PlainReasonsList, null);
-                    RaisePropertyChanged(nameof(ReasonsCollection));
-
-                    await Task.Run(() =>
+                    else
                     {
-                        var result = _commonDataController.SaveReasons();
+                        if (matchFlag) return;
 
-                        Dispatcher.CurrentDispatcher.Invoke(() =>
-                        {
-                            if (!result)
-                            {
-                                MessageBox.Show("Не удалось обновить данные!", "Memo-Random!", MessageBoxButton.OK, MessageBoxImage.Error);
-                            }
-                        });
-                    });
-
-
-                    InformationVisibility = Visibility.Hidden;
-                    RaisePropertyChanged(nameof(InformationVisibility));
-                    _transferFlag = false;
-                    //TODO надо правильно расставлять приоритеты
-                    //CancelButtonEnabled     = true; // Кнопка отмены недоступна
-                    //ChangeSaveButtonEnabled = true; // Кнопка редактирования/сохранения недоступна
-                    //AddSaveButtonEnabled = true; // Кнопка добавления/изменения недоступна
-                    //DeleteButtonEnabled     = true;
+                        reason.ReasonParent = obj as Reason;
+                        reason.ReasonParentId = (obj as Reason).ReasonId;
+                    }
                 }
+
+                ReasonsCollection.Clear();
+                _commonDataController.FormObservableCollection(PlainReasonsList, null);
+                RaisePropertyChanged(nameof(ReasonsCollection));
+
+                await Task.Run(() =>
+                {
+                    var result = _commonDataController.SaveReasons();
+
+                    Dispatcher.CurrentDispatcher.Invoke(() =>
+                    {
+                        if (!result)
+                        {
+                            MessageBox.Show("Не удалось обновить данные!", "Memo-Random!", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
+                    });
+                });
+
+
+                InformationVisibility = Visibility.Hidden;
+                RaisePropertyChanged(nameof(InformationVisibility));
+                _transferFlag = false;
+                //TODO надо правильно расставлять приоритеты
+                //CancelButtonEnabled     = true; // Кнопка отмены недоступна
+                //ChangeSaveButtonEnabled = true; // Кнопка редактирования/сохранения недоступна
+                //AddSaveButtonEnabled = true; // Кнопка добавления/изменения недоступна
+                //DeleteButtonEnabled     = true;
             }
             else // Обычная работа (без переноса узлов)
             {
@@ -586,10 +589,10 @@ namespace MemoRandom.Client.ViewModels
         {
             if (_transferFlag) // Перенос узла в корень
             {
-                var reas = PlainReasonsList.FirstOrDefault(x => x.ReasonId == _transferredReason.ReasonId);
+                var reason = PlainReasonsList.FirstOrDefault(x => x.ReasonId == _transferredReason.ReasonId);
 
-                reas.ReasonParent = null;
-                reas.ReasonParentId = Guid.Empty;
+                reason.ReasonParent = null;
+                reason.ReasonParentId = Guid.Empty;
 
                 ReasonsCollection.Clear();
                 _commonDataController.FormObservableCollection(PlainReasonsList, null);
@@ -676,13 +679,13 @@ namespace MemoRandom.Client.ViewModels
 
 
         #region CTOR
+
         /// <summary>
         /// Конструктор
         /// </summary>
         /// <param name="logger"></param>
         /// <param name="eventAggregator"></param>
-        /// <param name="dbController"></param>
-        /// <param name="reasonsHelper"></param>
+        /// <param name="commonDataController"></param>
         /// <exception cref="ArgumentNullException"></exception>
         public ReasonsViewModel(ILogger logger,
                                 IEventAggregator eventAggregator,

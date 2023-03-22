@@ -13,7 +13,7 @@ namespace MemoRandom.Client.ViewModels
     {
         private Window _view; // Окно
         private string _programVersion;
-        private string _copyRight = $"Ellinist Software Studio © 2019-{DateTime.Now.Year}";
+        private string _copyRight = $"Ellinist Software Studio © 2001-{DateTime.Now.Year}";
         
         public string ProgramVersion
         {
@@ -47,14 +47,9 @@ namespace MemoRandom.Client.ViewModels
         /// <param name="parameter"></param>
         private void OpenAboutWindow(object parameter)
         {
-            var view = parameter as Window;
-            if (view != null)
-            {
-                _view = parameter as Window;
-            }
+            if (parameter is not Window view) return;
 
-            //Assembly assembly = Assembly.GetExecutingAssembly();
-            //FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
+            _view = view;
             ProgramVersion = "Build " + Assembly.GetExecutingAssembly().GetName().Version.ToString();
             RaisePropertyChanged(nameof(ProgramVersion));
         }
@@ -77,6 +72,9 @@ namespace MemoRandom.Client.ViewModels
             OpenAboutWindowCommand = new DelegateCommand<object>(OpenAboutWindow);
             CloseAboutViewCommand = new DelegateCommand(CloseAboutView);
         }
+
+
+
 
         #region CTOR
         /// <summary>

@@ -20,15 +20,15 @@ namespace MemoRandom.Client.ViewModels
     public class ComparingProcessViewModel : BindableBase
     {
         #region CONSTANTS
-        private const int DaysHours      = 24;
-        private const int HoursMinutes   = 60;
-        private const int MinutesSeconds = 60;
+        private const int DAYS_HOURS      = 24;
+        private const int HOURS_MINUTES   = 60;
+        private const int MINUTES_SECONDS = 60;
         #endregion
 
         #region PRIVATE FIELDS
         private readonly ICommonDataController _commonDataController;
-        private readonly CancellationTokenSource cancelTokenSource = new CancellationTokenSource();
-        private CancellationToken token; // Токен для остановки потока
+        private readonly CancellationTokenSource _cancelTokenSource = new CancellationTokenSource();
+        private CancellationToken _token; // Токен для остановки потока
 
         private string _comparingTitle = "Кого мы пережили и... как много еще предстоит сделать!";
         #endregion
@@ -50,7 +50,7 @@ namespace MemoRandom.Client.ViewModels
         /// <summary>
         /// Графический поток отображаемых элементов
         /// </summary>
-        public Dispatcher ProgressDispatcher { get; set; }
+        public Dispatcher ProgressDispatcher { get; }
         #endregion
 
         /// <summary>
@@ -60,8 +60,8 @@ namespace MemoRandom.Client.ViewModels
         /// <param name="e"></param>
         public void ComparingProcessView_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            cancelTokenSource.Cancel();
-            cancelTokenSource.Dispose();
+            _cancelTokenSource.Cancel();
+            _cancelTokenSource.Dispose();
 
             e.Cancel = false; // Окно закрываем
         }
@@ -70,9 +70,11 @@ namespace MemoRandom.Client.ViewModels
         /// Формирование прогресс-индикаторов и потоков внутри
         /// </summary>
         /// <param name="panel"></param>
+        /// <param name="sender"></param>
         public void SetStackPanel(StackPanel panel, object sender)
         {
-            var orderedComparedHumansList = CommonDataController.ComparedHumansCollection.Where(x => x.IsComparedHumanConsidered == true);
+            var orderedComparedHumansList = CommonDataController.ComparedHumansCollection
+                                              .Where(x => x.IsComparedHumanConsidered == true);
             // Цикл по всем людям для сравнения
             foreach (var human in orderedComparedHumansList)
             {
@@ -91,7 +93,7 @@ namespace MemoRandom.Client.ViewModels
                 Task task = new(() =>
                 {
                     ProgressMethod(comparedHumanData);
-                }, token); // Передаем токен остановки
+                }, _token); // Передаем токен остановки
 
                 task.Start();
             }
@@ -162,7 +164,7 @@ namespace MemoRandom.Client.ViewModels
             #endregion
 
             // Запускаем основной цикл отображения изменяющихся данных (зависят от текущего времени)
-            while (!token.IsCancellationRequested) // Пока команда для остановки потока не придет, выполняем работу потока
+            while (!_token.IsCancellationRequested) // Пока команда для остановки потока не придет, выполняем работу потока
             {
                 // Весь бесконечный цикл проходим в потоке UI
                 ProgressDispatcher.Invoke(() =>
@@ -297,17 +299,12 @@ namespace MemoRandom.Client.ViewModels
         /// <param name="control"></param>
         private void ShowNextNullData(ComparedBlockControl control)
         {
-            control.NextHumanNameTextBlock.Text = string.Empty;
-
+            control.NextHumanNameTextBlock.Text      = string.Empty;
             control.NextHumanBirthDateTextBlock.Text = string.Empty;
-
             control.NextHumanDeathDateTextBlock.Text = string.Empty;
-
             control.NextHumanFullYearsTextBlock.Text = string.Empty;
-
-            control.NextHumanOverLifeDate.Text = string.Empty;
-
-            control.RestDaysToNextHuman.Text = string.Empty;
+            control.NextHumanOverLifeDate.Text       = string.Empty;
+            control.RestDaysToNextHuman.Text         = string.Empty;
         }
 
         /// <summary>
@@ -334,7 +331,7 @@ namespace MemoRandom.Client.ViewModels
                                          previousActor.DeathDate.Subtract(previousActor.BirthDate)).TotalDays;
                 
                 // Вычисляем количество секунд, прошедшее с момента ухода пережитого игрока
-                var previousActorSeconds = Math.Floor(previousActorDays * DaysHours * HoursMinutes * MinutesSeconds);
+                var previousActorSeconds = Math.Floor(previousActorDays * DAYS_HOURS * HOURS_MINUTES * MINUTES_SECONDS);
 
                 // Проверка на наличие не пережитого игрока
                 if (nextActor != null)
@@ -361,7 +358,7 @@ namespace MemoRandom.Client.ViewModels
                                          currentTime.Subtract(comparedHumanData.BirthDate)).TotalDays/* + correctionDays*/;
 
                     // Вычисляем количество секунд, которое должно пройти до достижения возраста пережитого игрока
-                    var nextActorSeconds = Math.Floor(nextActorDays * DaysHours * HoursMinutes * MinutesSeconds);
+                    var nextActorSeconds = Math.Floor(nextActorDays * DAYS_HOURS * HOURS_MINUTES * MINUTES_SECONDS);
 
                     #region Управление прогресс-индикатором
                     control.CurrentProgressBar.Maximum = previousActorSeconds + nextActorSeconds; // Значение максимума прогресс-индикатора
@@ -425,16 +422,16 @@ namespace MemoRandom.Client.ViewModels
 
                     #region Управление прогресс-индикатором
                     // Вычисляем количество секунд, которое должно пройти до достижения возраста пережитого игрока
-                    var nextActorSeconds = Math.Floor(nextActorDays * DaysHours * HoursMinutes * MinutesSeconds);
+                    var nextActorSeconds = Math.Floor(nextActorDays * DAYS_HOURS * HOURS_MINUTES * MINUTES_SECONDS);
                     var currentHumanDays = currentTime.Subtract(comparedHumanData.BirthDate).TotalDays;
-                    var currentHumanSeconds = Math.Floor(currentHumanDays * DaysHours * HoursMinutes * MinutesSeconds);
+                    var currentHumanSeconds = Math.Floor(currentHumanDays * DAYS_HOURS * HOURS_MINUTES * MINUTES_SECONDS);
                     control.CurrentProgressBar.Maximum = nextActorSeconds + currentHumanSeconds; // Значение максимума прогресс-индикатора
                     control.CurrentProgressBar.Value = currentHumanSeconds; // Значение текущей позиции прогресс-индикатора
                     #endregion
                 }
                 else
                 {
-                    //TODO Ситуация странная - не ни до ни после
+                    //TODO Ситуация странная - нет ни до ни после
                 }
             }
             #endregion
@@ -476,9 +473,9 @@ namespace MemoRandom.Client.ViewModels
         /// <exception cref="ArgumentNullException"></exception>
         public ComparingProcessViewModel(ICommonDataController commonDataController)
         {
-            _commonDataController = commonDataController ?? throw new ArgumentNullException(nameof(Common));
+            _commonDataController = commonDataController ?? throw new ArgumentNullException(nameof(commonDataController));
 
-            token = cancelTokenSource.Token;
+            _token = _cancelTokenSource.Token;
             ProgressDispatcher = Dispatcher.CurrentDispatcher;
         }
         #endregion

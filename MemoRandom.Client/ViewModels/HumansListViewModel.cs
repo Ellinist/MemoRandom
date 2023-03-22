@@ -733,7 +733,7 @@ namespace MemoRandom.Client.ViewModels
             MenQuantities = _commonDataController.GetFinalText(HumansQuantity, ScopeTypes.Men);
 
             var min = CommonDataController.HumansList.Min(x => x.DaysLived);
-            var minHuman = CommonDataController.HumansList.FirstOrDefault(x => x.DaysLived == min);
+            var minHuman = CommonDataController.HumansList.FirstOrDefault(x => Math.Abs(x.DaysLived - min) < double.Epsilon);
             MinimumAge = minHuman.FullYearsLived;
             YoungestHuman = minHuman.LastName + " " +
                             minHuman.FirstName[0..1] + "." +
@@ -744,7 +744,7 @@ namespace MemoRandom.Client.ViewModels
             AverageYears = _commonDataController.GetFinalText(AverageAge, ScopeTypes.Years);
 
             var max = CommonDataController.HumansList.Max(x => x.DaysLived);
-            var maxHuman = CommonDataController.HumansList.FirstOrDefault(x => x.DaysLived == max);
+            var maxHuman = CommonDataController.HumansList.FirstOrDefault(x => Math.Abs(x.DaysLived - max) < double.Epsilon);
             MaximumAge = maxHuman.FullYearsLived;
             OldestHuman = maxHuman.LastName + " " +
                           maxHuman.FirstName[0..1] + "." +

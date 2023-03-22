@@ -203,11 +203,9 @@ namespace MemoRandom.Client.ViewModels
                 {
                     //var result = _commonDataController.UpdateComparedHumanInRepository(SelectedHuman);
                     var result = _commonDataController.UpdateComparedHuman(SelectedHuman);
-                    if (!result)
-                    {
-                        MessageBox.Show("Не удалось обновить человека для сравнения", "Memo-Random!", MessageBoxButton.OK, MessageBoxImage.Error);
-                        return;
-                    }
+                    if (result) return;
+
+                    MessageBox.Show("Не удалось обновить человека для сравнения", "Memo-Random!", MessageBoxButton.OK, MessageBoxImage.Error);
                 });
             }
             else // Создание новой записи человека для сравнения
@@ -223,11 +221,9 @@ namespace MemoRandom.Client.ViewModels
                 await Task.Run(() =>
                 {
                     var result = _commonDataController.UpdateComparedHuman(compHuman);
-                    if (!result)
-                    {
-                        MessageBox.Show("Не удалось добавить человека для сравнения!", "Memo-Random!", MessageBoxButton.OK, MessageBoxImage.Error);
-                        return;
-                    }
+                    if (result) return;
+
+                    MessageBox.Show("Не удалось добавить человека для сравнения!", "Memo-Random!", MessageBoxButton.OK, MessageBoxImage.Error);
                 });
 
                 CommonDataController.ComparedHumansCollection.Add(compHuman);
@@ -273,8 +269,8 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private void InitCommands()
         {
-            NewComparedHumanCommand = new DelegateCommand(NewComparedHuman);
-            SaveComparedHumanCommand = new DelegateCommand(SaveComparedHuman);
+            NewComparedHumanCommand    = new DelegateCommand(NewComparedHuman);
+            SaveComparedHumanCommand   = new DelegateCommand(SaveComparedHuman);
             DeleteComparedHumanCommand = new DelegateCommand(DeleteComparedHuman);
         }
 

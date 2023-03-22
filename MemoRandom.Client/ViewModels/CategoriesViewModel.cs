@@ -203,11 +203,11 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private void NewCategory()
         {
-            _newFlag = true;
-            CategoryId = Guid.NewGuid();
+            _newFlag     = true;
+            CategoryId   = Guid.NewGuid();
             CategoryName = "Введите название!";
-            PeriodFrom = 0;
-            PeriodTo = 0;
+            PeriodFrom   = 0;
+            PeriodTo     = 0;
         }
 
         /// <summary>
@@ -221,7 +221,7 @@ namespace MemoRandom.Client.ViewModels
                 SelectedCategory.CategoryName  = CategoryName;
                 SelectedCategory.StartAge      = PeriodFrom;
                 SelectedCategory.StopAge       = PeriodTo;
-                SelectedCategory.CategoryColor   = SelectedColor;
+                SelectedCategory.CategoryColor = SelectedColor;
                 #endregion
 
                 if (!await Task.Run(() => _commonDataController.UpdateCategoriesInFile(SelectedCategory)))
@@ -242,7 +242,7 @@ namespace MemoRandom.Client.ViewModels
                     CategoryName  = CategoryName,
                     StartAge      = PeriodFrom,
                     StopAge       = PeriodTo,
-                    CategoryColor   = SelectedColor.ToString()
+                    CategoryColor = SelectedColor
                 };
 
                 if (!await Task.Run(() => _commonDataController.UpdateCategoriesInFile(category)))

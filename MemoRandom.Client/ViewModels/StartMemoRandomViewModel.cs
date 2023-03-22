@@ -19,12 +19,8 @@ namespace MemoRandom.Client.ViewModels
         public Action ButtonsVisibility { get; set; } // Действие видимости кнопок
 
         #region PRIVATE FIELDS
-        private CancellationTokenSource cancelTokenSource;
-        private CancellationToken token;
-
-        private static string _storageFileName;   // Название файла хранения информации (БД или Xml)
-        private static string _storageFilePath;   // Имя папки, где хранится информация
-        private static string _storageImagesPath; // Имя папки, где хранятся изображения
+        private CancellationTokenSource _cancelTokenSource;
+        private CancellationToken _token;
 
         private string _startViewTitleDefault           = "Memo-Random"; // Дефолтный заголовок стартового окна
         private string _reasonsButtonName               = "Справочник";
@@ -140,24 +136,23 @@ namespace MemoRandom.Client.ViewModels
         /// <param name="e"></param>
         public void StartView_Loaded(object sender, RoutedEventArgs e)
         {
-            if (sender is Window window)
+            if (sender is not Window window) return;
+            var success = _commonDataController.SetFilesPaths(); // Проверка на выполняемость метода
+
+            if (!success) // Если метод установки путей хранения информации неуспешен
             {
-                var success = _commonDataController.SetFilesPaths(); // Проверка на выполняемость метода
-
-                if (!success) // Если метод установки путей хранения информации неуспешен
-                {
-                    MessageBox.Show("Не удалось установить пути хранения информации!", "Memo-Random!", MessageBoxButton.OK, MessageBoxImage.Error);
-                    window.Close();
-                    return;
-                }
-
-                ReadStartData();
-
-                window.Closing += StartMemoRandomViewModel_Closing; // Подписываемся на событие закрытия окна
-                cancelTokenSource = new CancellationTokenSource();
-                token = cancelTokenSource.Token;
-                SetCurrentDateTime(); // Вызываем метод отображения текущего времени
+                MessageBox.Show("Не удалось установить пути хранения информации!", "Memo-Random!", MessageBoxButton.OK, MessageBoxImage.Error);
+                window.Close();
+                return;
             }
+
+            window.Closing += StartMemoRandomViewModel_Closing; // Подписываемся на событие закрытия окна
+            _cancelTokenSource = new CancellationTokenSource();
+            _token = _cancelTokenSource.Token;
+
+            ReadStartData();
+            
+            SetCurrentDateTime(); // Вызываем метод отображения текущего времени
         }
         #endregion
 
@@ -168,7 +163,7 @@ namespace MemoRandom.Client.ViewModels
         {
             Task.Factory.StartNew(() =>
             {
-                while (!token.IsCancellationRequested)
+                while (!_token.IsCancellationRequested)
                 {
                     Thread.Sleep(1000);
                     Dispatcher.CurrentDispatcher.Invoke(() =>
@@ -176,7 +171,7 @@ namespace MemoRandom.Client.ViewModels
                         CurrentDateTime = DateTime.Now;
                     });
                 }
-            }, token);
+            }, _token);
         }
 
         /// <summary>
@@ -203,8 +198,8 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         public void Dispose()
         {
-            cancelTokenSource?.Cancel();
-            cancelTokenSource.Dispose();
+            _cancelTokenSource?.Cancel();
+            _cancelTokenSource?.Dispose();
         }
 
 

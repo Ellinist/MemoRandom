@@ -24,12 +24,14 @@ namespace MemoRandom.Client.ViewModels
     {
         public Action CloseAction { get; set; }
 
+        #region CONSTANTS
+        private const double SOURCE_WIDTH = 450;
+        private const double SOURCE_HEIGHT = 350;
+        #endregion
+
         #region PRIVATE FIELDS
         private readonly ILogger          _logger;
         private readonly ICommonDataController _commonDataController;
-
-        private const double SourceWidth = 450;
-        private const double SourceHeight = 350;
 
         private string   _lastName;
         private string   _firstName;
@@ -448,6 +450,8 @@ namespace MemoRandom.Client.ViewModels
         {
             var obj = (sender as Image);
             if (e.LeftButton != MouseButtonState.Pressed) return;
+            if (obj == null) return;
+
             Point t = obj.PointToScreen(Mouse.GetPosition(obj));
 
             var currentX = t.X;
@@ -478,16 +482,16 @@ namespace MemoRandom.Client.ViewModels
                 ScaleX -= 0.01;
                 ScaleY -= 0.01;
 
-                Left = (SourceWidth - (SourceImageSource.Width) * ScaleX) / 2 + _shiftX;
-                Top = (SourceHeight - SourceImageSource.Height * ScaleY) / 2 + _shiftY;
+                Left = (SOURCE_WIDTH  - (SourceImageSource.Width) * ScaleX) / 2 + _shiftX;
+                Top  = (SOURCE_HEIGHT - SourceImageSource.Height  * ScaleY) / 2 + _shiftY;
             }
             else
             {
                 ScaleX += 0.01;
                 ScaleY += 0.01;
 
-                Left = (SourceWidth - (SourceImageSource.Width) * ScaleX) / 2 + _shiftX;
-                Top = (SourceHeight - SourceImageSource.Height * ScaleY) / 2 + _shiftY;
+                Left = (SOURCE_WIDTH  - (SourceImageSource.Width) * ScaleX) / 2 + _shiftX;
+                Top  = (SOURCE_HEIGHT - SourceImageSource.Height  * ScaleY) / 2 + _shiftY;
             }
         }
         #endregion
@@ -647,13 +651,13 @@ namespace MemoRandom.Client.ViewModels
         {
             if (src == null) return null;
 
-            MemoryStream ms = new MemoryStream();
-            BmpBitmapEncoder encoder = new BmpBitmapEncoder();
+            MemoryStream ms = new();
+            BmpBitmapEncoder encoder = new();
             encoder.Frames.Add(BitmapFrame.Create(src));
             encoder.Save(ms);
             ms.Position = 0;
 
-            BitmapImage myBitmapImage = new BitmapImage();
+            BitmapImage myBitmapImage = new();
             myBitmapImage.BeginInit();
             myBitmapImage.StreamSource = ms;
             myBitmapImage.EndInit();
@@ -667,14 +671,13 @@ namespace MemoRandom.Client.ViewModels
         private void ClickReasonNode(object obj)
         {
             SelectedReason = obj as Reason;
-            if(SelectedReason != null)
-            {
-                DeathReasonId = SelectedReason.ReasonId;
-                HumanDeathReasonName = SelectedReason.ReasonName;
-                RaisePropertyChanged(nameof(HumanDeathReasonName));
-                OpenComboState = false;
-                RaisePropertyChanged(nameof(OpenComboState));
-            }
+            if (SelectedReason == null) return;
+
+            DeathReasonId = SelectedReason.ReasonId;
+            HumanDeathReasonName = SelectedReason.ReasonName;
+            RaisePropertyChanged(nameof(HumanDeathReasonName));
+            OpenComboState = false;
+            RaisePropertyChanged(nameof(OpenComboState));
         }
 
         /// <summary>
@@ -691,12 +694,12 @@ namespace MemoRandom.Client.ViewModels
                 _shiftY = 0;
                 ScaleX  = 1;
                 ScaleY  = 1;
-                Left    = -(SourceImageSource.Width  - SourceWidth)  / 2;
-                Top     = -(SourceImageSource.Height - SourceHeight) / 2;
+                Left    = -(SourceImageSource.Width  - SOURCE_WIDTH)  / 2;
+                Top     = -(SourceImageSource.Height - SOURCE_HEIGHT) / 2;
             }
             else
             {
-                MessageBox.Show("Попытка впихнуть невпихуемое!", "Memo-Random!", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Неверный формат в буфере обмена!", "Memo-Random!", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
         #endregion
@@ -725,14 +728,14 @@ namespace MemoRandom.Client.ViewModels
 
 
         #region CTOR
+
         /// <summary>
         /// Конструктор
         /// </summary>
         /// <param name="logger"></param>
-        /// <param name="msSqlController"></param>
+        /// <param name="commonDataController"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public HumanDetailedViewModel(ILogger logger,
-                                      ICommonDataController commonDataController)
+        public HumanDetailedViewModel(ILogger logger, ICommonDataController commonDataController)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _commonDataController = commonDataController ?? throw new ArgumentNullException(nameof(commonDataController));
