@@ -423,7 +423,6 @@ namespace MemoRandom.Client.Common.Implementations
 
             try
             {
-                //_xmlController.DeleteHumanInFile(human.HumanId.ToString(), _humansFilePath);
                 _xmlController.DeleteHumanInFile(human.PersonId.ToString(), _humansFilePath);
 
                 if (imageFile != string.Empty)
@@ -454,56 +453,11 @@ namespace MemoRandom.Client.Common.Implementations
         }
         #endregion
 
-        ///// <summary>
-        ///// Получение изображения выбранного человека
-        ///// </summary>
-        ///// <param name="currentHuman"></param>
-        ///// <returns></returns>
-        //public BitmapImage GetHumanImage(Human currentHuman)
-        //{
-        //    // Читаем файл изображения, если выбранный человек существует и у него есть изображение
-        //    if (currentHuman == null || currentHuman.ImageFile == string.Empty) return null;
-
-        //    string combinedImagePath = Path.Combine(_imagesFolder, currentHuman.ImageFile);
-
-        //    if (!File.Exists(combinedImagePath)) return null;
-
-        //    using Stream stream = File.OpenRead(combinedImagePath);
-        //    BitmapImage image = new BitmapImage();
-        //    image.BeginInit();
-        //    image.CacheOption = BitmapCacheOption.OnLoad;
-        //    image.StreamSource = stream;
-        //    image.EndInit();
-        //    stream.Close();
-
-        //    return image;
-        //}
-
-        ///// <summary>
-        ///// Получение изображения выбранного человека
-        ///// </summary>
-        ///// <param name="human"></param>
-        ///// <returns></returns>
-        //public BitmapImage GetComparedHumanImage(ComparedHuman human)
-        //{
-        //    // Читаем файл изображения, если выбранный человек существует и у него есть изображение
-        //    if (human == null || human.ImageFile == string.Empty) return null;
-
-        //    string combinedImagePath = Path.Combine(_imagesFolder, human.ImageFile);
-
-        //    if (!File.Exists(combinedImagePath)) return null;
-
-        //    using Stream stream = File.OpenRead(combinedImagePath);
-        //    BitmapImage image = new BitmapImage();
-        //    image.BeginInit();
-        //    image.CacheOption = BitmapCacheOption.OnLoad;
-        //    image.StreamSource = stream;
-        //    image.EndInit();
-        //    stream.Close();
-
-        //    return image;
-        //}
-
+        /// <summary>
+        /// Получение изображения
+        /// </summary>
+        /// <param name="imageFile"></param>
+        /// <returns></returns>
         public BitmapImage GetPersonImage(string imageFile)
         {
             if (imageFile == string.Empty) return null;
@@ -522,7 +476,6 @@ namespace MemoRandom.Client.Common.Implementations
 
             return image;
         }
-
 
         /// <summary>
         /// Сохранение изображения в файл
