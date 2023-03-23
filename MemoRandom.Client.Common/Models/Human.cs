@@ -28,6 +28,7 @@ namespace MemoRandom.Client.Common.Models
         private int _fullYearsLived;
         #endregion
 
+        #region PROPS
         /// <summary>
         /// Идентификатор человека
         /// </summary>
@@ -238,5 +239,6 @@ namespace MemoRandom.Client.Common.Models
                 RaisePropertyChanged(nameof(FullYearsLived));
             }
         }
+        #endregion
     }
 }

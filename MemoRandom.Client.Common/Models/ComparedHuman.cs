@@ -15,8 +15,10 @@ namespace MemoRandom.Client.Common.Models
         private string _comparedHumanFullName;
         private DateTime _comparedHumanBirthDate;
         private bool _isComparedHumanConsidered;
+        private string _imageFile;
         #endregion
 
+        #region PROPS
         /// <summary>
         /// Идентификатор человека для сравнения
         /// </summary>
@@ -27,7 +29,7 @@ namespace MemoRandom.Client.Common.Models
             get => _comparedHumanId;
             set
             {
-                _comparedHumanId= value;
+                _comparedHumanId = value;
                 RaisePropertyChanged(nameof(ComparedHumanId));
             }
         }
@@ -35,31 +37,32 @@ namespace MemoRandom.Client.Common.Models
         /// <summary>
         /// Полное название человека
         /// </summary>
-        [Required]
         public string ComparedHumanFullName
         {
             get => _comparedHumanFullName;
             set
             {
-                _comparedHumanFullName= value;
+                _comparedHumanFullName = value;
                 RaisePropertyChanged(nameof(ComparedHumanFullName));
             }
         }
 
         /// <summary>
-        /// Дата рождения человека
+        /// Дата рождения человека для сравнения
         /// </summary>
-        [Required]
         public DateTime ComparedHumanBirthDate
         {
             get => _comparedHumanBirthDate;
             set
             {
-                _comparedHumanBirthDate= value;
+                _comparedHumanBirthDate = value;
                 RaisePropertyChanged(nameof(ComparedHumanBirthDate));
             }
         }
 
+        /// <summary>
+        /// Свойство - рассматривается ли человек для сравнения в прогрессе сравнения
+        /// </summary>
         public bool IsComparedHumanConsidered
         {
             get => _isComparedHumanConsidered;
@@ -69,5 +72,19 @@ namespace MemoRandom.Client.Common.Models
                 RaisePropertyChanged(nameof(IsComparedHumanConsidered));
             }
         }
+
+        /// <summary>
+        /// Путь к файлу изображения - все файлы хранятся в папке
+        /// </summary>
+        public string ImageFile
+        {
+            get => _imageFile;
+            set
+            {
+                _imageFile = value;
+                RaisePropertyChanged(nameof(ImageFile));
+            }
+        }
+        #endregion
     }
 }

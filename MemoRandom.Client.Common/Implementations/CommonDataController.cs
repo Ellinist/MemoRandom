@@ -12,6 +12,7 @@ using NLog;
 using MemoRandom.Client.Common.Enums;
 using MemoRandom.Data.DtoModels;
 using System.Configuration;
+using System.Security.Cryptography;
 
 namespace MemoRandom.Client.Common.Implementations
 {
@@ -334,7 +335,7 @@ namespace MemoRandom.Client.Common.Implementations
         /// </summary>
         /// <param name="comparedHuman"></param>
         /// <returns></returns>
-        public bool UpdateComparedHuman(ComparedHuman comparedHuman)
+        public bool UpdateComparedHuman(ComparedHuman comparedHuman, BitmapImage compHumanImage)
         {
             var success = true;
 
@@ -342,6 +343,12 @@ namespace MemoRandom.Client.Common.Implementations
             {
                 var dtoComparedHuman = _mapper.Map<ComparedHuman, DtoComparedHuman>(comparedHuman);
                 _xmlController.UpdateComparedHumanInFile(dtoComparedHuman, _comparedHumansFilePath);
+
+                if (compHumanImage != null)
+                {
+                    //TODO Потом перейти к обобщенному подходу
+                    SaveComparedImageToFile(compHumanImage, comparedHuman); // Сохраняем изображение
+                }
             }
             catch (Exception ex)
             {
@@ -391,6 +398,7 @@ namespace MemoRandom.Client.Common.Implementations
 
                 if (humanImage != null)
                 {
+                    //TODO Потом перейти к обобщенному подходу
                     SaveImageToFile(humanImage, human); // Сохраняем изображение
                 }
             }
@@ -471,11 +479,58 @@ namespace MemoRandom.Client.Common.Implementations
         }
 
         /// <summary>
+        /// Получение изображения выбранного человека
+        /// </summary>
+        /// <param name="human"></param>
+        /// <returns></returns>
+        public BitmapImage GetComparedHumanImage(ComparedHuman human)
+        {
+            // Читаем файл изображения, если выбранный человек существует и у него есть изображение
+            if (human == null || human.ImageFile == string.Empty) return null;
+
+            string combinedImagePath = Path.Combine(_imagesFolder, human.ImageFile);
+
+            if (!File.Exists(combinedImagePath)) return null;
+
+            using Stream stream = File.OpenRead(combinedImagePath);
+            BitmapImage image = new BitmapImage();
+            image.BeginInit();
+            image.CacheOption = BitmapCacheOption.OnLoad;
+            image.StreamSource = stream;
+            image.EndInit();
+            stream.Close();
+
+            return image;
+        }
+
+
+        /// <summary>
         /// Сохранение изображения в файл
         /// </summary>
         /// <param name="human"></param>
         /// <param name="humanImage"></param>
         private void SaveImageToFile(BitmapSource humanImage, Human human)
+        {
+            string combinedImagePath = Path.Combine(_imagesFolder, human.ImageFile);
+
+            JpegBitmapEncoder encoder = new JpegBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(humanImage));
+
+            if (File.Exists(combinedImagePath))
+            {
+                File.Delete(combinedImagePath);
+            }
+
+            using FileStream fs = new FileStream(combinedImagePath, FileMode.Create);
+            encoder.Save(fs);
+        }
+
+        /// <summary>
+        /// Сохранение изображения в файл для человека для сравнения
+        /// </summary>
+        /// <param name="human"></param>
+        /// <param name="humanImage"></param>
+        private void SaveComparedImageToFile(BitmapSource humanImage, ComparedHuman human)
         {
             string combinedImagePath = Path.Combine(_imagesFolder, human.ImageFile);
 

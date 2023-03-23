@@ -182,14 +182,22 @@
 
                 <!--В этом блоке картинка, если есть-->
                 <Grid Margin="2, 2, 2, 2">
-                    <Border MaxWidth="450" MinWidth="450"
-                            MaxHeight="350" MinHeight="350"
-                            BorderBrush="Black"
+                    <Border BorderBrush="Black"
                             BorderThickness="1">
-                        <Image Width="450" Height="350"
-                               Stretch="Uniform"
-                               HorizontalAlignment="Center"
-                               Source="{Binding Path=ComparedHumanImage}"/>
+                        <Canvas x:Name="SourceCanvas"
+                                ClipToBounds="True"
+                                Width="450" MinWidth="450" MaxWidth="450"
+                                Height="350" MinHeight="350" MaxHeight="350">
+                            <Image Canvas.Left="{Binding Left}"
+                                   Canvas.Top="{Binding Top}"
+                                   Stretch="None"
+                                   x:Name="PersonImage"
+                                   Source="{Binding Path=SourceImageSource}">
+                                <Image.LayoutTransform>
+                                    <ScaleTransform ScaleX="{Binding ScaleX}" ScaleY="{Binding ScaleY}"/>
+                                </Image.LayoutTransform>
+                            </Image>
+                        </Canvas>
                     </Border>
                 </Grid>
 
@@ -199,7 +207,8 @@
                             MinWidth="300" MaxWidth="300"
                             MinHeight="54"
                             FontSize="24"
-                            Content="Загрузить изображение">
+                            Content="Загрузить изображение"
+                            Command="{Binding ImageLoadCommand}">
                         
                     </Button>
                 </Grid>
@@ -226,7 +235,8 @@
                         Style="{StaticResource ButtonRoundCorner}"
                         FontSize="24"
                         Content="Сохранить"
-                        Command="{Binding SaveComparedHumanCommand}"/>
+                        Command="{Binding SaveComparedHumanCommand}"
+                        CommandParameter="{Binding ElementName=SourceCanvas}"/>
                 
                 <!--Кнопка удаления выбранного человека-->
                 <Button Grid.Column="2"

@@ -22,6 +22,8 @@ namespace MemoRandom.Data.DtoModels
         /// </summary>
         public DateTime ComparedHumanBirthDate { get; set; }
 
+        public string ImageFile { get; set; }
+
         /// <summary>
         /// Учитывать человека для сравнения в прогрессе сравнения
         /// </summary>

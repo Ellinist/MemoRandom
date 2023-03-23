@@ -278,6 +278,7 @@ namespace MemoRandom.Data.Implementations
                         ComparedHumanId           = Guid.Parse(comparedHuman.Attribute("id")!.Value),
                         ComparedHumanFullName     = comparedHuman.Element("name")!.Value,
                         ComparedHumanBirthDate    = DateTime.Parse(comparedHuman.Element("birthdate")!.Value),
+                        ImageFile                 = comparedHuman.Element("image")!.Value,
                         IsComparedHumanConsidered = bool.Parse(comparedHuman.Element("isconsidered")!.Value)
                     };
                     comparedHumans.Add(ch);
@@ -305,19 +306,22 @@ namespace MemoRandom.Data.Implementations
                 {
                     element.Element("name")!.Value         = comparedHuman.ComparedHumanFullName;
                     element.Element("birthdate")!.Value    = comparedHuman.ComparedHumanBirthDate.ToString();
+                    element.Element("image")!.Value         = comparedHuman.ImageFile;
                     element.Element("isconsidered")!.Value = comparedHuman.IsComparedHumanConsidered.ToString();
                 }
                 else
                 {
-                    XElement comp = new XElement("ComparedHuman");
-                    XAttribute id = new XAttribute("id", $"{comparedHuman.ComparedHumanId}");
-                    XElement name = new XElement("name", $"{comparedHuman.ComparedHumanFullName}");
-                    XElement birthdate = new XElement("birthdate", $"{comparedHuman.ComparedHumanBirthDate}");
+                    XElement comp         = new XElement("ComparedHuman");
+                    XAttribute id         = new XAttribute("id", $"{comparedHuman.ComparedHumanId}");
+                    XElement name         = new XElement("name", $"{comparedHuman.ComparedHumanFullName}");
+                    XElement birthdate    = new XElement("birthdate", $"{comparedHuman.ComparedHumanBirthDate}");
+                    XElement image        = new XElement("image", $"{comparedHuman.ImageFile}");
                     XElement isconsidered = new XElement("isconsidered", $"{comparedHuman.IsComparedHumanConsidered}");
 
                     comp.Add(id);
                     comp.Add(name);
                     comp.Add(birthdate);
+                    comp.Add(image);
                     comp.Add(isconsidered);
 
                     root.Add(comp);

@@ -66,7 +66,7 @@ namespace MemoRandom.Client.Common.Interfaces
         /// </summary>
         /// <param name="comparedHuman"></param>
         /// <returns></returns>
-        bool UpdateComparedHuman(ComparedHuman comparedHuman);
+        bool UpdateComparedHuman(ComparedHuman comparedHuman, BitmapImage compHumanImage);
 
         /// <summary>
         /// Удаление человека для сравнения
@@ -88,66 +88,6 @@ namespace MemoRandom.Client.Common.Interfaces
         bool DeleteHuman(Human human, string imageFile);
         #endregion
 
-
-        //void SaveXmlData();
-        
-
-
-
-
-
-
-
-
-
-        ///// <summary>
-        ///// Чтение общей информации из внешнего хранилища
-        ///// </summary>
-        ///// <returns></returns>
-        //bool ReadDataFromRepository();
-
-        ///// <summary>
-        ///// Обновление (или добавление) категории во внешнее хранилище
-        ///// </summary>
-        ///// <param name="category"></param>
-        ///// <returns></returns>
-        //bool UpdateCategoriesInRepository(Category category);
-
-        ///// <summary>
-        ///// Удаление выбранной категории во внешнем хранилище
-        ///// </summary>
-        ///// <param name="category"></param>
-        ///// <returns></returns>
-        //bool DeleteCategoryInRepository(Category category);
-
-        ///// <summary>
-        ///// Обновление (добавление) человека для сравнения во внешнем хранилище
-        ///// </summary>
-        ///// <param name="comparedHuman"></param>
-        ///// <returns></returns>
-        //bool UpdateComparedHumanInRepository(ComparedHuman comparedHuman);
-
-        ///// <summary>
-        ///// Удаление человека для сравнения во внешнем хранилище
-        ///// </summary>
-        ///// <returns></returns>
-        //bool DeleteComparedHumanInRepository(ComparedHuman comparedHuman);
-
-        ///// <summary>
-        ///// Обновление (добавление) человека во внешнем хранилище
-        ///// </summary>
-        ///// <param name="human"></param>
-        ///// <returns></returns>
-        //bool UpdateHumanInRepository(Human human, BitmapImage humanImage);
-
-        ///// <summary>
-        ///// Удаление человека из внешнего хранилища
-        ///// </summary>
-        ///// <param name="human"></param>
-        ///// <param name="imageFile"></param>
-        ///// <returns></returns>
-        //bool DeleteHumanInRepository(Human human, string imageFile);
-
         /// <summary>
         /// Обновление иерархической коллекции причин смерти
         /// </summary>
@@ -159,6 +99,13 @@ namespace MemoRandom.Client.Common.Interfaces
         /// <param name="currentHuman"></param>
         /// <returns></returns>
         BitmapImage GetHumanImage(Human currentHuman);
+
+        /// <summary>
+        /// Получение изображения человека для сравнения - потом уйти в обощение
+        /// </summary>
+        /// <param name="human"></param>
+        /// <returns></returns>
+        BitmapImage GetComparedHumanImage(ComparedHuman human);
 
         /// <summary>
         /// Получение слов с правильными окончаниями
