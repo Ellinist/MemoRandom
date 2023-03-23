@@ -10,9 +10,9 @@ namespace MemoRandom.Data.DtoModels
     /// Класс человека для хранения в XML-файле
     /// </summary>
     [Serializable]
-    public class DtoHuman
+    public class DtoHuman : DtoPerson
     {
-        public Guid HumanId { get; set; }
+        //public Guid HumanId { get; set; }
 
         public string FirstName { get; set; }
 
@@ -20,7 +20,7 @@ namespace MemoRandom.Data.DtoModels
 
         public string Patronymic { get; set; }
 
-        public DateTime BirthDate { get; set; }
+        //public DateTime BirthDate { get; set; }
 
         public string BirthCountry { get; set; }
 
@@ -32,7 +32,7 @@ namespace MemoRandom.Data.DtoModels
 
         public string DeathPlace { get;set; }
 
-        public string ImageFile { get; set; }
+        //public string ImageFile { get; set; }
 
         public Guid DeathReasonId { get; set; }
 

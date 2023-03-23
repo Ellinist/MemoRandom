@@ -165,7 +165,8 @@ namespace MemoRandom.Client.Common.Implementations
                 // Если файла нет, копируем файл по умолчанию
                 if (!File.Exists(_comparedHumansFilePath)) File.Copy(_defaultComparedHumansFilePath, _comparedHumansFilePath);
 
-                var comparedHumansResult = _xmlController.ReadComparedHumansFromFile(_comparedHumansFilePath).OrderBy(x => x.ComparedHumanBirthDate).ToList();
+                //var comparedHumansResult = _xmlController.ReadComparedHumansFromFile(_comparedHumansFilePath).OrderBy(x => x.ComparedHumanBirthDate).ToList();
+                var comparedHumansResult = _xmlController.ReadComparedHumansFromFile(_comparedHumansFilePath).OrderBy(x => x.BirthDate).ToList();
                 ComparedHumansCollection = _mapper.Map<List<DtoComparedHuman>, ObservableCollection<ComparedHuman>>(comparedHumansResult);
                 #endregion
 

@@ -275,9 +275,11 @@ namespace MemoRandom.Data.Implementations
                 {
                     DtoComparedHuman ch = new()
                     {
-                        ComparedHumanId           = Guid.Parse(comparedHuman.Attribute("id")!.Value),
+                        //ComparedHumanId           = Guid.Parse(comparedHuman.Attribute("id")!.Value),
+                        PersonId = Guid.Parse(comparedHuman.Attribute("id")!.Value),
                         ComparedHumanFullName     = comparedHuman.Element("name")!.Value,
-                        ComparedHumanBirthDate    = DateTime.Parse(comparedHuman.Element("birthdate")!.Value),
+                        //ComparedHumanBirthDate    = DateTime.Parse(comparedHuman.Element("birthdate")!.Value),
+                        BirthDate = DateTime.Parse(comparedHuman.Element("birthdate")!.Value),
                         ImageFile                 = comparedHuman.Element("image")!.Value,
                         IsComparedHumanConsidered = bool.Parse(comparedHuman.Element("isconsidered")!.Value)
                     };
@@ -301,20 +303,24 @@ namespace MemoRandom.Data.Implementations
             if (root != null)
             {
                 var rootElements = root.Elements("ComparedHuman");
-                var element = rootElements.FirstOrDefault(x => Guid.Parse(x.Attribute("id")!.Value) == comparedHuman.ComparedHumanId);
+                //var element = rootElements.FirstOrDefault(x => Guid.Parse(x.Attribute("id")!.Value) == comparedHuman.ComparedHumanId);
+                var element = rootElements.FirstOrDefault(x => Guid.Parse(x.Attribute("id")!.Value) == comparedHuman.PersonId);
                 if (element != null)
                 {
                     element.Element("name")!.Value         = comparedHuman.ComparedHumanFullName;
-                    element.Element("birthdate")!.Value    = comparedHuman.ComparedHumanBirthDate.ToString();
+                    //element.Element("birthdate")!.Value    = comparedHuman.ComparedHumanBirthDate.ToString();
+                    element.Element("birthdate")!.Value = comparedHuman.BirthDate.ToString();
                     element.Element("image")!.Value         = comparedHuman.ImageFile;
                     element.Element("isconsidered")!.Value = comparedHuman.IsComparedHumanConsidered.ToString();
                 }
                 else
                 {
                     XElement comp         = new XElement("ComparedHuman");
-                    XAttribute id         = new XAttribute("id", $"{comparedHuman.ComparedHumanId}");
+                    //XAttribute id         = new XAttribute("id", $"{comparedHuman.ComparedHumanId}");
+                    XAttribute id         = new XAttribute("id", $"{comparedHuman.PersonId}");
                     XElement name         = new XElement("name", $"{comparedHuman.ComparedHumanFullName}");
-                    XElement birthdate    = new XElement("birthdate", $"{comparedHuman.ComparedHumanBirthDate}");
+                    //XElement birthdate    = new XElement("birthdate", $"{comparedHuman.ComparedHumanBirthDate}");
+                    XElement birthdate    = new XElement("birthdate", $"{comparedHuman.BirthDate}");
                     XElement image        = new XElement("image", $"{comparedHuman.ImageFile}");
                     XElement isconsidered = new XElement("isconsidered", $"{comparedHuman.IsComparedHumanConsidered}");
 
@@ -371,7 +377,8 @@ namespace MemoRandom.Data.Implementations
                 {
                     DtoHuman human = new DtoHuman()
                     {
-                        HumanId        = Guid.Parse(hum.Attribute("id")!.Value),
+                        //HumanId        = Guid.Parse(hum.Attribute("id")!.Value),
+                        PersonId = Guid.Parse(hum.Attribute("id")!.Value),
                         FirstName      = hum.Element("firstname")!.Value,
                         LastName       = hum.Element("lastname")!.Value,
                         Patronymic     = hum.Element("patronymic")!.Value,
@@ -406,7 +413,8 @@ namespace MemoRandom.Data.Implementations
             if (root != null)
             {
                 var rootElements = root.Elements("Human");
-                var element = rootElements.FirstOrDefault(x => Guid.Parse(x.Attribute("id")!.Value) == human.HumanId);
+                //var element = rootElements.FirstOrDefault(x => Guid.Parse(x.Attribute("id")!.Value) == human.HumanId);
+                var element = rootElements.FirstOrDefault(x => Guid.Parse(x.Attribute("id")!.Value) == human.PersonId);
                 if (element != null)
                 {
                     element.Element("firstname")!.Value    = human.FirstName;
@@ -427,7 +435,8 @@ namespace MemoRandom.Data.Implementations
                 else
                 {
                     XElement hum          = new XElement("Human");
-                    XAttribute id         = new XAttribute("id", $"{human.HumanId}");
+                    //XAttribute id         = new XAttribute("id", $"{human.HumanId}");
+                    XAttribute id = new XAttribute("id", $"{human.PersonId}");
                     XElement firstname    = new XElement("firstname", $"{human.FirstName}");
                     XElement lastname     = new XElement("lastname", $"{human.LastName}");
                     XElement patronymic   = new XElement("patronymic", $"{human.Patronymic}");
