@@ -130,7 +130,8 @@ namespace MemoRandom.Client.ViewModels
                     RaisePropertyChanged(nameof(SelectedHuman));
 
                     // Изменение изображения
-                    var imageResult = _commonDataController.GetHumanImage(CommonDataController.CurrentHuman);
+                    //var imageResult = _commonDataController.GetHumanImage(CommonDataController.CurrentHuman);
+                    var imageResult = _commonDataController.GetPersonImage(CommonDataController.CurrentHuman.ImageFile);
                     if (imageResult != null)
                     {
                         ImageSource = imageResult;
@@ -444,7 +445,8 @@ namespace MemoRandom.Client.ViewModels
             PersonIndex = HumansCollection.IndexOf(CommonDataController.CurrentHuman);
             RaisePropertyChanged(nameof(PersonIndex));
 
-            ImageSource = _commonDataController.GetHumanImage(CommonDataController.CurrentHuman);
+            //ImageSource = _commonDataController.GetHumanImage(CommonDataController.CurrentHuman);
+            ImageSource = _commonDataController.GetPersonImage(CommonDataController.CurrentHuman.ImageFile);
             RaisePropertyChanged(nameof(ImageSource));
 
             var currentReason = PlainReasonsList.FirstOrDefault(x => x.ReasonId == SelectedHuman.DeathReasonId);
@@ -469,7 +471,8 @@ namespace MemoRandom.Client.ViewModels
             RaisePropertyChanged(nameof(PersonIndex));
             SetFullYearsText(CommonDataController.CurrentHuman);
 
-            ImageSource = _commonDataController.GetHumanImage(CommonDataController.CurrentHuman);
+            //ImageSource = _commonDataController.GetHumanImage(CommonDataController.CurrentHuman);
+            ImageSource = _commonDataController.GetPersonImage(CommonDataController.CurrentHuman.ImageFile);
             RaisePropertyChanged(nameof(ImageSource));
 
             var currentReason = PlainReasonsList.FirstOrDefault(x => x.ReasonId == SelectedHuman.DeathReasonId);
@@ -501,7 +504,8 @@ namespace MemoRandom.Client.ViewModels
 
             if (_previousIndex == -1) _previousIndex = 0; // Пока так - но надо умнее сделать
 
-            var formerId = HumansCollection[_previousIndex].HumanId;
+            //var formerId = HumansCollection[_previousIndex].HumanId;
+            var formerId = HumansCollection[_previousIndex].PersonId;
             try
             {
                 await Task.Run(() =>
@@ -516,7 +520,8 @@ namespace MemoRandom.Client.ViewModels
                 MessageBox.Show("Не удалось Удалить!\n Код ошибки в журнале", "Memo-Random!", MessageBoxButton.OK, MessageBoxImage.Error);
                 _logger.Error($"Ошибка: {ex}");
             }
-            PersonIndex = HumansCollection.IndexOf(HumansCollection.FirstOrDefault(x => x.HumanId == formerId));
+            //PersonIndex = HumansCollection.IndexOf(HumansCollection.FirstOrDefault(x => x.HumanId == formerId));
+            PersonIndex = HumansCollection.IndexOf(HumansCollection.FirstOrDefault(x => x.PersonId == formerId));
             RaisePropertyChanged(nameof(PersonIndex));
 
             CalculateAnalytics();
@@ -527,6 +532,7 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private void AdditionInfo()
         {
+            //_commonDataController.GetPersonImage<Human>(SelectedHuman, SelectedHuman.ImageFile);
             MessageBox.Show("Блок в разработке!", "Memo-Random!", MessageBoxButton.OK, MessageBoxImage.Hand);
         }
 

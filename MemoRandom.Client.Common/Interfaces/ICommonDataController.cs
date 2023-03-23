@@ -93,19 +93,22 @@ namespace MemoRandom.Client.Common.Interfaces
         /// </summary>
         void UpdateHierarchicalReasonsData();
 
-        /// <summary>
-        /// Получение изображения человека
-        /// </summary>
-        /// <param name="currentHuman"></param>
-        /// <returns></returns>
-        BitmapImage GetHumanImage(Human currentHuman);
 
-        /// <summary>
-        /// Получение изображения человека для сравнения - потом уйти в обощение
-        /// </summary>
-        /// <param name="human"></param>
-        /// <returns></returns>
-        BitmapImage GetComparedHumanImage(ComparedHuman human);
+        BitmapImage GetPersonImage(string imageFile);
+
+        ///// <summary>
+        ///// Получение изображения человека
+        ///// </summary>
+        ///// <param name="currentHuman"></param>
+        ///// <returns></returns>
+        //BitmapImage GetHumanImage(Human currentHuman);
+
+        ///// <summary>
+        ///// Получение изображения человека для сравнения - потом уйти в обощение
+        ///// </summary>
+        ///// <param name="human"></param>
+        ///// <returns></returns>
+        //BitmapImage GetComparedHumanImage(ComparedHuman human);
 
         /// <summary>
         /// Получение слов с правильными окончаниями

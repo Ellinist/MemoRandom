@@ -83,8 +83,10 @@ namespace MemoRandom.Client.ViewModels
                 {
                     ComparedHumanBar = control,
                     FullName = human.ComparedHumanFullName,
-                    BirthDate = human.ComparedHumanBirthDate,
-                    FullYearsLived = Math.Floor((DateTime.Now - human.ComparedHumanBirthDate).Days / 365.25)
+                    //BirthDate = human.ComparedHumanBirthDate,
+                    BirthDate = human.BirthDate,
+                    //FullYearsLived = Math.Floor((DateTime.Now - human.ComparedHumanBirthDate).Days / 365.25)
+                    FullYearsLived = Math.Floor((DateTime.Now - human.BirthDate).Days / 365.25)
                 };
 
                 panel.Children.Add(control);
@@ -141,7 +143,8 @@ namespace MemoRandom.Client.ViewModels
                     if (previousActor != null) // Если пережитый игрок существует - отображаем его картинку
                     {
                         var previousReason = CommonDataController.PlainReasonsList.FirstOrDefault(x => x.ReasonId == previousActor.DeathReasonId);
-                        control.PreviousImage.Source = _commonDataController.GetHumanImage(previousActor); // Загружаем картинку пережитого игрока
+                        //control.PreviousImage.Source = _commonDataController.GetHumanImage(previousActor); // Загружаем картинку пережитого игрока
+                        control.PreviousImage.Source = _commonDataController.GetPersonImage(previousActor.ImageFile); // Загружаем картинку пережитого игрока
 
                         // Отображение данных пережитого игрока, изменяемых только при смене игроков
                         ShowPreviousData(control, previousActor, previousReason);
@@ -155,7 +158,8 @@ namespace MemoRandom.Client.ViewModels
                     if (nextActor != null)
                     {
                         var nextReason = CommonDataController.PlainReasonsList.FirstOrDefault(x => x.ReasonId == nextActor.DeathReasonId);
-                        control.NextImage.Source = _commonDataController.GetHumanImage(nextActor); // Загружаем картинку еще не пережитого игрока
+                        //control.NextImage.Source = _commonDataController.GetHumanImage(nextActor); // Загружаем картинку еще не пережитого игрока
+                        control.NextImage.Source = _commonDataController.GetPersonImage(nextActor.ImageFile); // Загружаем картинку еще не пережитого игрока
 
                         // Отображение данных еще не пережитого игрока, изменяемых только при смене игроков
                         ShowNextData(control, nextActor, nextReason);
@@ -182,10 +186,12 @@ namespace MemoRandom.Client.ViewModels
                         nextActor = orderedList.FirstOrDefault(x => x.DaysLived > currentTimeLap.TotalDays); // А следующий - вычисляется
                         var nReason = CommonDataController.PlainReasonsList.FirstOrDefault(x => x.ReasonId == nextActor.DeathReasonId);
                         // И меняем картинки
-                        control.PreviousImage.Source = _commonDataController.GetHumanImage(previousActor); // Загружаем картинку пережитого игрока
+                        //control.PreviousImage.Source = _commonDataController.GetHumanImage(previousActor); // Загружаем картинку пережитого игрока
+                        control.PreviousImage.Source = _commonDataController.GetPersonImage(previousActor.ImageFile); // Загружаем картинку пережитого игрока
                         if (nextActor != null)
                         {
-                            control.NextImage.Source = _commonDataController.GetHumanImage(nextActor); // Загружаем картинку еще не пережитого игрока
+                            //control.NextImage.Source = _commonDataController.GetHumanImage(nextActor); // Загружаем картинку еще не пережитого игрока
+                            control.NextImage.Source = _commonDataController.GetPersonImage(nextActor.ImageFile); // Загружаем картинку еще не пережитого игрока
 
                             // Отображение данных, изменяемых только при смене игроков
                             ShowPreviousData(control, previousActor, prevReason);

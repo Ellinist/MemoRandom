@@ -541,7 +541,8 @@ namespace MemoRandom.Client.ViewModels
                 DeathPlace        = human.DeathPlace;
                 HumanComments     = human.HumanComments;
                 DeathReasonId     = human.DeathReasonId;
-                TargetImageSource = (BitmapSource)_commonDataController.GetHumanImage(CommonDataController.CurrentHuman); // Загружаем изображение
+                //TargetImageSource = (BitmapSource)_commonDataController.GetHumanImage(CommonDataController.CurrentHuman); // Загружаем изображение
+                TargetImageSource = (BitmapSource)_commonDataController.GetPersonImage(CommonDataController.CurrentHuman.ImageFile); // Загружаем изображение
 
                 (int years, int days) = _commonDataController.GetYearsAndDaysConsideredLeaps(BirthDate, DeathDate);
                 FullYearsLived = years;
@@ -592,7 +593,8 @@ namespace MemoRandom.Client.ViewModels
                 curHuman.DeathDate      = DeathDate;
                 curHuman.DeathCountry   = DeathCountry;
                 curHuman.DeathPlace     = DeathPlace;
-                curHuman.ImageFile      = TargetImageSource != null ? curHuman.HumanId.ToString() + ".jpg" : string.Empty;
+                //curHuman.ImageFile      = TargetImageSource != null ? curHuman.HumanId.ToString() + ".jpg" : string.Empty;
+                curHuman.ImageFile = TargetImageSource != null ? curHuman.PersonId.ToString() + ".jpg" : string.Empty;
                 curHuman.HumanComments  = HumanComments;
                 curHuman.DeathReasonId  = DeathReasonId;
                 curHuman.DaysLived      = (DeathDate - BirthDate).TotalDays; // Считаем полное число прожитых дней
@@ -605,7 +607,8 @@ namespace MemoRandom.Client.ViewModels
                 var newHumanId = Guid.NewGuid();
                 Human human = new()
                 {
-                    HumanId        = newHumanId,
+                    //HumanId        = newHumanId,
+                    PersonId       = newHumanId,
                     LastName       = LastName,
                     FirstName      = FirstName,
                     Patronymic     = Patronymic,

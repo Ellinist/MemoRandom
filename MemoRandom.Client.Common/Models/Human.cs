@@ -7,20 +7,20 @@ namespace MemoRandom.Client.Common.Models
     /// <summary>
     /// Класс человека
     /// </summary>
-    public class Human : BindableBase
+    public class Human : Person
     {
         #region PRIVATE FIELDS
-        private Guid _humanId;
+        //private Guid _humanId;
         private string _firstName;
         private string _lastName;
         private string _patronymic;
-        private DateTime _birthDate;
+        //private DateTime _birthDate;
         private string _birthCountry;
         private string _birthPlace;
         private DateTime _deathDate;
         private string _deathCountry;
         private string _deathPlace;
-        private string _imageFile;
+        //private string _imageFile;
         private Guid _deathReasonId;
         private string _humanDeathReasonName;
         private string _humanComments;
@@ -29,20 +29,20 @@ namespace MemoRandom.Client.Common.Models
         #endregion
 
         #region PROPS
-        /// <summary>
-        /// Идентификатор человека
-        /// </summary>
-        [Key]
-        [Required]
-        public Guid HumanId
-        {
-            get => _humanId;
-            set
-            {
-                _humanId = value;
-                RaisePropertyChanged(nameof(HumanId));
-            }
-        }
+        ///// <summary>
+        ///// Идентификатор человека
+        ///// </summary>
+        //[Key]
+        //[Required]
+        //public Guid HumanId
+        //{
+        //    get => _humanId;
+        //    set
+        //    {
+        //        _humanId = value;
+        //        RaisePropertyChanged(nameof(HumanId));
+        //    }
+        //}
 
         /// <summary>
         /// Имя человека
@@ -83,18 +83,18 @@ namespace MemoRandom.Client.Common.Models
             }
         }
 
-        /// <summary>
-        /// Дата рождения человека (подумать над временем суток)
-        /// </summary>
-        public DateTime BirthDate
-        {
-            get => _birthDate;
-            set
-            {
-                _birthDate = value;
-                RaisePropertyChanged(nameof(BirthDate));
-            }
-        }
+        ///// <summary>
+        ///// Дата рождения человека (подумать над временем суток)
+        ///// </summary>
+        //public DateTime BirthDate
+        //{
+        //    get => _birthDate;
+        //    set
+        //    {
+        //        _birthDate = value;
+        //        RaisePropertyChanged(nameof(BirthDate));
+        //    }
+        //}
 
         /// <summary>
         /// Страна рождения человека
@@ -161,18 +161,18 @@ namespace MemoRandom.Client.Common.Models
             }
         }
 
-        /// <summary>
-        /// Путь к файлу изображения - все файлы хранятся в папке
-        /// </summary>
-        public string ImageFile
-        {
-            get => _imageFile;
-            set
-            {
-                _imageFile = value;
-                RaisePropertyChanged(nameof(ImageFile));
-            }
-        }
+        ///// <summary>
+        ///// Путь к файлу изображения - все файлы хранятся в папке
+        ///// </summary>
+        //public string ImageFile
+        //{
+        //    get => _imageFile;
+        //    set
+        //    {
+        //        _imageFile = value;
+        //        RaisePropertyChanged(nameof(ImageFile));
+        //    }
+        //}
 
         /// <summary>
         /// Идентификатор причины смерти (берется из справочника)
