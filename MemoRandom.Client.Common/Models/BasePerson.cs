@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Prism.Mvvm;
 
 namespace MemoRandom.Client.Common.Models
 {
-    public abstract class Person : BindableBase
+    /// <summary>
+    /// Класс, относящийся ко всем персонам программы
+    /// </summary>
+    public abstract class BasePerson : BindableBase
     {
         #region PRIVATE FIELDS
         private Guid _personId;

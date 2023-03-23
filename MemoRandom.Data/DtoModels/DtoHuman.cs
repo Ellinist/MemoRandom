@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MemoRandom.Data.DtoModels
 {
@@ -10,17 +6,13 @@ namespace MemoRandom.Data.DtoModels
     /// Класс человека для хранения в XML-файле
     /// </summary>
     [Serializable]
-    public class DtoHuman : DtoPerson
+    public class DtoHuman : DtoBasePerson
     {
-        //public Guid HumanId { get; set; }
-
         public string FirstName { get; set; }
 
         public string LastName { get; set; }
 
         public string Patronymic { get; set; }
-
-        //public DateTime BirthDate { get; set; }
 
         public string BirthCountry { get; set; }
 
@@ -31,8 +23,6 @@ namespace MemoRandom.Data.DtoModels
         public string DeathCountry { get; set; }
 
         public string DeathPlace { get;set; }
-
-        //public string ImageFile { get; set; }
 
         public Guid DeathReasonId { get; set; }
 

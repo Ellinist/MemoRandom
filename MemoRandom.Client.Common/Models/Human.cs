@@ -1,26 +1,21 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
-using Prism.Mvvm;
 
 namespace MemoRandom.Client.Common.Models
 {
     /// <summary>
     /// Класс человека
     /// </summary>
-    public class Human : Person
+    public class Human : BasePerson
     {
         #region PRIVATE FIELDS
-        //private Guid _humanId;
         private string _firstName;
         private string _lastName;
         private string _patronymic;
-        //private DateTime _birthDate;
         private string _birthCountry;
         private string _birthPlace;
         private DateTime _deathDate;
         private string _deathCountry;
         private string _deathPlace;
-        //private string _imageFile;
         private Guid _deathReasonId;
         private string _humanDeathReasonName;
         private string _humanComments;
@@ -82,19 +77,6 @@ namespace MemoRandom.Client.Common.Models
                 RaisePropertyChanged(nameof(Patronymic));
             }
         }
-
-        ///// <summary>
-        ///// Дата рождения человека (подумать над временем суток)
-        ///// </summary>
-        //public DateTime BirthDate
-        //{
-        //    get => _birthDate;
-        //    set
-        //    {
-        //        _birthDate = value;
-        //        RaisePropertyChanged(nameof(BirthDate));
-        //    }
-        //}
 
         /// <summary>
         /// Страна рождения человека
@@ -160,19 +142,6 @@ namespace MemoRandom.Client.Common.Models
                 RaisePropertyChanged(nameof(DeathPlace));
             }
         }
-
-        ///// <summary>
-        ///// Путь к файлу изображения - все файлы хранятся в папке
-        ///// </summary>
-        //public string ImageFile
-        //{
-        //    get => _imageFile;
-        //    set
-        //    {
-        //        _imageFile = value;
-        //        RaisePropertyChanged(nameof(ImageFile));
-        //    }
-        //}
 
         /// <summary>
         /// Идентификатор причины смерти (берется из справочника)

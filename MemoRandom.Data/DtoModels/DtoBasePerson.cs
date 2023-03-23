@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MemoRandom.Data.DtoModels
 {
     [Serializable]
-    public abstract class DtoPerson
+    public abstract class DtoBasePerson
     {
         public Guid PersonId { get; set; }
         public DateTime BirthDate { get; set; }

@@ -130,7 +130,6 @@ namespace MemoRandom.Client.ViewModels
                     RaisePropertyChanged(nameof(SelectedHuman));
 
                     // Изменение изображения
-                    //var imageResult = _commonDataController.GetHumanImage(CommonDataController.CurrentHuman);
                     var imageResult = _commonDataController.GetPersonImage(CommonDataController.CurrentHuman.ImageFile);
                     if (imageResult != null)
                     {
@@ -445,7 +444,6 @@ namespace MemoRandom.Client.ViewModels
             PersonIndex = HumansCollection.IndexOf(CommonDataController.CurrentHuman);
             RaisePropertyChanged(nameof(PersonIndex));
 
-            //ImageSource = _commonDataController.GetHumanImage(CommonDataController.CurrentHuman);
             ImageSource = _commonDataController.GetPersonImage(CommonDataController.CurrentHuman.ImageFile);
             RaisePropertyChanged(nameof(ImageSource));
 
@@ -471,7 +469,6 @@ namespace MemoRandom.Client.ViewModels
             RaisePropertyChanged(nameof(PersonIndex));
             SetFullYearsText(CommonDataController.CurrentHuman);
 
-            //ImageSource = _commonDataController.GetHumanImage(CommonDataController.CurrentHuman);
             ImageSource = _commonDataController.GetPersonImage(CommonDataController.CurrentHuman.ImageFile);
             RaisePropertyChanged(nameof(ImageSource));
 
@@ -532,7 +529,6 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private void AdditionInfo()
         {
-            //_commonDataController.GetPersonImage<Human>(SelectedHuman, SelectedHuman.ImageFile);
             MessageBox.Show("Блок в разработке!", "Memo-Random!", MessageBoxButton.OK, MessageBoxImage.Hand);
         }
 
@@ -541,15 +537,15 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private void InitializeCommands()
         {
-            SettingsMenuCommand = new DelegateCommand(SettingsViewOpen);
-            AddHumanCommand = new DelegateCommand(AddHuman);
-            EditHumanDataCommand = new DelegateCommand(EditHumanData);
-            DeleteHumanCommand = new DelegateCommand(DeleteHuman);
-            StartAboutCommand = new DelegateCommand(OpenAboutView);
-            CategoriesCommand = new DelegateCommand(CategoriesOpen);
+            SettingsMenuCommand       = new DelegateCommand(SettingsViewOpen);
+            AddHumanCommand           = new DelegateCommand(AddHuman);
+            EditHumanDataCommand      = new DelegateCommand(EditHumanData);
+            DeleteHumanCommand        = new DelegateCommand(DeleteHuman);
+            StartAboutCommand         = new DelegateCommand(OpenAboutView);
+            CategoriesCommand         = new DelegateCommand(CategoriesOpen);
             ComparedHumansOpenCommand = new DelegateCommand(ComparedHumansOpen);
-            DynamicShowCommand = new DelegateCommand(DynamicShow);
-            ShowAdditionInfoCommand = new DelegateCommand(AdditionInfo);
+            DynamicShowCommand        = new DelegateCommand(DynamicShow);
+            ShowAdditionInfoCommand   = new DelegateCommand(AdditionInfo);
         }
 
         /// <summary>

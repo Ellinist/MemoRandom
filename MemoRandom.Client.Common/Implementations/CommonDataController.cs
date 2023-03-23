@@ -12,7 +12,6 @@ using NLog;
 using MemoRandom.Client.Common.Enums;
 using MemoRandom.Data.DtoModels;
 using System.Configuration;
-using System.Security.Cryptography;
 
 namespace MemoRandom.Client.Common.Implementations
 {

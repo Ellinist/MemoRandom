@@ -3,7 +3,6 @@ using MemoRandom.Client.Common.Interfaces;
 using MemoRandom.Client.Common.Models;
 using Prism.Commands;
 using Prism.Mvvm;
-using ScottPlot.Drawing.Colormaps;
 using System;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -107,12 +106,9 @@ namespace MemoRandom.Client.ViewModels
                 if (value == null) return;
                 _selectedHuman = value;
 
-                //ComparedHumanId = SelectedHuman.ComparedHumanId;
                 ComparedHumanId = SelectedHuman.PersonId;
                 ComparedHumanFullName = SelectedHuman.ComparedHumanFullName;
-                //ComparedHumanBirthDate = SelectedHuman.ComparedHumanBirthDate;
                 ComparedHumanBirthDate = SelectedHuman.BirthDate;
-                //SourceImageSource = (BitmapSource)_commonDataController.GetComparedHumanImage(SelectedHuman);
                 SourceImageSource = (BitmapSource)_commonDataController.GetPersonImage(SelectedHuman.ImageFile);
                 IsConsidered = SelectedHuman.IsComparedHumanConsidered;
                 RaisePropertyChanged(nameof(SelectedHuman));
@@ -310,9 +306,7 @@ namespace MemoRandom.Client.ViewModels
             {
                 #region Обновление выбранного для сравнения человека
                 SelectedHuman.ComparedHumanFullName     = ComparedHumanFullName;
-                //SelectedHuman.ComparedHumanBirthDate    = ComparedHumanBirthDate;
                 SelectedHuman.BirthDate = ComparedHumanBirthDate;
-                //SelectedHuman.ImageFile = TargetImageSource != null ? SelectedHuman.ComparedHumanId.ToString() + ".jpg" : string.Empty;
                 SelectedHuman.ImageFile = TargetImageSource != null ? SelectedHuman.PersonId.ToString() + ".jpg" : string.Empty;
                 SelectedHuman.IsComparedHumanConsidered = IsConsidered;
                 #endregion
@@ -329,10 +323,8 @@ namespace MemoRandom.Client.ViewModels
             {
                 ComparedHuman compHuman = new()
                 {
-                    //ComparedHumanId           = ComparedHumanId,
                     PersonId                  = ComparedHumanId,
                     ComparedHumanFullName     = ComparedHumanFullName,
-                    //ComparedHumanBirthDate    = ComparedHumanBirthDate,
                     BirthDate                 = ComparedHumanBirthDate,
                     ImageFile                 = TargetImageSource != null ? ComparedHumanId.ToString() + ".jpg" : string.Empty,
                     IsComparedHumanConsidered = IsConsidered
@@ -359,7 +351,6 @@ namespace MemoRandom.Client.ViewModels
         /// </summary>
         private void DeleteComparedHuman()
         {
-            //var result = _commonDataController.DeleteComparedHuman(SelectedHuman.ComparedHumanId);
             var result = _commonDataController.DeleteComparedHuman(SelectedHuman.PersonId);
             if (!result)
             {
@@ -382,7 +373,6 @@ namespace MemoRandom.Client.ViewModels
             ComparedHumansCollection = CommonDataController.ComparedHumansCollection;
             SelectedIndex = 0;
 
-            //SourceImageSource = (BitmapSource)_commonDataController.GetComparedHumanImage(CommonDataController.ComparedHumansCollection[0]); // Загружаем изображение
             SourceImageSource = (BitmapSource)_commonDataController.GetPersonImage(CommonDataController.ComparedHumansCollection[0].ImageFile); // Загружаем изображение
             RaisePropertyChanged(nameof(ComparedHumansCollection));
         }
