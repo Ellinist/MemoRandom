@@ -573,12 +573,12 @@
 
                                             <TextBlock Grid.Column="2"
                                                        Padding="5, 0, 5, 0"
-                                                       Text="{Binding EarliestYears}"
+                                                       Text="{Binding YoungestYears}"
                                                        HorizontalAlignment="Left"/>
 
                                             <TextBlock Grid.Column="3"
                                                        Padding="5, 0, 5, 0"
-                                                       Text="{Binding EarliestHuman}"
+                                                       Text="{Binding YoungestHuman}"
                                                        HorizontalAlignment="Center"/>
                                         </Grid>
 
