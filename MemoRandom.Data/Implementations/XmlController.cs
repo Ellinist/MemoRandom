@@ -305,8 +305,8 @@ namespace MemoRandom.Data.Implementations
                 if (element != null)
                 {
                     element.Element("name")!.Value         = comparedHuman.ComparedHumanFullName;
-                    element.Element("birthdate")!.Value = comparedHuman.BirthDate.ToString();
-                    element.Element("image")!.Value         = comparedHuman.ImageFile;
+                    element.Element("birthdate")!.Value    = comparedHuman.BirthDate.ToString();
+                    element.Element("image")!.Value        = comparedHuman.ImageFile;
                     element.Element("isconsidered")!.Value = comparedHuman.IsComparedHumanConsidered.ToString();
                 }
                 else
@@ -371,7 +371,7 @@ namespace MemoRandom.Data.Implementations
                 {
                     DtoHuman human = new DtoHuman()
                     {
-                        PersonId = Guid.Parse(hum.Attribute("id")!.Value),
+                        PersonId       = Guid.Parse(hum.Attribute("id")!.Value),
                         FirstName      = hum.Element("firstname")!.Value,
                         LastName       = hum.Element("lastname")!.Value,
                         Patronymic     = hum.Element("patronymic")!.Value,
@@ -427,7 +427,7 @@ namespace MemoRandom.Data.Implementations
                 else
                 {
                     XElement hum          = new XElement("Human");
-                    XAttribute id = new XAttribute("id", $"{human.PersonId}");
+                    XAttribute id         = new XAttribute("id", $"{human.PersonId}");
                     XElement firstname    = new XElement("firstname", $"{human.FirstName}");
                     XElement lastname     = new XElement("lastname", $"{human.LastName}");
                     XElement patronymic   = new XElement("patronymic", $"{human.Patronymic}");
