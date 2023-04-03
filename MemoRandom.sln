@@ -13,6 +13,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MemoRandom.Data", "MemoRand
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MemoRandom.Client.Common", "MemoRandom.Client.Common\MemoRandom.Client.Common.csproj", "{35BF9323-1E9C-49EA-A497-E46F0A2E37E4}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MemoRandom.Tests", "MemoRandom.Tests", "{5DE21AED-63EA-49CE-8EB1-5484C2930E16}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MemoRandom.UnitTests", "MemoRandom.UnitTests\MemoRandom.UnitTests.csproj", "{2B3EC641-1DAC-4C3A-AE0B-9E1782C307B0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +35,10 @@ Global
 		{35BF9323-1E9C-49EA-A497-E46F0A2E37E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{35BF9323-1E9C-49EA-A497-E46F0A2E37E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{35BF9323-1E9C-49EA-A497-E46F0A2E37E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B3EC641-1DAC-4C3A-AE0B-9E1782C307B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B3EC641-1DAC-4C3A-AE0B-9E1782C307B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B3EC641-1DAC-4C3A-AE0B-9E1782C307B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B3EC641-1DAC-4C3A-AE0B-9E1782C307B0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -39,6 +47,7 @@ Global
 		{9CB1BA23-B861-4B8C-8AE7-BCC97B157047} = {D0D5D93B-C063-4597-A5EB-D34749E900DB}
 		{A8E8510E-DE1D-40A9-8804-883F1A1758EE} = {0BDFDDC8-D12A-4B32-BD73-CAE1B2B1BB48}
 		{35BF9323-1E9C-49EA-A497-E46F0A2E37E4} = {D0D5D93B-C063-4597-A5EB-D34749E900DB}
+		{2B3EC641-1DAC-4C3A-AE0B-9E1782C307B0} = {5DE21AED-63EA-49CE-8EB1-5484C2930E16}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {26CC3868-A993-43FE-A18C-1AB1D34A9B1C}

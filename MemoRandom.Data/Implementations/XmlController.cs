@@ -18,7 +18,7 @@ namespace MemoRandom.Data.Implementations
         /// </summary>
         /// <param name="filePath"></param>
         /// <returns></returns>
-        public List<DtoReason> ReadReasonsFromFile(string filePath)
+        List<DtoReason> IXmlController.ReadReasonsFromFile(string filePath)
         {
             List<DtoReason> reasons = new(); // Создание списка DTO данных по причинам смерти
             var xmlReasons = XDocument.Load(filePath); // Чтение из файла
@@ -52,7 +52,7 @@ namespace MemoRandom.Data.Implementations
         /// </summary>
         /// <param name="reasons"></param>
         /// <param name="filePath"></param>
-        public void SaveReasonsToFile(List<DtoReason> reasons, string filePath)
+        void IXmlController.SaveReasonsToFile(List<DtoReason> reasons, string filePath)
         {
             XDocument xmlReasons = new(); // Создаем новый документ
             XElement root = new("Reasons"); // Корневой элемент причин смерти
@@ -90,7 +90,7 @@ namespace MemoRandom.Data.Implementations
         /// <param name="reason"></param>
         /// <param name="filePath"></param>
         /// <returns></returns>
-        public void AddReasonToList(DtoReason reason, string filePath)
+        void IXmlController.AddReasonToList(DtoReason reason, string filePath)
         {
             var xmlReasons = XDocument.Load(filePath);
             var root = xmlReasons.Element("Reasons");
@@ -119,7 +119,7 @@ namespace MemoRandom.Data.Implementations
         /// </summary>
         /// <param name="rsn"></param>
         /// <param name="filePath"></param>
-        public void ChangeReasonInFile(DtoReason rsn, string filePath)
+        void IXmlController.ChangeReasonInFile(DtoReason rsn, string filePath)
         {
             var xmlReasons = XDocument.Load(filePath);
             var root = xmlReasons.Element("Reasons");
@@ -143,7 +143,7 @@ namespace MemoRandom.Data.Implementations
         /// </summary>
         /// <param name="id"></param>
         /// <param name="filePath"></param>
-        public void DeleteReasonInFile(string id, string filePath)
+        void IXmlController.DeleteReasonInFile(string id, string filePath)
         {
             var xmlReasons = XDocument.Load(filePath);
             var root = xmlReasons.Element("Reasons");
