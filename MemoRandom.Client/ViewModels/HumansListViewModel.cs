@@ -483,7 +483,7 @@ namespace MemoRandom.Client.ViewModels
         }
 
         /// <summary>
-        /// Вызов окна реадктирования выбранного человека двойным щелчком по записи
+        /// Вызов окна редактирования выбранного человека двойным щелчком по записи
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
