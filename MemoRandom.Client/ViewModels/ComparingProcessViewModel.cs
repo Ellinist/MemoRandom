@@ -30,7 +30,6 @@ namespace MemoRandom.Client.ViewModels
         private readonly CancellationTokenSource _cancelTokenSource = new CancellationTokenSource();
         private readonly CancellationToken _token; // Токен для остановки потока
         private readonly Dispatcher _progressDispatcher;
-        private object locker = new object();
 
         private string _comparingTitle = "Кого мы пережили и... как много еще предстоит сделать!";
         #endregion
@@ -113,71 +112,65 @@ namespace MemoRandom.Client.ViewModels
             var nextActor = orderedList.FirstOrDefault(x => x.DaysLived > startSpan.TotalDays); // Не пережитый
 
             #region Начальный вывод картинок и данных, если они должны быть
-            lock (locker)
+            _progressDispatcher.Invoke(() =>
             {
-                _progressDispatcher.Invoke(() =>
+                if (previousActor != null) // Если пережитый игрок существует - отображаем его картинку
                 {
-                    if (previousActor != null) // Если пережитый игрок существует - отображаем его картинку
-                    {
-                        var previousReason = CommonDataController.PlainReasonsList.FirstOrDefault(x => x.ReasonId == previousActor.DeathReasonId);
-                        progressData.PreviousImage = _commonDataController.GetPersonImage(previousActor.ImageFile);
+                    var previousReason = CommonDataController.PlainReasonsList.FirstOrDefault(x => x.ReasonId == previousActor.DeathReasonId);
+                    progressData.PreviousImage = _commonDataController.GetPersonImage(previousActor.ImageFile);
 
-                        // Отображение данных пережитого игрока, изменяемых только при смене игроков
-                        ShowPreviousData(progressData, previousActor, previousReason);
-                    }
+                    // Отображение данных пережитого игрока, изменяемых только при смене игроков
+                    ShowPreviousData(progressData, previousActor, previousReason);
+                }
 
-                    if (nextActor != null)
-                    {
-                        var nextReason = CommonDataController.PlainReasonsList.FirstOrDefault(x => x.ReasonId == nextActor.DeathReasonId);
-                        progressData.NextImage = _commonDataController.GetPersonImage(nextActor.ImageFile); // Загружаем картинку еще не пережитого игрока
+                if (nextActor != null)
+                {
+                    var nextReason = CommonDataController.PlainReasonsList.FirstOrDefault(x => x.ReasonId == nextActor.DeathReasonId);
+                    progressData.NextImage = _commonDataController.GetPersonImage(nextActor.ImageFile); // Загружаем картинку еще не пережитого игрока
 
-                        // Отображение данных еще не пережитого игрока, изменяемых только при смене игроков
-                        ShowNextData(progressData, nextActor, nextReason);
-                    }
-                });
-            }
+                    // Отображение данных еще не пережитого игрока, изменяемых только при смене игроков
+                    ShowNextData(progressData, nextActor, nextReason);
+                }
+            });
             #endregion
 
             // Запускаем основной цикл отображения изменяющихся данных (зависят от текущего времени)
             while (!_token.IsCancellationRequested) // Пока команда для остановки потока не придет, выполняем работу потока
             {
-                lock (locker)
+                // Весь бесконечный цикл проходим в потоке UI
+                _progressDispatcher.Invoke(() =>
                 {
-                    // Весь бесконечный цикл проходим в потоке UI
-                    _progressDispatcher.Invoke(() =>
+                    // В метод надо пробрасывать только необходимые аргументы
+                    MainProcess(progressData, human, DateTime.Now, previousActor, nextActor);
+
+                    var currentTimeLap = DateTime.Now.Subtract(human.BirthDate); // Вычисление разрыва между рождением и текущим временем
+                    if (currentTimeLap > (nextActor.DeathDate.Subtract(nextActor.BirthDate)))
                     {
-                        // В метод надо пробрасывать только необходимые аргументы
-                        MainProcess(progressData, human, DateTime.Now, previousActor, nextActor);
-
-                        var currentTimeLap = DateTime.Now.Subtract(human.BirthDate); // Вычисление разрыва между рождением и текущим временем
-                        if (currentTimeLap > (nextActor.DeathDate.Subtract(nextActor.BirthDate)))
+                        // Сдвигаем игроков влево
+                        // ВНИМАНИЕ! Здесь поставить проверку, а вдруг следующего игрока нет! Обана!
+                        previousActor = nextActor; // Предыдущий игрок становится следующим
+                        var prevReason = CommonDataController.PlainReasonsList.FirstOrDefault(x => x.ReasonId == previousActor.DeathReasonId);
+                        nextActor = orderedList.FirstOrDefault(x => x.DaysLived > currentTimeLap.TotalDays); // А следующий - вычисляется
+                        var nReason = CommonDataController.PlainReasonsList.FirstOrDefault(x => x.ReasonId == nextActor.DeathReasonId);
+                        // И меняем картинки
+                        progressData.PreviousImage = _commonDataController.GetPersonImage(previousActor.ImageFile); // Загружаем картинку пережитого игрока
+                        if (nextActor != null)
                         {
-                            // Сдвигаем игроков влево
-                            // ВНИМАНИЕ! Здесь поставить проверку, а вдруг следующего игрока нет! Обана!
-                            previousActor = nextActor; // Предыдущий игрок становится следующим
-                            var prevReason = CommonDataController.PlainReasonsList.FirstOrDefault(x => x.ReasonId == previousActor.DeathReasonId);
-                            nextActor = orderedList.FirstOrDefault(x => x.DaysLived > currentTimeLap.TotalDays); // А следующий - вычисляется
-                            var nReason = CommonDataController.PlainReasonsList.FirstOrDefault(x => x.ReasonId == nextActor.DeathReasonId);
-                            // И меняем картинки
-                            progressData.PreviousImage = _commonDataController.GetPersonImage(previousActor.ImageFile); // Загружаем картинку пережитого игрока
-                            if (nextActor != null)
-                            {
-                                progressData.NextImage = _commonDataController.GetPersonImage(nextActor.ImageFile); // Загружаем картинку еще не пережитого игрока
+                            progressData.NextImage = _commonDataController.GetPersonImage(nextActor.ImageFile); // Загружаем картинку еще не пережитого игрока
 
-                                // Отображение данных, изменяемых только при смене игроков
-                                ShowPreviousData(progressData, previousActor, prevReason);
-                                ShowNextData(progressData, nextActor, nReason);
-                            }
-                            else
-                            {
-                                progressData.NextImage = null; // Если следующий игрок не найден - картинка обнуляется
-
-                                //TODO обнулить данные для следующего игрока - его просто нет
-                                ShowNextNullData(progressData);
-                            }
+                            // Отображение данных, изменяемых только при смене игроков
+                            ShowPreviousData(progressData, previousActor, prevReason);
+                            ShowNextData(progressData, nextActor, nReason);
                         }
-                    });
-                }
+                        else
+                        {
+                            progressData.NextImage = null; // Если следующий игрок не найден - картинка обнуляется
+
+                            //TODO обнулить данные для следующего игрока - его просто нет
+                            ShowNextNullData(progressData);
+                        }
+                    }
+                });
 
                 Thread.Sleep(250); // Остановка потока для уменьшения нагрузки на программу
             }
