@@ -11,17 +11,245 @@
         MinWidth="1800"
         WindowStartupLocation="CenterScreen"
         WindowState="Maximized">
-    
-    
-    
+
     <Grid>
         <ScrollViewer HorizontalScrollBarVisibility="Disabled"
                       VerticalScrollBarVisibility="Auto">
-            <StackPanel x:Name="ProgressStackPanel"
-                    Orientation="Vertical"
-                    HorizontalAlignment="Stretch">
+            <ItemsControl ItemsSource="{Binding ProgressCollection}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Vertical"
+                                    HorizontalAlignment="Stretch"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
 
-            </StackPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+
+                                <!--Левое изображение (пройденный этап)-->
+                                <ColumnDefinition MinWidth="225" MaxWidth="225"/>
+
+                                <!--Прогресс-индикатор-->
+                                <ColumnDefinition Width="*"/>
+
+                                <!--Правое изображение (этап по плану)-->
+                                <ColumnDefinition MinWidth="225" MaxWidth="225"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!--Изображение прошедшее-->
+                            <Image Grid.Column="0"
+                                   Margin="5, 3, 3, 3"
+                                   Source="{Binding PreviousImage}"/>
+
+                            <!--Прогресс-индикатор-->
+                            <ProgressBar Grid.Column="1"
+                                         Margin="2, 3, 2, 3"
+                                         Minimum="{Binding StartValue}"
+                                         Maximum="{Binding StopValue}"
+                                         Value="{Binding CurrentValue}"
+                                         IsIndeterminate="false"
+                                         Background="Chocolate"/>
+
+                            <Image Grid.Column="2"
+                                   Margin="3, 3, 5, 3"
+                                   Source="{Binding NextImage}"/>
+
+                            <Grid Grid.Column="1" Margin="2, 3, 2, 3">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="40"/>
+                                    <ColumnDefinition Width="2.7*"/>
+                                    <ColumnDefinition Width="20"/>
+                                    <ColumnDefinition Width="2.5*"/>
+                                    <ColumnDefinition Width="20"/>
+                                    <ColumnDefinition Width="2.7*"/>
+                                    <ColumnDefinition Width="40"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="10"/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition Height="2"/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition Height="10"/>
+                                </Grid.RowDefinitions>
+
+                                <!--Горизонтальный разделитель смысловых блоков-->
+                                <Border Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3"
+                                        Margin="20, 0, 20, 0"
+                                        BorderBrush="Black"
+                                        BorderThickness="2"/>
+
+                                <!--Горизонтальный разделитель смысловых блоков-->
+                                <Border Grid.Row="5" Grid.Column="4" Grid.ColumnSpan="3"
+                                        Margin="20, 0, 20, 0"
+                                        BorderBrush="Black"
+                                        BorderThickness="2"/>
+
+                                <!--Левый столбец данных-->
+                                <!--ФИО пережитого человека-->
+                                <TextBlock Grid.Row="1" Grid.Column="1"
+                                           Padding="0"
+                                           Text="{Binding PreviousHumanName}"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Left"
+                                           Foreground="Aquamarine"
+                                           FontSize="22"
+                                           FontWeight="Bold"/>
+
+                                <!--Дата рождения пережитого человека-->
+                                <TextBlock Grid.Row="2" Grid.Column="1"
+                                           Text="{Binding PreviousHumanBirthDate}"
+                                           HorizontalAlignment="Left"
+                                           VerticalAlignment="Center"
+                                           Foreground="White"
+                                           FontSize="15"
+                                           FontWeight="Bold"/>
+
+                                <!--Дата смерти пережитого человека-->
+                                <TextBlock Grid.Row="3" Grid.Column="1"
+                                           Text="{Binding PreviousHumanDeathDate}"
+                                           HorizontalAlignment="Left"
+                                           VerticalAlignment="Center"
+                                           Foreground="White"
+                                           FontSize="15"
+                                           FontWeight="Bold"/>
+
+                                <!--Число полных прожитых лет пережитого человека-->
+                                <TextBlock Grid.Row="4" Grid.Column="1"
+                                           Text="{Binding PreviousHumanFullYears}"
+                                           HorizontalAlignment="Left"
+                                           VerticalAlignment="Center"
+                                           Foreground="White"
+                                           FontSize="15"
+                                           FontWeight="Bold"/>
+
+                                <!--Когда (дата) анализируемый человек пережил предыдущего-->
+                                <TextBlock Grid.Row="6" Grid.Column="1"
+                                           Text="{Binding PreviousHumanOverLifeDate}"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Left"
+                                           Foreground="Aqua"
+                                           FontStyle="Italic"
+                                           FontSize="15"
+                                           FontWeight="Bold"/>
+
+                                <!--Сколько прошло после пережитого игрока (в днях)-->
+                                <TextBlock Grid.Row="7" Grid.Column="1"
+                                           Text="{Binding SpentDaysFromPreviousHuman}"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Left"
+                                           Foreground="Yellow"
+                                           FontSize="15"
+                                           FontWeight="Bold"/>
+
+
+
+
+
+
+
+                                <!--Средний столбец данных-->
+                                <!--ФИО текущего анализируемого человека для сравнения-->
+                                <TextBlock Grid.Row="1" Grid.Column="3"
+                                           Text="{Binding CurrentHumanFullName}"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Center"
+                                           Foreground="White"
+                                           FontSize="22"
+                                           FontWeight="Bold"/>
+
+                                <!--Детали текущего анализируемого человека-->
+                                <TextBlock Grid.Row="2" Grid.Column="3"
+                                           Text="{Binding CurrentHumanBirthDate}"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Center"
+                                           Foreground="White"
+                                           FontSize="18"
+                                           FontWeight="Bold"/>
+
+                                <!--Сколько прожил анализируемый человек-->
+                                <TextBlock Grid.Row="3" Grid.Column="3"
+                                           Text="{Binding CurrentHumanLivedPeriod}"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Center"
+                                           Foreground="Yellow"
+                                           FontSize="16"
+                                           FontWeight="Bold"/>
+
+
+
+
+
+
+
+                                <!--Правый столбец данных-->
+                                <!--ФИО человека, еще не пережитого-->
+                                <TextBlock Grid.Row="1" Grid.Column="5"
+                                           Padding="0"
+                                           Text="{Binding NextHumanName}"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Right"
+                                           Foreground="Aquamarine"
+                                           FontSize="22"
+                                           FontWeight="Bold"/>
+
+                                <!--Дата рождения еще не пережитого человека-->
+                                <TextBlock Grid.Row="2" Grid.Column="5"
+                                           Text="{Binding NextHumanBirthDate}"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Right"
+                                           Foreground="White"
+                                           FontSize="15"
+                                           FontWeight="Bold"/>
+
+                                <!--Дата смерти еще не пережитого человека-->
+                                <TextBlock Grid.Row="3" Grid.Column="5"
+                                           Text="{Binding NextHumanDeathDate}"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Right"
+                                           Foreground="White"
+                                           FontSize="15"
+                                           FontWeight="Bold"/>
+
+                                <!--Число полных прожитых лет еще не пережитого человека-->
+                                <TextBlock Grid.Row="4" Grid.Column="5"
+                                           Text="{Binding NextHumanFullYears}"
+                                           HorizontalAlignment="Right"
+                                           VerticalAlignment="Center"
+                                           Foreground="White"
+                                           FontSize="15"
+                                           FontWeight="Bold"/>
+
+                                <!--Когда (дата) анализируемый человек переживет следующего-->
+                                <TextBlock Grid.Row="6" Grid.Column="5"
+                                           Text="{Binding NextHumanOverLifeDate}"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Right"
+                                           Foreground="Aqua"
+                                           FontStyle="Italic"
+                                           FontSize="15"
+                                           FontWeight="Bold"/>
+
+                                <!--Сколько прошло после пережитого игрока (в днях)-->
+                                <TextBlock Grid.Row="7" Grid.Column="5"
+                                           Text="{Binding RestDaysToNextHuman}"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Right"
+                                           Foreground="Yellow"
+                                           FontSize="15"
+                                           FontWeight="Bold"/>
+
+                            </Grid>
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
         </ScrollViewer>
     </Grid>
 </mah:MetroWindow>

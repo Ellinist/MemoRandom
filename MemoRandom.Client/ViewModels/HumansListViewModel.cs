@@ -17,7 +17,6 @@ using MemoRandom.Client.Common.Interfaces;
 using MemoRandom.Client.Common.Enums;
 using ScottPlot;
 using ScottPlot.Statistics;
-using Microsoft.EntityFrameworkCore;
 
 namespace MemoRandom.Client.ViewModels
 {
