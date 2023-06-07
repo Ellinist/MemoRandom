@@ -275,9 +275,9 @@ namespace MemoRandom.Data.Implementations
                 {
                     DtoComparedHuman ch = new()
                     {
-                        PersonId = Guid.Parse(comparedHuman.Attribute("id")!.Value),
+                        PersonId                  = Guid.Parse(comparedHuman.Attribute("id")!.Value),
                         ComparedHumanFullName     = comparedHuman.Element("name")!.Value,
-                        BirthDate = DateTime.Parse(comparedHuman.Element("birthdate")!.Value),
+                        BirthDate                 = DateTime.Parse(comparedHuman.Element("birthdate")!.Value),
                         ImageFile                 = comparedHuman.Element("image")!.Value,
                         IsComparedHumanConsidered = bool.Parse(comparedHuman.Element("isconsidered")!.Value)
                     };
