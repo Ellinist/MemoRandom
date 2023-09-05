@@ -451,6 +451,9 @@ namespace MemoRandom.Client.ViewModels
             if (currentReason != null)
             {
                 HumanDeathReasonName = currentReason.ReasonName;
+                HumansCollection.FirstOrDefault(x => x.PersonId == CommonDataController.CurrentHuman.PersonId)
+                    .HumanDeathReasonName = currentReason.ReasonName;
+                RaisePropertyChanged(nameof(HumansCollection));
                 RaisePropertyChanged(nameof(HumanDeathReasonName));
             }
             CalculateAnalytics();
@@ -476,6 +479,9 @@ namespace MemoRandom.Client.ViewModels
             if (currentReason != null)
             {
                 HumanDeathReasonName = currentReason.ReasonName;
+                HumansCollection.FirstOrDefault(x => x.PersonId == CommonDataController.CurrentHuman.PersonId)
+                    .HumanDeathReasonName = currentReason.ReasonName;
+                RaisePropertyChanged(nameof(HumansCollection));
                 RaisePropertyChanged(nameof(HumanDeathReasonName));
             }
             CalculateAnalytics();
@@ -567,7 +573,7 @@ namespace MemoRandom.Client.ViewModels
                 MessageBox.Show("Список людей пуст!", "Memo-Random!", MessageBoxButton.OK, MessageBoxImage.Stop);
                 return;
             }
-            _container.Resolve<ComparingProcessView>().ShowDialog(); // Отображение, если есть
+            _container.Resolve<ComparingProcessView>().Show(); // Отображение, если есть
         }
 
         /// <summary>
