@@ -38,7 +38,6 @@ namespace MemoRandom.Client.ViewModels
         private Human _selectedHuman;
         private BitmapSource _imageSource;
         private string _displayedYears = "";
-        private string _humanDeathReasonName;
         private readonly StringBuilder _yearsText = new();
         private string _sortMember;
         private string _sortDirection;
@@ -158,19 +157,6 @@ namespace MemoRandom.Client.ViewModels
             {
                 _displayedYears = value;
                 RaisePropertyChanged(nameof(DisplayedYears));
-            }
-        }
-
-        /// <summary>
-        /// Название причины смерти
-        /// </summary>
-        public string HumanDeathReasonName
-        {
-            get => _humanDeathReasonName;
-            set
-            {
-                _humanDeathReasonName = value;
-                RaisePropertyChanged(nameof(HumanDeathReasonName));
             }
         }
 
@@ -450,11 +436,9 @@ namespace MemoRandom.Client.ViewModels
             var currentReason = PlainReasonsList.FirstOrDefault(x => x.ReasonId == SelectedHuman.DeathReasonId);
             if (currentReason != null)
             {
-                HumanDeathReasonName = currentReason.ReasonName;
                 HumansCollection.FirstOrDefault(x => x.PersonId == CommonDataController.CurrentHuman.PersonId)
                     .HumanDeathReasonName = currentReason.ReasonName;
                 RaisePropertyChanged(nameof(HumansCollection));
-                RaisePropertyChanged(nameof(HumanDeathReasonName));
             }
             CalculateAnalytics();
         }
@@ -478,11 +462,9 @@ namespace MemoRandom.Client.ViewModels
             var currentReason = PlainReasonsList.FirstOrDefault(x => x.ReasonId == SelectedHuman.DeathReasonId);
             if (currentReason != null)
             {
-                HumanDeathReasonName = currentReason.ReasonName;
                 HumansCollection.FirstOrDefault(x => x.PersonId == CommonDataController.CurrentHuman.PersonId)
                     .HumanDeathReasonName = currentReason.ReasonName;
                 RaisePropertyChanged(nameof(HumansCollection));
-                RaisePropertyChanged(nameof(HumanDeathReasonName));
             }
             CalculateAnalytics();
         }
