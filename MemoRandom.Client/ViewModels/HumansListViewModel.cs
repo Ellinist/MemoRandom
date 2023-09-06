@@ -433,13 +433,6 @@ namespace MemoRandom.Client.ViewModels
             ImageSource = _commonDataController.GetPersonImage(CommonDataController.CurrentHuman.ImageFile);
             RaisePropertyChanged(nameof(ImageSource));
 
-            var currentReason = PlainReasonsList.FirstOrDefault(x => x.ReasonId == SelectedHuman.DeathReasonId);
-            if (currentReason != null)
-            {
-                HumansCollection.FirstOrDefault(x => x.PersonId == CommonDataController.CurrentHuman.PersonId)
-                    .HumanDeathReasonName = currentReason.ReasonName;
-                RaisePropertyChanged(nameof(HumansCollection));
-            }
             CalculateAnalytics();
         }
 
@@ -459,13 +452,6 @@ namespace MemoRandom.Client.ViewModels
             ImageSource = _commonDataController.GetPersonImage(CommonDataController.CurrentHuman.ImageFile);
             RaisePropertyChanged(nameof(ImageSource));
 
-            var currentReason = PlainReasonsList.FirstOrDefault(x => x.ReasonId == SelectedHuman.DeathReasonId);
-            if (currentReason != null)
-            {
-                HumansCollection.FirstOrDefault(x => x.PersonId == CommonDataController.CurrentHuman.PersonId)
-                    .HumanDeathReasonName = currentReason.ReasonName;
-                RaisePropertyChanged(nameof(HumansCollection));
-            }
             CalculateAnalytics();
         }
 

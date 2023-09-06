@@ -178,8 +178,6 @@
 
                                     <DataGrid.CellStyle>
                                         <Style TargetType="DataGridCell">
-                                            <!--<Setter Property="Foreground" Value="Black"/>-->
-
                                             <Style.Triggers>
                                                 <Trigger Property="IsSelected" Value="True">
                                                     <Setter Property="Background" Value="Blue"/>
@@ -216,7 +214,7 @@
                                         <DataGridTextColumn Header="Причина смерти"
                                                             IsReadOnly="True"
                                                             Width="150"
-                                                            Binding="{Binding Path=HumanDeathReasonName}"/>
+                                                            Binding="{Binding Converter={StaticResource ReasonNameConverter}}"/>
                                         <DataGridTextColumn Header="Страна смерти"
                                                             IsReadOnly="True"
                                                             Binding="{Binding Path=DeathCountry}"/>
@@ -292,7 +290,7 @@
                                 </StackPanel>
 
                                 <!--Число полных прожитых лет-->
-                                <DockPanel Grid.Column="1" Grid.Row="2">
+                                <DockPanel Grid.Row="2">
                                     <Label DockPanel.Dock="Top"
                                            Content="{Binding Path=DisplayedYears}"
                                            HorizontalAlignment="Center"
@@ -361,7 +359,7 @@
                                            FontSize="20"/>
                                     <Label Grid.Column="1"
                                            
-                                           Content="{Binding Path=HumanDeathReasonName}"
+                                           Content="{Binding Converter={StaticResource ReasonNameConverter}}"
                                            HorizontalAlignment="Left"
                                            FontSize="20"/>
                                 </Grid>

@@ -176,11 +176,11 @@ namespace MemoRandom.Client.Common.Implementations
 
                 var humansResult = _xmlController.ReadHumansFromFile(_humansFilePath).OrderBy(x => x.DaysLived).ToList();
                 HumansList = _mapper.Map<List<DtoHuman>, ObservableCollection<Human>>(humansResult);
-                foreach (var human in HumansList)
-                {
-                    var res = PlainReasonsList.FirstOrDefault(x => x.ReasonId == human.DeathReasonId);
-                    human.HumanDeathReasonName = (res != null) ? res.ReasonName : string.Empty;
-                }
+                //foreach (var human in HumansList)
+                //{
+                //    var res = PlainReasonsList.FirstOrDefault(x => x.ReasonId == human.DeathReasonId);
+                //    human.HumanDeathReasonName = (res != null) ? res.ReasonName : string.Empty;
+                //}
                 #endregion
             }
             catch (Exception ex)
