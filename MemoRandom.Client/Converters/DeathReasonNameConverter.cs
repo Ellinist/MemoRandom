@@ -16,6 +16,8 @@ namespace MemoRandom.Client.Converters
 
             var id = (value as Human).DeathReasonId;
             var reason = CommonDataController.PlainReasonsList.FirstOrDefault(x => x.ReasonId == id);
+            if (reason == null) return string.Empty;
+
             var result = reason.ReasonName;
 
             return result;
