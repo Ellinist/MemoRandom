@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Data;
@@ -14,7 +13,7 @@ namespace MemoRandom.Client.Converters
         {
             if (value == null) return string.Empty;
 
-            var id = (value as Human).DeathReasonId;
+            var id = ((Human)value).DeathReasonId;
             var reason = CommonDataController.PlainReasonsList.FirstOrDefault(x => x.ReasonId == id);
             if(reason == null) return string.Empty;
             var result = reason.ReasonName;
