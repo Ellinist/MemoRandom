@@ -369,25 +369,56 @@ namespace MemoRandom.Data.Implementations
             {
                 foreach (XElement hum in root.Elements("Human"))
                 {
-                    DtoHuman human = new DtoHuman()
+                    try
                     {
-                        PersonId       = Guid.Parse(hum.Attribute("id")!.Value),
-                        FirstName      = hum.Element("firstname")!.Value,
-                        LastName       = hum.Element("lastname")!.Value,
-                        Patronymic     = hum.Element("patronymic")!.Value,
-                        BirthDate      = DateTime.Parse(hum.Element("birthdate")!.Value),
-                        BirthCountry   = hum.Element("birthcountry")!.Value,
-                        BirthPlace     = hum.Element("birthplace")!.Value,
-                        DeathDate      = DateTime.Parse(hum.Element("deathdate")!.Value),
-                        DeathCountry   = hum.Element("deathcountry")!.Value,
-                        DeathPlace     = hum.Element("deathplace")!.Value,
-                        ImageFile      = hum.Element("image")!.Value,
-                        DeathReasonId  = Guid.Parse(hum.Element("deathreason")!.Value),
-                        HumanComments  = hum.Element("comments")!.Value,
-                        DaysLived      = double.Parse(hum.Element("dayslived")!.Value),
-                        FullYearsLived = int.Parse(hum.Element("fullyears")!.Value)
-                    };
-                    humans.Add(human);
+                        DtoHuman human = new DtoHuman()
+                        {
+                            PersonId = Guid.Parse(hum.Attribute("id")!.Value),
+                            FirstName = hum.Element("firstname")!.Value,
+                            LastName = hum.Element("lastname")!.Value,
+                            Patronymic = hum.Element("patronymic")!.Value,
+                            BirthDate = DateTime.Parse(hum.Element("birthdate")!.Value),
+                            BirthCountry = hum.Element("birthcountry")!.Value,
+                            BirthPlace = hum.Element("birthplace")!.Value,
+                            DeathDate = DateTime.Parse(hum.Element("deathdate")!.Value),
+                            DeathCountry = hum.Element("deathcountry")!.Value,
+                            DeathPlace = hum.Element("deathplace")!.Value,
+                            ImageFile = hum.Element("image")!.Value,
+                            DeathReasonId = Guid.Parse(hum.Element("deathreason")!.Value),
+                            HumanComments = hum.Element("comments")!.Value,
+                            DaysLived = double.Parse(hum.Element("dayslived")!.Value),
+                            FullYearsLived = int.Parse(hum.Element("fullyears")!.Value),
+
+                            HumanSex = hum.Element("humansex")!.Value
+                        };
+
+                        humans.Add(human);
+                    }
+                    catch
+                    {
+                        DtoHuman human = new DtoHuman()
+                        {
+                            PersonId = Guid.Parse(hum.Attribute("id")!.Value),
+                            FirstName = hum.Element("firstname")!.Value,
+                            LastName = hum.Element("lastname")!.Value,
+                            Patronymic = hum.Element("patronymic")!.Value,
+                            BirthDate = DateTime.Parse(hum.Element("birthdate")!.Value),
+                            BirthCountry = hum.Element("birthcountry")!.Value,
+                            BirthPlace = hum.Element("birthplace")!.Value,
+                            DeathDate = DateTime.Parse(hum.Element("deathdate")!.Value),
+                            DeathCountry = hum.Element("deathcountry")!.Value,
+                            DeathPlace = hum.Element("deathplace")!.Value,
+                            ImageFile = hum.Element("image")!.Value,
+                            DeathReasonId = Guid.Parse(hum.Element("deathreason")!.Value),
+                            HumanComments = hum.Element("comments")!.Value,
+                            DaysLived = double.Parse(hum.Element("dayslived")!.Value),
+                            FullYearsLived = int.Parse(hum.Element("fullyears")!.Value),
+
+                            HumanSex = "Male"
+                        };
+
+                        humans.Add(human);
+                    }
                 }
             }
 
@@ -423,6 +454,16 @@ namespace MemoRandom.Data.Implementations
                     element.Element("comments")!.Value     = human.HumanComments;
                     element.Element("dayslived")!.Value    = human.DaysLived.ToString();
                     element.Element("fullyears")!.Value    = human.FullYearsLived.ToString();
+
+                    try
+                    {
+                        element.Element("humansex")!.Value = human.HumanSex.ToString();
+                    }
+                    catch
+                    {
+                        XElement humansex = new XElement("humansex", $"{human.HumanSex}");
+                        element.Add(humansex);
+                    }
                 }
                 else
                 {
@@ -442,6 +483,7 @@ namespace MemoRandom.Data.Implementations
                     XElement comments     = new XElement("comments", $"{human.HumanComments}");
                     XElement dayslived    = new XElement("dayslived", $"{human.DaysLived}");
                     XElement fullyears    = new XElement("fullyears", $"{human.FullYearsLived}");
+                    XElement humansex     = new XElement("humansex", $"{human.HumanSex}");
 
                     hum.Add(id);
                     hum.Add(firstname);
@@ -458,6 +500,8 @@ namespace MemoRandom.Data.Implementations
                     hum.Add(comments);
                     hum.Add(dayslived);
                     hum.Add(fullyears);
+
+                    hum.Add(humansex);
 
                     root.Add(hum);
                 }

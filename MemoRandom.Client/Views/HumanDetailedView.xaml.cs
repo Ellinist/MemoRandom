@@ -1,5 +1,7 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using MahApps.Metro.Controls;
+using MemoRandom.Client.Common.Enums;
 using MemoRandom.Client.ViewModels;
 
 namespace MemoRandom.Client.Views
@@ -39,6 +41,8 @@ namespace MemoRandom.Client.Views
             SourceCanvas.MouseWheel += vm.SourceCanvas_MouseWheel;
 
             DataContext = vm;
+
+            HumanSexCombo.ItemsSource = Enum.GetValues(typeof(SexEnum));
         }
         #endregion
     }

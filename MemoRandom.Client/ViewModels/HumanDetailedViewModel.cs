@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using MemoRandom.Client.Common.Enums;
 using MemoRandom.Client.Common.Implementations;
 using MemoRandom.Client.Common.Interfaces;
 using MemoRandom.Client.Common.Models;
@@ -49,6 +50,7 @@ namespace MemoRandom.Client.ViewModels
         private string _humanComments;
         private int _daysLived;
         private double _fullYearsLived;
+        private SexEnum _humanSex;
         private string _humanDeathReasonName;
         private bool _openComboState = false; // По умолчанию комбобокс свернут
         private double _left   = 0; // Левый верхний угол изображения на канве (координата X)
@@ -188,6 +190,19 @@ namespace MemoRandom.Client.ViewModels
             set
             {
                 _deathPlace = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Пол человека
+        /// </summary>
+        public SexEnum HumanSex
+        {
+            get => _humanSex;
+            set
+            {
+                _humanSex = value;
                 RaisePropertyChanged();
             }
         }
@@ -545,6 +560,8 @@ namespace MemoRandom.Client.ViewModels
 
                 (int years, int days) = _commonDataController.GetYearsAndDaysConsideredLeaps(BirthDate, DeathDate);
                 FullYearsLived = years;
+
+                HumanSex = human.HumanSex;
             }
             else // Создание нового человека
             {
@@ -559,6 +576,8 @@ namespace MemoRandom.Client.ViewModels
                 DeathCountry  = "Введите страну смерти";
                 DeathPlace    = "Введите место смерти";
                 HumanComments = "Введите краткое описание";
+
+                HumanSex = SexEnum.Male;
             }
             ReasonsList      = CommonDataController.ReasonsCollection;
             PlainReasonsList = CommonDataController.PlainReasonsList;
@@ -598,6 +617,8 @@ namespace MemoRandom.Client.ViewModels
                 curHuman.DaysLived      = (DeathDate - BirthDate).TotalDays; // Считаем полное число прожитых дней
                 curHuman.FullYearsLived = years;
 
+                curHuman.HumanSex       = HumanSex;
+
                 CommonDataController.CurrentHuman = curHuman;
             }
             else // Добавление нового
@@ -619,7 +640,9 @@ namespace MemoRandom.Client.ViewModels
                     HumanComments  = HumanComments,
                     DeathReasonId  = DeathReasonId,
                     DaysLived      = (DeathDate - BirthDate).TotalDays, // Считаем полное число прожитых дней
-                    FullYearsLived = years
+                    FullYearsLived = years,
+
+                    HumanSex       = HumanSex
                 };
 
                 CommonDataController.CurrentHuman = human;

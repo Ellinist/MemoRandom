@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MemoRandom.Client.Common.Enums;
+using System;
 
 namespace MemoRandom.Client.Common.Models
 {
@@ -20,6 +21,8 @@ namespace MemoRandom.Client.Common.Models
         private string _humanComments;
         private double _daysLived;
         private int _fullYearsLived;
+
+        private SexEnum _humanSex;
         #endregion
 
         #region PROPS
@@ -192,6 +195,20 @@ namespace MemoRandom.Client.Common.Models
             {
                 _fullYearsLived = value;
                 RaisePropertyChanged(nameof(FullYearsLived));
+            }
+        }
+
+
+        /// <summary>
+        /// Пол человека
+        /// </summary>
+        public SexEnum HumanSex
+        {
+            get => _humanSex;
+            set
+            {
+                _humanSex = value;
+                RaisePropertyChanged(nameof(HumanSex));
             }
         }
         #endregion

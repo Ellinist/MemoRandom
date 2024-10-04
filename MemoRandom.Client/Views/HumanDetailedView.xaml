@@ -7,6 +7,7 @@
                  xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
                  xmlns:models="clr-namespace:MemoRandom.Client.Common.Models;assembly=MemoRandom.Client.Common"
                  xmlns:local="clr-namespace:MemoRandom.Client.Views"
+                 xmlns:sex="clr-namespace:MemoRandom.Client.Common.Enums;assembly=MemoRandom.Client.Common"
                  Icon="pack://application:,,,/Resources/Icons/humanInfoIcon.ico"
                  xmlns:xceed="http://schemas.xceed.com/wpf/xaml/toolkit"
                  mc:Ignorable="d"
@@ -20,6 +21,8 @@
             <Setter Property="Control.FontSize" Value="20"/>
             <Setter Property="ItemsControl.FontWeight" Value="Bold"/>
         </Style>
+
+        <ObjectDataProvider x:Key="TypeFromEnum" MethodName="GetValues"/>
     </mah:MetroWindow.Resources>
 
     <Grid>
@@ -64,6 +67,8 @@
                             <RowDefinition Height="32"/>
                             <RowDefinition Height="32"/>
                             <RowDefinition Height="32"/>
+                            <RowDefinition Height="32"/>
+
                             <RowDefinition Height="32"/>
                         </Grid.RowDefinitions>
 
@@ -213,8 +218,23 @@
                              HorizontalContentAlignment="Left"
                              IsReadOnly="True"/>
 
+                        <!--Пол человека-->
+                        <TextBlock Grid.Row="9" Grid.Column="0"
+                                   Margin="0"
+                                   Padding="1, 0, 3, 0"
+                                   Style="{StaticResource FontCharacteristics}"
+                                   Text="Пол:"
+                                   HorizontalAlignment="Right"/>
+                        <ComboBox Grid.Row="9" Grid.Column="1" Grid.ColumnSpan="2"
+                                  x:Name="HumanSexCombo"
+                                  Style="{StaticResource FontCharacteristics}"
+                                  HorizontalAlignment="Stretch"
+                                  HorizontalContentAlignment="Left"
+                                  ItemsSource="{Binding Source={StaticResource TypeFromEnum}}"
+                                  SelectedItem="{Binding HumanSex}"/>
+
                         <!--Всплывающее окно TreeView с иерархической коллекцией причин смерти-->
-                        <ComboBox Grid.Row="10" Grid.Column="2"
+                        <ComboBox Grid.Row="11" Grid.Column="2"
                               IsDropDownOpen="{Binding OpenComboState}" 
                               Style="{StaticResource FontCharacteristics}">
                             <ScrollViewer CanContentScroll="True"

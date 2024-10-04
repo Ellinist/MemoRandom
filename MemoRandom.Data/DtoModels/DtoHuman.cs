@@ -31,5 +31,8 @@ namespace MemoRandom.Data.DtoModels
         public double DaysLived { get; set; }
 
         public int FullYearsLived { get; set; }
+
+
+        public string HumanSex { get; set; }
     }
 }
